@@ -1,13 +1,12 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
-import { MainLayout } from 'src/layouts/main';
+import { MainLayout } from 'src/layouts/main/index';
 
-import { SplashScreen } from 'src/components/loading-screen';
+import { SplashScreen } from 'src/components/loading-screen/index';
 
 import { authRoutes } from './auth';
 import { mainRoutes } from './main';
-import { authDemoRoutes } from './auth-demo';
 import { dashboardRoutes } from './dashboard';
 import { componentsRoutes } from './components';
 
@@ -34,7 +33,6 @@ export function Router() {
 
     // Auth
     ...authRoutes,
-    ...authDemoRoutes,
 
     // Dashboard
     ...dashboardRoutes,

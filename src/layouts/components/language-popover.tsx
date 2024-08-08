@@ -14,7 +14,6 @@ import { varHover } from 'src/components/animate';
 import { FlagIcon } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-// ----------------------------------------------------------------------
 
 export type LanguagePopoverProps = IconButtonProps & {
   data?: {

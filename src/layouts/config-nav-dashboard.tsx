@@ -48,25 +48,66 @@ export const navData = [
    * Overview
    */
   {
-    subheader: 'Overview',
     items: [
-      { title: 'App', path: paths.dashboard.root, icon: ICONS.dashboard },
-      { title: 'Ecommerce', path: paths.dashboard.general.ecommerce, icon: ICONS.ecommerce },
-      { title: 'Analytics', path: paths.dashboard.general.analytics, icon: ICONS.analytics },
-      { title: 'Banking', path: paths.dashboard.general.banking, icon: ICONS.banking },
-      { title: 'Booking', path: paths.dashboard.general.booking, icon: ICONS.booking },
-      { title: 'File', path: paths.dashboard.general.file, icon: ICONS.file },
-      { title: 'Course', path: paths.dashboard.general.course, icon: ICONS.course },
-    ],
-  },
-  /**
-   * Management
-   */
-  {
-    subheader: 'Management',
-    items: [
+      { title: 'Ana səhifə', path: paths.dashboard.root, icon: ICONS.dashboard },
       {
-        title: 'User',
+        title: 'Kreditlər',
+        path: paths.dashboard.general.ecommerce,
+        icon: ICONS.ecommerce,
+        children: [
+          { title: 'Cari', path: paths.dashboard.general.ecommerce },
+          { title: 'Planlaşdırılmış ödənişlər', path: paths.dashboard.general.ecommerce },
+          { title: 'Silinmiş Kreditlər', path: paths.dashboard.general.ecommerce },
+          { title: 'Arxiv', path: paths.dashboard.general.ecommerce },
+          { title: 'Kredit idarə edəni dəyişmək', path: paths.dashboard.general.ecommerce },
+          { title: 'KP', path: paths.dashboard.general.ecommerce },
+          { title: 'ROP', path: paths.dashboard.general.ecommerce },
+          { title: 'Kredit ödənişləri', path: paths.dashboard.general.ecommerce },
+          { title: 'MKR-də olmayan', path: paths.dashboard.general.ecommerce },
+        ],
+      },
+      {
+        title: 'İstifadəçilər',
+        path: paths.dashboard.general.analytics,
+        icon: ICONS.analytics,
+
+        children: [
+          { title: 'Cədvəl', path: paths.dashboard.user.list },
+          { title: 'Profil Yarat', path: paths.dashboard.user.new },
+        ],
+      },
+      {
+        title: 'Məhsullar',
+        path: paths.dashboard.product.root,
+        icon: ICONS.banking,
+        children: [
+          { title: 'Yarat', path: paths.dashboard.user.new },
+          { title: 'Siyahı', path: paths.dashboard.product.root },
+        ],
+      },
+      {
+        title: 'Kanallar',
+        path: paths.dashboard.general.booking,
+        icon: ICONS.booking,
+        children: [
+          { title: 'Yarat', path: paths.dashboard.blank },
+          { title: 'Siyahı', path: paths.dashboard.blank },
+        ],
+      },
+      { title: 'Chat', path: paths.dashboard.chat, icon: ICONS.chat },
+      {
+        title: 'Invoice',
+        path: paths.dashboard.invoice.root,
+        icon: ICONS.invoice,
+        children: [
+          { title: 'List', path: paths.dashboard.invoice.root },
+          { title: 'Details', path: paths.dashboard.invoice.demo.details },
+          { title: 'Create', path: paths.dashboard.invoice.new },
+          { title: 'Edit', path: paths.dashboard.invoice.demo.edit },
+        ],
+      },
+      {
+        title: 'Müştərilər',
         path: paths.dashboard.user.root,
         icon: ICONS.user,
         children: [
@@ -78,6 +119,7 @@ export const navData = [
           { title: 'Account', path: paths.dashboard.user.account },
         ],
       },
+      { title: 'Fayllar', path: paths.dashboard.general.file, icon: ICONS.file },
       {
         title: 'Product',
         path: paths.dashboard.product.root,
@@ -98,17 +140,7 @@ export const navData = [
           { title: 'Details', path: paths.dashboard.order.demo.details },
         ],
       },
-      {
-        title: 'Invoice',
-        path: paths.dashboard.invoice.root,
-        icon: ICONS.invoice,
-        children: [
-          { title: 'List', path: paths.dashboard.invoice.root },
-          { title: 'Details', path: paths.dashboard.invoice.demo.details },
-          { title: 'Create', path: paths.dashboard.invoice.new },
-          { title: 'Edit', path: paths.dashboard.invoice.demo.edit },
-        ],
-      },
+
       {
         title: 'Blog',
         path: paths.dashboard.post.root,
@@ -144,6 +176,54 @@ export const navData = [
       },
       { title: 'File manager', path: paths.dashboard.fileManager, icon: ICONS.folder },
       {
+        title: 'Girov',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Cari', path: paths.dashboard.tour.root },
+          { title: 'Təsdiqlənmiş', path: paths.dashboard.tour.demo.details },
+          { title: 'İmtina Edilmiş', path: paths.dashboard.tour.new },
+          { title: 'Azad Edilmiş', path: paths.dashboard.tour.demo.edit },
+          { title: 'Köçürməyə', path: paths.dashboard.tour.demo.details },
+          { title: 'Sorğulanmış', path: paths.dashboard.tour.demo.details },
+          { title: 'Köçürmə Arxiv', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Asan Finance',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Məlumatlar', path: paths.dashboard.tour.root },
+          { title: 'Balans', path: paths.dashboard.tour.demo.details },
+          { title: 'Fin sorğusu', path: paths.dashboard.tour.demo.details },
+          { title: 'İş yeri məlumatlaı', path: paths.dashboard.tour.demo.details },
+          { title: 'Pensiya haqqında məlumat', path: paths.dashboard.tour.demo.details },
+          { title: 'Lokal bazada saxlanma', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'AKB',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Sorğu', path: paths.dashboard.tour.root },
+          { title: 'Balans', path: paths.dashboard.tour.demo.details },
+          { title: 'Lokal bazada saxlanma', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Müqavilələr',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Məhsullar', path: paths.dashboard.tour.root },
+          { title: 'Məhsul obyektləri', path: paths.dashboard.tour.demo.details },
+          { title: 'Müqavilə şablonlarının redaktəsi', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+
+      {
         title: 'Mail',
         path: paths.dashboard.mail,
         icon: ICONS.mail,
@@ -153,7 +233,6 @@ export const navData = [
           </Label>
         ),
       },
-      { title: 'Chat', path: paths.dashboard.chat, icon: ICONS.chat },
       { title: 'Calendar', path: paths.dashboard.calendar, icon: ICONS.calendar },
       { title: 'Kanban', path: paths.dashboard.kanban, icon: ICONS.kanban },
     ],

@@ -10,6 +10,7 @@ export function Snackbar() {
   return (
     <Portal>
       <StyledToaster
+     
         expand
         gap={12}
         closeButton

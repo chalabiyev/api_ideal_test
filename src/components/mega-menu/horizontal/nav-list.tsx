@@ -98,7 +98,6 @@ export function NavList({ data, render, slotProps, enabledRootRedirect, cssVars 
     return (
       <NavLi disabled={data.disabled}>
         {renderNavItem}
-
         <Popover
           disableScrollLock
           open={openMenu}
