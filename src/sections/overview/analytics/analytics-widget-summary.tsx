@@ -99,7 +99,7 @@ export function AnalyticsWidgetSummary({
       }}
       {...other}
     >
-      <Box sx={{ width: 48, height: 2, mb: 3 }}>{icon}</Box>
+      <Box sx={{ width: 48, height: 10, mb: 3 }}>{icon}</Box>
 
       {renderTrending}
 
@@ -112,7 +112,7 @@ export function AnalyticsWidgetSummary({
         }}
       >
         <Box sx={{ flexGrow: 1, minWidth: 112 }}>
-          <Box sx={{ mb: 1, typography: 'subtitle2' }}>{title}</Box>
+          <Box sx={{ typography: 'subtitle2' }}>{title}</Box>
           <Box sx={{ typography: 'h4' }}>
             {id === 'creditValue' ? total : fShortenNumber(total)}
           </Box>
@@ -123,7 +123,7 @@ export function AnalyticsWidgetSummary({
           series={[{ data: chart.series }]}
           options={chartOptions}
           width={84}
-          height={56}
+          height={45}
         />
       </Box>
 
