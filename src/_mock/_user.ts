@@ -3,10 +3,10 @@ import { _mock } from './_mock';
 // ----------------------------------------------------------------------
 
 export const USER_STATUS_OPTIONS = [
-  { value: 'active', label: 'Active' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'banned', label: 'Banned' },
-  { value: 'rejected', label: 'Rejected' },
+  { value: 'active', label: 'Təsdiqlənmiş' },
+  { value: 'pending', label: 'İcraatda olan' },
+  { value: 'banned', label: 'Xətalılar' },
+  { value: 'rejected', label: 'İmtina edilmiş' },
 ];
 
 export const _userAbout = {
@@ -126,7 +126,9 @@ export const _userPlans = [
 
 export const _userList = [...Array(20)].map((_, index) => ({
   id: _mock.id(index),
+  files: _mock.files(index),
   zipCode: '85807',
+  username: _mock.username(index),
   state: 'Virginia',
   city: 'Rancho Cordova',
   role: _mock.role(index),

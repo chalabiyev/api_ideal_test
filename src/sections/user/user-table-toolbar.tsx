@@ -60,12 +60,36 @@ export function UserTableToolbar({ filters, options, onResetPage }: Props) {
         sx={{ p: 2.5, pr: { xs: 2.5, md: 1 } }}
       >
         <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
-          <InputLabel htmlFor="user-filter-role-select-label">Role</InputLabel>
+          <InputLabel htmlFor="user-filter-role-select-label">Rol</InputLabel>
           <Select
             multiple
             value={filters.state.role}
             onChange={handleFilterRole}
-            input={<OutlinedInput label="Role" />}
+            input={<OutlinedInput label="Rol" />}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            inputProps={{ id: 'user-filter-role-select-label' }}
+            MenuProps={{ PaperProps: { sx: { maxHeight: 240 } } }}
+          >
+            {options.roles.map((option) => (
+              <MenuItem key={option} value={option}>
+                <Checkbox
+                  disableRipple
+                  size="small"
+                  checked={filters.state.role.includes(option)}
+                />
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
+          <InputLabel htmlFor="user-filter-role-select-label">Vəzifə</InputLabel>
+          <Select
+            multiple
+            value={filters.state.role}
+            onChange={handleFilterRole}
+            input={<OutlinedInput label="Vəzifə" />}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             inputProps={{ id: 'user-filter-role-select-label' }}
             MenuProps={{ PaperProps: { sx: { maxHeight: 240 } } }}
@@ -88,7 +112,7 @@ export function UserTableToolbar({ filters, options, onResetPage }: Props) {
             fullWidth
             value={filters.state.name}
             onChange={handleFilterName}
-            placeholder="Search..."
+            placeholder="Axtar..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
