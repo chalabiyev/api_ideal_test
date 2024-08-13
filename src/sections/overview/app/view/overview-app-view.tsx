@@ -210,10 +210,6 @@ export function OverviewAppView() {
           </Grid>
         ))}
 
-       
-
-       
-
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentDownload
             title="Verilmiş kreditlərin müddəti üzrə statistika"

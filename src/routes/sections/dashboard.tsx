@@ -65,6 +65,11 @@ const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission')
 // Blank page
 const ParamsPage = lazy(() => import('src/pages/dashboard/params'));
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
+// Credit Page
+const CreditPage = lazy(() => import('src/pages/dashboard/credits/profile'));
+const NewCreditPage = lazy(()=> import('src/pages/dashboard/credits/new'));
+const EditCreditPage = lazy(()=> import('src/pages/dashboard/credits/edit'));
+const CreditListPage =  lazy(()=> import('src/pages/dashboard/credits/list'));
 
 // ----------------------------------------------------------------------
 
@@ -166,6 +171,11 @@ export const dashboardRoutes = [
       { path: 'permission', element: <PermissionDeniedPage /> },
       { path: 'params', element: <ParamsPage /> },
       { path: 'blank', element: <BlankPage /> },
+      {path: 'credits',
+      children:[
+        {element: <NewCreditPage />, index: true},
+      ]
+    },
     ],
   },
 ];
