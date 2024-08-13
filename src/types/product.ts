@@ -35,6 +35,8 @@ export type IProductReview = {
 };
 
 export type IProductItem = {
+  time: string;
+  percentage: number;
   id: string;
   sku: string;
   name: string;

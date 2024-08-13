@@ -1,7 +1,6 @@
 export const PRODUCT_GENDER_OPTIONS = [
-  { label: 'Men', value: 'Men' },
-  { label: 'Women', value: 'Women' },
-  { label: 'Kids', value: 'Kids' },
+  { label: 'Kişi', value: 'Men' },
+  { label: 'Qadın', value: 'Women' },
 ];
 
 export const PRODUCT_CATEGORY_OPTIONS = ['Shose', 'Apparel', 'Accessories'];
@@ -62,10 +61,10 @@ export const PRODUCT_SORT_OPTIONS = [
   { value: 'priceAsc', label: 'Price: Low - High' },
 ];
 
-export const PRODUCT_CATEGORY_GROUP_OPTIONS = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather', 'Accessories'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats', 'Apparel'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
+export const USER_CATEGORY_GROUP_OPTIONS = [
+  { group: 'group 1', classify: ['type 1', 'type 2', 'type 3', 'type 4', 'type 5'] },
+  { group: 'group 2', classify: ['type 1', 'type 2', 'type 3', 'type 4', 'type 5'] },
+  { group: 'group 2', classify: ['type 1', 'type 2', 'type 3', 'type 4', 'type 5'] },
 ];
 
 export const PRODUCT_CHECKOUT_STEPS = ['Cart', 'Billing & address', 'Payment'];
