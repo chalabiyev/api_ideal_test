@@ -14,7 +14,6 @@ export default function OverviewAppPage() {
       <Helmet>
         <title> {metadata.title}</title>
       </Helmet>
-
       <OverviewAppView />
     </>
   );

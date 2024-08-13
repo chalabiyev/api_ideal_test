@@ -48,38 +48,79 @@ export const navData = [
    * Overview
    */
   {
-    subheader: 'Overview',
     items: [
-      { title: 'App', path: paths.dashboard.root, icon: ICONS.dashboard },
-      { title: 'Ecommerce', path: paths.dashboard.general.ecommerce, icon: ICONS.ecommerce },
-      { title: 'Analytics', path: paths.dashboard.general.analytics, icon: ICONS.analytics },
-      { title: 'Banking', path: paths.dashboard.general.banking, icon: ICONS.banking },
-      { title: 'Booking', path: paths.dashboard.general.booking, icon: ICONS.booking },
-      { title: 'File', path: paths.dashboard.general.file, icon: ICONS.file },
-      { title: 'Course', path: paths.dashboard.general.course, icon: ICONS.course },
-    ],
-  },
-  /**
-   * Management
-   */
-  {
-    subheader: 'Management',
-    items: [
+      { title: 'Ana səhifə', path: paths.dashboard.root, icon: ICONS.dashboard },
       {
-        title: 'User',
-        path: paths.dashboard.user.root,
-        icon: ICONS.user,
+        title: 'Kreditlər',
+        path: paths.dashboard.general.ecommerce,
+        icon: ICONS.ecommerce,
         children: [
-          { title: 'Profile', path: paths.dashboard.user.root },
-          { title: 'Cards', path: paths.dashboard.user.cards },
-          { title: 'List', path: paths.dashboard.user.list },
-          { title: 'Create', path: paths.dashboard.user.new },
-          { title: 'Edit', path: paths.dashboard.user.demo.edit },
-          { title: 'Account', path: paths.dashboard.user.account },
+          { title: 'Cari', path: paths.dashboard.general.ecommerce },
+          { title: 'Planlaşdırılmış ödənişlər', path: paths.dashboard.general.ecommerce },
+          { title: 'Silinmiş Kreditlər', path: paths.dashboard.general.ecommerce },
+          { title: 'Arxiv', path: paths.dashboard.general.ecommerce },
+          { title: 'Kredit idarə edəni dəyişmək', path: paths.dashboard.general.ecommerce },
+          { title: 'KP', path: paths.dashboard.general.ecommerce },
+          { title: 'ROP', path: paths.dashboard.general.ecommerce },
+          { title: 'Kredit ödənişləri', path: paths.dashboard.general.ecommerce },
+          { title: 'MKR-də olmayan', path: paths.dashboard.general.ecommerce },
         ],
       },
       {
-        title: 'Product',
+        title: 'İstifadəçilər',
+        path: paths.dashboard.general.analytics,
+        icon: ICONS.analytics,
+
+        children: [
+          { title: 'Cədvəl', path: paths.dashboard.user.list },
+          { title: 'Profil Yarat', path: paths.dashboard.user.new },
+        ],
+      },
+      {
+        title: 'Məhsullar',
+        path: paths.dashboard.product.root,
+        icon: ICONS.banking,
+        children: [
+          { title: 'Yarat', path: paths.dashboard.user.new },
+          { title: 'Siyahı', path: paths.dashboard.product.root },
+        ],
+      },
+      {
+        title: 'Kanallar',
+        path: paths.dashboard.general.booking,
+        icon: ICONS.booking,
+        children: [
+          { title: 'Yarat', path: paths.dashboard.blank },
+          { title: 'Siyahı', path: paths.dashboard.blank },
+        ],
+      },
+      { title: 'Chat', path: paths.dashboard.chat, icon: ICONS.chat },
+      {
+        title: 'Invoice',
+        path: paths.dashboard.invoice.root,
+        icon: ICONS.invoice,
+        children: [
+          { title: 'Siyahı', path: paths.dashboard.invoice.root },
+          { title: 'Detallar', path: paths.dashboard.invoice.demo.details },
+          { title: 'Yarat', path: paths.dashboard.invoice.new },
+          { title: 'Redaktə et', path: paths.dashboard.invoice.demo.edit },
+        ],
+      },
+      {
+        title: 'Müştərilər',
+        path: paths.dashboard.user.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'Fiziki Şəxslər', path: paths.dashboard.user.root },
+          { title: 'Fərdi Sahibkarlar', path: paths.dashboard.user.cards },
+          { title: 'Hüquqi Şəxslər', path: paths.dashboard.user.list },
+          { title: 'Təminat', path: paths.dashboard.user.new },
+          { title: 'COV müştəri', path: paths.dashboard.user.account },
+        ],
+      },
+      { title: 'Fayllar', path: paths.dashboard.general.file, icon: ICONS.file },
+      {
+        title: 'Girov',
         path: paths.dashboard.product.root,
         icon: ICONS.product,
         children: [
@@ -90,163 +131,228 @@ export const navData = [
         ],
       },
       {
-        title: 'Order',
-        path: paths.dashboard.order.root,
-        icon: ICONS.order,
-        children: [
-          { title: 'List', path: paths.dashboard.order.root },
-          { title: 'Details', path: paths.dashboard.order.demo.details },
-        ],
-      },
-      {
-        title: 'Invoice',
-        path: paths.dashboard.invoice.root,
-        icon: ICONS.invoice,
-        children: [
-          { title: 'List', path: paths.dashboard.invoice.root },
-          { title: 'Details', path: paths.dashboard.invoice.demo.details },
-          { title: 'Create', path: paths.dashboard.invoice.new },
-          { title: 'Edit', path: paths.dashboard.invoice.demo.edit },
-        ],
-      },
-      {
-        title: 'Blog',
-        path: paths.dashboard.post.root,
-        icon: ICONS.blog,
-        children: [
-          { title: 'List', path: paths.dashboard.post.root },
-          { title: 'Details', path: paths.dashboard.post.demo.details },
-          { title: 'Create', path: paths.dashboard.post.new },
-          { title: 'Edit', path: paths.dashboard.post.demo.edit },
-        ],
-      },
-      {
-        title: 'Job',
-        path: paths.dashboard.job.root,
-        icon: ICONS.job,
-        children: [
-          { title: 'List', path: paths.dashboard.job.root },
-          { title: 'Details', path: paths.dashboard.job.demo.details },
-          { title: 'Create', path: paths.dashboard.job.new },
-          { title: 'Edit', path: paths.dashboard.job.demo.edit },
-        ],
-      },
-      {
-        title: 'Tour',
+        title: 'Asan Finance',
         path: paths.dashboard.tour.root,
         icon: ICONS.tour,
         children: [
-          { title: 'List', path: paths.dashboard.tour.root },
-          { title: 'Details', path: paths.dashboard.tour.demo.details },
-          { title: 'Create', path: paths.dashboard.tour.new },
-          { title: 'Edit', path: paths.dashboard.tour.demo.edit },
+          { title: 'Məlumatlar', path: paths.dashboard.tour.root },
+          { title: 'Balans', path: paths.dashboard.tour.demo.details },
+          { title: 'Fin sorğusu', path: paths.dashboard.tour.demo.details },
+          { title: 'İş yeri məlumatlaı', path: paths.dashboard.tour.demo.details },
+          { title: 'Pensiya haqqında məlumat', path: paths.dashboard.tour.demo.details },
+          { title: 'Lokal bazada saxlanma', path: paths.dashboard.tour.demo.details },
         ],
       },
-      { title: 'File manager', path: paths.dashboard.fileManager, icon: ICONS.folder },
       {
-        title: 'Mail',
-        path: paths.dashboard.mail,
-        icon: ICONS.mail,
-        info: (
-          <Label color="error" variant="inverted">
-            +32
-          </Label>
-        ),
-      },
-      { title: 'Chat', path: paths.dashboard.chat, icon: ICONS.chat },
-      { title: 'Calendar', path: paths.dashboard.calendar, icon: ICONS.calendar },
-      { title: 'Kanban', path: paths.dashboard.kanban, icon: ICONS.kanban },
-    ],
-  },
-  /**
-   * Item State
-   */
-  {
-    subheader: 'Misc',
-    items: [
-      {
-        // default roles : All roles can see this entry.
-        // roles: ['user'] Only users can see this item.
-        // roles: ['admin'] Only admin can see this item.
-        // roles: ['admin', 'manager'] Only admin/manager can see this item.
-        // Reference from 'src/guards/RoleBasedGuard'.
-        title: 'Permission',
-        path: paths.dashboard.permission,
-        icon: ICONS.lock,
-        roles: ['admin', 'manager'],
-        caption: 'Only admin can see this item',
+        title: 'AKB',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Sorğu', path: paths.dashboard.tour.root },
+          { title: 'Balans', path: paths.dashboard.tour.demo.details },
+          { title: 'Lokal bazada saxlanma', path: paths.dashboard.tour.demo.details },
+        ],
       },
       {
-        title: 'Level',
-        path: '#/dashboard/menu_level',
-        icon: ICONS.menuItem,
+        title: 'Müqavilələr',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Məhsullar', path: paths.dashboard.tour.root },
+          { title: 'Məhsul obyektləri', path: paths.dashboard.tour.demo.details },
+          { title: 'Müqavilə şablonlarının redaktəsi', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'COV',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Yeni Sifariş', path: paths.dashboard.tour.root },
+          { title: 'Cari', path: paths.dashboard.tour.demo.details },
+          { title: 'Komitə', path: paths.dashboard.tour.demo.details },
+          { title: 'Təsdiqlənmiş', path: paths.dashboard.tour.demo.details },
+          { title: 'Arxiv', path: paths.dashboard.tour.demo.details },
+          { title: 'Siyahı', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Maliyə',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Hesablar', path: paths.dashboard.tour.root },
+          { title: 'Balansarxası hesablar', path: paths.dashboard.tour.demo.details },
+          { title: 'Balans Sənədləri', path: paths.dashboard.tour.demo.details },
+          { title: 'Daxili Hesablar', path: paths.dashboard.tour.demo.details },
+          { title: 'Ödənişlər', path: paths.dashboard.tour.demo.details },
+          { title: 'Balansarxası', path: paths.dashboard.tour.demo.details },
+          { title: 'Filiallararası müxabirləşmə', path: paths.dashboard.tour.demo.details },
+          { title: 'Mənfiyə İcazə verilən Hesablar', path: paths.dashboard.tour.demo.details },
+          { title: 'Mənfiyə icazə verilən balans', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Hesabatlar',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'İnteraktiv balans', path: paths.dashboard.tour.root },
+          { title: 'MKR', path: paths.dashboard.tour.demo.details },
+          { title: 'Tam Balans', path: paths.dashboard.tour.demo.details },
+          { title: 'Gündəlik Balans', path: paths.dashboard.tour.demo.details },
+          { title: 'Gəlir Xərc', path: paths.dashboard.tour.demo.details },
+          { title: 'Qalıq Dövriyyə', path: paths.dashboard.tour.demo.details },
+          { title: 'Asan Finans', path: paths.dashboard.tour.demo.details },
+          { title: 'İcmal Balans', path: paths.dashboard.tour.demo.details },
+          { title: 'Müxbir Hesabların Yoxlanılması', path: paths.dashboard.tour.demo.details },
+          { title: 'İnteraktiv Balans (AP)', path: paths.dashboard.tour.demo.details },
+          { title: 'İnteraktiv Balansarxası (AP)', path: paths.dashboard.tour.demo.details },
+          { title: 'Prudensial Hesabat', path: paths.dashboard.tour.demo.details },
+          { title: 'Müştəri Əlaqələri', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Sifarişlər',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Yeni sifariş', path: paths.dashboard.tour.root },
+          { title: 'Məlumatlar', path: paths.dashboard.tour.demo.details },
+          { title: 'Cari', path: paths.dashboard.tour.demo.details },
+          { title: 'Komitə', path: paths.dashboard.tour.demo.details },
+          { title: 'Təsdiqlənmiş', path: paths.dashboard.tour.demo.details },
+          { title: 'Arxiv', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Tənzimləmələr',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'İstifadəçilər', path: paths.dashboard.tour.root },
+          { title: 'Vəzifələr', path: paths.dashboard.tour.demo.details },
+          { title: 'Filiallar', path: paths.dashboard.tour.demo.details },
+          { title: 'Komitələr', path: paths.dashboard.tour.demo.details },
+          { title: 'Günə keçid', path: paths.dashboard.tour.demo.details },
+          { title: 'Təqvim', path: paths.dashboard.tour.demo.details },
+          { title: 'Valyuta', path: paths.dashboard.tour.demo.details },
+          { title: 'Region', path: paths.dashboard.tour.demo.details },
+          { title: 'Kredit kuratoru', path: paths.dashboard.tour.demo.details },
+          { title: 'Zərgərlər', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Loqlama',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Bütün əməliyyatlar', path: paths.dashboard.tour.root }, //something about logging
+          { title: 'Səhifədə hər Klikləmə', path: paths.dashboard.tour.demo.details },
+          { title: 'Loqaların qorunması', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Komplayens',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Sanksiya siyahısı üzrə yoxlanış', path: paths.dashboard.tour.root },
+          { title: 'Siyahının əlavə edilməsi imkanı', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Əsas vəsaitlər',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'İnvertarlar', path: paths.dashboard.tour.root },
+          { title: 'Amartizasiya', path: paths.dashboard.tour.demo.details },
+          { title: 'Balansda əks olunma', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Əsas vəsaitlər',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'İnvertarlar', path: paths.dashboard.tour.root },
+          { title: 'Amartizasiya', path: paths.dashboard.tour.demo.details },
+          { title: 'Balansda əks olunma', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Gecikmə portfeli',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+      },
+      {
+        title: 'SMS xidməti',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+      },
+      {
+        title: 'Arayış yarat',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Bağlanış arayışı', path: paths.dashboard.tour.root },
+          { title: 'Borcun olmaması haqqında arayış', path: paths.dashboard.tour.demo.details },
+          { title: 'Qalıq borc haqqında arayış', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Zəmanət məktubu',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+      },
+      {
+        title: 'Çağrı mərkəzi',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+      },
+      {
+        title: 'Əmək haqqının hesablanması',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [
+          { title: 'Davamiyyət qeydiyyatı', path: paths.dashboard.tour.root },
+          {
+            title: 'Avtomatik əmək haqqının hesablanması',
+            path: paths.dashboard.tour.demo.details,
+          },
+          { title: 'Əmək haqqından avanslar', path: paths.dashboard.tour.demo.details },
+          { title: 'Mükafatlar və cərimələr', path: paths.dashboard.tour.demo.details },
+          { title: 'Həyat sığortası', path: paths.dashboard.tour.demo.details },
+        ],
+      },
+      {
+        title: 'Kadr sənəd dövriyyəsi',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
         children: [
           {
-            title: 'Level 1a',
-            path: '#/dashboard/menu_level/menu_level_1a',
-            children: [
-              {
-                title: 'Level 2a',
-                path: '#/dashboard/menu_level/menu_level_1a/menu_level_2a',
-              },
-              {
-                title: 'Level 2b',
-                path: '#/dashboard/menu_level/menu_level_1a/menu_level_2b',
-                children: [
-                  {
-                    title: 'Level 3a',
-                    path: '#/dashboard/menu_level/menu_level_1a/menu_level_2b/menu_level_3a',
-                  },
-                  {
-                    title: 'Level 3b',
-                    path: '#/dashboard/menu_level/menu_level_1a/menu_level_2b/menu_level_3b',
-                  },
-                ],
-              },
-            ],
+            title: 'İşçilər barədə detalli məlumat bazasi və işçi kartları',
+            path: paths.dashboard.tour.root,
           },
-          { title: 'Level 1b', path: '#/dashboard/menu_level/menu_level_1b' },
+          {
+            title: 'Müxtəlif təşkilati və idarəetmə strukturların dəstəklənməsi',
+            path: paths.dashboard.tour.demo.details,
+          },
+          { title: 'Əmrlər və əməliyyatlar', path: paths.dashboard.tour.demo.details },
+          {
+            title: 'Məzuniyyət və ezamiyyət əmrləri və hesablamalar',
+            path: paths.dashboard.tour.demo.details,
+          },
+          { title: 'HR sənədlərin elektron arxivi', path: paths.dashboard.tour.demo.details },
         ],
       },
       {
-        title: 'Disabled',
-        path: '#disabled',
-        icon: ICONS.disabled,
-        disabled: true,
+        title: 'Dəvamiyyət',
+        path: paths.dashboard.tour.root,
+        icon: ICONS.tour,
+        children: [{ title: 'Davamiyyət Modulu', path: paths.dashboard.tour.root }],
       },
-      {
-        title: 'Label',
-        path: '#label',
-        icon: ICONS.label,
-        info: (
-          <Label
-            color="info"
-            variant="inverted"
-            startIcon={<Iconify icon="solar:bell-bing-bold-duotone" />}
-          >
-            NEW
-          </Label>
-        ),
-      },
-      {
-        title: 'Caption',
-        path: '#caption',
-        icon: ICONS.menuItem,
-        caption:
-          'Quisque malesuada placerat nisl. In hac habitasse platea dictumst. Cras id dui. Pellentesque commodo eros a enim. Morbi mollis tellus ac sapien.',
-      },
-      {
-        title: 'Params',
-        path: '/dashboard/params?id=e99f09a7-dd88-49d5-b1c8-1daf80c2d7b1',
-        icon: ICONS.parameter,
-      },
-      {
-        title: 'External link',
-        path: 'https://www.google.com/',
-        icon: ICONS.external,
-        info: <Iconify width={18} icon="prime:external-link" />,
-      },
-      { title: 'Blank', path: paths.dashboard.blank, icon: ICONS.blank },
     ],
   },
 ];

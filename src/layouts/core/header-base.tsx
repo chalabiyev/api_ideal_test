@@ -6,9 +6,10 @@ import Button from '@mui/material/Button';
 import { styled, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
+import { usePathname } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { Logo } from 'src/components/logo';
+import {LogoIdealKredit} from 'src/svgIcons/logoIdealKredit';
 
 import { HeaderSection } from './header-section';
 import { Searchbar } from '../components/searchbar';
@@ -16,7 +17,6 @@ import { MenuButton } from '../components/menu-button';
 import { SignInButton } from '../components/sign-in-button';
 import { AccountDrawer } from '../components/account-drawer';
 import { SettingsButton } from '../components/settings-button';
-import { LanguagePopover } from '../components/language-popover';
 import { ContactsPopover } from '../components/contacts-popover';
 import { WorkspacesPopover } from '../components/workspaces-popover';
 import { NotificationsDrawer } from '../components/notifications-drawer';
@@ -24,7 +24,6 @@ import { NotificationsDrawer } from '../components/notifications-drawer';
 import type { HeaderSectionProps } from './header-section';
 import type { AccountDrawerProps } from '../components/account-drawer';
 import type { ContactsPopoverProps } from '../components/contacts-popover';
-import type { LanguagePopoverProps } from '../components/language-popover';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 import type { NotificationsDrawerProps } from '../components/notifications-drawer';
 
@@ -62,7 +61,6 @@ export type HeaderBaseProps = HeaderSectionProps & {
   data?: {
     nav?: NavSectionProps['data'];
     account?: AccountDrawerProps['data'];
-    langs?: LanguagePopoverProps['data'];
     contacts?: ContactsPopoverProps['data'];
     workspaces?: WorkspacesPopoverProps['data'];
     notifications?: NotificationsDrawerProps['data'];
@@ -111,6 +109,7 @@ export function HeaderBase({
   ...other
 }: HeaderBaseProps) {
   const theme = useTheme();
+  const pathname = usePathname();
 
   return (
     <HeaderSection
@@ -133,7 +132,8 @@ export function HeaderBase({
             )}
 
             {/* -- Logo -- */}
-            <Logo data-slot="logo" />
+
+            {pathname.startsWith('/auth') && <LogoIdealKredit />}
 
             {/* -- Divider -- */}
             <StyledDivider data-slot="divider" />
@@ -171,9 +171,6 @@ export function HeaderBase({
 
               {/* -- Searchbar -- */}
               {searchbar && <Searchbar data-slot="searchbar" data={data?.nav} />}
-
-              {/* -- Language popover -- */}
-              {localization && <LanguagePopover data-slot="localization" data={data?.langs} />}
 
               {/* -- Notifications popover -- */}
               {notifications && (

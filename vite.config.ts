@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 import checker from 'vite-plugin-checker';
 import { loadEnv, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
