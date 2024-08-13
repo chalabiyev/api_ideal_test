@@ -2,9 +2,10 @@ import React from 'react';
 
 import { SvgIconProps } from '@mui/material';
 
-export const LogoIdealKredit = (props: SvgIconProps) => {
+export const LogoIdealKredit: React.FC<SvgIconProps> = (props) => {
   return (
     <svg
+    {...props}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       width="43"
@@ -26,5 +27,5 @@ export const LogoIdealKredit = (props: SvgIconProps) => {
       </defs>
     </svg>
   );
-};
+}
 export default LogoIdealKredit;

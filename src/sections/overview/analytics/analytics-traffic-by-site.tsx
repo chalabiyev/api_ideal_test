@@ -42,7 +42,7 @@ export function AnalyticsTrafficBySite({ title, subheader, list, ...other }: Pro
             }}
           >
             <SocialIcon width={32} icon={site.value} />
-
+salamlar
             <Typography variant="h6" sx={{ mt: 1 }}>
               {fShortenNumber(site.total)}
             </Typography>
