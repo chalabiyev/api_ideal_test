@@ -26,8 +26,6 @@ import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 import { familyRelationshipOptions } from '../_examples/extra/form-validation-view/react-hook-form';
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
-import comingSoonIllustration from 'src/assets/illustrations/coming-soon-illustration';
-import { preventDefault } from '@fullcalendar/core/internal';
 
 // ----------------------------------------------------------------------
 
@@ -44,15 +42,17 @@ export const NewUserSchema = zod.object({
   born: zod.string().min(1, { message: 'Born is required!' }),
   familyRelationship: zod.string().min(1, { message: 'Family relationship is required!' }),
   gender: zod.string().min(1, { message: 'Gender is required!' }),
-
+  state: zod.string().min(1, { message: 'State is required!' }),
+  city: zod.string().min(1, { message: 'City is required!' }),
+  zipCode: zod.string().min(1, { message: 'Zip code is required!' }),
+  role: zod.string().min(1, { message: 'Role is required!' }),
   email: zod
     .string()
     .min(1, { message: 'Email is required!' })
     .email({ message: 'Email must be a valid email address!' }),
   phoneNumber: schemaHelper.phoneNumber({ isValidPhoneNumber }),
   address: zod.string().min(1, { message: 'Address is required!' }),
-  // Not required
-
+  country: zod.string().min(1, { message: 'Country is required!' }),
   status: zod.string().optional(),
 });
 
@@ -228,6 +228,12 @@ export function UserNewEditForm({ currentUser }: Props) {
                 <Field.Text name="surname" label="Soyadı" />
                 <Field.Text name="fatherName" label="Ata adı" />
                 <Field.Text name="born" label="Doğum tarixi" />
+                <Field.Text name="email" label="Email" />
+                <Field.Text name="country" label="Ölkə" />
+                <Field.Text name="state" label="Şəhər" />
+                <Field.Text name="city" label="Rayon" />
+                <Field.Text name="zipCode" label="Poçt kodu" />
+                <Field.Text name="role" label="Rol" />
                 <Field.Select
                   native
                   name="familyRelationship"
