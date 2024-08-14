@@ -76,6 +76,7 @@ export function TabsView() {
             {TABS.slice(0, 3).map((tab) => (
               <Tab key={tab.value} icon={tab.icon} value={tab.value} />
             ))}
+            hahah
           </Tabs>
         </ComponentBlock>
       ),
