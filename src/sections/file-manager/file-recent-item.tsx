@@ -1,4 +1,3 @@
-import type { IFileManager } from 'src/types/file';
 import type { PaperProps } from '@mui/material/Paper';
 
 import { useState, useCallback } from 'react';
@@ -31,7 +30,7 @@ import { FileManagerFileDetails } from './file-manager-file-details';
 // ----------------------------------------------------------------------
 
 type Props = PaperProps & {
-  file: IFileManager;
+  file: any;
   onDelete: () => void;
 };
 
@@ -126,7 +125,7 @@ export function FileRecentItem({ file, onDelete, sx, ...other }: Props) {
         },
       }}
     >
-      {file.shared?.map((person) => (
+      {file.shared?.map((person: any) => (
         <Avatar key={person.id} alt={person.name} src={person.avatarUrl} />
       ))}
     </AvatarGroup>

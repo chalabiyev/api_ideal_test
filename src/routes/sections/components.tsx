@@ -48,7 +48,6 @@ const RadioButtonsPage = lazy(() => import('src/pages/components/mui/radio-butto
 const TransferListPage = lazy(() => import('src/pages/components/mui/transfer-list'));
 
 // Extra components
-const MapPage = lazy(() => import('src/pages/components/extra/map'));
 const DndPage = lazy(() => import('src/pages/components/extra/dnd'));
 const ChartPage = lazy(() => import('src/pages/components/extra/chart'));
 const ImagePage = lazy(() => import('src/pages/components/extra/image'));
@@ -68,7 +67,6 @@ const FormWizardPage = lazy(() => import('src/pages/components/extra/form-wizard
 const OrgChartPage = lazy(() => import('src/pages/components/extra/organization-chart'));
 const MultiLanguagePage = lazy(() => import('src/pages/components/extra/multi-language'));
 const NavigationBarPage = lazy(() => import('src/pages/components/extra/navigation-bar'));
-const FormValidationPage = lazy(() => import('src/pages/components/extra/form-validation'));
 const ScrollProgressPage = lazy(() => import('src/pages/components/extra/scroll-progress'));
 
 // ----------------------------------------------------------------------
@@ -146,7 +144,6 @@ export const componentsRoutes = [
                 element: <Navigate to="/components/extra/animate" replace />,
                 index: true,
               },
-              { path: 'map', element: <MapPage /> },
               { path: 'dnd', element: <DndPage /> },
               { path: 'chart', element: <ChartPage /> },
               { path: 'image', element: <ImagePage /> },
@@ -166,7 +163,6 @@ export const componentsRoutes = [
               { path: 'organization-chart', element: <OrgChartPage /> },
               { path: 'multi-language', element: <MultiLanguagePage /> },
               { path: 'navigation-bar', element: <NavigationBarPage /> },
-              { path: 'form-validation', element: <FormValidationPage /> },
               { path: 'scroll-progress', element: <ScrollProgressPage /> },
             ],
           },

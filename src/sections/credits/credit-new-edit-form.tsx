@@ -21,11 +21,13 @@ import { useRouter } from 'src/routes/hooks';
 
 import { fData } from 'src/utils/format-number';
 
+import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
+
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
+
 import { familyRelationshipOptions } from '../_examples/extra/form-validation-view/react-hook-form';
-import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +37,6 @@ export const NewUserSchema = zod.object({
   fin: zod.string().min(1, { message: 'Fin is required!' }),
   serialNumber: zod.string().min(1, { message: 'Ş/V seriyası və nömrəsi is required!' }),
   passportStatus: zod.string().min(1, { message: 'Vəsiqənin statusu is required!' }),
-  avatarUrl: schemaHelper.file({ message: { required_error: 'Avatar is required!' } }),
   name: zod.string().min(1, { message: 'Name is required!' }),
   surname: zod.string().min(1, { message: 'Surname is required!' }),
   fatherName: zod.string().min(1, { message: 'Father name is required!' }),

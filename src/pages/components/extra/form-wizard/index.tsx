@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
 
-import { FormWizardView } from 'src/sections/_examples/extra/form-wizard-view';
+// import { FormWizardView } from 'src/sections/_examples/extra/form-wizard-view';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <FormWizardView />
+      {/* <FormWizardView /> */}
     </>
   );
 }

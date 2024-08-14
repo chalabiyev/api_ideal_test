@@ -6,7 +6,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { UserNewEditForm } from '../credit-new-edit-form';
+import { CreateCreditForm } from '../credit-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export function UserEditView({ user: currentUser }: Props) {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <UserNewEditForm currentUser={currentUser} />
+      <CreateCreditForm currentUser={currentUser} />
     </DashboardContent>
   );
 }
