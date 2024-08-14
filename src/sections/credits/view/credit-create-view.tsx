@@ -12,11 +12,11 @@ export function CreditCreateView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new user"
+        heading="Create a new Credit"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'User', href: paths.dashboard.user.root },
-          { name: 'New user' },
+          { name: 'Credits', href: paths.dashboard.user.root },
+          { name: 'New credit' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
