@@ -13,6 +13,7 @@ export function emptyRows(page: number, rowsPerPage: number, arrayLength: number
 // ----------------------------------------------------------------------
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  
   if (a[orderBy] === null) {
     return 1;
   }

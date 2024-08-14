@@ -77,7 +77,6 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
             onOpenNav={mobileNavOpen.onTrue}
             data={{
               nav: navData,
-              langs: allLangs,
               account: _account,
               contacts: _contacts,
               workspaces: _workspaces,

@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
-import { _appAuthors, _appRelated, _appFeatured, _appInvoices, _appInstalled } from 'src/_mock';
+import { _appAuthors, _appRelated, _appFeatured, _appInvoices, _appInstalled, _analyticTraffic } from 'src/_mock';
 
 import { svgColorClasses } from 'src/components/svg-color';
 
@@ -21,8 +21,146 @@ import { AppAreaInstalled } from '../app-area-installed';
 import { AppWidgetSummary } from '../app-widget-summary';
 import { AppCurrentDownload } from '../app-current-download';
 import { AppTopInstalledCountries } from '../app-top-installed-countries';
+import { AnalyticsWidgetSummary } from '../../analytics/analytics-widget-summary';
+import { AnalyticsTrafficBySite } from '../../analytics/analytics-traffic-by-site';
 
-// ----------------------------------------------------------------------
+const CreditDataWidget = [
+  {
+    title: 'Sorğularin sayı bu gün',
+    total: 1234,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+  {
+    title: 'Sorğularin sayı bu ay',
+    total: 1234,
+    percent: 45,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12, 15, 65],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+  {
+    title: 'Bu gün verilən kreditlərin sayı',
+    total: 2345,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+    },
+  },
+  {
+    id: 'creditValue',
+    title: 'Bu gün verilən məbləğ',
+    total: 1234,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+];
+
+const UseraDataWidget = [
+  {
+    title: 'Müştəri xidməti sorğuların sayı 01.08.2024',
+    total: 1234,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+  {
+    title: 'Call Center sorğuların sayı 01.08.2024',
+    total: 1234,
+    percent: 45,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12, 15, 65],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+  {
+    title: 'Sayt sorğularının sayı 01.08.2024',
+    total: 2345,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+    },
+  },
+  {
+    title: 'Partnyor kanalı sorğuların sayı 01.08.2024',
+    total: 1234,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+];
+
+const SoftwareDataWidget = [
+  {
+    title: `Video zənglə kredit sorğuların sayı ${new Date().toLocaleDateString('en-US', {
+      dateStyle: 'medium',
+    })}`,
+    total: 1234,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+  {
+    title: `Süni intellektlə kredit sorğuların sayı ${new Date().toLocaleDateString('en-US', {
+      dateStyle: 'medium',
+    })}`,
+    total: 1234,
+    percent: 45,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12, 15, 65],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+  {
+    title: `Direct Sales sorğuların sayı ${new Date().toLocaleDateString('en-US', {
+      dateStyle: 'medium',
+    })}`,
+    total: 2345,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+    },
+  },
+  {
+    title: `İmtina olunan sorğuların sayı ${new Date().toLocaleDateString('en-US', {
+      dateStyle: 'medium',
+    })}`,
+    total: 1234,
+    percent: 3,
+    icon: <SeoIllustration />,
+    chart: {
+      series: [22, 8, 35, 50, 82, 84, 77, 12],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+    },
+  },
+];
 
 export function OverviewAppView() {
   const { user } = useMockedUser();
@@ -32,71 +170,63 @@ export function OverviewAppView() {
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid xs={12} md={8}>
-          <AppWelcome
-            title={`Welcome back 👋 \n ${user?.displayName}`}
-            description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
-            img={<SeoIllustration hideBackground />}
-            action={
-              <Button variant="contained" color="primary">
-                Go now
-              </Button>
-            }
-          />
-        </Grid>
+        {CreditDataWidget.map((widget, index) => (
+          <Grid key={index} xs={12} md={6} lg={3}>
+            <AnalyticsWidgetSummary
+              id={widget.id}
+              title={widget.title}
+              total={widget.total}
+              percent={widget.percent}
+              icon={widget.icon}
+              chart={widget.chart}
+              color="success"
+            />
+          </Grid>
+        ))}
 
-        <Grid xs={12} md={4}>
-          <AppFeatured list={_appFeatured} />
-        </Grid>
+        {UseraDataWidget.map((widget, index) => (
+          <Grid key={index} xs={12} md={6} lg={3}>
+            <AnalyticsWidgetSummary
+              title={widget.title}
+              color="secondary"
+              total={widget.total}
+              percent={widget.percent}
+              icon={widget.icon}
+              chart={widget.chart}
+            />
+          </Grid>
+        ))}
 
-        <Grid xs={12} md={4}>
-          <AppWidgetSummary
-            title="Total active users"
-            percent={2.6}
-            total={18765}
-            chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [15, 18, 12, 51, 68, 11, 39, 37],
-            }}
-          />
-        </Grid>
+        {SoftwareDataWidget.map((widget, index) => (
+          <Grid key={index} xs={12} md={6} lg={3}>
+            <AnalyticsWidgetSummary
+              title={widget.title}
+              color="warning"
+              total={widget.total}
+              percent={widget.percent}
+              icon={widget.icon}
+              chart={widget.chart}
+            />
+          </Grid>
+        ))}
 
-        <Grid xs={12} md={4}>
-          <AppWidgetSummary
-            title="Total installed"
-            percent={0.2}
-            total={4876}
-            chart={{
-              colors: [theme.vars.palette.info.main],
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [20, 41, 63, 33, 28, 35, 50, 46],
-            }}
-          />
-        </Grid>
+       
 
-        <Grid xs={12} md={4}>
-          <AppWidgetSummary
-            title="Total downloads"
-            percent={-0.1}
-            total={678}
-            chart={{
-              colors: [theme.vars.palette.error.main],
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [18, 19, 31, 8, 16, 37, 12, 33],
-            }}
-          />
-        </Grid>
+       
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentDownload
-            title="Current download"
-            subheader="Downloaded by operating system"
+            title="Verilmiş kreditlərin müddəti üzrə statistika"
             chart={{
               series: [
-                { label: 'Mac', value: 12244 },
-                { label: 'Window', value: 53345 },
-                { label: 'iOS', value: 44313 },
-                { label: 'Android', value: 78343 },
+                { label: '3 ayadək', value: 12244 },
+                { label: '6 ayadək', value: 53345 },
+                { label: '9 ayadək', value: 44313 },
+                { label: '12 ayadək', value: 78343 },
+                { label: '15 ayadək', value: 78343 },
+                { label: '18 ayadək', value: 78343 },
+                { label: '21 ayadək', value: 78343 },
+                { label: '24 ayadək', value: 78343 },
               ],
             }}
           />
@@ -104,7 +234,7 @@ export function OverviewAppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppAreaInstalled
-            title="Area installed"
+            title="Partnyor kanalı - kredit statistikası"
             subheader="(+43%) than last year"
             chart={{
               categories: [
@@ -125,79 +255,51 @@ export function OverviewAppView() {
                 {
                   name: '2022',
                   data: [
-                    { name: 'Asia', data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16] },
-                    { name: 'Europe', data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16] },
-                    { name: 'Americas', data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16] },
+                    {
+                      name: 'Daxil olan sorğular',
+                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                    },
+                    {
+                      name: 'Verilən kreditlər',
+                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                    },
                   ],
                 },
                 {
                   name: '2023',
                   data: [
-                    { name: 'Asia', data: [6, 18, 14, 9, 20, 6, 22, 19, 8, 22, 8, 17] },
-                    { name: 'Europe', data: [6, 18, 14, 9, 20, 6, 22, 19, 8, 22, 8, 17] },
-                    { name: 'Americas', data: [6, 18, 14, 9, 20, 6, 22, 19, 8, 22, 8, 17] },
+                    {
+                      name: 'Daxil olan sorğular',
+                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                    },
+                    {
+                      name: 'Verilən kreditlər',
+                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                    },
                   ],
                 },
                 {
                   name: '2024',
                   data: [
-                    { name: 'Asia', data: [6, 20, 15, 18, 7, 24, 6, 10, 12, 17, 18, 10] },
-                    { name: 'Europe', data: [6, 20, 15, 18, 7, 24, 6, 10, 12, 17, 18, 10] },
-                    { name: 'Americas', data: [6, 20, 15, 18, 7, 24, 6, 10, 12, 17, 18, 10] },
+                    {
+                      name: 'Daxil olan sorğular',
+                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                    },
+                    {
+                      name: 'Verilən kreditlər',
+                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                    },
                   ],
                 },
               ],
             }}
           />
         </Grid>
-
-        <Grid xs={12} lg={8}>
-          <AppNewInvoice
-            title="New invoice"
-            tableData={_appInvoices}
-            headLabel={[
-              { id: 'id', label: 'Invoice ID' },
-              { id: 'category', label: 'Category' },
-              { id: 'price', label: 'Price' },
-              { id: 'status', label: 'Status' },
-              { id: '' },
-            ]}
-          />
+       
+        <Grid xs={12} md={6} lg={15}>
+          <AnalyticsTrafficBySite title="Traffic by site" list={_analyticTraffic} />
         </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppTopRelated title="Related applications" list={_appRelated} />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppTopInstalledCountries title="Top installed countries" list={_appInstalled} />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppTopAuthors title="Top authors" list={_appAuthors} />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-            <AppWidget
-              title="Conversion"
-              total={38566}
-              icon="solar:user-rounded-bold"
-              chart={{ series: 48 }}
-            />
-
-            <AppWidget
-              title="Applications"
-              total={55566}
-              icon="fluent:mail-24-filled"
-              chart={{
-                series: 75,
-                colors: [theme.vars.palette.info.light, theme.vars.palette.info.main],
-              }}
-              sx={{ bgcolor: 'info.dark', [`& .${svgColorClasses.root}`]: { color: 'info.light' } }}
-            />
-          </Box>
-        </Grid>
+       
       </Grid>
     </DashboardContent>
   );
