@@ -81,8 +81,8 @@ export const navData = [
         path: paths.dashboard.product.root,
         icon: ICONS.banking,
         children: [
-          { title: 'Yarat', path: paths.dashboard.user.new },
-          { title: 'Siyahı', path: paths.product.demo.details },
+          { title: 'Yarat', path: paths.dashboard.product.new },
+          { title: 'Siyahı', path: paths.dashboard.product.root },
         ],
       },
       {

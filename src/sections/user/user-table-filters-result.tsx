@@ -63,6 +63,7 @@ export function UserTableFiltersResult({ filters, onResetPage, totalResults, sx 
       <FiltersBlock label="Keyword:" isShow={!!filters.state.name}>
         <Chip {...chipProps} label={filters.state.name} onDelete={handleRemoveKeyword} />
       </FiltersBlock>
+    
     </FiltersResult>
   );
 }

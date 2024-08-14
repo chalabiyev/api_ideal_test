@@ -25,7 +25,7 @@ import {
   PRODUCT_SIZE_OPTIONS,
   PRODUCT_GENDER_OPTIONS,
   PRODUCT_COLOR_NAME_OPTIONS,
-  PRODUCT_CATEGORY_GROUP_OPTIONS,
+  USER_CATEGORY_GROUP_OPTIONS,
 } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
@@ -82,7 +82,10 @@ export function ProductNewEditForm({ currentProduct }: Props) {
       tags: currentProduct?.tags || [],
       taxes: currentProduct?.taxes || 0,
       gender: currentProduct?.gender || [],
-      category: currentProduct?.category || PRODUCT_CATEGORY_GROUP_OPTIONS[0].classify[1],
+      category: currentProduct?.category || USER_CATEGORY_GROUP_OPTIONS[0].classify[1],
+      time: currentProduct?.time || USER_CATEGORY_GROUP_OPTIONS[0].classify[1],
+      percentage: currentProduct?.percentage || USER_CATEGORY_GROUP_OPTIONS[0].classify[1],
+
       colors: currentProduct?.colors || [],
       sizes: currentProduct?.sizes || [],
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
@@ -150,17 +153,17 @@ export function ProductNewEditForm({ currentProduct }: Props) {
 
   const renderDetails = (
     <Card>
-      <CardHeader title="Details" subheader="Title, short description, image..." sx={{ mb: 3 }} />
+      <CardHeader title="Yeni Məhsul" sx={{ mb: 3 }} />
 
       <Divider />
 
       <Stack spacing={3} sx={{ p: 3 }}>
-        <Field.Text name="name" label="Product name" />
+        <Field.Text name="name" label="Məhsulun adı" />
 
-        <Field.Text name="subDescription" label="Sub description" multiline rows={4} />
+        <Field.Text name="subDescription" label="Məhsulun təsviri" multiline rows={4} />
 
         <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Content</Typography>
+          <Typography variant="subtitle2">Fayllar</Typography>
           <Field.Editor name="description" sx={{ maxHeight: 480 }} />
         </Stack>
 
@@ -182,12 +185,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
 
   const renderProperties = (
     <Card>
-      <CardHeader
-        title="Properties"
-        subheader="Additional functions and attributes..."
-        sx={{ mb: 3 }}
-      />
-
       <Divider />
 
       <Stack spacing={3} sx={{ p: 3 }}>
@@ -195,22 +192,22 @@ export function ProductNewEditForm({ currentProduct }: Props) {
           columnGap={2}
           rowGap={3}
           display="grid"
-          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
         >
-          <Field.Text name="code" label="Product code" />
-
-          <Field.Text name="sku" label="Product SKU" />
-
-          <Field.Text
-            name="quantity"
-            label="Quantity"
+         <Field.Text
+            name="code"
+            label="Məhsulun kodu"
             placeholder="0"
             type="number"
             InputLabelProps={{ shrink: true }}
           />
-
-          <Field.Select native name="category" label="Category" InputLabelProps={{ shrink: true }}>
-            {PRODUCT_CATEGORY_GROUP_OPTIONS.map((category) => (
+          <Field.Select
+            native
+            name="productType"
+            label="Məhsulun tipi"
+            InputLabelProps={{ shrink: true }}
+          >
+            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
               <optgroup key={category.group} label={category.group}>
                 {category.classify.map((classify) => (
                   <option key={classify} value={classify}>
@@ -220,15 +217,54 @@ export function ProductNewEditForm({ currentProduct }: Props) {
               </optgroup>
             ))}
           </Field.Select>
-
-          <Field.MultiSelect
-            checkbox
-            name="colors"
-            label="Colors"
-            options={PRODUCT_COLOR_NAME_OPTIONS}
-          />
-
-          <Field.MultiSelect checkbox name="sizes" label="Sizes" options={PRODUCT_SIZE_OPTIONS} />
+          <Field.Select
+            native
+            name="category"
+            label="Müştəri kateqoriyası"
+            InputLabelProps={{ shrink: true }}
+          >
+            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
+              <optgroup key={category.group} label={category.group}>
+                {category.classify.map((classify) => (
+                  <option key={classify} value={classify}>
+                    {classify}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </Field.Select>
+          <Field.Select
+            native
+            name="time"
+            label="Məhsulun müddəti"
+            InputLabelProps={{ shrink: true }}
+          >
+            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
+              <optgroup key={category.group} label={category.group}>
+                {category.classify.map((classify) => (
+                  <option key={classify} value={classify}>
+                    {classify}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </Field.Select>
+          <Field.Select
+            native
+            name="percentage"
+            label="Məhsulun faizi"
+            InputLabelProps={{ shrink: true }}
+          >
+            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
+              <optgroup key={category.group} label={category.group}>
+                {category.classify.map((classify) => (
+                  <option key={classify} value={classify}>
+                    {classify}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </Field.Select>{' '}
         </Box>
 
         <Field.Autocomplete
@@ -260,30 +296,8 @@ export function ProductNewEditForm({ currentProduct }: Props) {
         />
 
         <Stack spacing={1}>
-          <Typography variant="subtitle2">Gender</Typography>
+          <Typography variant="subtitle2">Cinsi</Typography>
           <Field.MultiCheckbox row name="gender" options={PRODUCT_GENDER_OPTIONS} sx={{ gap: 2 }} />
-        </Stack>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Field.Switch name="saleLabel.enabled" label={null} sx={{ m: 0 }} />
-          <Field.Text
-            name="saleLabel.content"
-            label="Sale label"
-            fullWidth
-            disabled={!values.saleLabel.enabled}
-          />
-        </Stack>
-
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Field.Switch name="newLabel.enabled" label={null} sx={{ m: 0 }} />
-          <Field.Text
-            name="newLabel.content"
-            label="New label"
-            fullWidth
-            disabled={!values.newLabel.enabled}
-          />
         </Stack>
       </Stack>
     </Card>
@@ -291,14 +305,14 @@ export function ProductNewEditForm({ currentProduct }: Props) {
 
   const renderPricing = (
     <Card>
-      <CardHeader title="Pricing" subheader="Price related inputs" sx={{ mb: 3 }} />
+      <CardHeader title="Məhsul üzrə məbləğ" sx={{ mb: 3 }} />
 
       <Divider />
 
       <Stack spacing={3} sx={{ p: 3 }}>
         <Field.Text
           name="price"
-          label="Regular price"
+          label="Minimal Məbləğ"
           placeholder="0.00"
           type="number"
           InputLabelProps={{ shrink: true }}
@@ -315,7 +329,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
 
         <Field.Text
           name="priceSale"
-          label="Sale price"
+          label="Maksimal Məbləğ"
           placeholder="0.00"
           type="number"
           InputLabelProps={{ shrink: true }}
@@ -329,50 +343,63 @@ export function ProductNewEditForm({ currentProduct }: Props) {
             ),
           }}
         />
+      </Stack>
+    </Card>
+  );
 
-        <FormControlLabel
-          control={
-            <Switch id="toggle-taxes" checked={includeTaxes} onChange={handleChangeIncludeTaxes} />
-          }
-          label="Price includes taxes"
+  const timeDetails = (
+    <Card>
+      <CardHeader title="Detallar" sx={{ mb: 3 }} />
+
+      <Divider />
+
+      <Stack spacing={3} sx={{ p: 3 }}>
+        <Field.Checkbox name="timeLimited" label="Müddətli" />
+
+        <Field.Text
+          name="price"
+          label="Başlama tarixi"
+          placeholder="0.00"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Box component="span" sx={{ color: 'text.disabled' }}>
+                  $
+                </Box>
+              </InputAdornment>
+            ),
+          }}
         />
-
-        {!includeTaxes && (
-          <Field.Text
-            name="taxes"
-            label="Tax (%)"
-            placeholder="0.00"
-            type="number"
-            InputLabelProps={{ shrink: true }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Box component="span" sx={{ color: 'text.disabled' }}>
-                    %
-                  </Box>
-                </InputAdornment>
-              ),
-            }}
-          />
-        )}
+        <Field.Text
+          name="price"
+          label="Bitmə tarixi"
+          placeholder="0.00"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Box component="span" sx={{ color: 'text.disabled' }}>
+                  $
+                </Box>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Field.Checkbox name="noTimeLimited" label="Müddətsiz" />
       </Stack>
     </Card>
   );
 
   const renderActions = (
-    <Stack spacing={3} direction="row" alignItems="center" flexWrap="wrap">
-      <FormControlLabel
-        control={<Switch defaultChecked inputProps={{ id: 'publish-switch' }} />}
-        label="Publish"
-        sx={{ pl: 3, flexGrow: 1 }}
-      />
-
+    <Stack spacing={3} direction="row" alignItems="center" justifyContent="end" flexWrap="wrap">
       <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-        {!currentProduct ? 'Create product' : 'Save changes'}
+        {!currentProduct ? 'Məhsul Yarat' : 'Yadda saxla'}
       </LoadingButton>
     </Stack>
   );
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto', maxWidth: { xs: 720, xl: 880 } }}>
@@ -381,6 +408,8 @@ export function ProductNewEditForm({ currentProduct }: Props) {
         {renderProperties}
 
         {renderPricing}
+
+        {timeDetails}
 
         {renderActions}
       </Stack>

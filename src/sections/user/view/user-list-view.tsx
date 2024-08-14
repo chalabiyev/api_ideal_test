@@ -50,12 +50,13 @@ import { UserTableFiltersResult } from '../user-table-filters-result';
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
+  { id: 'username', label: 'Username', width: 180 },
+  { id: 'name', label: 'Name', width: 200 },
   { id: 'phoneNumber', label: 'Phone number', width: 180 },
-  { id: 'company', label: 'Company', width: 220 },
-  { id: 'role', label: 'Role', width: 180 },
-  { id: 'status', label: 'Status', width: 100 },
+  { id: 'email', label: 'Email', width: 220 },
+  {id: 'files', label: 'Files', width: 100},
   { id: '', width: 88 },
+
 ];
 
 // ----------------------------------------------------------------------

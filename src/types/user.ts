@@ -77,6 +77,8 @@ export type IUserCard = {
 export type IUserItem = {
   id: string;
   name: string;
+  username: string;
+  files: any;
   city: string;
   role: string;
   email: string;

@@ -39,6 +39,15 @@ const OPTIONS = [
   { value: 'option 8', label: 'Option 8' },
 ];
 
+export const familyRelationshipOptions = [
+  { value: 'married', label: 'Married' },
+  { value: 'single', label: 'Single' },
+  { value: 'divorced', label: 'Divorced' },
+  { value: 'widowed', label: 'Widowed' },
+  { value: 'separated', label: 'Separated' },
+  { value: 'other', label: 'Other' },
+];
+
 type OptionType = {
   value: string;
   label: string;

@@ -39,6 +39,32 @@ export const _prices = [
   83.74, 97.14, 68.71, 85.21, 52.17, 25.18, 43.84, 60.98, 98.42, 53.37, 72.75, 56.61, 64.55, 77.32,
   60.62, 79.81, 93.68, 47.44, 76.24, 92.87, 72.91, 20.54, 94.25, 37.51,
 ];
+export const _usernames = [
+  `nannie.abernathy70`,
+  `ashlynn.ohara62`,
+  `milo.farrell`,
+  `violet.ratke86`,
+  `letha.lubowitz24`,
+  `aditya.greenfelder31`,
+  `lenna.bergnaum27`,
+  `luella.ryan33`,
+  `joana.simonis84`,
+  `marjolaine.white94`,
+  `vergie.block82`,
+  `vito.hudson`,
+  `tyrel.greenholt`,
+  `dwight.block85`,
+  `mireya13`,
+  `dasia.jenkins`,
+  `joana.simois84`,
+  `marjolain.white94`,
+  `vergie.bock82`,
+  `vito.huson`,
+  `tyrel.reenholt`,
+  `dwigh.block85`,
+  `mirea13`,
+  `dasa.jenkins`,
+];
 
 export const _ratings = [
   4.2, 3.7, 4.5, 3.5, 0.5, 3.0, 2.5, 2.8, 4.9, 3.6, 2.5, 1.7, 3.9, 2.8, 4.1, 4.5, 2.2, 3.2, 0.6,
@@ -47,6 +73,34 @@ export const _ratings = [
 
 export const _ages = [
   30, 26, 59, 47, 29, 46, 18, 56, 39, 19, 45, 18, 46, 56, 38, 41, 44, 48, 32, 45, 42, 60, 33, 57,
+];
+
+export const _files = [
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
+  `/dummy-pdf_2.pdf`,
 ];
 
 export const _percents = [
