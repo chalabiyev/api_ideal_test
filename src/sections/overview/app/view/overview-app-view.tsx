@@ -200,8 +200,10 @@ export function OverviewAppView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentDownload
+        
             title="Verilmiş kreditlərin müddəti üzrə statistika"
             chart={{
+             
               series: [
                 { label: '3 ayadək', value: 12244 },
                 { label: '6 ayadək', value: 53345 },

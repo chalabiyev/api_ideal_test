@@ -46,6 +46,12 @@ export const familyRelationshipOptions = [
   { value: 'other', label: 'Other' },
 ];
 
+export const whereToGetSignatureOptions = [
+  { value: 'wp', label: 'Whatsapp' },
+  { value: 'em', label: 'Email' },
+  { value: 'tg', label: 'Telegram' },
+];
+
 type OptionType = {
   value: any;
   label: string;

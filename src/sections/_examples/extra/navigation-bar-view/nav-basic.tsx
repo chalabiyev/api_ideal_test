@@ -168,12 +168,6 @@ export const NAV_ITEMS = [
     icon: <SvgColor src={`${CONFIG.site.basePath}/assets/icons/navbar/ic-mail.svg`} />,
   },
   {
-    title: 'Contact',
-    path: '#',
-    icon: <SvgColor src={`${CONFIG.site.basePath}/assets/icons/navbar/ic-user.svg`} />,
-    disabled: true,
-  },
-  {
     title: 'External',
     path: 'https://www.google.com/',
     icon: <SvgColor src={`${CONFIG.site.basePath}/assets/icons/navbar/ic-tour.svg`} />,

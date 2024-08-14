@@ -272,6 +272,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
           renderOption={(props, option) => (
             <li {...props} key={option}>
               {option}
+              
             </li>
           )}
           renderTags={(selected, getTagProps) =>

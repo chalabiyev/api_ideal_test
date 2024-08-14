@@ -27,7 +27,7 @@ export function UserEditView({ user: currentUser }: Props) {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <CreateCreditForm currentUser={currentUser} />
+      <CreateCreditForm  />
     </DashboardContent>
   );
 }

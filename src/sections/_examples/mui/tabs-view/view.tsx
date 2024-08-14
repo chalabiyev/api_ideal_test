@@ -57,7 +57,6 @@ export function TabsView() {
               <Tab key={tab.value} value={tab.value} label={tab.label} />
             ))}
           </Tabs>
-
           <Paper variant="outlined" sx={{ p: 2.5, typography: 'body2', borderRadius: 1.5 }}>
             {TABS.slice(0, 3).map((tab) =>
               tab.value === basicTabs.value ? (
