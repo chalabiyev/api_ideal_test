@@ -8,7 +8,8 @@ import { useTheme } from '@mui/material/styles';
 
 import { RouterLink } from 'src/routes/components';
 
-import { LogoIdealKredit } from 'src/svgIcons/logoIdealKredit';
+import {LogoIdealKredit}  from 'src/svgIcons/logoIdealKredit';
+
 import { logoClasses } from './classes';
 
 // ----------------------------------------------------------------------

@@ -16,8 +16,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { today } from 'src/utils/format-time';
-
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 
@@ -49,15 +47,31 @@ export const familyRelationshipOptions = [
 ];
 
 type OptionType = {
-  value: string;
+  value: any;
   label: string;
 };
 
 export const defaultValues = {
   age: 0,
+  fin: '',
+  serialNumber: '',
+  passportStatus: '',
+
   email: '',
-  fullName: '',
+  name: '',
+  surname: '',
+  fatherName: '',
+  born: '',
+  familyRelationship: '',
+  gender: '',
   phoneNumber: '',
+  state: '',
+  city: '',
+  zipCode: '',
+  role: '',
+  address: '',
+  country: '',
+  status: '',
   //
   editor: '',
   autocomplete: null,
@@ -65,8 +79,8 @@ export const defaultValues = {
   password: '',
   confirmPassword: '',
   //
-  startDate: today(),
-  endDate: null,
+  startDate: "",
+  endDate: "",
   //
   singleUpload: '',
   multiUpload: [],
@@ -99,7 +113,6 @@ export function ReactHookForm({ debug }: Props) {
 
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
-    defaultValues,
   });
 
   const {

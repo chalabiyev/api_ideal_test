@@ -1,9 +1,8 @@
+import type { SvgIconProps } from '@mui/material';
+
 import React from 'react'
 
-import { SvgIconProps } from '@mui/material';
-
-export const LogoExtended = (props: SvgIconProps) => {
-  return (
+export const LogoExtended = (props: SvgIconProps) => (
     <div
       style={{
         width: '167px',
@@ -44,4 +43,3 @@ export const LogoExtended = (props: SvgIconProps) => {
       </svg>
     </div>
   );
-};

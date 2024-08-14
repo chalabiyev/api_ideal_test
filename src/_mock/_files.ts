@@ -80,7 +80,7 @@ export const _folders = FOLDERS.map((name, index) => ({
   isFavorited: _mock.boolean(index + 1),
 }));
 
-export const _files = _fileNames.map((name, index) => ({
+export const _filess = _fileNames.map((name, index) => ({
   id: `${_mock.id(index)}_file`,
   name,
   url: URLS[index],
@@ -93,4 +93,4 @@ export const _files = _fileNames.map((name, index) => ({
   isFavorited: _mock.boolean(index + 1),
 }));
 
-export const _allFiles = [..._folders, ..._files];
+export const _allFiles = [..._folders, ..._filess];

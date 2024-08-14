@@ -32,6 +32,7 @@ export const NewInvoiceSchema = zod
   .object({
     invoiceTo: zod
       .custom<IInvoice['invoiceTo'] | null>()
+      .nullable()
       .refine((data) => data !== null, { message: 'Invoice to is required!' }),
     createDate: schemaHelper.date({ message: { required_error: 'Create date is required!' } }),
     dueDate: schemaHelper.date({ message: { required_error: 'Due date is required!' } }),
@@ -83,7 +84,15 @@ export function InvoiceNewEditForm({ currentInvoice }: Props) {
       status: currentInvoice?.status || 'draft',
       discount: currentInvoice?.discount || 0,
       invoiceFrom: currentInvoice?.invoiceFrom || _addressBooks[0],
-      invoiceTo: currentInvoice?.invoiceTo || null,
+      invoiceTo: currentInvoice?.invoiceTo || {
+        id: undefined,
+        name: undefined,
+        company: undefined,
+        primary: undefined,
+        fullAddress: undefined,
+        phoneNumber: undefined,
+        addressType: undefined,
+      },
       totalAmount: currentInvoice?.totalAmount || 0,
       items: currentInvoice?.items || [
         {

@@ -11,23 +11,22 @@ export function emptyRows(page: number, rowsPerPage: number, arrayLength: number
 }
 
 // ----------------------------------------------------------------------
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+function descendingComparator<T>(a: T | undefined, b: T | undefined, orderBy: keyof T): number {
+    if (a == null || a[orderBy] == null) {
+      return 1;
+    }
+    if (b == null || b[orderBy] == null) {
+      return -1;
+    }
+    if (a[orderBy] < b[orderBy]) {
+      return -1;
+    }
+    if (a[orderBy] > b[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
   
-  if (a[orderBy] === null) {
-    return 1;
-  }
-  if (b[orderBy] === null) {
-    return -1;
-  }
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
 
 // ----------------------------------------------------------------------
 

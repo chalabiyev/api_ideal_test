@@ -74,28 +74,10 @@ export function HomeHero({ sx, ...other }: StackProps) {
         }}
       >
         <Box component="span" sx={{ width: 1, opacity: 0.24 }}>
-          Boost your building
+        Sign In to Continue
         </Box>
-        process with
-        <Box
-          component={m.span}
-          animate={{ backgroundPosition: '200% center' }}
-          transition={{
-            duration: 20,
-            ease: 'linear',
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-          sx={{
-            ...textGradient(
-              `300deg, ${theme.vars.palette.primary.main} 0%, ${theme.vars.palette.warning.main} 25%, ${theme.vars.palette.primary.main} 50%, ${theme.vars.palette.warning.main} 75%, ${theme.vars.palette.primary.main} 100%`
-            ),
-            backgroundSize: '400%',
-            ml: { xs: 0.75, md: 1, xl: 1.5 },
-          }}
-        >
-          Minimal
-        </Box>
+      
+       
       </Box>
     </MInview>
   );
@@ -238,9 +220,7 @@ export function HomeHero({ sx, ...other }: StackProps) {
         overflow: 'hidden',
         position: 'relative',
         [theme.breakpoints.up(mdKey)]: {
-          minHeight: 760,
-          height: '100vh',
-          maxHeight: 1440,
+          maxHeight: 760,
           display: 'block',
           willChange: 'opacity',
           mt: 'calc(var(--layout-header-desktop-height) * -1)',
@@ -264,7 +244,6 @@ export function HomeHero({ sx, ...other }: StackProps) {
         <Container
           component={MotionContainer}
           sx={{
-            py: 3,
             gap: 5,
             zIndex: 9,
             display: 'flex',
@@ -273,17 +252,14 @@ export function HomeHero({ sx, ...other }: StackProps) {
             [theme.breakpoints.up(mdKey)]: {
               flex: '1 1 auto',
               justifyContent: 'center',
-              py: 'var(--layout-header-desktop-height)',
             },
           }}
         >
-          <Stack spacing={3} sx={{ textAlign: 'center' }}>
             <m.div style={{ y: y1 }}>{renderHeading}</m.div>
-            <m.div style={{ y: y2 }}>{renderText}</m.div>
-          </Stack>
-          <m.div style={{ y: y3 }}>{renderRatings}</m.div>
+            {/* <m.div style={{ y: y2 }}>{renderText}</m.div> */}
+          {/* <m.div style={{ y: y3 }}>{renderRatings}</m.div>
           <m.div style={{ y: y4 }}>{renderButtons}</m.div>
-          <m.div style={{ y: y5 }}>{renderIcons}</m.div>
+          <m.div style={{ y: y5 }}>{renderIcons}</m.div> */}
         </Container>
 
         <HeroBackground />

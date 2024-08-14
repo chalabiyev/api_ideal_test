@@ -202,9 +202,9 @@ export function OverviewFileView() {
               />
 
               <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column' }}>
-                {_files.slice(0, 5).map((file) => (
+                {_files.slice(0, 5).map((file, index) => (
                   <FileRecentItem
-                    key={file.id}
+                    key={index}
                     file={file}
                     onDelete={() => console.info('DELETE', file.id)}
                   />

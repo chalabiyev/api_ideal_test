@@ -4,9 +4,8 @@ import { CONFIG } from 'src/config-global';
 
 import {
   _id,
-  _usernames,
-  _files,
   _ages,
+  _files,
   _roles,
   _prices,
   _emails,
@@ -16,6 +15,7 @@ import {
   _nativeL,
   _percents,
   _booleans,
+  _usernames,
   _sentences,
   _lastNames,
   _fullNames,

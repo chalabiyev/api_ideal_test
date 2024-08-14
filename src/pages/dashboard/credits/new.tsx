@@ -2,11 +2,11 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
 
-// import { FormWizardView } from 'src/sections/_examples/extra/form-wizard-view';
+import { CreditCreateView } from 'src/sections/credits/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Form wizard | Components - ${CONFIG.site.name}` };
+const metadata = { title: `Create a new user | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (
@@ -15,7 +15,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      {/* <FormWizardView /> */}
+      <CreditCreateView />
     </>
   );
 }

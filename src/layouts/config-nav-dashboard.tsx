@@ -2,8 +2,6 @@ import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
 
-import { Label } from 'src/components/label';
-import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -247,7 +245,7 @@ export const navData = [
         path: paths.dashboard.tour.root,
         icon: ICONS.tour,
         children: [
-          { title: 'Bütün əməliyyatlar', path: paths.dashboard.tour.root }, //something about logging
+          { title: 'Bütün əməliyyatlar', path: paths.dashboard.tour.root }, // something about logging
           { title: 'Səhifədə hər Klikləmə', path: paths.dashboard.tour.demo.details },
           { title: 'Loqaların qorunması', path: paths.dashboard.tour.demo.details },
         ],

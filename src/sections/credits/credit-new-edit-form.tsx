@@ -37,7 +37,6 @@ export const NewUserSchema = zod.object({
   fin: zod.string().min(1, { message: 'Fin is required!' }),
   serialNumber: zod.string().min(1, { message: 'Ş/V seriyası və nömrəsi is required!' }),
   passportStatus: zod.string().min(1, { message: 'Vəsiqənin statusu is required!' }),
-  avatarUrl: schemaHelper.file({ message: { required_error: 'Avatar is required!' } }),
   name: zod.string().min(1, { message: 'Name is required!' }),
   surname: zod.string().min(1, { message: 'Surname is required!' }),
   fatherName: zod.string().min(1, { message: 'Father name is required!' }),
@@ -64,7 +63,7 @@ type Props = {
   currentUser?: IUserItem;
 };
 
-export function UserNewEditForm({ currentUser }: Props) {
+export function CreateCreditForm({ currentUser }: Props) {
   const router = useRouter();
 
   const defaultValues = useMemo(
@@ -242,7 +241,7 @@ export function UserNewEditForm({ currentUser }: Props) {
                   label="Ailə vəziyyəti"
                   InputLabelProps={{ shrink: true }}
                 >
-                  {familyRelationshipOptions.map((option: any) => (
+                  {familyRelationshipOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
