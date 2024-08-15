@@ -1,14 +1,16 @@
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { _analyticTraffic } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
 
-import { useMockedUser } from 'src/auth/hooks';
-import { useRouter } from 'src/routes/hooks';
+// import { useMockedUser } from 'src/auth/hooks';
 
 import { VideoCallIcon } from 'src/components/videocall';
+
 import { AppAreaInstalled } from '../app-area-installed';
 import { AppCurrentDownload } from '../app-current-download';
 import { AnalyticsWidgetSummary } from '../../analytics/analytics-widget-summary';
@@ -153,7 +155,7 @@ const SoftwareDataWidget = [
 ];
 
 export function OverviewAppView() {
-  const { user } = useMockedUser();
+  // const { user } = useMockedUser();
 
   const router = useRouter();
 
