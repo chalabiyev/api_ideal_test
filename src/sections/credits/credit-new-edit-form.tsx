@@ -34,6 +34,7 @@ import {
   TableContainer,
   Table,
   TableHead,
+  TableBody,
   TableRow,
   TableCell,
 } from '@mui/material';
@@ -42,7 +43,6 @@ import {
   familyRelationshipOptions,
   whereToGetSignatureOptions,
 } from '../_examples/extra/form-validation-view/react-hook-form';
-import { TableBody } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -471,7 +471,6 @@ export function CreateCreditForm() {
               >
                 Borcalanın cari ödənişləri
               </Typography>
-
               {/* <TableContainer>
                 <Table>
                   <TableBody sx={

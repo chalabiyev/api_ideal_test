@@ -101,6 +101,7 @@ export const paths = {
     calendar: `${ROOTS.DASHBOARD}/calendar`,
     fileManager: `${ROOTS.DASHBOARD}/file-manager`,
     permission: `${ROOTS.DASHBOARD}/permission`,
+    videoCall: '/videocall',
     credits: {
       root: `${ROOTS.DASHBOARD}/credits`,
       new: `${ROOTS.DASHBOARD}/credits/new`,
