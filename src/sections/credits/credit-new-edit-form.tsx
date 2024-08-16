@@ -1019,7 +1019,7 @@ export function CreateCreditForm() {
                 <Field.Text name="subDescription" label="İllik dərəcəsi(%)" />
 
                 <Slider
-                name='months'
+                  name="months"
                   sx={{
                     gridArea: '2 / 1 / 3 / 3',
                   }}
@@ -1030,10 +1030,10 @@ export function CreateCreditForm() {
                   valueLabelDisplay="on"
                   color="info"
                 />
-              <Field.Text name="name" label="Aylıq ödəniş" />
+                <Field.Text name="name" label="Aylıq ödəniş" />
 
-              <Field.Text name="subDescription" label="Cəmi ödəniləcək məbləğ" />
-              <Field.Text name="subDescription" label="Cəmi faiz" />
+                <Field.Text name="subDescription" label="Cəmi ödəniləcək məbləğ" />
+                <Field.Text name="subDescription" label="Cəmi faiz" />
               </Box>
             </Stack>
           </Grid>
