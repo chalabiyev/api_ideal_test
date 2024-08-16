@@ -86,11 +86,11 @@ export const navData = [
       },
       {
         title: 'Kanallar',
-        path: paths.dashboard.general.booking,
+        path: paths.dashboard.channels.list,
         icon: ICONS.booking,
         children: [
-          { title: 'Yarat', path: paths.dashboard.blank },
-          { title: 'Siyahı', path: paths.dashboard.blank },
+          { title: 'Yarat', path: paths.dashboard.channels.new },
+          { title: 'Siyahı', path: paths.dashboard.channels.list },
         ],
       },
       { title: 'Chat', path: paths.dashboard.chat, icon: ICONS.chat },

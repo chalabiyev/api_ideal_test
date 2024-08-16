@@ -135,6 +135,13 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
+    channels:{
+      root: `${ROOTS.DASHBOARD}/channels`,
+      new: `${ROOTS.DASHBOARD}/channels/new`,
+      list: `${ROOTS.DASHBOARD}/channels/list`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/channels/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/channels/${id}/edit`,
+    },
     customer: {
       fiziki: `${ROOTS.DASHBOARD}/customer/fiziki/list`,
       ferdi: `${ROOTS.DASHBOARD}/ferdi`,
