@@ -25,7 +25,7 @@ const ProductCreatePage = lazy(() => import('src/pages/dashboard/product/new'));
 const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
 // Order
 const OrderListPage = lazy(() => import('src/pages/dashboard/order/list'));
-import VideoCallPage from 'src/pages/dashboard/videocall/videocall';
+const VideoCallPage = lazy(() => import('src/pages/dashboard/videocall/videocall'));
 const OrderDetailsPage = lazy(() => import('src/pages/dashboard/order/details'));
 // Invoice
 const InvoiceListPage = lazy(() => import('src/pages/dashboard/invoice/list'));
@@ -39,6 +39,12 @@ const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
 const UserAccountPage = lazy(() => import('src/pages/dashboard/user/account'));
 const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
 const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
+// Customer
+const FizikiCustomerListPage = lazy(() => import('src/pages/dashboard/customer/fiziki/list'));
+const HuquqiCustomerListPage = lazy(() => import('src/pages/dashboard/customer/huquqi/list'));
+const TeminatCustomerListPage = lazy(() => import('src/pages/dashboard/customer/teminat/list'));
+const CovCustomerListPage = lazy(() => import('src/pages/dashboard/customer/covmusteri/list'));
+const FerdiCustomerListPage = lazy(() => import('src/pages/dashboard/customer/ferdi/list'));
 // Blog
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -68,9 +74,9 @@ const ParamsPage = lazy(() => import('src/pages/dashboard/params'));
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 // Credit Page
 const CreditPage = lazy(() => import('src/pages/dashboard/credits/profile'));
-const NewCreditPage = lazy(()=> import('src/pages/dashboard/credits/new'));
-const EditCreditPage = lazy(()=> import('src/pages/dashboard/credits/edit'));
-const CreditListPage =  lazy(()=> import('src/pages/dashboard/credits/list'));
+const NewCreditPage = lazy(() => import('src/pages/dashboard/credits/new'));
+const EditCreditPage = lazy(() => import('src/pages/dashboard/credits/edit'));
+const CreditListPage = lazy(() => import('src/pages/dashboard/credits/list'));
 
 // ----------------------------------------------------------------------
 
@@ -87,7 +93,7 @@ export const dashboardRoutes = [
     path: 'dashboard',
     element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     children: [
-      {element: <VideoCallPage /> , path: 'videocall'},
+      { element: <VideoCallPage />, path: 'videocall' },
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
@@ -105,6 +111,17 @@ export const dashboardRoutes = [
           { path: 'new', element: <UserCreatePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
           { path: 'account', element: <UserAccountPage /> },
+        ],
+      },
+      {
+        path: 'customer',
+        children: [
+          { element: <FizikiCustomerListPage />, index: true },
+          { path: 'fiziki/list', element: <FizikiCustomerListPage /> },
+          { path: 'ferdi', element: <FerdiCustomerListPage /> },
+          { path: 'huquqi', element: <HuquqiCustomerListPage /> },
+          { path: 'teminat', element: <TeminatCustomerListPage /> },
+          { path: 'covmusteri', element: <CovCustomerListPage /> },
         ],
       },
       {
@@ -173,11 +190,7 @@ export const dashboardRoutes = [
       { path: 'permission', element: <PermissionDeniedPage /> },
       { path: 'params', element: <ParamsPage /> },
       { path: 'blank', element: <BlankPage /> },
-      {path: 'credits',
-      children:[
-        {element: <NewCreditPage />, index: true},
-      ]
-    },
+      { path: 'credits', children: [{ element: <NewCreditPage />, index: true }] },
     ],
   },
 ];

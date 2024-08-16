@@ -110,11 +110,11 @@ export const navData = [
         path: paths.dashboard.user.root,
         icon: ICONS.user,
         children: [
-          { title: 'Fiziki Şəxslər', path: paths.dashboard.user.root },
+          { title: 'Fiziki Şəxslər', path: paths.dashboard.customer.fiziki },
           { title: 'Fərdi Sahibkarlar', path: paths.dashboard.user.cards },
           { title: 'Hüquqi Şəxslər', path: paths.dashboard.user.list },
           { title: 'Təminat', path: paths.dashboard.user.new },
-          { title: 'COV müştəri', path: paths.dashboard.user.account },
+          { title: 'COV müştəri', path: paths.dashboard.customer.covmusteri },
         ],
       },
       { title: 'Fayllar', path: paths.dashboard.general.file, icon: ICONS.file },

@@ -135,6 +135,18 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
+    customer: {
+      fiziki: `${ROOTS.DASHBOARD}/customer/fiziki/list`,
+      ferdi: `${ROOTS.DASHBOARD}/ferdi`,
+      huquqi: `${ROOTS.DASHBOARD}/huquqi`,
+      teminat: `${ROOTS.DASHBOARD}/teminat`,
+      covmusteri: `${ROOTS.DASHBOARD}/covmusteri`,
+      account: `${ROOTS.DASHBOARD}/customer/account`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+      demo: {
+        edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
+      },
+    },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
