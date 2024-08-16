@@ -1,11 +1,15 @@
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { _analyticTraffic } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
 
-import { useMockedUser } from 'src/auth/hooks';
+// import { useMockedUser } from 'src/auth/hooks';
+
+import { VideoCallIcon } from 'src/components/videocall';
 
 import { AppAreaInstalled } from '../app-area-installed';
 import { AppCurrentDownload } from '../app-current-download';
@@ -151,7 +155,9 @@ const SoftwareDataWidget = [
 ];
 
 export function OverviewAppView() {
-  const { user } = useMockedUser();
+  // const { user } = useMockedUser();
+
+  const router = useRouter();
 
   const theme = useTheme();
 
@@ -279,12 +285,25 @@ export function OverviewAppView() {
             }}
           />
         </Grid>
-       
+
         <Grid xs={12} md={6} lg={15}>
           <AnalyticsTrafficBySite title="Traffic by site" list={_analyticTraffic} />
         </Grid>
-       
       </Grid>
+      <div
+        style={{
+          position: 'fixed',
+          bottom: theme.spacing(10),
+          right: theme.spacing(10),
+          zIndex: 9999,
+          cursor: 'pointer',
+        }}
+       
+      >
+        <VideoCallIcon  onClick={() => {
+          router.push('/dashboard/videocall');
+        }}/>
+      </div>
     </DashboardContent>
   );
 }

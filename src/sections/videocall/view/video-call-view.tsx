@@ -1,33 +1,26 @@
-import type { IUserItem } from 'src/types/user';
-
 import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { CreateCreditForm } from '../credit-new-edit-form';
+import { VideoCallTab } from '../videocalltab';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  user?: IUserItem;
-};
-
-export function UserEditView({ user: currentUser }: Props) {
+export function VideoCallView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Edit"
+        heading="VIdeo Call"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'User', href: paths.dashboard.user.root },
-          { name: currentUser?.name },
+          { name: 'Videocall', href: paths.dashboard.videoCall },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <CreateCreditForm  />
+      <VideoCallTab />
     </DashboardContent>
   );
 }

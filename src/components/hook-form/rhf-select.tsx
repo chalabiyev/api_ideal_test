@@ -126,7 +126,7 @@ export function RHFMultiSelect({
             displayEmpty={!!placeholder}
             label={label}
             renderValue={(selected) => {
-              const selectedItems = options.filter((item) =>
+              const selectedItems = options.filter((item: any) =>
                 (selected as string[]).includes(item.value)
               );
 

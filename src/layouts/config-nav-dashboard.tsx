@@ -53,7 +53,8 @@ export const navData = [
         path: paths.dashboard.general.ecommerce,
         icon: ICONS.ecommerce,
         children: [
-          { title: 'Cari', path: paths.dashboard.general.ecommerce },
+          { title: 'Yarat', path: paths.dashboard.credits.root},
+          { title: 'Cari', path: paths.dashboard.credits.list },
           { title: 'Planlaşdırılmış ödənişlər', path: paths.dashboard.general.ecommerce },
           { title: 'Silinmiş Kreditlər', path: paths.dashboard.general.ecommerce },
           { title: 'Arxiv', path: paths.dashboard.general.ecommerce },

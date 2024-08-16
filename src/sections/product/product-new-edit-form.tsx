@@ -143,9 +143,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
     setValue('images', [], { shouldValidate: true });
   }, [setValue]);
 
-  const handleChangeIncludeTaxes = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setIncludeTaxes(event.target.checked);
-  }, []);
 
   const renderDetails = (
     <Card>
@@ -275,6 +272,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
           renderOption={(props, option) => (
             <li {...props} key={option}>
               {option}
+              
             </li>
           )}
           renderTags={(selected, getTagProps) =>

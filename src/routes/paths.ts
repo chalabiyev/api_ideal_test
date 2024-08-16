@@ -23,7 +23,6 @@ export const paths = {
   pricing: '/pricing',
   payment: '/payment',
   about: '/about-us',
-  contact: '/contact-us',
   faqs: '/faqs',
   page403: '/error/403',
   page404: '/error/404',
@@ -102,7 +101,19 @@ export const paths = {
     calendar: `${ROOTS.DASHBOARD}/calendar`,
     fileManager: `${ROOTS.DASHBOARD}/file-manager`,
     permission: `${ROOTS.DASHBOARD}/permission`,
-    credits: `${ROOTS.DASHBOARD}/credits`,
+    videoCall: '/videocall',
+    credits: {
+      root: `${ROOTS.DASHBOARD}/credits`,
+      new: `${ROOTS.DASHBOARD}/credits/new`,
+      list: `${ROOTS.DASHBOARD}/credits/list`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/credits/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/credits/${id}/edit`,
+      demo: {
+        details: `${ROOTS.DASHBOARD}/credits/${MOCK_ID}`,
+        edit: `${ROOTS.DASHBOARD}/credits/${MOCK_ID}/edit`,
+      },
+    },
+
     general: {
       app: `${ROOTS.DASHBOARD}/app`,
       ecommerce: `${ROOTS.DASHBOARD}/ecommerce`,

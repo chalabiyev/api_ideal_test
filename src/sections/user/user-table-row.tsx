@@ -10,8 +10,6 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
-import { useRouter } from 'src/routes/hooks';
-
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import DownloadIcon from 'src/svgIcons/downloadIcon';
@@ -31,7 +29,6 @@ type Props = {
 };
 
 export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) {
-  const router = useRouter();
 
   const confirm = useBoolean();
 

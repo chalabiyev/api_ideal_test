@@ -17,9 +17,6 @@ export type ConfigValue = {
     skip: boolean;
     redirectPath: string;
   };
-  mapbox: {
-    apiKey: string;
-  };
   firebase: {
     appId: string;
     apiKey: string;
@@ -38,7 +35,7 @@ export type ConfigValue = {
 
 export const CONFIG: ConfigValue = {
   site: {
-    name: 'Minimals',
+    name: 'Ideal Kredit',
     serverUrl: import.meta.env.VITE_SERVER_URL ?? '',
     assetURL: import.meta.env.VITE_ASSET_URL ?? '',
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
@@ -52,12 +49,6 @@ export const CONFIG: ConfigValue = {
     method: 'jwt',
     skip: false,
     redirectPath: paths.dashboard.root,
-  },
-  /**
-   * Mapbox
-   */
-  mapbox: {
-    apiKey: import.meta.env.VITE_MAPBOX_API_KEY ?? '',
   },
   /**
    * Firebase
