@@ -25,8 +25,6 @@ const PostDetailsPage = lazy(() => import('src/pages/post/details'));
 const Page500 = lazy(() => import('src/pages/error/500'));
 const Page403 = lazy(() => import('src/pages/error/403'));
 const Page404 = lazy(() => import('src/pages/error/404'));
-// Blank
-const BlankPage = lazy(() => import('src/pages/blank'));
 
 // ----------------------------------------------------------------------
 
@@ -52,10 +50,6 @@ export const mainRoutes = [
           {
             path: 'faqs',
             element: <FaqsPage />,
-          },
-          {
-            path: 'blank',
-            element: <BlankPage />,
           },
           {
             path: 'product',
