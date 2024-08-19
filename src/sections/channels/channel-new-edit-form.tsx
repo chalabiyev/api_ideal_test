@@ -1,27 +1,20 @@
-import type { IProductItem } from 'src/types/product';
-
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { _tags, PRODUCT_GENDER_OPTIONS, USER_CATEGORY_GROUP_OPTIONS } from 'src/_mock';
-
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { Menu } from '@mui/material';
 
 // ----------------------------------------------------------------------
 

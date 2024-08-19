@@ -1,3 +1,4 @@
+import type { IChannelFilters } from 'src/types/channel';
 import type { Theme, SxProps } from '@mui/material/styles';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
@@ -7,7 +8,6 @@ import Chip from '@mui/material/Chip';
 import { varAlpha } from 'src/theme/styles';
 
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
-import { IChannelFilters } from 'src/types/channel';
 
 // ----------------------------------------------------------------------
 

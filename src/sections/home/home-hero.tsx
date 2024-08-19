@@ -22,7 +22,6 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 import { _mock } from 'src/_mock';
 import { CONFIG } from 'src/config-global';
-import { textGradient } from 'src/theme/styles';
 
 import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';

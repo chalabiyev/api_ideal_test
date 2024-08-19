@@ -1,4 +1,4 @@
-import { IChannelItem } from 'src/types/channel';
+import type { IChannelItem } from 'src/types/channel';
 
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';

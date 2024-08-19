@@ -2,21 +2,13 @@ import type { IProductItem } from 'src/types/product';
 
 import { useState, useEffect, useCallback } from 'react';
 
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useTabs } from 'src/hooks/use-tabs';
 
-import { varAlpha } from 'src/theme/styles';
-import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -67,13 +59,6 @@ export function ChannelDetailsView({ channel, error, loading }: Props) {
     setPublish(newValue);
   }, []);
 
-  if (loading) {
-    return (
-      <DashboardContent sx={{ pt: 5 }}>
-      </DashboardContent>
-    );
-  }
-
   if (error) {
     return (
       <DashboardContent sx={{ pt: 5 }}>
@@ -96,11 +81,4 @@ export function ChannelDetailsView({ channel, error, loading }: Props) {
     );
   }
 
-  return (
-    <DashboardContent>
-      
-  
-
-    </DashboardContent>
-  );
 }

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+
 import { CONFIG } from 'src/config-global';
+
 import { VideoCallView } from 'src/sections/videocall/view';
 
 export default function VideoCallPage() {

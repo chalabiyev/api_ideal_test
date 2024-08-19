@@ -1,11 +1,11 @@
 import type { BoxProps } from '@mui/material/Box';
+import type { IChannelItem } from 'src/types/channel';
 
 import Box from '@mui/material/Box';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { ChannelItem } from './channel-item';
 import { ChannelItemSkeleton } from './channel-skeleton';
-import { IChannelItem } from 'src/types/channel';
 
 // ----------------------------------------------------------------------
 

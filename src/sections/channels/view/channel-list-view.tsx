@@ -1,12 +1,11 @@
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+import type { IChannelItem, IChannelTableFilters } from 'src/types/channel';
 import type {
   GridSlots,
   GridColDef,
   GridRowSelectionModel,
   GridColumnVisibilityModel,
 } from '@mui/x-data-grid';
-import { IChannelItem, IChannelTableFilters } from 'src/types/channel';
-
 
 import { useState, useEffect, useCallback } from 'react';
 
