@@ -57,4 +57,9 @@ export const endpoints = {
     details: '/api/product/details',
     search: '/api/product/search',
   },
+  channel: {
+    list: '/api/product/list',
+    details: '/api/product/details',
+    search: '/api/product/search',
+  },
 };

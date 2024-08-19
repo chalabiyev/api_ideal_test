@@ -45,6 +45,11 @@ const HuquqiCustomerListPage = lazy(() => import('src/pages/dashboard/customer/h
 const TeminatCustomerListPage = lazy(() => import('src/pages/dashboard/customer/teminat/list'));
 const CovCustomerListPage = lazy(() => import('src/pages/dashboard/customer/covmusteri/list'));
 const FerdiCustomerListPage = lazy(() => import('src/pages/dashboard/customer/ferdi/list'));
+// Channels
+const ChannelListPage = lazy(() => import('src/pages/dashboard/channels/list'));
+const ChannelNewPage = lazy(() => import('src/pages/dashboard/channels/new'));
+const ChannelDetailPage = lazy(() => import('src/pages/dashboard/channels/details'));
+const ChannelEditPage = lazy(() => import('src/pages/dashboard/channels/edit'));
 // Blog
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -180,6 +185,16 @@ export const dashboardRoutes = [
           { path: ':id', element: <TourDetailsPage /> },
           { path: 'new', element: <TourCreatePage /> },
           { path: ':id/edit', element: <TourEditPage /> },
+        ],
+      },
+      {
+        path: 'channels',
+        children: [
+          { element: <ChannelListPage />, index: true },
+          { path: 'list', element: <ChannelListPage /> },
+          { path: ':id', element: <ChannelDetailPage /> },
+          { path: 'new', element: <ChannelNewPage /> },
+          { path: ':id/edit', element: <ChannelEditPage /> },
         ],
       },
       { path: 'file-manager', element: <FileManagerPage /> },

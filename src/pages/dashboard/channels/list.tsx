@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
+import { ChannelListView } from 'src/sections/channels/view';
 
-import { AccountView } from 'src/sections/account/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Account settings | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `Channel list | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (
@@ -15,8 +15,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <AccountView />
+      <ChannelListView />
     </>
   );
 }
-
