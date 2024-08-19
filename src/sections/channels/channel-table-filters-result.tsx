@@ -18,7 +18,7 @@ type Props = {
   filters: UseSetStateReturn<IProductTableFilters>;
 };
 
-export function ProductTableFiltersResult({ filters, totalResults, sx }: Props) {
+export function ChannelTableFiltersResult({ filters, totalResults, sx }: Props) {
   const handleRemoveStock = useCallback(
     (inputValue: string) => {
       const newValue = filters.state.stock.filter((item) => item !== inputValue);

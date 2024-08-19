@@ -1,4 +1,3 @@
-import type { IProductFilters } from 'src/types/product';
 import type { Theme, SxProps } from '@mui/material/styles';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
@@ -8,16 +7,17 @@ import Chip from '@mui/material/Chip';
 import { varAlpha } from 'src/theme/styles';
 
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
+import { IChannelFilters } from 'src/types/channel';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   totalResults: number;
   sx?: SxProps<Theme>;
-  filters: UseSetStateReturn<IProductFilters>;
+  filters: UseSetStateReturn<IChannelFilters>;
 };
 
-export function ProductFiltersResult({ filters, totalResults, sx }: Props) {
+export function ChannelFiltersResult({ filters, totalResults, sx }: Props) {
   const handleRemoveGender = (inputValue: string) => {
     const newValue = filters.state.gender.filter((item) => item !== inputValue);
 

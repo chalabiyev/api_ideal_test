@@ -3,18 +3,18 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/config-global';
-import { useGetProduct } from 'src/actions/product';
+import {useGetChannel } from 'src/actions/channel';
 
-import { ProductEditView } from 'src/sections/product/view';
+import { ChannelEditView } from 'src/sections/channels/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Product edit | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `Channel edit | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   const { id = '' } = useParams();
 
-  const { product } = useGetProduct(id);
+  const { channel } = useGetChannel(id);
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <ProductEditView product={product} />
+      <ChannelEditView channel={channel} />
     </>
   );
 }

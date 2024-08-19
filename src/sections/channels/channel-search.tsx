@@ -1,4 +1,4 @@
-import type { IProductItem } from 'src/types/product';
+import type { IChannelItem } from 'src/types/channel';
 
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
@@ -21,21 +21,21 @@ import { SearchNotFound } from 'src/components/search-not-found';
 type Props = {
   query: string;
   loading?: boolean;
-  results: IProductItem[];
+  results: IChannelItem[];
   onSearch: (inputValue: string) => void;
 };
 
-export function ProductSearch({ query, results, onSearch, loading }: Props) {
+export function ChannelSearch({ query, results, onSearch, loading }: Props) {
   const router = useRouter();
 
   const handleClick = (id: string) => {
-    router.push(paths.product.details(id));
+    router.push(paths.dashboard.channels.details(id));
   };
 
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (query) {
       if (event.key === 'Enter') {
-        const selectItem = results.filter((product) => product.name === query)[0];
+        const selectItem = results.filter((channel) => channel.name === query)[0];
 
         handleClick(selectItem.id);
       }
@@ -78,16 +78,16 @@ export function ProductSearch({ query, results, onSearch, loading }: Props) {
           }}
         />
       )}
-      renderOption={(props, product, { inputValue }) => {
-        const matches = match(product.name, inputValue);
-        const parts = parse(product.name, matches);
+      renderOption={(props, channel, { inputValue }) => {
+        const matches = match(channel.name, inputValue);
+        const parts = parse(channel.name, matches);
 
         return (
-          <Box component="li" {...props} onClick={() => handleClick(product.id)} key={product.id}>
+          <Box component="li" {...props} onClick={() => handleClick(channel.id)} key={channel.id}>
             <Avatar
-              key={product.id}
-              alt={product.name}
-              src={product.coverUrl}
+              key={channel.id}
+              alt={channel.name}
+              src={channel.coverUrl}
               variant="rounded"
               sx={{ mr: 1.5, width: 48, height: 48, flexShrink: 0, borderRadius: 1 }}
             />

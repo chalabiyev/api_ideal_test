@@ -1,4 +1,4 @@
-import type { IProductFilters } from 'src/types/product';
+import type { IChannelFilters } from 'src/types/channel';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { useCallback } from 'react';
@@ -32,7 +32,7 @@ type Props = {
   canReset: boolean;
   onOpen: () => void;
   onClose: () => void;
-  filters: UseSetStateReturn<IProductFilters>;
+  filters: UseSetStateReturn<IChannelFilters>;
   options: {
     colors: string[];
     ratings: string[];
@@ -41,7 +41,7 @@ type Props = {
   };
 };
 
-export function ProductFilters({ open, onOpen, onClose, canReset, filters, options }: Props) {
+export function ChannelFilters({ open, onOpen, onClose, canReset, filters, options }: Props) {
   const marksLabel = [...Array(21)].map((_, index) => {
     const value = index * 10;
 
@@ -266,7 +266,7 @@ export function ProductFilters({ open, onOpen, onClose, canReset, filters, optio
 type InputRangeProps = {
   type: 'min' | 'max';
   value: number[];
-  onFilters: UseSetStateReturn<IProductFilters>['setState'];
+  onFilters: UseSetStateReturn<IChannelFilters>['setState'];
 };
 
 function InputRange({ type, value, onFilters }: InputRangeProps) {

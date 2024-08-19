@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
@@ -137,7 +136,9 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
         </Box>
         <Divider />
 
-        <Field.Text name="description" label="Kredit mütəxəssisi" />
+        <Field.Text defaultValue={
+          defaultValues.name
+        } name="description" label="Kredit mütəxəssisi" />
 
         <Field.Text name="description" label="Mağaza adı" />
 

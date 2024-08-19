@@ -5,11 +5,11 @@ import { useParams } from 'src/routes/hooks';
 import { CONFIG } from 'src/config-global';
 import { useGetProduct } from 'src/actions/product';
 
-import { ProductDetailsView } from 'src/sections/product/view';
+import { ChannelDetailsView } from 'src/sections/channels/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Product details | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `Channel details | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   const { id = '' } = useParams();
@@ -22,7 +22,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <ProductDetailsView product={product} loading={productLoading} error={productError} />
+      <ChannelDetailsView channel={product} loading={productLoading} error={productError} />
     </>
   );
 }

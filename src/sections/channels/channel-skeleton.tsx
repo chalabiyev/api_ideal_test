@@ -8,7 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 // ----------------------------------------------------------------------
 
-export function ProductItemSkeleton({
+export function ChannelItemSkeleton({
   sx,
   amount = 16,
   ...other
@@ -38,7 +38,7 @@ export function ProductItemSkeleton({
 
 // ----------------------------------------------------------------------
 
-export function ProductDetailsSkeleton({ ...other }: Grid2Props) {
+export function ChannelDetailsSkeleton({ ...other }: Grid2Props) {
   return (
     <Grid container spacing={8} {...other}>
       <Grid xs={12} md={6} lg={7}>

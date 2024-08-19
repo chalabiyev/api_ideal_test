@@ -1,11 +1,12 @@
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
-import type { IProductItem, IProductTableFilters } from 'src/types/product';
 import type {
   GridSlots,
   GridColDef,
   GridRowSelectionModel,
   GridColumnVisibilityModel,
 } from '@mui/x-data-grid';
+import { IChannelItem, IChannelTableFilters } from 'src/types/channel';
+
 
 import { useState, useEffect, useCallback } from 'react';
 
@@ -31,7 +32,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { PRODUCT_STOCK_OPTIONS } from 'src/_mock';
-import { useGetProducts } from 'src/actions/product';
+import { useGetChannels } from 'src/actions/channel';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/snackbar';
@@ -40,15 +41,13 @@ import { EmptyContent } from 'src/components/empty-content';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ProductTableToolbar } from '../product-table-toolbar';
-import { ProductTableFiltersResult } from '../product-table-filters-result';
+import { ChannelTableToolbar } from '../channel-table-toolbar';
+import { ChannelTableFiltersResult } from '../channel-table-filters-result';
 import {
-  RenderCellStock,
   RenderCellPrice,
-  RenderCellPublish,
-  RenderCellProduct,
+  RenderCellChannel,
   RenderCellCreatedAt,
-} from '../product-table-row';
+} from '../channel-table-row';
 
 // ----------------------------------------------------------------------
 
@@ -68,11 +67,11 @@ export function ChannelListView() {
 
   const router = useRouter();
 
-  const { products, productsLoading } = useGetProducts();
+  const { channels, channelsLoading } = useGetChannels();
 
-  const filters = useSetState<IProductTableFilters>({ publish: [], stock: [] });
+  const filters = useSetState<IChannelTableFilters>({ publish: [], stock: [] });
 
-  const [tableData, setTableData] = useState<IProductItem[]>([]);
+  const [tableData, setTableData] = useState<IChannelItem[]>([]);
 
   const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
 
@@ -82,10 +81,10 @@ export function ChannelListView() {
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
 
   useEffect(() => {
-    if (products.length) {
-      setTableData(products);
+    if (channels.length) {
+      setTableData(channels);
     }
-  }, [products]);
+  }, [channels]);
 
   const canReset = filters.state.publish.length > 0 || filters.state.stock.length > 0;
 
@@ -112,14 +111,14 @@ export function ChannelListView() {
 
   const handleEditRow = useCallback(
     (id: string) => {
-      router.push(paths.dashboard.product.edit(id));
+      router.push(paths.dashboard.channels.edit(id));
     },
     [router]
   );
 
   const handleViewRow = useCallback(
     (id: string) => {
-      router.push(paths.dashboard.product.details(id));
+      router.push(paths.dashboard.channels.details(id));
     },
     [router]
   );
@@ -143,43 +142,48 @@ export function ChannelListView() {
     { field: 'category', headerName: 'Category', filterable: false },
     {
       field: 'name',
-      headerName: 'Product',
+      headerName: 'Kanalın adı',
       flex: 1,
       minWidth: 360,
       hideable: false,
       renderCell: (params) => (
-        <RenderCellProduct params={params} onViewRow={() => handleViewRow(params.row.id)} />
+        <RenderCellChannel params={params} onViewRow={() => handleViewRow(params.row.id)} />
       ),
     },
     {
       field: 'createdAt',
-      headerName: 'Create at',
+      headerName: 'Kanalın Nömrəsi',
       width: 160,
       renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
-      field: 'inventoryType',
+      field: 'Kredit Mütəxəssisi',
       headerName: 'Stock',
       width: 160,
       type: 'singleSelect',
       valueOptions: PRODUCT_STOCK_OPTIONS,
-      renderCell: (params) => <RenderCellStock params={params} />,
+      // renderCell: (params) => <RenderCellStock params={params} />,
+      renderCell: (params) => (
+        <RenderCellChannel params={params} onViewRow={() => handleViewRow(params.row.id)} />
+      ),
     },
     {
       field: 'price',
-      headerName: 'Price',
+      headerName: 'Mağaza adı',
       width: 140,
       editable: true,
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
       field: 'publish',
-      headerName: 'Publish',
+      headerName: 'Link',
       width: 110,
       type: 'singleSelect',
       editable: true,
       valueOptions: PUBLISH_OPTIONS,
-      renderCell: (params) => <RenderCellPublish params={params} />,
+      renderCell: (params) => (
+        <RenderCellChannel params={params} onViewRow={() => handleViewRow(params.row.id)} />
+      ),
     },
     {
       type: 'actions',
@@ -229,17 +233,17 @@ export function ChannelListView() {
           heading="List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Product', href: paths.dashboard.product.root },
+            { name: 'Channels', href: paths.dashboard.channels.root },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.product.new}
+              href={paths.dashboard.channels.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New product
+              New Channel
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
@@ -258,7 +262,7 @@ export function ChannelListView() {
             disableRowSelectionOnClick
             rows={dataFiltered}
             columns={columns}
-            loading={productsLoading}
+            loading={channelsLoading}
             getRowHeight={() => 'auto'}
             pageSizeOptions={[5, 10, 25]}
             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
@@ -313,7 +317,7 @@ interface CustomToolbarProps {
   filteredResults: number;
   selectedRowIds: GridRowSelectionModel;
   onOpenConfirmDeleteRows: () => void;
-  filters: UseSetStateReturn<IProductTableFilters>;
+  filters: UseSetStateReturn<IChannelTableFilters>;
   setFilterButtonEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
 }
 
@@ -328,7 +332,7 @@ function CustomToolbar({
   return (
     <>
       <GridToolbarContainer>
-        <ProductTableToolbar
+        <ChannelTableToolbar
           filters={filters}
           options={{ stocks: PRODUCT_STOCK_OPTIONS, publishs: PUBLISH_OPTIONS }}
         />
@@ -360,7 +364,7 @@ function CustomToolbar({
       </GridToolbarContainer>
 
       {canReset && (
-        <ProductTableFiltersResult
+        <ChannelTableFiltersResult
           filters={filters}
           totalResults={filteredResults}
           sx={{ p: 2.5, pt: 0 }}
@@ -373,19 +377,19 @@ function CustomToolbar({
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: IProductItem[];
-  filters: IProductTableFilters;
+  inputData: IChannelItem[];
+  filters: IChannelTableFilters;
 };
 
 function applyFilter({ inputData, filters }: ApplyFilterProps) {
   const { stock, publish } = filters;
 
   if (stock.length) {
-    inputData = inputData.filter((product) => stock.includes(product.inventoryType));
+    inputData = inputData.filter((channel) => stock.includes(channel.inventoryType));
   }
 
   if (publish.length) {
-    inputData = inputData.filter((product) => publish.includes(product.publish));
+    inputData = inputData.filter((channel) => publish.includes(channel.publish));
   }
 
   return inputData;

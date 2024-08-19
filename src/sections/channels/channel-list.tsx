@@ -1,23 +1,23 @@
 import type { BoxProps } from '@mui/material/Box';
-import type { IProductItem } from 'src/types/product';
 
 import Box from '@mui/material/Box';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
-import { ProductItem } from './product-item';
-import { ProductItemSkeleton } from './product-skeleton';
+import { ChannelItem } from './channel-item';
+import { ChannelItemSkeleton } from './channel-skeleton';
+import { IChannelItem } from 'src/types/channel';
 
 // ----------------------------------------------------------------------
 
 type Props = BoxProps & {
   loading?: boolean;
-  products: IProductItem[];
+  products: IChannelItem[];
 };
 
-export function ProductList({ products, loading, ...other }: Props) {
-  const renderLoading = <ProductItemSkeleton />;
+export function ChannelList({ products, loading, ...other }: Props) {
+  const renderLoading = <ChannelItemSkeleton />;
 
-  const renderList = products.map((product) => <ProductItem key={product.id} product={product} />);
+  const renderList = products.map((product) => <ChannelItem key={product.id} channel={product} />);
 
   return (
     <>

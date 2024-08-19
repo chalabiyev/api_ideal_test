@@ -47,21 +47,21 @@ const SUMMARY = [
 // ----------------------------------------------------------------------
 
 type Props = {
-  product?: IProductItem;
+  channel?: IProductItem;
   loading?: boolean;
   error?: any;
 };
 
-export function ProductDetailsView({ product, error, loading }: Props) {
+export function ChannelDetailsView({ channel, error, loading }: Props) {
   const tabs = useTabs('description');
 
   const [publish, setPublish] = useState('');
 
   useEffect(() => {
-    if (product) {
-      setPublish(product?.publish);
+    if (channel) {
+      setPublish(channel?.publish);
     }
-  }, [product]);
+  }, [channel]);
 
   const handleChangePublish = useCallback((newValue: string) => {
     setPublish(newValue);
@@ -79,7 +79,7 @@ export function ProductDetailsView({ product, error, loading }: Props) {
       <DashboardContent sx={{ pt: 5 }}>
         <EmptyContent
           filled
-          title="Product not found!"
+          title="Channel not found!"
           action={
             <Button
               component={RouterLink}

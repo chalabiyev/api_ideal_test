@@ -29,7 +29,7 @@ module.exports = {
     'no-alert': 0,
     camelcase: 0,
     'no-console': 0,
-    'no-unused-vars': 0,
+    'no-unused-vars': "off",
     'no-nested-ternary': 0,
     'no-param-reassign': 0,
     'no-underscore-dangle': 0,

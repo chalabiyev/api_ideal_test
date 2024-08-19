@@ -59,7 +59,7 @@ export function RenderCellStock({ params }: ParamsProps) {
   );
 }
 
-export function RenderCellProduct({
+export function RenderCellChannel({
   params,
   onViewRow,
 }: ParamsProps & {
@@ -67,12 +67,7 @@ export function RenderCellProduct({
 }) {
   return (
     <Stack direction="row" alignItems="center" sx={{ py: 2, width: 1 }}>
-      <Avatar
-        alt={params.row.name}
-        src={params.row.coverUrl}
-        variant="rounded"
-        sx={{ width: 64, height: 64, mr: 2 }}
-      />
+     
 
       <ListItemText
         disableTypography
@@ -87,11 +82,7 @@ export function RenderCellProduct({
             {params.row.name}
           </Link>
         }
-        secondary={
-          <Box component="div" sx={{ typography: 'body2', color: 'text.disabled' }}>
-            {params.row.category}
-          </Box>
-        }
+      
         sx={{ display: 'flex', flexDirection: 'column' }}
       />
     </Stack>

@@ -17,7 +17,7 @@ type Props = {
   }[];
 };
 
-export function ProductSort({ sort, onSort, sortOptions }: Props) {
+export function ChannelSort({ sort, onSort, sortOptions }: Props) {
   const popover = usePopover();
 
   const sortLabel = sortOptions.find((option) => option.value === sort)?.label;

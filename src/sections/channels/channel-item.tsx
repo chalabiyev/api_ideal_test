@@ -1,4 +1,4 @@
-import type { IProductItem } from 'src/types/product';
+import { IChannelItem } from 'src/types/channel';
 
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
@@ -22,19 +22,19 @@ import { useCheckoutContext } from '../checkout/context';
 // ----------------------------------------------------------------------
 
 type Props = {
-  product: IProductItem;
+  channel: IChannelItem;
 };
 
-export function ProductItem({ product }: Props) {
+export function ChannelItem({ channel }: Props) {
   const checkout = useCheckoutContext();
 
   const { id, name, coverUrl, price, colors, available, sizes, priceSale, newLabel, saleLabel } =
-    product;
+    channel;
 
-  const linkTo = paths.product.details(id);
+  const linkTo = paths.dashboard.channels.details(id);
 
   const handleAddCart = async () => {
-    const newProduct = {
+    const newChannel = {
       id,
       name,
       coverUrl,
@@ -45,7 +45,7 @@ export function ProductItem({ product }: Props) {
       quantity: 1,
     };
     try {
-      checkout.onAddToCart(newProduct);
+      checkout.onAddToCart(newChannel);
     } catch (error) {
       console.error(error);
     }
