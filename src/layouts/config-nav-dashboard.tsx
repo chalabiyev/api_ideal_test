@@ -95,14 +95,12 @@ export const navData = [
       },
       { title: 'Chat', path: paths.dashboard.chat, icon: ICONS.chat },
       {
-        title: 'Invoice',
+        title: 'Invoyslar',
         path: paths.dashboard.invoice.root,
         icon: ICONS.invoice,
         children: [
           { title: 'Siyahı', path: paths.dashboard.invoice.root },
-          { title: 'Detallar', path: paths.dashboard.invoice.demo.details },
           { title: 'Yarat', path: paths.dashboard.invoice.new },
-          { title: 'Redaktə et', path: paths.dashboard.invoice.demo.edit },
         ],
       },
       {

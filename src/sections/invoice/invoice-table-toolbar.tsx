@@ -79,7 +79,7 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
         direction={{ xs: 'column', md: 'row' }}
         sx={{ p: 2.5, pr: { xs: 2.5, md: 1 } }}
       >
-        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 180 } }}>
+        {/* <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 180 } }}>
           <InputLabel htmlFor="invoice-filter-service-select-label">Service</InputLabel>
 
           <Select
@@ -102,16 +102,16 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
 
-        <DatePicker
+        {/* <DatePicker
           label="Start date"
           value={filters.state.endDate}
           onChange={handleFilterStartDate}
           slotProps={{ textField: { fullWidth: true } }}
           sx={{ maxWidth: { md: 180 } }}
-        />
-
+        /> */}
+{/* 
         <DatePicker
           label="End date"
           value={filters.state.endDate}
@@ -130,7 +130,7 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
               position: { md: 'absolute' },
             },
           }}
-        />
+        /> */}
 
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
@@ -146,13 +146,12 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
               ),
             }}
           />
-
           <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </Stack>
       </Stack>
-
+{/* 
       <CustomPopover
         open={popover.open}
         anchorEl={popover.anchorEl}
@@ -189,7 +188,7 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
             </MenuItem>
           </MenuList>
         </MenuList>
-      </CustomPopover>
+      </CustomPopover> */}
     </>
   );
 }

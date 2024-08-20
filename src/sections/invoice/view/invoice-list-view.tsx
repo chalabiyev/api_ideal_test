@@ -47,7 +47,6 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { InvoiceAnalytic } from '../invoice-analytic';
 import { InvoiceTableRow } from '../invoice-table-row';
 import { InvoiceTableToolbar } from '../invoice-table-toolbar';
 import { InvoiceTableFiltersResult } from '../invoice-table-filters-result';
@@ -55,12 +54,12 @@ import { InvoiceTableFiltersResult } from '../invoice-table-filters-result';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'invoiceNumber', label: 'Customer' },
-  { id: 'createDate', label: 'Create' },
-  { id: 'dueDate', label: 'Due' },
-  { id: 'price', label: 'Amount' },
-  { id: 'sent', label: 'Sent', align: 'center' },
-  { id: 'status', label: 'Status' },
+  { id: 'invoiceNumber', label: 'Hesab-faktura №' },
+  { id: 'createDate', label: 'Tarix' },
+  { id: 'company', label: 'Şirkət' },
+  { id: 'code', label: 'Kodu',  },
+  { id: 'VOEN', label: 'VÖEN' },
+  { id: 'account', label: 'Hesab' },
   { id: '' },
 ];
 
@@ -205,7 +204,7 @@ export function InvoiceListView() {
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
             { name: 'Invoice', href: paths.dashboard.invoice.root },
-            { name: 'List' },
+            { name: 'Siyahı' },
           ]}
           action={
             <Button
@@ -214,13 +213,13 @@ export function InvoiceListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New invoice
+             Yeni invoice
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
-        <Card sx={{ mb: { xs: 3, md: 5 } }}>
+        {/* <Card sx={{ mb: { xs: 3, md: 5 } }}>
           <Scrollbar sx={{ minHeight: 108 }}>
             <Stack
               direction="row"
@@ -273,10 +272,10 @@ export function InvoiceListView() {
               />
             </Stack>
           </Scrollbar>
-        </Card>
+        </Card> */}
 
         <Card>
-          <Tabs
+          {/* <Tabs
             value={filters.state.status}
             onChange={handleFilterStatus}
             sx={{
@@ -303,7 +302,7 @@ export function InvoiceListView() {
                 }
               />
             ))}
-          </Tabs>
+          </Tabs> */}
 
           <InvoiceTableToolbar
             filters={filters}

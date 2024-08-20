@@ -60,24 +60,12 @@ export function InvoiceTableRow({
 
         <TableCell>
           <Stack spacing={2} direction="row" alignItems="center">
-            <Avatar alt={row.invoiceTo.name}>{row.invoiceTo.name.charAt(0).toUpperCase()}</Avatar>
-
             <ListItemText
               disableTypography
               primary={
                 <Typography variant="body2" noWrap>
-                  {row.invoiceTo.name}
-                </Typography>
-              }
-              secondary={
-                <Link
-                  noWrap
-                  variant="body2"
-                  onClick={onViewRow}
-                  sx={{ color: 'text.disabled', cursor: 'pointer' }}
-                >
                   {row.invoiceNumber}
-                </Link>
+                </Typography>
               }
             />
           </Stack>
@@ -93,12 +81,7 @@ export function InvoiceTableRow({
         </TableCell>
 
         <TableCell>
-          <ListItemText
-            primary={fDate(row.dueDate)}
-            secondary={fTime(row.dueDate)}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-            secondaryTypographyProps={{ mt: 0.5, component: 'span', typography: 'caption' }}
-          />
+          {row.invoiceFrom.company}
         </TableCell>
 
         <TableCell>{fCurrency(row.totalAmount)}</TableCell>
@@ -106,17 +89,17 @@ export function InvoiceTableRow({
         <TableCell align="center">{row.sent}</TableCell>
 
         <TableCell>
-          <Label
-            variant="soft"
-            color={
-              (row.status === 'paid' && 'success') ||
-              (row.status === 'pending' && 'warning') ||
-              (row.status === 'overdue' && 'error') ||
-              'default'
-            }
+          <Typography
+          // i want here overflow ellipsis
+          sx={{
+            maxWidth: 200,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
           >
-            {row.status}
-          </Label>
+          {row.invoiceFrom.id}
+          </Typography>
         </TableCell>
 
         <TableCell align="right" sx={{ px: 1 }}>
