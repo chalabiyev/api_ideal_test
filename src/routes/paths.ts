@@ -135,7 +135,7 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
-    channels:{
+    channels: {
       root: `${ROOTS.DASHBOARD}/channels`,
       new: `${ROOTS.DASHBOARD}/channels/new`,
       list: `${ROOTS.DASHBOARD}/channels/list`,
@@ -144,15 +144,16 @@ export const paths = {
     },
     customer: {
       fiziki: `${ROOTS.DASHBOARD}/customer/fiziki/list`,
-      ferdi: `${ROOTS.DASHBOARD}/ferdi`,
-      huquqi: `${ROOTS.DASHBOARD}/huquqi`,
-      teminat: `${ROOTS.DASHBOARD}/teminat`,
-      covmusteri: `${ROOTS.DASHBOARD}/covmusteri`,
+      ferdi: `${ROOTS.DASHBOARD}/customer/ferdi/list`,
+      huquqi: `${ROOTS.DASHBOARD}/customer/huquqi/list`,
+      teminat: `${ROOTS.DASHBOARD}/customer/teminat/list`,
+      covmusteri: `${ROOTS.DASHBOARD}/customer/covmusteri/list`,
       account: `${ROOTS.DASHBOARD}/customer/account`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
+      request: (id: string) => `${ROOTS.DASHBOARD}/customer/${id}/request`,
     },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,

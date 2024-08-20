@@ -10,6 +10,8 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import DownloadIcon from 'src/svgIcons/downloadIcon';
@@ -17,7 +19,6 @@ import DownloadIcon from 'src/svgIcons/downloadIcon';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-import { useRouter } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +60,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.email}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <a download={row.files} href={row.files}>
-            <DownloadIcon />
+          <DownloadIcon />
           </a>
         </TableCell>
 
@@ -98,14 +99,6 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           >
             <Iconify icon="solar:pen-bold" />
             Edit
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              router.push(`/dashboard/customer/${row.id}/createrequest`);
-            }}
-          >
-            <Iconify icon="solar:pen-bold" />
-            Request
           </MenuItem>
         </MenuList>
       </CustomPopover>

@@ -45,6 +45,7 @@ const HuquqiCustomerListPage = lazy(() => import('src/pages/dashboard/customer/h
 const TeminatCustomerListPage = lazy(() => import('src/pages/dashboard/customer/teminat/list'));
 const CovCustomerListPage = lazy(() => import('src/pages/dashboard/customer/covmusteri/list'));
 const FerdiCustomerListPage = lazy(() => import('src/pages/dashboard/customer/ferdi/list'));
+const CreateRequestPage = lazy(() => import('src/pages/dashboard/customer/request/new'));
 // Channels
 const ChannelListPage = lazy(() => import('src/pages/dashboard/channels/list'));
 const ChannelNewPage = lazy(() => import('src/pages/dashboard/channels/new'));
@@ -123,10 +124,11 @@ export const dashboardRoutes = [
         children: [
           { element: <FizikiCustomerListPage />, index: true },
           { path: 'fiziki/list', element: <FizikiCustomerListPage /> },
-          { path: 'ferdi', element: <FerdiCustomerListPage /> },
-          { path: 'huquqi', element: <HuquqiCustomerListPage /> },
-          { path: 'teminat', element: <TeminatCustomerListPage /> },
-          { path: 'covmusteri', element: <CovCustomerListPage /> },
+          { path: 'ferdi/list', element: <FerdiCustomerListPage /> },
+          { path: 'huquqi/list', element: <HuquqiCustomerListPage /> },
+          { path: 'teminat/list', element: <TeminatCustomerListPage /> },
+          { path: 'covmusteri/list', element: <CovCustomerListPage /> },
+          {path: ':id/createrequest', element : <CreateRequestPage/>}
         ],
       },
       {

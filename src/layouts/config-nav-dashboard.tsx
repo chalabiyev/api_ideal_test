@@ -111,9 +111,9 @@ export const navData = [
         icon: ICONS.user,
         children: [
           { title: 'Fiziki Şəxslər', path: paths.dashboard.customer.fiziki },
-          { title: 'Fərdi Sahibkarlar', path: paths.dashboard.user.cards },
-          { title: 'Hüquqi Şəxslər', path: paths.dashboard.user.list },
-          { title: 'Təminat', path: paths.dashboard.user.new },
+          { title: 'Fərdi Sahibkarlar', path: paths.dashboard.customer.ferdi },
+          { title: 'Hüquqi Şəxslər', path: paths.dashboard.customer.huquqi },
+          { title: 'Təminat', path: paths.dashboard.customer.teminat},
           { title: 'COV müştəri', path: paths.dashboard.customer.covmusteri },
         ],
       },

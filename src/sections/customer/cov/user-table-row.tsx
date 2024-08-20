@@ -30,13 +30,14 @@ type Props = {
 };
 
 export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) {
+
   const router = useRouter();
 
   const confirm = useBoolean();
 
   const popover = usePopover();
 
-  console.log(row.files);
+
   return (
     <>
       <TableRow hover selected={selected} aria-checked={selected} tabIndex={-1}>
@@ -59,7 +60,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.email}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <a download={row.files} href={row.files}>
-            <DownloadIcon />
+          <DownloadIcon />
           </a>
         </TableCell>
 
@@ -101,7 +102,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           </MenuItem>
           <MenuItem
             onClick={() => {
-              router.push(`/dashboard/customer/${row.id}/createrequest`);
+             router.push(`/dashboard/customer/${row.id}/createrequest`);
             }}
           >
             <Iconify icon="solar:pen-bold" />
