@@ -57,7 +57,14 @@ export const endpoints = {
     details: '/api/product/details',
     search: '/api/product/search',
   },
+  // ? this will change
+
   channel: {
+    list: '/api/product/list',
+    details: '/api/product/details',
+    search: '/api/product/search',
+  },
+  girov: {
     list: '/api/product/list',
     details: '/api/product/details',
     search: '/api/product/search',

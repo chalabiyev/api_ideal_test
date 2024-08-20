@@ -176,6 +176,12 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/invoice/${MOCK_ID}/edit`,
       },
     },
+    girov : {
+      root: `${ROOTS.DASHBOARD}/girov/list`,
+      new: `${ROOTS.DASHBOARD}/girov/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/girov/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/girov/${id}/edit`,
+    },
     post: {
       root: `${ROOTS.DASHBOARD}/post`,
       new: `${ROOTS.DASHBOARD}/post/new`,

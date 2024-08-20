@@ -118,13 +118,11 @@ export const navData = [
       { title: 'Fayllar', path: paths.dashboard.general.file, icon: ICONS.file },
       {
         title: 'Girov',
-        path: paths.dashboard.product.root,
+        path: paths.dashboard.girov.root,
         icon: ICONS.product,
         children: [
-          { title: 'List', path: paths.dashboard.product.root },
-          { title: 'Details', path: paths.dashboard.product.demo.details },
-          { title: 'Create', path: paths.dashboard.product.new },
-          { title: 'Edit', path: paths.dashboard.product.demo.edit },
+          { title: 'List', path: paths.dashboard.girov.root },
+          { title: 'Create', path: paths.dashboard.girov.new },
         ],
       },
       {
