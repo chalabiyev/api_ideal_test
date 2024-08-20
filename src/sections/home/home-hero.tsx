@@ -6,32 +6,21 @@ import { useRef, useState } from 'react';
 import { m, useScroll, useSpring, useTransform, useMotionValueEvent } from 'framer-motion';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar, { avatarClasses } from '@mui/material/Avatar';
-
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { _mock } from 'src/_mock';
-import { CONFIG } from 'src/config-global';
 
-import { Iconify } from 'src/components/iconify';
-import { SvgColor } from 'src/components/svg-color';
 import { varFade, MotionContainer } from 'src/components/animate';
 
 import { HeroBackground } from './components/hero-background';
 
 // ----------------------------------------------------------------------
 
-const smKey = 'sm';
 const mdKey = 'md';
 const lgKey = 'lg';
 
@@ -45,10 +34,6 @@ export function HomeHero({ sx, ...other }: StackProps) {
   const distance = mdUp ? scroll.percent : 0;
 
   const y1 = useTransformY(scroll.scrollY, distance * -7);
-  const y2 = useTransformY(scroll.scrollY, distance * -6);
-  const y3 = useTransformY(scroll.scrollY, distance * -5);
-  const y4 = useTransformY(scroll.scrollY, distance * -4);
-  const y5 = useTransformY(scroll.scrollY, distance * -3);
 
   const opacity: MotionValue<number> = useTransform(
     scroll.scrollY,
@@ -73,142 +58,10 @@ export function HomeHero({ sx, ...other }: StackProps) {
         }}
       >
         <Box component="span" sx={{ width: 1, opacity: 0.24 }}>
-        Sign In to Continue
+          Sign In to Continue
         </Box>
-      
-       
       </Box>
     </MInview>
-  );
-
-  const renderText = (
-    <MInview>
-      <Typography
-        variant="body2"
-        sx={{
-          mx: 'auto',
-          [theme.breakpoints.up(smKey)]: { whiteSpace: 'pre' },
-          [theme.breakpoints.up(lgKey)]: { fontSize: 20, lineHeight: '36px' },
-        }}
-      >
-        {`The starting point for your next project is based on MUI. \nEasy customization helps you build apps faster and better.`}
-      </Typography>
-    </MInview>
-  );
-
-  const renderRatings = (
-    <MInview>
-      <Box
-        gap={1.5}
-        display="flex"
-        flexWrap="wrap"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ typography: 'subtitle2' }}
-      >
-        <AvatarGroup sx={{ [`& .${avatarClasses.root}`]: { width: 32, height: 32 } }}>
-          {[...Array(3)].map((_, index) => (
-            <Avatar
-              key={_mock.fullName(index + 1)}
-              alt={_mock.fullName(index + 1)}
-              src={_mock.image.avatar(index + 1)}
-            />
-          ))}
-        </AvatarGroup>
-        160+ Happy customers
-      </Box>
-    </MInview>
-  );
-
-  const renderButtons = (
-    <Box display="flex" flexWrap="wrap" justifyContent="center" gap={{ xs: 1.5, sm: 2 }}>
-      <MInview>
-        <Stack alignItems="center" spacing={2.5}>
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.root}
-            color="inherit"
-            size="large"
-            variant="contained"
-            startIcon={<Iconify width={24} icon="iconoir:flash" />}
-          >
-            <span>
-              Live preview
-              <Box
-                component="small"
-                sx={{
-                  mt: '-3px',
-                  opacity: 0.64,
-                  display: 'flex',
-                  fontSize: theme.typography.pxToRem(10),
-                  fontWeight: theme.typography.fontWeightMedium,
-                }}
-              >
-                v{CONFIG.site.version}
-              </Box>
-            </span>
-          </Button>
-
-          <Link
-            color="inherit"
-            variant="body2"
-            target="_blank"
-            rel="noopener"
-            href={paths.freeUI}
-            underline="always"
-            sx={{ gap: 0.5, alignItems: 'center', display: 'inline-flex' }}
-          >
-            Get free version
-            <Iconify width={16} icon="eva:external-link-fill" />
-          </Link>
-        </Stack>
-      </MInview>
-
-      <MInview>
-        <Button
-          color="inherit"
-          size="large"
-          variant="outlined"
-          target="_blank"
-          rel="noopener"
-          href={paths.figma}
-          startIcon={<Iconify width={24} icon="solar:figma-outline" />}
-          sx={{ borderColor: 'text.primary' }}
-        >
-          Figma preview
-        </Button>
-      </MInview>
-    </Box>
-  );
-
-  const renderIcons = (
-    <Stack spacing={3} sx={{ textAlign: 'center' }}>
-      <MInview>
-        <Typography variant="overline" sx={{ opacity: 0.4 }}>
-          Available For
-        </Typography>
-      </MInview>
-
-      <Stack spacing={2.5} direction="row">
-        {['js', 'ts', 'nextjs', 'vite', 'figma'].map((platform) => (
-          <MInview key={platform}>
-            {platform === 'nextjs' ? (
-              <SvgColor
-                src={`${CONFIG.site.basePath}/assets/icons/platforms/ic-${platform}.svg`}
-                sx={{ width: 24, height: 24 }}
-              />
-            ) : (
-              <Box
-                component="img"
-                alt={platform}
-                src={`${CONFIG.site.basePath}/assets/icons/platforms/ic-${platform}.svg`}
-                sx={{ width: 24, height: 24 }}
-              />
-            )}
-          </MInview>
-        ))}
-      </Stack>
-    </Stack>
   );
 
   return (
@@ -254,11 +107,7 @@ export function HomeHero({ sx, ...other }: StackProps) {
             },
           }}
         >
-            <m.div style={{ y: y1 }}>{renderHeading}</m.div>
-            {/* <m.div style={{ y: y2 }}>{renderText}</m.div> */}
-          {/* <m.div style={{ y: y3 }}>{renderRatings}</m.div>
-          <m.div style={{ y: y4 }}>{renderButtons}</m.div>
-          <m.div style={{ y: y5 }}>{renderIcons}</m.div> */}
+          <m.div style={{ y: y1 }}>{renderHeading}</m.div>
         </Container>
 
         <HeroBackground />

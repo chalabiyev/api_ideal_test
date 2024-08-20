@@ -29,10 +29,12 @@ import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
-import {
-  familyRelationshipOptions,
-  whereToGetSignatureOptions,
-} from '../_examples/extra/form-validation-view/react-hook-form';
+// import {
+//   familyRelationshipOptions,
+//   whereToGetSignatureOptions,
+// } from '../_examples/extra/form-validation-view/react-hook-form';
+
+import { familyRelationshipOptions, whereToGetSignatureOptions } from 'src/sections/_examples/extra/form-validation-view/react-hook-form';
 
 // ----------------------------------------------------------------------
 
