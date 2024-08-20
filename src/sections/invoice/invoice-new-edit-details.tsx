@@ -44,6 +44,7 @@ export function InvoiceNewEditDetails() {
       description: '',
       service: '',
       quantity: 1,
+      measure: '',
       price: 0,
       total: 0,
     });
@@ -104,30 +105,6 @@ export function InvoiceNewEditDetails() {
       alignItems="flex-end"
       sx={{ mt: 3, textAlign: 'right', typography: 'body2' }}
     >
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Subtotal</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(subtotal) || '-'}</Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Shipping</Box>
-        <Box sx={{ width: 160, ...(values.shipping && { color: 'error.main' }) }}>
-          {values.shipping ? `- ${fCurrency(values.shipping)}` : '-'}
-        </Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Discount</Box>
-        <Box sx={{ width: 160, ...(values.discount && { color: 'error.main' }) }}>
-          {values.discount ? `- ${fCurrency(values.discount)}` : '-'}
-        </Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Taxes</Box>
-        <Box sx={{ width: 160 }}>{values.taxes ? fCurrency(values.taxes) : '-'}</Box>
-      </Stack>
-
       <Stack direction="row" sx={{ typography: 'subtitle1' }}>
         <div>Total</div>
         <Box sx={{ width: 160 }}>{fCurrency(totalAmount) || '-'}</Box>
@@ -137,72 +114,34 @@ export function InvoiceNewEditDetails() {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ color: 'text.disabled', mb: 3 }}>
-        Details:
-      </Typography>
-
       <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
         {fields.map((item, index) => (
-          <Stack key={item.id} alignItems="flex-end" spacing={1.5}>
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
+          <Stack key={item.id} spacing={1.5}>
+            <Stack display='grid' gridTemplateColumns='repeat(2, 1fr)' spacing={2}>
               <Field.Text
-                size="small"
                 name={`items[${index}].title`}
-                label="Title"
+                label="Malın adı"
                 InputLabelProps={{ shrink: true }}
               />
 
               <Field.Text
-                size="small"
-                name={`items[${index}].description`}
-                label="Description"
+                name={`items[${index}].measure`}
+                label="Ölçü vahidi"
                 InputLabelProps={{ shrink: true }}
               />
-
-              <Field.Select
-                name={`items[${index}].service`}
-                size="small"
-                label="Service"
-                InputLabelProps={{ shrink: true }}
-                sx={{ maxWidth: { md: 160 } }}
-              >
-                <MenuItem
-                  value=""
-                  onClick={() => handleClearService(index)}
-                  sx={{ fontStyle: 'italic', color: 'text.secondary' }}
-                >
-                  None
-                </MenuItem>
-
-                <Divider sx={{ borderStyle: 'dashed' }} />
-
-                {INVOICE_SERVICE_OPTIONS.map((service) => (
-                  <MenuItem
-                    key={service.id}
-                    value={service.name}
-                    onClick={() => handleSelectService(index, service.name)}
-                  >
-                    {service.name}
-                  </MenuItem>
-                ))}
-              </Field.Select>
-
               <Field.Text
-                size="small"
                 type="number"
                 name={`items[${index}].quantity`}
-                label="Quantity"
+                label="Sayı"
                 placeholder="0"
                 onChange={(event) => handleChangeQuantity(event, index)}
                 InputLabelProps={{ shrink: true }}
-                sx={{ maxWidth: { md: 96 } }}
               />
 
               <Field.Text
-                size="small"
                 type="number"
                 name={`items[${index}].price`}
-                label="Price"
+                label="Qiyməti"
                 placeholder="0.00"
                 onChange={(event) => handleChangePrice(event, index)}
                 InputProps={{
@@ -212,15 +151,13 @@ export function InvoiceNewEditDetails() {
                     </InputAdornment>
                   ),
                 }}
-                sx={{ maxWidth: { md: 96 } }}
               />
 
               <Field.Text
                 disabled
-                size="small"
                 type="number"
                 name={`items[${index}].total`}
-                label="Total"
+                label="Məbləğ"
                 placeholder="0.00"
                 value={values.items[index].total === 0 ? '' : values.items[index].total.toFixed(2)}
                 onChange={(event) => handleChangePrice(event, index)}
@@ -232,14 +169,12 @@ export function InvoiceNewEditDetails() {
                   ),
                 }}
                 sx={{
-                  maxWidth: { md: 104 },
                   [`& .${inputBaseClasses.input}`]: { textAlign: { md: 'right' } },
                 }}
               />
             </Stack>
 
             <Button
-              size="small"
               color="error"
               startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
               onClick={() => handleRemove(index)}
@@ -258,7 +193,6 @@ export function InvoiceNewEditDetails() {
         alignItems={{ xs: 'flex-end', md: 'center' }}
       >
         <Button
-          size="small"
           color="primary"
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={handleAdd}
@@ -266,37 +200,6 @@ export function InvoiceNewEditDetails() {
         >
           Add Item
         </Button>
-
-        <Stack
-          spacing={2}
-          justifyContent="flex-end"
-          direction={{ xs: 'column', md: 'row' }}
-          sx={{ width: 1 }}
-        >
-          <Field.Text
-            size="small"
-            label="Shipping($)"
-            name="shipping"
-            type="number"
-            sx={{ maxWidth: { md: 120 } }}
-          />
-
-          <Field.Text
-            size="small"
-            label="Discount($)"
-            name="discount"
-            type="number"
-            sx={{ maxWidth: { md: 120 } }}
-          />
-
-          <Field.Text
-            size="small"
-            label="Taxes(%)"
-            name="taxes"
-            type="number"
-            sx={{ maxWidth: { md: 120 } }}
-          />
-        </Stack>
       </Stack>
 
       {renderTotal}

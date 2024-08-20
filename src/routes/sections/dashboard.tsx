@@ -83,6 +83,9 @@ const CreditPage = lazy(() => import('src/pages/dashboard/credits/profile'));
 const NewCreditPage = lazy(() => import('src/pages/dashboard/credits/new'));
 const EditCreditPage = lazy(() => import('src/pages/dashboard/credits/edit'));
 const CreditListPage = lazy(() => import('src/pages/dashboard/credits/list'));
+// Girov Page
+const GirovPage = lazy(() => import('src/pages/dashboard/girov/list'));
+const GirovEditPage = lazy(() => import('src/pages/dashboard/girov/edit'));
 
 // ----------------------------------------------------------------------
 
@@ -128,7 +131,7 @@ export const dashboardRoutes = [
           { path: 'huquqi/list', element: <HuquqiCustomerListPage /> },
           { path: 'teminat/list', element: <TeminatCustomerListPage /> },
           { path: 'covmusteri/list', element: <CovCustomerListPage /> },
-          {path: ':id/createrequest', element : <CreateRequestPage/>}
+          { path: ':id/createrequest', element: <CreateRequestPage /> },
         ],
       },
       {
@@ -197,6 +200,20 @@ export const dashboardRoutes = [
           { path: ':id', element: <ChannelDetailPage /> },
           { path: 'new', element: <ChannelNewPage /> },
           { path: ':id/edit', element: <ChannelEditPage /> },
+        ],
+      },
+      {
+        path: 'girov',
+        children: [
+          { element: <GirovPage />, index: true },
+          {
+            path: 'list',
+            element: <GirovPage />,
+          },
+          {
+            path: ':id/edit',
+            element: <GirovEditPage />,
+          },
         ],
       },
       { path: 'file-manager', element: <FileManagerPage /> },

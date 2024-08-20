@@ -4,24 +4,24 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { InvoiceNewEditForm } from '../invoice-new-edit-form';
+import { ProductNewEditForm } from '../girov-new-edit-form';
 
 // ----------------------------------------------------------------------
 
-export function InvoiceCreateView() {
+export function GirovCreateView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new invoice"
+        heading="Yeni Girov yarat"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Invoys', href: paths.dashboard.invoice.root },
-          { name: 'Yeni Invoys' },
+          { name: 'Girov', href: paths.dashboard.girov.root },
+          { name: 'New product' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <InvoiceNewEditForm />
+      <ProductNewEditForm />
     </DashboardContent>
   );
 }

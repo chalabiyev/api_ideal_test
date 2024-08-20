@@ -20,6 +20,8 @@ import { _addressBooks } from 'src/_mock';
 
 import { Form, schemaHelper } from 'src/components/hook-form';
 
+import { CardHeader } from '@mui/material';
+
 import { InvoiceNewEditDetails } from './invoice-new-edit-details';
 import { InvoiceNewEditAddress } from './invoice-new-edit-address';
 import { InvoiceNewEditStatusDate } from './invoice-new-edit-status-date';
@@ -154,9 +156,15 @@ export function InvoiceNewEditForm({ currentInvoice }: Props) {
     <Form methods={methods}>
       <Card>
         <InvoiceNewEditAddress />
-
-        <InvoiceNewEditStatusDate />
-
+      </Card>
+      <div
+        style={{
+          height: 20,
+          background: '',
+        }}
+      />
+      <Card>
+        <CardHeader title="Göstərilmiş xidmətlər" />
         <InvoiceNewEditDetails />
       </Card>
 
