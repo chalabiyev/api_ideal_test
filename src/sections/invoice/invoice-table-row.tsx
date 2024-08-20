@@ -90,7 +90,6 @@ export function InvoiceTableRow({
 
         <TableCell>
           <Typography
-          // i want here overflow ellipsis
           sx={{
             maxWidth: 200,
             overflow: 'hidden',

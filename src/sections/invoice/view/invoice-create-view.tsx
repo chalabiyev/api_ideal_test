@@ -15,8 +15,8 @@ export function InvoiceCreateView() {
         heading="Create a new invoice"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Invoice', href: paths.dashboard.invoice.root },
-          { name: 'New invoice' },
+          { name: 'Invoys', href: paths.dashboard.invoice.root },
+          { name: 'Yeni Invoys' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

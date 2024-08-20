@@ -6,7 +6,7 @@ import { InvoiceCreateView } from 'src/sections/invoice/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Create a new invoice | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `Yeni invoys yarat | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (
