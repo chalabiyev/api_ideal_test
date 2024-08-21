@@ -182,30 +182,6 @@ export function GirovNewEditForm({ currentProduct }: Props) {
           </option>
         ))}
       </Field.Select>
-      {/* <Field.Switch
-        name="girovcredit"
-        label="Girovu kredite bağla"
-        checked={displayCredit}
-        onChange={handleSwitchChange}
-      />
-      {displayCredit && (
-        <Field.Text
-          name="credit"
-          label="Kredit Məbləği"
-          placeholder="0.00"
-          type="number"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Box component="span" sx={{ color: 'text.disabled' }}>
-                  $
-                </Box>
-              </InputAdornment>
-            ),
-          }}
-        />
-      )} */}
     </Box>
   );
 
