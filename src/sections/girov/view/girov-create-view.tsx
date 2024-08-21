@@ -4,7 +4,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ProductNewEditForm } from '../girov-new-edit-form';
+import { GirovNewEditForm } from '../girov-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -16,12 +16,12 @@ export function GirovCreateView() {
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Girov', href: paths.dashboard.girov.root },
-          { name: 'New product' },
+          { name: 'Yeni Girov' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <ProductNewEditForm />
+      <GirovNewEditForm />
     </DashboardContent>
   );
 }
