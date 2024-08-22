@@ -12,11 +12,11 @@ export function ProductCreateView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new product"
+        heading="Yeni məhsul yarat"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Product', href: paths.dashboard.product.root },
-          { name: 'New product' },
+          { name: 'Məhsullar', href: paths.dashboard.product.root },
+          { name: 'Yeni Məhsul' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

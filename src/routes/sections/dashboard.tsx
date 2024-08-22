@@ -86,6 +86,7 @@ const CreditListPage = lazy(() => import('src/pages/dashboard/credits/list'));
 // Girov Page
 const GirovPage = lazy(() => import('src/pages/dashboard/girov/list'));
 const GirovEditPage = lazy(() => import('src/pages/dashboard/girov/edit'));
+const GirovCreatePage = lazy(() => import('src/pages/dashboard/girov/new'));
 
 // ----------------------------------------------------------------------
 
@@ -213,6 +214,10 @@ export const dashboardRoutes = [
           {
             path: ':id/edit',
             element: <GirovEditPage />,
+          },
+          {
+            path: 'new',
+            element: <GirovCreatePage />,
           },
         ],
       },

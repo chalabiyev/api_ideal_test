@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
 
-import { UserListView } from 'src/sections/user/view';
+import { FerdiCustomerListView } from 'src/sections/customer/ferdi/view/user-list-view';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <UserListView />
+      <FerdiCustomerListView />
     </>
   );
 }

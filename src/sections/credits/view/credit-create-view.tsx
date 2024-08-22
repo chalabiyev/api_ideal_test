@@ -15,8 +15,8 @@ export function CreditCreateView() {
         heading="Create a new Credit"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Credits', href: paths.dashboard.user.root },
-          { name: 'New credit' },
+          { name: 'Kreditlər', href: paths.dashboard.credits.root },
+          { name: 'Yeni Kredit' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

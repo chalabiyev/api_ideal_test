@@ -123,7 +123,6 @@ export function UserNewEditForm({ currentUser }: Props) {
               <Label
                 color={
                   (values.status === 'active' && 'success') ||
-                  (values.status === 'banned' && 'error') ||
                   'warning'
                 }
                 sx={{ position: 'absolute', top: 24, right: 24 }}
@@ -154,42 +153,7 @@ export function UserNewEditForm({ currentUser }: Props) {
               />
             </Box>
 
-            {currentUser && (
-              <FormControlLabel
-                labelPlacement="start"
-                control={
-                  <Controller
-                    name="status"
-                    control={control}
-                    render={({ field }) => (
-                      <Switch
-                        {...field}
-                        checked={field.value !== 'active'}
-                        onChange={(event) =>
-                          field.onChange(event.target.checked ? 'banned' : 'active')
-                        }
-                      />
-                    )}
-                  />
-                }
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Banned
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Apply disable account
-                    </Typography>
-                  </>
-                }
-                sx={{
-                  mx: 0,
-                  mb: 3,
-                  width: 1,
-                  justifyContent: 'space-between',
-                }}
-              />
-            )}
+          
 
             {currentUser && (
               <Stack justifyContent="center" alignItems="center" sx={{ mt: 3 }}>

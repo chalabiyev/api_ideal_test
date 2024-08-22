@@ -47,14 +47,17 @@ import { UserTableFiltersResult } from '../user-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+const STATUS_OPTIONS = [{ value: 'all', label: 'Hamısı' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'username', label: 'Username', width: 180 },
-  { id: 'name', label: 'Name', width: 200 },
-  { id: 'phoneNumber', label: 'Phone number', width: 180 },
-  { id: 'email', label: 'Email', width: 220 },
-  {id: 'files', label: 'Files', width: 100},
+  { id: 'count', label: 'Say', width: 180 },
+  { id: 'name', label: 'Borcalan', width: 200 },
+  { id: 'date', label: 'Tarix', width: 180 },
+  { id: 'product', label: 'Məhsul', width: 180 },
+  { id: 'proce', label: 'Məbləğ', width: 180 },
+  { id: 'currency', label: 'Valyuta', width: 220 },
+  {id: 'stage', label: 'Mərhələ', width: 100},
+  {id: 'status', label: 'Status', width: 100},
   { id: '', width: 88 },
 
 ];
@@ -150,43 +153,6 @@ export function UserListView() {
         />
 
         <Card>
-          <Tabs
-            value={filters.state.status}
-            onChange={handleFilterStatus}
-            sx={{
-              px: 2.5,
-              boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${varAlpha(theme.vars.palette.grey['500Channel'], 0.08)}`,
-            }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab
-                key={tab.value}
-                iconPosition="end"
-                value={tab.value}
-                label={tab.label}
-                icon={
-                  <Label
-                    variant={
-                      ((tab.value === 'all' || tab.value === filters.state.status) && 'filled') ||
-                      'soft'
-                    }
-                    color={
-                      (tab.value === 'active' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'banned' && 'error') ||
-                      'default'
-                    }
-                  >
-                    {['active', 'pending', 'banned', 'rejected'].includes(tab.value)
-                      ? tableData.filter((user) => user.status === tab.value).length
-                      : tableData.length}
-                  </Label>
-                }
-              />
-            ))}
-          </Tabs>
-
           <UserTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}

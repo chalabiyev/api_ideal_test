@@ -12,7 +12,7 @@ export function InvoiceCreateView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new invoice"
+        heading="Yeni invoys yarat"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Invoys', href: paths.dashboard.invoice.root },

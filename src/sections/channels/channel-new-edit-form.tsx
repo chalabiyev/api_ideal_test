@@ -79,8 +79,7 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
     { value: 'internet', label: 'Internet sayt' },
     { value: 'filial', label: 'Filial' },
     { value: 'partner', label: 'Partnyor' },
-    { value: 'online', label: 'Online' },
-    { value: 'bot', label: 'Bot' },
+    { value: 'mobile', label: 'Mobil Tətbiq' },
   ];
 
   const values = watch();
@@ -90,7 +89,6 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
       reset(defaultValues);
     }
   }, [currentChannel, defaultValues, reset]);
-
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -106,7 +104,7 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
 
   const renderDetails = (
     <Card>
-      <CardHeader title="Yeni Kanal" sx={{ mb: 3 }} />
+      <CardHeader title="Müraciətin daxil olduğu mənbə" sx={{ mb: 3 }} />
 
       <Divider />
 
@@ -117,7 +115,7 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
           display="grid"
           gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
         >
-          <Field.Select native name="name" label="Kanalın adı" InputLabelProps={{ shrink: true }}>
+          <Field.Select native name="name" label="Mənbənin adı" InputLabelProps={{ shrink: true }}>
             {channelName.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -125,13 +123,13 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
             ))}
           </Field.Select>
 
-          <Field.Text name="subDescription" label="Kanalın №" />
+          <Field.Text name="subDescription" label="Mənbənin №" />
         </Box>
         <Divider />
 
-        <Field.Text defaultValue={
+        {/* <Field.Text defaultValue={
           defaultValues.name
-        } name="description" label="Kredit mütəxəssisi" />
+        } name="description" label="Kredit mütəxəssisi" /> */}
 
         <Field.Text name="description" label="Mağaza adı" />
 
@@ -143,13 +141,13 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
   const renderActions = (
     <Stack spacing={3} direction="row" alignItems="center" justifyContent="end" flexWrap="wrap">
       <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-        {!currentChannel ? 'Kanal Yarat' : 'Yadda saxla'}
+        {!currentChannel ? 'Mənbə Yarat' : 'Yadda saxla'}
       </LoadingButton>
     </Stack>
   );
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto', maxWidth: { xs: 720, xl: 880 } }}>
+      <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto', }}>
         {renderDetails}
 
         {renderActions}

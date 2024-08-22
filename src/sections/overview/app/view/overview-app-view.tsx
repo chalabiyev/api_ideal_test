@@ -3,7 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { _analyticTraffic } from 'src/_mock';
+import { _analyticTrafficbysite, _analyticTrafficbymobile } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
 
@@ -92,7 +92,7 @@ const UseraDataWidget = [
     },
   },
   {
-    title: 'Partnyor kanalı sorğuların sayı 01.08.2024',
+    title: 'Partnyor mənbəsi sorğuların sayı 01.08.2024',
     total: 1234,
     percent: 3,
     icon: <SeoIllustration />,
@@ -168,6 +168,7 @@ export function OverviewAppView() {
           <Grid key={index} xs={12} md={6} lg={3}>
             <AnalyticsWidgetSummary
               id={widget.id}
+              sx={{ height: 200 }}
               title={widget.title}
               total={widget.total}
               percent={widget.percent}
@@ -183,6 +184,7 @@ export function OverviewAppView() {
             <AnalyticsWidgetSummary
               title={widget.title}
               color="secondary"
+              sx={{ height: 200 }}
               total={widget.total}
               percent={widget.percent}
               icon={widget.icon}
@@ -196,6 +198,7 @@ export function OverviewAppView() {
             <AnalyticsWidgetSummary
               title={widget.title}
               color="warning"
+              sx={{ height: 200 }}
               total={widget.total}
               percent={widget.percent}
               icon={widget.icon}
@@ -207,6 +210,7 @@ export function OverviewAppView() {
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentDownload
             title="Verilmiş kreditlərin müddəti üzrə statistika"
+            sx={{ height: 500 }}
             chart={{
               series: [
                 { label: '3 ayadək', value: 12244 },
@@ -224,7 +228,8 @@ export function OverviewAppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppAreaInstalled
-            title="Partnyor kanalı - kredit statistikası"
+            sx={{ height: 500 }}
+            title="Partnyor mənbəsi - kredit statistikası"
             subheader="(+43%) than last year"
             chart={{
               categories: [
@@ -287,7 +292,10 @@ export function OverviewAppView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={15}>
-          <AnalyticsTrafficBySite title="Traffic by site" list={_analyticTraffic} />
+          <AnalyticsTrafficBySite title="Traffic by site" list={_analyticTrafficbysite} />
+        </Grid>
+        <Grid xs={12} md={6} lg={15}>
+          <AnalyticsTrafficBySite title="Traffic by mobile app" list={_analyticTrafficbymobile} />
         </Grid>
       </Grid>
       <div
@@ -298,11 +306,12 @@ export function OverviewAppView() {
           zIndex: 9999,
           cursor: 'pointer',
         }}
-       
       >
-        <VideoCallIcon  onClick={() => {
-          router.push('/dashboard/videocall');
-        }}/>
+        <VideoCallIcon
+          onClick={() => {
+            router.push('/dashboard/videocall');
+          }}
+        />
       </div>
     </DashboardContent>
   );

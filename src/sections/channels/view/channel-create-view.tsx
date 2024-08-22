@@ -15,8 +15,8 @@ export function ChannelCreateView() {
         heading="Create a new Channel"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Channel', href: paths.dashboard.channels.root },
-          { name: 'New Channel' },
+          { name: 'Mənbələr', href: paths.dashboard.channels.root },
+          { name: 'Yeni mənbə' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
