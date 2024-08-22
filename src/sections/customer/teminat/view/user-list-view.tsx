@@ -64,7 +64,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export function FizikiCustomerListView() {
+export function TeminatCustomerListView() {
   const table = useTable();
 
   const router = useRouter();

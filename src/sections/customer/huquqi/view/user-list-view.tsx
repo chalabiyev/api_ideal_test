@@ -63,7 +63,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export function FizikiCustomerListView() {
+export function HuquqiCustomerListView() {
   const table = useTable();
 
   const router = useRouter();
