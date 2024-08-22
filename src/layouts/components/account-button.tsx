@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
 import { varHover, AnimateAvatar } from 'src/components/animate';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -60,6 +61,7 @@ export function AccountButton({ open, photoURL, displayName, sx, ...other }: Acc
             },
           }}
         >
+       
           {displayName?.charAt(0).toUpperCase()}
         </AnimateAvatar>
       </NoSsr>

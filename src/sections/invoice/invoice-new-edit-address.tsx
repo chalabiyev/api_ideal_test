@@ -60,9 +60,11 @@ export function InvoiceNewEditAddress() {
             ))}
           </Field.Select>
           <Field.Text name="companyCode" label="Kodu" />
+          <Field.Text name="voen" label="VÖEN" />
+          <Field.Text name="acoount" label="Hesab" />
           <Field.Text name="muxbirHesab" label="Müxbir Hesab" />
           <Field.Text name="swift" label="SWIFT" />
-        </Stack>
+        CDC</Stack>
       </Stack>
   );
 }
