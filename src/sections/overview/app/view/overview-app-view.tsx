@@ -174,7 +174,6 @@ export function OverviewAppView() {
               percent={widget.percent}
               icon={widget.icon}
               chart={widget.chart}
-              sx={{ height: 200 }}
               color="success"
             />
           </Grid>
@@ -190,7 +189,6 @@ export function OverviewAppView() {
               percent={widget.percent}
               icon={widget.icon}
               chart={widget.chart}
-              sx={{ height: 200 }}
             />
           </Grid>
         ))}
@@ -205,7 +203,6 @@ export function OverviewAppView() {
               percent={widget.percent}
               icon={widget.icon}
               chart={widget.chart}
-              sx={{ height: 200 }}
             />
           </Grid>
         ))}
