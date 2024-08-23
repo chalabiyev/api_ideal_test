@@ -81,7 +81,7 @@ export function AppCurrentDownload({ title, subheader, chart, ...other }: Props)
         options={chartOptions}
         width={{ xs: 240, xl: 260 }}
         height={{ xs: 240, xl: 260 }}
-        sx={{ my: 6, mx: 'auto' }}
+        sx={{ my: 3, mx: 'auto' }}
       />
 
       <Divider sx={{ borderStyle: 'dashed' }} />
@@ -89,7 +89,7 @@ export function AppCurrentDownload({ title, subheader, chart, ...other }: Props)
       <ChartLegends
         labels={chartOptions?.labels}
         colors={chartOptions?.colors}
-        sx={{ p: 3, justifyContent: 'center' }}
+        sx={{p:3, justifyContent: 'center' }}
       />
     </Card>
   );

@@ -173,6 +173,7 @@ export function OverviewAppView() {
               percent={widget.percent}
               icon={widget.icon}
               chart={widget.chart}
+              sx={{ height: 200 }}
               color="success"
             />
           </Grid>
@@ -187,6 +188,7 @@ export function OverviewAppView() {
               percent={widget.percent}
               icon={widget.icon}
               chart={widget.chart}
+              sx={{ height: 200 }}
             />
           </Grid>
         ))}
@@ -200,6 +202,7 @@ export function OverviewAppView() {
               percent={widget.percent}
               icon={widget.icon}
               chart={widget.chart}
+              sx={{ height: 200 }}
             />
           </Grid>
         ))}
@@ -207,6 +210,7 @@ export function OverviewAppView() {
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentDownload
             title="Verilmiş kreditlərin müddəti üzrə statistika"
+            sx={{ height: 480 }}
             chart={{
               series: [
                 { label: '3 ayadək', value: 12244 },
@@ -298,11 +302,12 @@ export function OverviewAppView() {
           zIndex: 9999,
           cursor: 'pointer',
         }}
-       
       >
-        <VideoCallIcon  onClick={() => {
-          router.push('/dashboard/videocall');
-        }}/>
+        <VideoCallIcon
+          onClick={() => {
+            router.push('/dashboard/videocall');
+          }}
+        />
       </div>
     </DashboardContent>
   );
