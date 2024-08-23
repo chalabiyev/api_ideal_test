@@ -85,7 +85,7 @@ export const navData = [
         ],
       },
       {
-        title: 'Kanallar',
+        title: 'Mənbələr',
         path: paths.dashboard.channels.list,
         icon: ICONS.booking,
         children: [

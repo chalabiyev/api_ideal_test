@@ -6,7 +6,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import {
   _analyticTasks,
   _analyticPosts,
-  _analyticTraffic,
+  _analyticTrafficbymobile,
+  _analyticTrafficbysite,
   _analyticOrderTimeline,
 } from 'src/_mock';
 
@@ -164,7 +165,11 @@ export function OverviewAnalyticsView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <AnalyticsTrafficBySite title="Traffic by site" list={_analyticTraffic} />
+          <AnalyticsTrafficBySite title="Traffic by site" list={_analyticTrafficbysite} />
+        </Grid>
+
+        <Grid xs={12} md={6} lg={4}>
+          <AnalyticsTrafficBySite title="Traffic by monile app" list={_analyticTrafficbymobile} />
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>

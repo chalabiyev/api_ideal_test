@@ -142,10 +142,17 @@ export function ProductListView() {
   const columns: GridColDef[] = [
     { field: 'category', headerName: 'Category', filterable: false },
     {
-      field: 'name',
-      headerName: 'Product',
+      field: 'count',
+      headerName: 'Say',
       flex: 1,
-      minWidth: 360,
+      width: 20,
+      hideable: false,
+      renderCell: (params) => <RenderCellStock params={params} />,
+    },
+    {
+      field: 'name',
+      headerName: 'Məhsulun adı',
+      flex: 1,
       hideable: false,
       renderCell: (params) => (
         <RenderCellProduct params={params} onViewRow={() => handleViewRow(params.row.id)} />
@@ -153,33 +160,38 @@ export function ProductListView() {
     },
     {
       field: 'createdAt',
-      headerName: 'Create at',
+      headerName: 'Müddət min',
+      width: 160,
+      renderCell: (params) => <RenderCellCreatedAt params={params} />,
+    },
+    {
+      field: 'createdAt',
+      headerName: 'Müddət max',
       width: 160,
       renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'inventoryType',
-      headerName: 'Stock',
+      headerName: 'Məbləğ min',
       width: 160,
       type: 'singleSelect',
-      valueOptions: PRODUCT_STOCK_OPTIONS,
-      renderCell: (params) => <RenderCellStock params={params} />,
-    },
-    {
-      field: 'price',
-      headerName: 'Price',
-      width: 140,
-      editable: true,
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
+      field: 'price',
+      headerName: 'Məbləğ max',
+      width: 160,
+      type: 'singleSelect',
+      renderCell: (params) => <RenderCellPrice params={params} />,
+    },
+
+    {
       field: 'publish',
-      headerName: 'Publish',
+      headerName: 'Komissiya',
       width: 110,
       type: 'singleSelect',
       editable: true,
-      valueOptions: PUBLISH_OPTIONS,
-      renderCell: (params) => <RenderCellPublish params={params} />,
+      renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
       type: 'actions',

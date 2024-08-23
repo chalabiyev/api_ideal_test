@@ -18,11 +18,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import {
-  _tags,
-  PRODUCT_GENDER_OPTIONS,
-  USER_CATEGORY_GROUP_OPTIONS,
-} from 'src/_mock';
+import { _tags, PRODUCT_GENDER_OPTIONS, USER_CATEGORY_GROUP_OPTIONS } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
@@ -143,7 +139,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
     setValue('images', [], { shouldValidate: true });
   }, [setValue]);
 
-
   const renderDetails = (
     <Card>
       <CardHeader title="Yeni Məhsul" sx={{ mb: 3 }} />
@@ -154,24 +149,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
         <Field.Text name="name" label="Məhsulun adı" />
 
         <Field.Text name="subDescription" label="Məhsulun təsviri" multiline rows={4} />
-
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Fayllar</Typography>
-          <Field.Editor name="description" sx={{ maxHeight: 480 }} />
-        </Stack>
-
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Images</Typography>
-          <Field.Upload
-            multiple
-            thumbnail
-            name="images"
-            maxSize={3145728}
-            onRemove={handleRemoveFile}
-            onRemoveAll={handleRemoveAllFiles}
-            onUpload={() => console.info('ON UPLOAD')}
-          />
-        </Stack>
       </Stack>
     </Card>
   );
@@ -187,7 +164,7 @@ export function ProductNewEditForm({ currentProduct }: Props) {
           display="grid"
           gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
         >
-         <Field.Text
+          <Field.Text
             name="code"
             label="Məhsulun kodu"
             placeholder="0"
@@ -272,7 +249,6 @@ export function ProductNewEditForm({ currentProduct }: Props) {
           renderOption={(props, option) => (
             <li {...props} key={option}>
               {option}
-              
             </li>
           )}
           renderTags={(selected, getTagProps) =>
@@ -383,6 +359,18 @@ export function ProductNewEditForm({ currentProduct }: Props) {
           }}
         />
         <Field.Checkbox name="noTimeLimited" label="Müddətsiz" />
+        <Stack spacing={1.5}>
+          <Typography variant="subtitle2">Images</Typography>
+          <Field.Upload
+            multiple
+            thumbnail
+            name="images"
+            maxSize={3145728}
+            onRemove={handleRemoveFile}
+            onRemoveAll={handleRemoveAllFiles}
+            onUpload={() => console.info('ON UPLOAD')}
+          />
+        </Stack>
       </Stack>
     </Card>
   );

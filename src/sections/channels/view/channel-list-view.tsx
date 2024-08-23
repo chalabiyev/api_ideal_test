@@ -141,7 +141,7 @@ export function ChannelListView() {
     { field: 'category', headerName: 'Category', filterable: false },
     {
       field: 'name',
-      headerName: 'Kanalın adı',
+      headerName: 'Mənbənin adı',
       flex: 1,
       minWidth: 360,
       hideable: false,
@@ -151,7 +151,7 @@ export function ChannelListView() {
     },
     {
       field: 'createdAt',
-      headerName: 'Kanalın Nömrəsi',
+      headerName: 'Mənbənin Nömrəsi',
       width: 160,
       renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },

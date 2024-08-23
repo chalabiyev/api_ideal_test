@@ -47,21 +47,24 @@ import { UserTableFiltersResult } from '../user-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+const STATUS_OPTIONS = [{ value: 'all', label: 'Hamısı' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'username', label: 'Username', width: 180 },
-  { id: 'name', label: 'Name', width: 200 },
-  { id: 'phoneNumber', label: 'Phone number', width: 180 },
-  { id: 'email', label: 'Email', width: 220 },
-  {id: 'files', label: 'Files', width: 100},
+  { id: 'count', label: 'Say', width: 180 },
+  { id: 'name', label: 'Borcalan', width: 200 },
+  { id: 'date', label: 'Tarix', width: 180 },
+  { id: 'product', label: 'Məhsul', width: 180 },
+  { id: 'proce', label: 'Məbləğ', width: 180 },
+  { id: 'currency', label: 'Valyuta', width: 220 },
+  {id: 'stage', label: 'Mərhələ', width: 100},
+  {id: 'status', label: 'Status', width: 100},
   { id: '', width: 88 },
 
 ];
 
 // ----------------------------------------------------------------------
 
-export function FizikiCustomerListView() {
+export function FerdiCustomerListView() {
   const table = useTable();
 
   const router = useRouter();
@@ -133,7 +136,7 @@ export function FizikiCustomerListView() {
           heading="List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
+            { name: 'Fərdi Müştəri', href: paths.dashboard.user.root },
             { name: 'List' },
           ]}
           action={
@@ -150,7 +153,7 @@ export function FizikiCustomerListView() {
         />
 
         <Card>
-          <Tabs
+        <Tabs
             value={filters.state.status}
             onChange={handleFilterStatus}
             sx={{

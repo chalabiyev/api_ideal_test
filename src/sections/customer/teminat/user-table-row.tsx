@@ -31,10 +31,11 @@ type Props = {
 
 export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) {
 
-  const router  = useRouter();
+  const router = useRouter()
   const confirm = useBoolean();
 
   const popover = usePopover();
+
 
   return (
     <>
@@ -43,7 +44,8 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           <Checkbox id={row.id} checked={selected} onClick={onSelectRow} />
         </TableCell>
         <TableCell onClick={onEditRow} sx={{ cursor: 'pointer' }}>
-          {row.username}
+          {/* {row.} */}
+2
         </TableCell>
 
         <TableCell>
@@ -54,12 +56,22 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           </Stack>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.phoneNumber}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.email}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          <a download={row.files} href={row.files}>
-          <DownloadIcon />
-          </a>
+          {/* {row.} */}
+          11.12.2023
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.state}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {row.city}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {row.phoneNumber}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {row.role}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {row.status}
         </TableCell>
 
         <TableCell>
@@ -104,7 +116,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
             }}
           >
             <Iconify icon="solar:pen-bold" />
-            sorgu
+            Request
           </MenuItem>
         </MenuList>
       </CustomPopover>

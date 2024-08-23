@@ -22,6 +22,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  CardHeader,
+  Button,
+  Paper,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -69,7 +72,8 @@ export const NewUserSchema = zod.object({
 });
 
 export function CreateCreditForm() {
-  const [currentTab, setCurrentTab] = useState('s/v');
+  const [currentTab, setCurrentTab] = useState('info');
+  const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
 
@@ -113,6 +117,37 @@ export function CreateCreditForm() {
     setCurrentTab(newValue);
   };
 
+  const paymentHistory = [
+    {
+      date: '2022-05-01',
+      monthlyPayment: 100,
+      total: 1000,
+      percentageValue: 90,
+      status: 'Ödənilib',
+    },
+    {
+      date: '2022-05-01',
+      monthlyPayment: 100,
+      total: 1000,
+      percentageValue: 90,
+      status: 'Ödənilməyib',
+    },
+    {
+      date: '2022-05-01',
+      monthlyPayment: 100,
+      total: 1000,
+      percentageValue: 90,
+      status: 'Ödənilib',
+    },
+    {
+      date: '2022-05-01',
+      monthlyPayment: 100,
+      total: 1000,
+      percentageValue: 90,
+      status: 'Ödənilib',
+    },
+  ];
+
   const creditsHistoryData = {
     2022: [
       { month: '05', value: 500 },
@@ -149,10 +184,15 @@ export function CreateCreditForm() {
       { month: '08', value: 800 },
     ],
   };
-
+  const sellingChannel = [
+    { value: '1', label: 'Internet sayt' },
+    { value: '2', label: 'Bot' },
+    { value: '3', label: 'Filial' },
+  ];
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Tabs value={currentTab} onChange={handleTabChange}>
+        <Tab value="info" label="Sorğu haqqında məlumat" />
         <Tab value="s/v" label="Ş/V" />
         <Tab value="akb" label="AKB" />
         <Tab value="workplace" label="İş yeri" />
@@ -160,119 +200,198 @@ export function CreateCreditForm() {
         <Tab value="vehicle" label="Nəqliyyat vasitələri" />
         <Tab value="familyMembers" label="Ailə üzvləri" />
         <Tab value="credits" label="Kreditlər" />
+        <Tab value="payment" label="Ödəniş cədvəli" />
       </Tabs>
-      {(currentTab === 's/v' && (
-        <Grid
-          // 2 columns for the avatar and the form
-          container
-          gap="55px"
-          mt={3}
-        >
-          <Box>
-            <Field.UploadAvatar
-              name="avatarUrl"
-              maxSize={3145728}
-              sx={{
-                height: '128px',
-                width: '128px',
-              }}
-            />
-          </Box>
 
-          <Grid xs={12} md={8}>
-            <Card sx={{ p: 3 }}>
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-              >
-                <Box
-                  display="grid"
-                  rowGap={3}
-                  columnGap={2}
-                  gridTemplateColumns={{ xs: 'repeat(3  , 1fr)' }}
-                >
-                  <Field.Text name="fin" label="Fin" />
-                  <Field.Text name="serialNumber" label="Ş/V seriyası və nömrəsi" />
-                  <Field.Text name="passportStatus" label="Vəsiqənin statusu" />
-                </Box>
+      {(currentTab === 'info' && (
+        <Grid spacing={3}>
+          <Card
+            sx={{
+              padding: 3,
+              marginTop: 3,
+            }}
+          >
+            <CardHeader title="Sorğu haqqında məlumat" />
 
-                <Box
-                  display="grid"
-                  rowGap={3}
-                  columnGap={2}
-                  gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-                >
-                  <Field.Text name="name" label="Adı" />
-                  <Field.Text name="surname" label="Soyadı" />
-                  <Field.Text name="fatherName" label="Ata adı" />
-                  <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" />
-                  <Field.Text name="state" label="Şəhər" />
-                  <Field.Text name="city" label="Rayon" />
-                  <Field.Text name="zipCode" label="Poçt kodu" />
-                  <Field.Text name="role" label="Rol" />
-                  <Field.Select
-                    native
-                    name="familyRelationship"
-                    label="Ailə vəziyyəti"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {familyRelationshipOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
-                  <Field.Select
-                    native
-                    name="gender"
-                    label="Cinsi"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {PRODUCT_GENDER_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
-                </Box>
-                <Field.Text name="address" label="Qeydiyyatda olduğu ünvan" />
-                <Field.Text name="phoneNumber" label="Telefon nömrəsi" />
-                <Box
-                  display="grid"
-                  rowGap={3}
-                  columnGap={2}
-                  gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-                >
-                  <Field.Select
-                    native
-                    name="whereToGetSignature"
-                    label="Müqavilənin əldə ediləcəyi vasitələr"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {whereToGetSignatureOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
+            <Divider sx={{ mb: 3, mt: 3 }} />
 
-                  {selectedOption === 'tg' && (
-                    <Field.Text name="telegramUsername" label="Telegram Username" />
-                  )}
+            <Box
+              display="grid"
+              rowGap={3}
+              columnGap={2}
+              gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+            >
+              <Field.Text name="name" label="Sorğunun nömrəsi" />
 
-                  {selectedOption === 'wp' && (
-                    <Field.Text name="whatsappNumber" label="WhatsApp Number" />
-                  )}
+              <Field.Text name="subDescription" label="Yaradılma tarixi" />
 
-                  {selectedOption === 'em' && <Field.Text name="email" label="Email" />}
-                </Box>
-              </Box>
-            </Card>
-          </Grid>
+              <Field.Select name="name" label="Satış Kanalı">
+                {sellingChannel.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Field.Select>
+            </Box>
+          </Card>
+
+          <Card
+            sx={{
+              padding: 3,
+              marginTop: 3,
+            }}
+          >
+            <CardHeader title="Borcalan haqqında məlumat" />
+
+            <Divider sx={{ mb: 3, mt: 3 }} />
+
+            <Box
+              display="grid"
+              rowGap={3}
+              columnGap={2}
+              gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+            >
+              <Field.Text name="name" label="Ad" />
+
+              <Field.Text name="subDescription" label="Soyad" />
+              <Field.Text name="subDescription" label="Ata adı" />
+            </Box>
+          </Card>
+          <Card
+            sx={{
+              padding: 3,
+              marginTop: 3,
+            }}
+          >
+            <CardHeader title="İcraçı haqqında məlumat" />
+
+            <Divider sx={{ mb: 3, mt: 3 }} />
+
+            <Box
+              display="grid"
+              rowGap={3}
+              columnGap={2}
+              gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+            >
+              <Field.Text name="name" label="Qeydiyyata alanın tam adı" />
+
+              <Field.Text name="subDescription" label="Filial" />
+            </Box>
+          </Card>
         </Grid>
       )) ||
+        (currentTab === 's/v' && (
+          <Grid
+            // 2 columns for the avatar and the form
+            container
+            gap="55px"
+            mt={3}
+          >
+            <Box>
+              <Field.UploadAvatar
+                name="avatarUrl"
+                maxSize={3145728}
+                sx={{
+                  height: '128px',
+                  width: '128px',
+                }}
+              />
+            </Box>
+
+            <Grid xs={12} md={8}>
+              <Card sx={{ p: 3 }}>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                >
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(3  , 1fr)' }}
+                  >
+                    <Field.Text name="fin" label="Fin" />
+                    <Field.Text name="serialNumber" label="Ş/V seriyası və nömrəsi" />
+                    <Field.Text name="passportStatus" label="Vəsiqənin statusu" />
+                  </Box>
+
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+                  >
+                    <Field.Text name="name" label="Adı" />
+                    <Field.Text name="surname" label="Soyadı" />
+                    <Field.Text name="fatherName" label="Ata adı" />
+                    <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" />
+                    <Field.Text name="state" label="Şəhər" />
+                    <Field.Text name="city" label="Rayon" />
+                    <Field.Text name="zipCode" label="Poçt kodu" />
+                    <Field.Text name="role" label="Rol" />
+                    <Field.Select
+                      native
+                      name="familyRelationship"
+                      label="Ailə vəziyyəti"
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      {familyRelationshipOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field.Select>
+                    <Field.Select
+                      native
+                      name="gender"
+                      label="Cinsi"
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      {PRODUCT_GENDER_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field.Select>
+                  </Box>
+                  <Field.Text name="address" label="Qeydiyyatda olduğu ünvan" />
+                  <Field.Text name="phoneNumber" label="Telefon nömrəsi" />
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+                  >
+                    <Field.Select
+                      native
+                      name="whereToGetSignature"
+                      label="Müqavilənin əldə ediləcəyi vasitələr"
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      {whereToGetSignatureOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field.Select>
+
+                    {selectedOption === 'tg' && (
+                      <Field.Text name="telegramUsername" label="Telegram Username" />
+                    )}
+
+                    {selectedOption === 'wp' && (
+                      <Field.Text name="whatsappNumber" label="WhatsApp Number" />
+                    )}
+
+                    {selectedOption === 'em' && <Field.Text name="email" label="Email" />}
+                  </Box>
+                </Box>
+              </Card>
+            </Grid>
+          </Grid>
+        )) ||
         (currentTab === 'akb' && (
           <Grid spacing={3}>
             <Stack>
@@ -987,73 +1106,155 @@ export function CreateCreditForm() {
           </>
         )) ||
         (currentTab === 'credits' && (
-          <Grid spacing={3}>
-            <Stack>
-              <Typography
-                sx={{
-                  my: 3,
-                  fontSize: 20,
-                  lineHeight: 1.5,
-                  fontWeight: 700,
-                }}
-              >
-                Nağd pul krediti
-              </Typography>
-
-              <Divider sx={{ mb: 3 }} />
-
-              <Box
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-              >
-                <Field.Text name="name" label="Kreditin məbləği" />
-
-                <Field.Text name="subDescription" label="İllik dərəcəsi(%)" />
-
-                <Box
-                  sx={{
-                    gridArea: '2 / 1 / 3 / 3',
-                  }}
-                >
+          <Box>
+            {isOpen && (
+              <Grid spacing={3}>
+                <Stack>
                   <Typography
                     sx={{
-                      fontSize: 14,
+                      my: 3,
+                      fontSize: 20,
+                      lineHeight: 1.5,
+                      fontWeight: 700,
                     }}
                   >
-                    Kreditin müddəti(aylarla)
+                    Nağd pul krediti
                   </Typography>
-                  <Slider
-                    name="months"
-                    defaultValue={30}
-                    aria-labelledby="discrete-slider"
-                    step={1}
-                    min={1}
-                    max={84}
-                    valueLabelDisplay="on"
-                    color="info"
-                  />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Typography sx={{ fontSize: 14 }}>12 ay</Typography>
-                    <Typography sx={{ fontSize: 14 }}>84 ay</Typography>
-                  </Box>
-                </Box>
-                <Field.Text name="name" label="Aylıq ödəniş" />
 
-                <Field.Text name="subDescription" label="Cəmi ödəniləcək məbləğ" />
-                <Field.Text name="subDescription" label="Cəmi faiz" />
-              </Box>
-              <Typography mt={4}>
-                Komissiyaya qərar üçün göndər <Switch color="info" defaultChecked />
-              </Typography>
-            </Stack>
-          </Grid>
+                  <Divider sx={{ mb: 3 }} />
+
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+                  >
+                    <Field.Text name="name" label="Kreditin məbləği" />
+
+                    <Field.Text name="subDescription" label="İllik dərəcəsi(%)" />
+
+                    <Box
+                      sx={{
+                        gridArea: '2 / 1 / 3 / 3',
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: 14,
+                        }}
+                      >
+                        Kreditin müddəti(aylarla)
+                      </Typography>
+                      <Slider
+                        name="months"
+                        defaultValue={30}
+                        aria-labelledby="discrete-slider"
+                        step={1}
+                        min={1}
+                        max={84}
+                        valueLabelDisplay="on"
+                        color="info"
+                      />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Typography sx={{ fontSize: 14 }}>12 ay</Typography>
+                        <Typography sx={{ fontSize: 14 }}>84 ay</Typography>
+                      </Box>
+                    </Box>
+                    <Field.Text name="name" label="Aylıq ödəniş" />
+
+                    <Field.Text name="subDescription" label="Cəmi ödəniləcək məbləğ" />
+                    <Field.Text name="subDescription" label="Cəmi faiz" />
+                  </Box>
+                  <Typography mt={4}>
+                    Komissiyaya qərar üçün göndər <Switch color="info" defaultChecked />
+                  </Typography>
+                </Stack>
+              </Grid>
+            )}
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  width: '200px',
+                  backgroundColor: '#1c252e',
+                  color: 'white',
+                  ':hover': {
+                    color: 'black',
+                  },
+                }}
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {isOpen ? 'Bağla' : 'Kredit yarat +'}
+              </Button>
+            </Box>
+          </Box>
+        )) ||
+        (currentTab === 'payment' && (
+          <>
+          
+          <TableContainer my={4} component={Box}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Nağd Pul Krediti</TableCell>
+                  <TableCell>Monthly Payment Value</TableCell>
+                  <TableCell>Main Price</TableCell>
+                  <TableCell>Percentage Price</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paymentHistory.map((payment, index) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{payment.date}</TableCell>
+                    <TableCell>{payment.monthlyPayment}</TableCell>
+                    <TableCell>{payment.total}</TableCell>
+                    <TableCell>{payment.percentageValue}</TableCell>
+                    <TableCell>{payment.status}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer my={4} component={Box}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Icbari sığorta N/V</TableCell>
+                  <TableCell>Monthly Payment Value</TableCell>
+                  <TableCell>Main Price</TableCell>
+                  <TableCell>Percentage Price</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paymentHistory.map((payment, index) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{payment.date}</TableCell>
+                    <TableCell>{payment.monthlyPayment}</TableCell>
+                    <TableCell>{payment.total}</TableCell>
+                    <TableCell>{payment.percentageValue}</TableCell>
+                    <TableCell>{payment.status}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          </>
         ))}
       <Stack alignItems="flex-end" sx={{ mt: 3 }}>
         <LoadingButton type="submit" variant="contained" color="info" loading={isSubmitting}>

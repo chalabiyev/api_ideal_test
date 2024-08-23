@@ -3,10 +3,11 @@ import { _mock } from './_mock';
 // ----------------------------------------------------------------------
 
 export const USER_STATUS_OPTIONS = [
-  { value: 'active', label: 'Təsdiqlənmiş' },
   { value: 'pending', label: 'İcraatda olan' },
+  { value: 'active', label: 'Verilib' },
   { value: 'banned', label: 'Xətalılar' },
   { value: 'rejected', label: 'İmtina edilmiş' },
+  { value: 'monitoring', label: 'Monitorinq' },
 ];
 
 export const _userAbout = {

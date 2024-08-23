@@ -1,27 +1,33 @@
+import type { IUserItem } from 'src/types/user';
+
 import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { GirovNewEditForm } from '../girov-new-edit-form';
+import { CreateCreditForm } from '../credit-new-edit-form';
 
 // ----------------------------------------------------------------------
 
-export function GirovCreateView() {
+type Props = {
+  user?: IUserItem;
+};
+
+export function UserEditView({ user: currentUser }: Props) {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Yeni Girov yarat"
+        heading="Edit"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Girov', href: paths.dashboard.girov.root },
-          { name: 'Yeni Girov' },
+          { name: 'User', href: paths.dashboard.user.root },
+          { name: currentUser?.name },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <GirovNewEditForm />
+      <CreateCreditForm  />
     </DashboardContent>
   );
 }

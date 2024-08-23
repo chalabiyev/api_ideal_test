@@ -10,6 +10,8 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import DownloadIcon from 'src/svgIcons/downloadIcon';
@@ -17,7 +19,6 @@ import DownloadIcon from 'src/svgIcons/downloadIcon';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-import { useRouter } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -30,13 +31,13 @@ type Props = {
 };
 
 export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) {
+  const router = useRouter();
 
-  const router = useRouter()
   const confirm = useBoolean();
 
   const popover = usePopover();
 
-
+  console.log(row.files);
   return (
     <>
       <TableRow hover selected={selected} aria-checked={selected} tabIndex={-1}>
@@ -44,8 +45,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           <Checkbox id={row.id} checked={selected} onClick={onSelectRow} />
         </TableCell>
         <TableCell onClick={onEditRow} sx={{ cursor: 'pointer' }}>
-          {/* {row.} */}
-2
+          {row.username}
         </TableCell>
 
         <TableCell>
@@ -56,22 +56,12 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           </Stack>
         </TableCell>
 
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.phoneNumber}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.email}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {/* {row.} */}
-          11.12.2023
-        </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.state}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.city}
-        </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.phoneNumber}
-        </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.role}
-        </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.status}
+          <a download={row.files} href={row.files}>
+          <DownloadIcon />
+          </a>
         </TableCell>
 
         <TableCell>
@@ -109,14 +99,6 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           >
             <Iconify icon="solar:pen-bold" />
             Edit
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              router.push(`/dashboard/customer/${row.id}/createrequest`);
-            }}
-          >
-            <Iconify icon="solar:pen-bold" />
-            Request
           </MenuItem>
         </MenuList>
       </CustomPopover>

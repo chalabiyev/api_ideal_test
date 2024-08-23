@@ -20,12 +20,15 @@ import { useRouter } from 'src/routes/hooks';
 
 import {
   _tags,
+  PRODUCT_COLOR_NAME_OPTIONS,
   PRODUCT_GENDER_OPTIONS,
+  PRODUCT_SIZE_OPTIONS,
   USER_CATEGORY_GROUP_OPTIONS,
 } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
+import { Button } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -58,10 +61,11 @@ type Props = {
   currentProduct?: IProductItem;
 };
 
-export function ProductNewEditForm({ currentProduct }: Props) {
+export function GirovNewEditForm({ currentProduct }: Props) {
   const router = useRouter();
 
   const [includeTaxes, setIncludeTaxes] = useState(false);
+  const [displayCredit, setDisplayCredit] = useState(false);
 
   const defaultValues = useMemo(
     () => ({
@@ -142,270 +146,218 @@ export function ProductNewEditForm({ currentProduct }: Props) {
   const handleRemoveAllFiles = useCallback(() => {
     setValue('images', [], { shouldValidate: true });
   }, [setValue]);
-
-
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplayCredit(!displayCredit);
+  };
   const renderDetails = (
-    <Card>
-      <CardHeader title="Məhsul" sx={{ mb: 3 }} />
-
-      <Divider />
-
-      <Stack spacing={3} sx={{ p: 3 }}>
-        <Field.Text name="name" label="Məhsulun adı" />
-
-        <Field.Text name="subDescription" label="Məhsulun təsviri" multiline rows={4} />
-
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Fayllar</Typography>
-          <Field.Editor name="description" sx={{ maxHeight: 480 }} />
-        </Stack>
-
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Images</Typography>
-          <Field.Upload
-            multiple
-            thumbnail
-            name="images"
-            maxSize={3145728}
-            onRemove={handleRemoveFile}
-            onRemoveAll={handleRemoveAllFiles}
-            onUpload={() => console.info('ON UPLOAD')}
-          />
-        </Stack>
-      </Stack>
-    </Card>
+    <Box
+      columnGap={2}
+      rowGap={3}
+      display="grid"
+      gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+    >
+      <Field.Select
+        native
+        name="girovtype"
+        label="Girov Əmlakın növü"
+        InputLabelProps={{ shrink: true }}
+      >
+        {PRODUCT_SIZE_OPTIONS.map((classify) => (
+          <option key={classify.value} value={classify.value}>
+            {classify.label}
+          </option>
+        ))}
+      </Field.Select>
+      <Field.Select native name="total" label="Girov Məbləği" InputLabelProps={{ shrink: true }}>
+        {PRODUCT_SIZE_OPTIONS.map((classify) => (
+          <option key={classify.value} value={classify.value}>
+            {classify.label}
+          </option>
+        ))}
+      </Field.Select>
+      <Field.Select native name="status" label="Status" InputLabelProps={{ shrink: true }}>
+        {PRODUCT_SIZE_OPTIONS.map((classify) => (
+          <option key={classify.value} value={classify.value}>
+            {classify.label}
+          </option>
+        ))}
+      </Field.Select>
+    </Box>
   );
 
   const renderProperties = (
     <Card>
-      <Divider />
+      <Box
+        mb={5}
+        onClick={() =>
+          handleSwitchChange({
+            target: { value: 'girovcreditbox', checked: !displayCredit },
+          } as React.ChangeEvent<HTMLInputElement>)
+        }
+      >
+        <Field.Switch name="girovcredit" label="Girovu kredite bağla" checked={displayCredit} />
+      </Box>
 
-      <Stack spacing={3} sx={{ p: 3 }}>
+      {!displayCredit && (
         <Box
           columnGap={2}
           rowGap={3}
           display="grid"
-          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
+          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
         >
-         <Field.Text
-            name="code"
-            label="Məhsulun kodu"
-            placeholder="0"
+          <Field.Text
+            name="credit"
+            label="Kredit Məbləği"
+            placeholder="0.00"
             type="number"
             InputLabelProps={{ shrink: true }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Box component="span" sx={{ color: 'text.disabled' }}>
+                    $
+                  </Box>
+                </InputAdornment>
+              ),
+            }}
           />
-          <Field.Select
-            native
-            name="productType"
-            label="Məhsulun tipi"
+          <Field.Text
+            name="credit"
+            label="Kredit Məbləği"
+            placeholder="0.00"
+            type="number"
             InputLabelProps={{ shrink: true }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Box component="span" sx={{ color: 'text.disabled' }}>
+                    $
+                  </Box>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+      )}
+
+      <Stack spacing={3} sx={{ p: 3 }}>
+        <Box>
+          <Box
+            columnGap={2}
+            rowGap={3}
+            display="grid"
+            my={5}
+            gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
           >
-            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
-              <optgroup key={category.group} label={category.group}>
-                {category.classify.map((classify) => (
-                  <option key={classify} value={classify}>
-                    {classify}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </Field.Select>
-          <Field.Select
-            native
-            name="category"
-            label="Müştəri kateqoriyası"
-            InputLabelProps={{ shrink: true }}
+            <Field.Text
+              name="code"
+              label="Fin"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Ş/V seriyası və nömrəsi"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Vəsiqənin statusu"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+          <Box
+            columnGap={2}
+            rowGap={3}
+            display="grid"
+            gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
           >
-            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
-              <optgroup key={category.group} label={category.group}>
-                {category.classify.map((classify) => (
-                  <option key={classify} value={classify}>
-                    {classify}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </Field.Select>
-          <Field.Select
-            native
-            name="time"
-            label="Məhsulun müddəti"
-            InputLabelProps={{ shrink: true }}
-          >
-            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
-              <optgroup key={category.group} label={category.group}>
-                {category.classify.map((classify) => (
-                  <option key={classify} value={classify}>
-                    {classify}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </Field.Select>
-          <Field.Select
-            native
-            name="percentage"
-            label="Məhsulun faizi"
-            InputLabelProps={{ shrink: true }}
-          >
-            {USER_CATEGORY_GROUP_OPTIONS.map((category) => (
-              <optgroup key={category.group} label={category.group}>
-                {category.classify.map((classify) => (
-                  <option key={classify} value={classify}>
-                    {classify}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </Field.Select>{' '}
+            <Field.Text
+              name="code"
+              label="Ad"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Soyad"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Ata adı"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Anadan olduğu il"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Ailə vəziyyəti"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Cinsi"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Field.Text
+              name="code"
+              label="Qeydiyyatda olduğu ünvan"
+              placeholder="0"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Images</Typography>
+            <Field.Upload
+              multiple
+              thumbnail
+              name="images"
+              maxSize={3145728}
+              onRemove={handleRemoveFile}
+              onRemoveAll={handleRemoveAllFiles}
+              onUpload={() => console.info('ON UPLOAD')}
+            />
+          </Stack>
         </Box>
 
-        <Field.Autocomplete
-          name="tags"
-          label="Tags"
-          placeholder="+ Tags"
-          multiple
-          freeSolo
-          disableCloseOnSelect
-          options={_tags.map((option) => option)}
-          getOptionLabel={(option) => option}
-          renderOption={(props, option) => (
-            <li {...props} key={option}>
-              {option}
-              
-            </li>
-          )}
-          renderTags={(selected, getTagProps) =>
-            selected.map((option, index) => (
-              <Chip
-                {...getTagProps({ index })}
-                key={option}
-                label={option}
-                size="small"
-                color="info"
-                variant="soft"
-              />
-            ))
-          }
-        />
-
-        <Stack spacing={1}>
-          <Typography variant="subtitle2">Cinsi</Typography>
-          <Field.MultiCheckbox row name="gender" options={PRODUCT_GENDER_OPTIONS} sx={{ gap: 2 }} />
-        </Stack>
+        <Button
+          type="button"
+          sx={{ color: 'text.secondary',  }}
+          onClick={
+            ()=> handleSubmit
+          } 
+        >
+          <Chip label="Əlavə et"sx={{p:3}} />
+        </Button>
       </Stack>
     </Card>
-  );
-
-  const renderPricing = (
-    <Card>
-      <CardHeader title="Məhsul üzrə məbləğ" sx={{ mb: 3 }} />
-
-      <Divider />
-
-      <Stack spacing={3} sx={{ p: 3 }}>
-        <Field.Text
-          name="price"
-          label="Minimal Məbləğ"
-          placeholder="0.00"
-          type="number"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Box component="span" sx={{ color: 'text.disabled' }}>
-                  $
-                </Box>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <Field.Text
-          name="priceSale"
-          label="Maksimal Məbləğ"
-          placeholder="0.00"
-          type="number"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Box component="span" sx={{ color: 'text.disabled' }}>
-                  $
-                </Box>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
-    </Card>
-  );
-
-  const timeDetails = (
-    <Card>
-      <CardHeader title="Detallar" sx={{ mb: 3 }} />
-
-      <Divider />
-
-      <Stack spacing={3} sx={{ p: 3 }}>
-        <Field.Checkbox name="timeLimited" label="Müddətli" />
-
-        <Field.Text
-          name="price"
-          label="Başlama tarixi"
-          placeholder="0.00"
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Box component="span" sx={{ color: 'text.disabled' }}>
-                  $
-                </Box>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Field.Text
-          name="price"
-          label="Bitmə tarixi"
-          placeholder="0.00"
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Box component="span" sx={{ color: 'text.disabled' }}>
-                  $
-                </Box>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Field.Checkbox name="noTimeLimited" label="Müddətsiz" />
-      </Stack>
-    </Card>
-  );
-
-  const renderActions = (
-    <Stack spacing={3} direction="row" alignItems="center" justifyContent="end" flexWrap="wrap">
-      <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-        {!currentProduct ? 'Məhsul Yarat' : 'Yadda saxla'}
-      </LoadingButton>
-    </Stack>
   );
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto', maxWidth: { xs: 720, xl: 880 } }}>
+      <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto' }}>
         {renderDetails}
-
         {renderProperties}
-
-        {renderPricing}
-
-        {timeDetails}
-
-        {renderActions}
       </Stack>
     </Form>
   );
