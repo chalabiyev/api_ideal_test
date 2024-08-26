@@ -4,11 +4,7 @@ import React from 'react'
 
 export const LogoExtended = (props: SvgIconProps) => (
     <div
-      style={{
-        width: '167px',
-        height: '46px',
-
-      }}
+      
     >
       <svg
     

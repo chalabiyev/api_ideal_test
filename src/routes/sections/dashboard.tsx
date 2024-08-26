@@ -229,7 +229,24 @@ export const dashboardRoutes = [
       { path: 'permission', element: <PermissionDeniedPage /> },
       { path: 'params', element: <ParamsPage /> },
       { path: 'blank', element: <BlankPage /> },
-      { path: 'credits', children: [{ element: <NewCreditPage />, index: true }] },
+      {
+        path: 'credits',
+        children: [
+          { element: <NewCreditPage />, index: true },
+          {
+            path: 'list',
+            element: <CreditListPage />,
+          },
+          {
+            path: ':id/edit',
+            element: <EditCreditPage />,
+          },
+          {
+            path: 'new',
+            element: <NewCreditPage />,
+          },
+        ],
+      },
     ],
   },
 ];

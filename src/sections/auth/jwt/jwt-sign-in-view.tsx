@@ -22,8 +22,8 @@ import { Form, Field } from 'src/components/hook-form';
 
 import { useAuthContext } from 'src/auth/hooks';
 import { signInWithPassword } from 'src/auth/context/jwt';
-import { Card } from '@mui/material';
 import { LogoExtended } from 'src/svgIcons/LogoExtended';
+import { Card } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -140,7 +140,7 @@ export function JwtSignInView() {
     <Card
       sx={{
         p: 3,
-        boxShadow: '0px 4px 8px 0px rgb(0 0 0 / 5%), 0px 2px 4px 0px rgb(0 0 0 / 10%)',
+        boxShadow: '4px 4px 8px 4px rgb(0 0 0 / 5%), 0px 2px 4px 4px rgb(0 0 0 / 10%)',
       }}
     >
       {renderHead}

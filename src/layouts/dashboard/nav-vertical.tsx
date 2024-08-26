@@ -23,7 +23,6 @@ export type NavVerticalProps = NavSectionProps & {
     topArea?: React.ReactNode;
     bottomArea?: React.ReactNode;
   };
-  isNavbarClosed?: boolean;
 };
 
 export function NavVertical({
@@ -33,7 +32,6 @@ export function NavVertical({
   isNavMini,
   layoutQuery,
   onToggleNav,
-  isNavbarClosed,
   ...other
 }: NavVerticalProps) {
   const theme = useTheme();
@@ -42,13 +40,7 @@ export function NavVertical({
     <>
       {slots?.topArea ?? (
         <Box sx={{ pl: 3.5, pt: 2.5, pb: 1 }}>
-         {
-          isNavbarClosed ? (
-            <Logo />
-          ) : (
-            <Logo />
-          )
-         }
+          <Logo />
         </Box>
       )}
 
@@ -103,8 +95,6 @@ export function NavVertical({
     >
       <NavToggleButton
         isNavMini={isNavMini}
-        
-        
         onClick={onToggleNav}
         sx={{
           display: 'none',

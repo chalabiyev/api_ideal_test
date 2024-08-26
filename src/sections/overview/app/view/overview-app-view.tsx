@@ -8,8 +8,22 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
 
 // import { useMockedUser } from 'src/auth/hooks';
+import {
+  Box,
+  Button,
+  Card,
+  CardHeader,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Stack,
+} from '@mui/material';
 
 import { VideoCallIcon } from 'src/components/videocall';
+import DownloadIcon from 'src/svgIcons/downloadIcon';
 
 import { AppAreaInstalled } from '../app-area-installed';
 import { AppCurrentDownload } from '../app-current-download';
@@ -161,6 +175,23 @@ export function OverviewAppView() {
 
   const theme = useTheme();
 
+  const _years: any = ['2024', '2023', '2022'];
+  const _months: any = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  const _channels: any = ['Call Center', 'Sayt', 'Partnyor mənbəsi', 'Video zəng'];
+  const _products: any = ['Məhsul 1', 'Məhsul 2', 'Məhsul 3', 'Məhsul 4'];
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
@@ -178,7 +209,6 @@ export function OverviewAppView() {
             />
           </Grid>
         ))}
-
         {UseraDataWidget.map((widget, index) => (
           <Grid key={index} xs={12} md={6} lg={3}>
             <AnalyticsWidgetSummary
@@ -206,91 +236,172 @@ export function OverviewAppView() {
             />
           </Grid>
         ))}
+        <Grid container spacing={3}>
+          <Grid xs={12}>
+            <Card>
+              <CardHeader title="Statistika" />
+              <Stack
+                spacing={2}
+                alignItems={{ xs: 'center', md: 'center' }}
+                direction={{ xs: 'column', md: 'row' }}
+                sx={{ p: 2.5, pr: { xs: 2.5, md: 1 } , display: 'flex', justifyContent: 'space-around' }}
+              >
+                <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 250 } ,}}>
+                  <InputLabel htmlFor="user-filter-role-select-label">İlə görə</InputLabel>
+                  <Select
+                    input={<OutlinedInput label="İlə görə" />}
+                    inputProps={{ id: 'user-filter-role-select-label' }}
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
+                  >
+                    {_years.map((year: any, index: any) => (
+                      <MenuItem key={index} value={year}>
+                        {year}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-        <Grid xs={12} md={6} lg={4}>
-          <AppCurrentDownload
-            title="Verilmiş kreditlərin müddəti üzrə statistika"
-            sx={{ height: 500 }}
-            chart={{
-              series: [
-                { label: '3 ayadək', value: 12244 },
-                { label: '6 ayadək', value: 53345 },
-                { label: '9 ayadək', value: 44313 },
-                { label: '12 ayadək', value: 78343 },
-                { label: '15 ayadək', value: 78343 },
-                { label: '18 ayadək', value: 78343 },
-                { label: '21 ayadək', value: 78343 },
-                { label: '24 ayadək', value: 78343 },
-              ],
-            }}
-          />
+                <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 250 } }}>
+                  <InputLabel htmlFor="user-filter-role-select-label">Aya görə</InputLabel>
+                  <Select
+                    input={<OutlinedInput label="Aya görə" />}
+                    inputProps={{ id: 'user-filter-role-select-label' }}
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
+                  >
+                    {_months.map((month: string, index: number) => (
+                      <MenuItem key={index} value={month}>
+                        {month}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 250 } }}>
+                  <InputLabel htmlFor="user-filter-role-select-label">Kanal</InputLabel>
+                  <Select
+                    input={<OutlinedInput label="Kanal" />}
+                    inputProps={{ id: 'user-filter-role-select-label' }}
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 250 }, p: 10 } }}
+                  >
+                    {_channels.map((channel: string, index: number) => (
+                      <MenuItem key={index} value={channel}>
+                        {channel}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 250 } }}>
+                  <InputLabel htmlFor="user-filter-role-select-label">Məhsul</InputLabel>
+                  <Select
+                    input={<OutlinedInput label="Məhsul" />}
+                    inputProps={{ id: 'user-filter-role-select-label' }}
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
+                  >
+                    {_products.map((product: string, index: number) => (
+                      <MenuItem key={index} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {/* Hesabatı yüklə buttonu */}
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  endIcon={<DownloadIcon />}
+                  sx={{
+                    padding: '15px 30px',
+                  }}
+                >
+                  Download
+                </Button>
+              </Stack>
+            </Card>{' '}
+          </Grid>
+          <Grid xs={12} md={6} lg={4}>
+            <AppCurrentDownload
+              title="Verilmiş kreditlərin müddəti üzrə statistika"
+              sx={{ height: 500 }}
+              chart={{
+                series: [
+                  { label: '3 ayadək', value: 12244 },
+                  { label: '6 ayadək', value: 53345 },
+                  { label: '9 ayadək', value: 44313 },
+                  { label: '12 ayadək', value: 78343 },
+                  { label: '15 ayadək', value: 78343 },
+                  { label: '18 ayadək', value: 78343 },
+                  { label: '21 ayadək', value: 78343 },
+                  { label: '24 ayadək', value: 78343 },
+                ],
+              }}
+            />
+          </Grid>
+
+          <Grid xs={12} md={6} lg={8}>
+            <AppAreaInstalled
+              sx={{ height: 500 }}
+              title="Partnyor mənbəsi - kredit statistikası"
+              subheader="(+43%) than last year"
+              chart={{
+                categories: [
+                  'Jan',
+                  'Feb',
+                  'Mar',
+                  'Apr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Aug',
+                  'Sep',
+                  'Oct',
+                  'Nov',
+                  'Dec',
+                ],
+                series: [
+                  {
+                    name: '2022',
+                    data: [
+                      {
+                        name: 'Daxil olan sorğular',
+                        data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                      },
+                      {
+                        name: 'Verilən kreditlər',
+                        data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                      },
+                    ],
+                  },
+                  {
+                    name: '2023',
+                    data: [
+                      {
+                        name: 'Daxil olan sorğular',
+                        data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                      },
+                      {
+                        name: 'Verilən kreditlər',
+                        data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                      },
+                    ],
+                  },
+                  {
+                    name: '2024',
+                    data: [
+                      {
+                        name: 'Daxil olan sorğular',
+                        data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                      },
+                      {
+                        name: 'Verilən kreditlər',
+                        data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
+                      },
+                    ],
+                  },
+                ],
+              }}
+            />
+          </Grid>
         </Grid>
-
-        <Grid xs={12} md={6} lg={8}>
-          <AppAreaInstalled
-            sx={{ height: 500 }}
-            title="Partnyor mənbəsi - kredit statistikası"
-            subheader="(+43%) than last year"
-            chart={{
-              categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
-              ],
-              series: [
-                {
-                  name: '2022',
-                  data: [
-                    {
-                      name: 'Daxil olan sorğular',
-                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
-                    },
-                    {
-                      name: 'Verilən kreditlər',
-                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
-                    },
-                  ],
-                },
-                {
-                  name: '2023',
-                  data: [
-                    {
-                      name: 'Daxil olan sorğular',
-                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
-                    },
-                    {
-                      name: 'Verilən kreditlər',
-                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
-                    },
-                  ],
-                },
-                {
-                  name: '2024',
-                  data: [
-                    {
-                      name: 'Daxil olan sorğular',
-                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
-                    },
-                    {
-                      name: 'Verilən kreditlər',
-                      data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16],
-                    },
-                  ],
-                },
-              ],
-            }}
-          />
-        </Grid>
-
         <Grid xs={12} md={6} lg={15}>
           <AnalyticsTrafficBySite title="Traffic by site" list={_analyticTrafficbysite} />
         </Grid>

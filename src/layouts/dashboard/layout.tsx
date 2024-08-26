@@ -156,7 +156,6 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
                   'navLayout',
                   settings.navLayout === 'vertical' ? 'mini' : 'vertical'
                 )
-               
               }
             />
           )
