@@ -7,7 +7,8 @@ import NoSsr from '@mui/material/NoSsr';
 
 import { RouterLink } from 'src/routes/components';
 
-import {LogoIdealKredit}  from 'src/svgIcons/logoIdealKredit';
+import { LogoIdealKredit } from 'src/svgIcons/logoIdealKredit';
+import { LogoExtended } from 'src/svgIcons/LogoExtended';
 
 import { logoClasses } from './classes';
 
@@ -16,12 +17,13 @@ import { logoClasses } from './classes';
 export type LogoProps = BoxProps & {
   href?: string;
   disableLink?: boolean;
+  isNavbarClosed?: boolean;
 };
 
 export const Logo = forwardRef<HTMLDivElement, LogoProps>(
-  ({ width = 40, height = 40, disableLink = false, className, href = '/', sx, ...other }, ref) => {
-
+  ({ width = 40, height = 40, disableLink = false, className, href = '/', sx, isNavbarClosed=false , ...other}, ref) => {
     const logo = <LogoIdealKredit />;
+    const logoExtended = <LogoExtended />;
 
     return (
       <NoSsr
@@ -51,7 +53,7 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
           }}
           {...other}
         >
-          {logo}
+          {isNavbarClosed ? logo : logoExtended} 
         </Box>
       </NoSsr>
     );

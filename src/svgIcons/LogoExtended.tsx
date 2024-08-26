@@ -7,7 +7,6 @@ export const LogoExtended = (props: SvgIconProps) => (
       style={{
         width: '167px',
         height: '46px',
-        marginLeft: "25%",
 
       }}
     >

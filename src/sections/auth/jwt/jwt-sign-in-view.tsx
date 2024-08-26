@@ -22,6 +22,8 @@ import { Form, Field } from 'src/components/hook-form';
 
 import { useAuthContext } from 'src/auth/hooks';
 import { signInWithPassword } from 'src/auth/context/jwt';
+import { Card } from '@mui/material';
+import { LogoExtended } from 'src/svgIcons/LogoExtended';
 
 // ----------------------------------------------------------------------
 
@@ -77,24 +79,19 @@ export function JwtSignInView() {
   });
 
   const renderHead = (
-    <Stack spacing={1.5} sx={{ mb: 5 }}>
-      <Typography variant="h5">Sign in to your account</Typography>
+    <Stack
+      spacing={1.5}
+      sx={{ mb: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+    >
+      <LogoExtended />
 
-      <Stack direction="row" spacing={0.5}>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {`Don't have an account?`}
-        </Typography>
-
-        <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
-          Get started
-        </Link>
-      </Stack>
+      <Typography variant="h5">Daxil ol</Typography>
     </Stack>
   );
 
   const renderForm = (
     <Stack spacing={3}>
-      <Field.Text name="email" label="Email address" InputLabelProps={{ shrink: true }} />
+      <Field.Text name="email" label="Email" InputLabelProps={{ shrink: true }} />
 
       <Stack spacing={1.5}>
         <Link
@@ -104,12 +101,12 @@ export function JwtSignInView() {
           color="inherit"
           sx={{ alignSelf: 'flex-end' }}
         >
-          Forgot password?
+          Şifrəmi unutmuşam
         </Link>
 
         <Field.Text
           name="password"
-          label="Password"
+          label="Şifrə"
           placeholder="6+ characters"
           type={password.value ? 'text' : 'password'}
           InputLabelProps={{ shrink: true }}
@@ -134,20 +131,19 @@ export function JwtSignInView() {
         loading={isSubmitting}
         loadingIndicator="Sign in..."
       >
-        Sign in
+        Daxil Ol{' '}
       </LoadingButton>
     </Stack>
   );
 
   return (
-    <>
+    <Card
+      sx={{
+        p: 3,
+        boxShadow: '0px 4px 8px 0px rgb(0 0 0 / 5%), 0px 2px 4px 0px rgb(0 0 0 / 10%)',
+      }}
+    >
       {renderHead}
-
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use <strong>{defaultValues.email}</strong>
-        {' with password '}
-        <strong>{defaultValues.password}</strong>
-      </Alert>
 
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>
@@ -158,6 +154,6 @@ export function JwtSignInView() {
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm}
       </Form>
-    </>
+    </Card>
   );
 }

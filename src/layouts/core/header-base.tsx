@@ -130,9 +130,6 @@ export function HeaderBase({
               />
             )}
 
-            {/* -- Logo -- */}
-
-            {pathname.startsWith('/auth') && <LogoIdealKredit />}
 
             {/* -- Divider -- */}
             <StyledDivider data-slot="divider" />
@@ -156,19 +153,6 @@ export function HeaderBase({
                 gap: { xs: 1, sm: 1.5 },
               }}
             >
-              {/* -- Help link -- */}
-              {helpLink && (
-                <Link
-                  data-slot="help-link"
-                  href={paths.faqs}
-                  component={RouterLink}
-                  color="inherit"
-                  sx={{ typography: 'subtitle2' }}
-                >
-                  Need help?
-                </Link>
-              )}
-
               {/* -- Searchbar -- */}
               {searchbar && <Searchbar data-slot="searchbar" data={data?.nav} />}
 

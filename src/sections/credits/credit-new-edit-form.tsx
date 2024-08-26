@@ -68,6 +68,12 @@ export const NewUserSchema = zod.object({
   whereToGetSignature: zod.string().min(1, { message: 'Where to get signature is required!' }),
 });
 
+const _customerRole = [
+  { value: 'customer', label: 'Müştəri' },
+  { value: 'guarantor', label: 'Zamin' },
+  { value: 'employee', label: 'Əməkdaş' },
+];
+
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState('s/v');
 
@@ -210,8 +216,19 @@ export function CreateCreditForm() {
                   <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" />
                   <Field.Text name="state" label="Şəhər" />
                   <Field.Text name="city" label="Rayon" />
-                  <Field.Text name="zipCode" label="Poçt kodu" />
-                  <Field.Text name="role" label="Rol" />
+                  <Field.Text name="role" label="Vəzifə" />
+                  <Field.Select
+                    native
+                    name="familyRelationship"
+                    label="Rol"
+                    InputLabelProps={{ shrink: true }}
+                  >
+                    {_customerRole.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Field.Select>
                   <Field.Select
                     native
                     name="familyRelationship"
@@ -523,7 +540,7 @@ export function CreateCreditForm() {
         )) ||
         (currentTab === 'workplace' && (
           <Grid spacing={3}>
-            <Stack>
+            {/* <Stack>
               <Typography
                 sx={{
                   my: 3,
@@ -532,7 +549,7 @@ export function CreateCreditForm() {
                   fontWeight: 700,
                 }}
               >
-                İşçi barədə məlumat
+                İşçi barədə məlumat 
               </Typography>
 
               <Divider sx={{ mb: 3 }} />
@@ -563,7 +580,7 @@ export function CreateCreditForm() {
                   }}
                 />
               </Box>
-            </Stack>
+            </Stack> */}
             <Divider sx={{ my: 3 }} />
 
             <Stack>
@@ -650,7 +667,7 @@ export function CreateCreditForm() {
             </Stack>
             <Divider sx={{ my: 3 }} />
 
-            <Stack>
+            {/* <Stack>
               <Typography
                 sx={{
                   my: 3,
@@ -747,7 +764,7 @@ export function CreateCreditForm() {
               >
                 Borcalanın cari ödənişləri
               </Typography>
-            </Stack>
+            </Stack> */}
           </Grid>
         )) ||
         (currentTab === 'occupancy' && (
