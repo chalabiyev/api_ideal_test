@@ -24,6 +24,8 @@ import {
   TableContainer,
 } from '@mui/material';
 
+
+
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
@@ -40,6 +42,11 @@ import {
 } from '../_examples/extra/form-validation-view/react-hook-form';
 
 // ----------------------------------------------------------------------
+type ValuesType = {
+  [year: string]: {
+    [month: string]: number;
+  };
+};
 
 export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
 
@@ -77,6 +84,16 @@ const _customerRole = [
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState('s/v');
 
+  const tabledata = {
+    2024: ['01', '02', '03', '04','05', '06', '07', '08'],
+    2023: ['12', '11', '10', '09', '08', '07','06', '05', '04', '03', '02', '01'],
+    2022: ['12', '11']
+  };
+  const values: ValuesType = {
+    2024: { '01': 10, '02': 20, '03': 30, '04': 40, '05': 50, '06': 60, '07': 70, '08': 80 },
+    2023: { '12': 90, '11': 100, '10': 110, '09': 120, '08': 130, '07': 140, '06': 150, '05': 160, '04': 170, '03': 180, '02': 190, '01': 200 },
+    2022: { '12': 210, '11': 220 }
+  }
   const router = useRouter();
 
   const methods = useForm<NewUserSchemaType>({
@@ -119,42 +136,6 @@ export function CreateCreditForm() {
     setCurrentTab(newValue);
   };
 
-  const creditsHistoryData = {
-    2022: [
-      { month: '05', value: 500 },
-      { month: '06', value: 600 },
-      { month: '07', value: 700 },
-      { month: '08', value: 800 },
-      { month: '09', value: 900 },
-      { month: '10', value: 1000 },
-      { month: '11', value: 1100 },
-      { month: '12', value: 1200 },
-    ],
-    2023: [
-      { month: '01', value: 100 },
-      { month: '02', value: 200 },
-      { month: '03', value: 300 },
-      { month: '04', value: 400 },
-      { month: '05', value: 500 },
-      { month: '06', value: 600 },
-      { month: '07', value: 700 },
-      { month: '08', value: 800 },
-      { month: '09', value: 900 },
-      { month: '10', value: 1000 },
-      { month: '11', value: 1100 },
-      { month: '12', value: 1200 },
-    ],
-    2024: [
-      { month: '01', value: 100 },
-      { month: '02', value: 200 },
-      { month: '03', value: 300 },
-      { month: '04', value: 400 },
-      { month: '05', value: 500 },
-      { month: '06', value: 600 },
-      { month: '07', value: 700 },
-      { month: '08', value: 800 },
-    ],
-  };
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -168,12 +149,7 @@ export function CreateCreditForm() {
         <Tab value="credits" label="Kreditlər" />
       </Tabs>
       {(currentTab === 's/v' && (
-        <Grid
-          // 2 columns for the avatar and the form
-          container
-          gap="55px"
-          mt={3}
-        >
+        <Grid container gap="55px" mt={3}>
           <Box>
             <Field.UploadAvatar
               name="avatarUrl"
@@ -511,108 +487,65 @@ export function CreateCreditForm() {
               >
                 Borcalanın cari ödənişləri
               </Typography>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell> </TableCell>
-                    {Object.keys(creditsHistoryData).map((year) => (
-                      <TableCell>{year}</TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Aylar</TableCell>
-                    {Object.values(creditsHistoryData).map((yearData) => (
-                      <TableCell>{yearData.map((month) => month.month).join(' ')}</TableCell>
-                    ))}
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Tarixçə</TableCell>
-                    {Object.values(creditsHistoryData).map((yearData) => (
-                      <TableCell>{yearData.map((month) => month.value).join(' ')}</TableCell>
-                    ))}
-                  </TableRow>
-                </TableBody>
-              </Table>
+           
+         <TableContainer sx={{
+          border: '1px solid black',
+         }}>
+      <Table sx={{ width: '100%', borderCollapse: 'collapse',border: '1px solid black', }} aria-label="simple table">
+        <TableBody>
+          <TableRow>
+            <TableCell sx={{ backgroundColor: 'white' }}> </TableCell>
+            {Object.entries(tabledata).map(([year, months]) => (
+              <TableCell sx={{ backgroundColor: 'white',border: '1px solid black', }} colSpan={months.length} key={year}>
+                {year}
+              </TableCell>
+            ))}
+          </TableRow>
+          <TableRow>
+            <TableCell
+              sx={{
+                backgroundColor: 'white',
+                border: '1px solid black',
+                padding: '8px',
+              }}
+            >
+              Aylar
+            </TableCell>
+            {Object.entries(tabledata).flatMap(([year, months]) => 
+              months.map((month, index) => (
+                <TableCell sx={{ border: '1px solid black', padding: '8px' }} key={`${year}-${month}`}>
+                  {month}
+                </TableCell>
+              ))
+            )}
+          </TableRow>
+          <TableRow>
+            <TableCell
+              sx={{
+                backgroundColor: 'white',
+                border: '1px black',
+                padding: '8px',
+              }}
+            >
+              Tarixçə
+            </TableCell>
+            {Object.entries(tabledata).flatMap(([year, months]) => 
+              months.map((month, index) => (
+                <TableCell sx={{ border: '1px  black', padding: '8px' }} key={`${year}-${month}`}>
+                  {values[year][month]}
+                </TableCell>
+              ))
+            )}
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
             </Stack>
           </Grid>
         )) ||
         (currentTab === 'workplace' && (
           <Grid spacing={3}>
-            {/* <Stack>
-              <Typography
-                sx={{
-                  my: 3,
-                  fontSize: 20,
-                  lineHeight: 1.5,
-                  fontWeight: 700,
-                }}
-              >
-                İşçi barədə məlumat 
-              </Typography>
-
-              <Divider sx={{ mb: 3 }} />
-
-              <Box
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-              >
-                <Field.Text name="name" label="FİN" />
-
-                <Field.Text name="subDescription" label="Ş/V seriyası və nömrəsi" />
-
-                <Field.Text name="name" label="Ad" />
-
-                <Field.Text name="subDescription" label="Soyad" />
-
-                <Field.Text name="name" label="Ata adı" />
-
-                <Field.Text name="subDescription" label="Doğum tarixi" />
-
-                <Field.Text
-                  name="name"
-                  label="Qeydiyyatda olduğu ünvan"
-                  sx={{
-                    gridArea: '4 / 1 / 4 / 3',
-                  }}
-                />
-              </Box>
-            </Stack> */}
-            <Divider sx={{ my: 3 }} />
-
             <Stack>
-              <Typography
-                sx={{
-                  my: 3,
-                  fontSize: 20,
-                  lineHeight: 1.5,
-                  fontWeight: 700,
-                }}
-              >
-                İşəgötürən barədə məlumatlar
-              </Typography>
-
-              <Stack
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-              >
-                <Field.Text name="name" label="İşəgötürənin tam adı" />
-
-                <Field.Text name="subDescription" label="Struktur bölmənin adı" />
-
-                <Field.Text
-                  name="name"
-                  label="İşçinin vəzifəsinin(peşəsinin) adı"
-                  sx={{
-                    gridArea: '2 / 1 / 4 / 3',
-                  }}
-                />
-              </Stack>
               <Typography
                 sx={{
                   my: 3,
@@ -666,105 +599,6 @@ export function CreateCreditForm() {
               </Box>
             </Stack>
             <Divider sx={{ my: 3 }} />
-
-            {/* <Stack>
-              <Typography
-                sx={{
-                  my: 3,
-                  fontSize: 20,
-                  lineHeight: 1.5,
-                  fontWeight: 700,
-                }}
-              >
-                Borcalanın cari öhdəlikləri{' '}
-              </Typography>
-              <Box
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-              >
-                <Typography
-                  sx={{
-                    my: 3,
-                    fontSize: 22,
-                    lineHeight: 1.5,
-                    fontWeight: 700,
-                  }}
-                >
-                  Borc: 400m
-                </Typography>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'start',
-                    gap: 2,
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      my: 3,
-                      fontSize: 20,
-                      lineHeight: 1.5,
-                      fontWeight: 600,
-                    }}
-                  >
-                    Yenidən maliyyələşdirmə üçün uyğundur
-                  </Typography>
-                  <Switch defaultChecked />
-                </Box>
-              </Box>
-
-              <Divider sx={{ mb: 3 }} />
-
-              <Stack
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-              >
-                <Field.Text name="name" label="Informasiya provideri" />
-
-                <Field.Text name="subDescription" label="Kredit balansının məbləği" />
-
-                <Field.Text name="name" label="Aylıq ödəniş məbləği" />
-
-                <Field.Text name="subDescription" label="Son ödəniş tarixi" />
-
-                <Field.Text name="name" label="Məqsəd" />
-
-                <Field.Text
-                  name="subDescription"
-                  label="Əsas borc üzrə vaxtı keçmiş günlərin sayı"
-                />
-
-                <Field.Text name="name" label="Hesab nömrəsi" />
-
-                <Field.Text name="subDescription" label="Faiz məbləği" />
-                <Field.Text name="subDescription" label="Faiz dərəcəsi" />
-                <Field.Text name="subDescription" label="Kreditin verilmə tarixi" />
-                <Field.Text name="subDescription" label="Kreditin bitmə tarixi" />
-                <Field.Text
-                  name="subDescription"
-                  label="Faizli borc üzrə vaxtı keçmiş günlərin sayı"
-                />
-                <Field.Text
-                  name="subDescription"
-                  label="Daxili risk sistemlərinin hesablanmasına uyğun olaraq aylıq ödəniş"
-                />
-              </Stack>
-              <Typography
-                sx={{
-                  my: 3,
-                  fontSize: 22,
-                  lineHeight: 1.5,
-                  fontWeight: 700,
-                }}
-              >
-                Borcalanın cari ödənişləri
-              </Typography>
-            </Stack> */}
           </Grid>
         )) ||
         (currentTab === 'occupancy' && (
@@ -827,32 +661,37 @@ export function CreateCreditForm() {
         )) ||
         (currentTab === 'familyMembers' && (
           <>
-            <Box>
+            <Box
+              sx={{
+                mt: 3,
+              }}
+            >
               <Grid container spacing={3}>
-                <Grid xs={12} md={4}>
-                  <Card sx={{ px: 3, pb: 5 }}>
-                    <Typography
-                      sx={{
-                        my: 3,
-                        fontSize: 20,
-                        lineHeight: 1.5,
-                        fontWeight: 700,
-                      }}
-                    >
-                      Həyat yoldaşı
-                    </Typography>
-                    <Box>
-                      <Field.UploadAvatar
-                        name="avatarUrl"
-                        maxSize={3145728}
-                        sx={{
-                          height: '128px',
-                          width: '128px',
-                        }}
-                      />
-                    </Box>
-                  </Card>
-                </Grid>
+                <Box
+                  sx={{
+                    mr: 2,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      my: 3,
+                      fontSize: 20,
+                      lineHeight: 1.5,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Həyat yoldaşı
+                  </Typography>
+
+                  <Field.UploadAvatar
+                    name="avatarUrl"
+                    maxSize={3145728}
+                    sx={{
+                      height: '128px',
+                      width: '128px',
+                    }}
+                  />
+                </Box>
 
                 <Grid xs={12} md={8}>
                   <Card sx={{ p: 3 }}>
@@ -916,30 +755,31 @@ export function CreateCreditForm() {
             </Box>
             <Box>
               <Grid container spacing={3}>
-                <Grid xs={12} md={4}>
-                  <Card sx={{ px: 3, pb: 5 }}>
-                    <Typography
-                      sx={{
-                        my: 3,
-                        fontSize: 20,
-                        lineHeight: 1.5,
-                        fontWeight: 700,
-                      }}
-                    >
-                      Övladı
-                    </Typography>
-                    <Box>
-                      <Field.UploadAvatar
-                        name="avatarUrl"
-                        maxSize={3145728}
-                        sx={{
-                          height: '128px',
-                          width: '128px',
-                        }}
-                      />
-                    </Box>
-                  </Card>
-                </Grid>
+                <Box
+                  sx={{
+                    mr: 2,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      my: 3,
+                      fontSize: 20,
+                      lineHeight: 1.5,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Həyat yoldaşı
+                  </Typography>
+
+                  <Field.UploadAvatar
+                    name="avatarUrl"
+                    maxSize={3145728}
+                    sx={{
+                      height: '128px',
+                      width: '128px',
+                    }}
+                  />
+                </Box>
 
                 <Grid xs={12} md={8}>
                   <Card sx={{ p: 3 }}>

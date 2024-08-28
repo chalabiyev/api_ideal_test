@@ -9,7 +9,6 @@ import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
 import { varHover, AnimateAvatar } from 'src/components/animate';
-import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
