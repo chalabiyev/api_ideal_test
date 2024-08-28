@@ -30,6 +30,7 @@ import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
 import { familyRelationshipOptions, whereToGetSignatureOptions } from 'src/sections/_examples/extra/form-validation-view/react-hook-form';
+import { ValuesType } from 'src/sections/credits/credit-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +63,16 @@ export const NewUserSchema = zod.object({
 
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState('s/v');
-
+  const tabledata = {
+    2024: ['01', '02', '03', '04','05', '06', '07', '08'],
+    2023: ['12', '11', '10', '09', '08', '07','06', '05', '04', '03', '02', '01'],
+    2022: ['12', '11']
+  };
+  const values: ValuesType = {
+    2024: { '01': 10, '02': 20, '03': 30, '04': 40, '05': 50, '06': 60, '07': 70, '08': 80 },
+    2023: { '12': 90, '11': 100, '10': 110, '09': 120, '08': 130, '07': 140, '06': 150, '05': 160, '04': 170, '03': 180, '02': 190, '01': 200 },
+    2022: { '12': 210, '11': 220 }
+  }
   const router = useRouter();
 
   const methods = useForm<NewUserSchemaType>({
@@ -469,26 +479,7 @@ export function CreateCreditForm() {
               >
                 Borcalanın cari ödənişləri
               </Typography>
-              {/* <TableContainer>
-                <Table>
-                  <TableBody sx={
-                    {}
-                  }>
-                    <TableRow></TableRow>
-                    <TableRow>Month</TableRow>
-                    <TableRow>Credits Paid</TableRow>
-                    {yearsData.map((year, yearIndex) =>
-                      monthsData.map((month, monthIndex) => (
-                        <TableCell key={`${yearIndex}-${monthIndex}`}>
-                          {monthIndex === 0 && <TableRow>{year}</TableRow>}
-                          <TableRow>{month}</TableRow>
-                          <TableRow>{creditsPaidData[monthIndex]}</TableRow>
-                        </TableCell>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer> */}
+              padding: '8px'
             </Stack>
           </Grid>
         )) ||

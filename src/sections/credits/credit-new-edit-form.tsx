@@ -24,8 +24,6 @@ import {
   TableContainer,
 } from '@mui/material';
 
-
-
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
@@ -42,7 +40,7 @@ import {
 } from '../_examples/extra/form-validation-view/react-hook-form';
 
 // ----------------------------------------------------------------------
-type ValuesType = {
+export type ValuesType = {
   [year: string]: {
     [month: string]: number;
   };
@@ -85,15 +83,28 @@ export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState('s/v');
 
   const tabledata = {
-    2024: ['01', '02', '03', '04','05', '06', '07', '08'],
-    2023: ['12', '11', '10', '09', '08', '07','06', '05', '04', '03', '02', '01'],
-    2022: ['12', '11']
+    2024: ['01', '02', '03', '04', '05', '06', '07', '08'],
+    2023: ['12', '11', '10', '09', '08', '07', '06', '05', '04', '03', '02', '01'],
+    2022: ['12', '11'],
   };
   const values: ValuesType = {
     2024: { '01': 10, '02': 20, '03': 30, '04': 40, '05': 50, '06': 60, '07': 70, '08': 80 },
-    2023: { '12': 90, '11': 100, '10': 110, '09': 120, '08': 130, '07': 140, '06': 150, '05': 160, '04': 170, '03': 180, '02': 190, '01': 200 },
-    2022: { '12': 210, '11': 220 }
-  }
+    2023: {
+      '12': 90,
+      '11': 100,
+      '10': 110,
+      '09': 120,
+      '08': 130,
+      '07': 140,
+      '06': 150,
+      '05': 160,
+      '04': 170,
+      '03': 180,
+      '02': 190,
+      '01': 200,
+    },
+    2022: { '12': 210, '11': 220 },
+  };
   const router = useRouter();
 
   const methods = useForm<NewUserSchemaType>({
@@ -135,7 +146,6 @@ export function CreateCreditForm() {
   const handleTabChange = (event: any, newValue: string) => {
     setCurrentTab(newValue);
   };
-
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -487,59 +497,74 @@ export function CreateCreditForm() {
               >
                 Borcalanın cari ödənişləri
               </Typography>
-           
-         <TableContainer sx={{
-          border: '1px solid black',
-         }}>
-      <Table sx={{ width: '100%', borderCollapse: 'collapse',border: '1px solid black', }} aria-label="simple table">
-        <TableBody>
-          <TableRow>
-            <TableCell sx={{ backgroundColor: 'white' }}> </TableCell>
-            {Object.entries(tabledata).map(([year, months]) => (
-              <TableCell sx={{ backgroundColor: 'white',border: '1px solid black', }} colSpan={months.length} key={year}>
-                {year}
-              </TableCell>
-            ))}
-          </TableRow>
-          <TableRow>
-            <TableCell
-              sx={{
-                backgroundColor: 'white',
-                border: '1px solid black',
-                padding: '8px',
-              }}
-            >
-              Aylar
-            </TableCell>
-            {Object.entries(tabledata).flatMap(([year, months]) => 
-              months.map((month, index) => (
-                <TableCell sx={{ border: '1px solid black', padding: '8px' }} key={`${year}-${month}`}>
-                  {month}
-                </TableCell>
-              ))
-            )}
-          </TableRow>
-          <TableRow>
-            <TableCell
-              sx={{
-                backgroundColor: 'white',
-                border: '1px black',
-                padding: '8px',
-              }}
-            >
-              Tarixçə
-            </TableCell>
-            {Object.entries(tabledata).flatMap(([year, months]) => 
-              months.map((month, index) => (
-                <TableCell sx={{ border: '1px  black', padding: '8px' }} key={`${year}-${month}`}>
-                  {values[year][month]}
-                </TableCell>
-              ))
-            )}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+
+              <TableContainer
+                sx={{
+                  border: '1px solid black',
+                }}
+              >
+                <Table
+                  sx={{ width: '100%', borderCollapse: 'collapse', border: '1px solid black' }}
+                  aria-label="simple table"
+                >
+                  <TableBody>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: 'white' }}> </TableCell>
+                      {Object.entries(tabledata).map(([year, months]) => (
+                        <TableCell
+                          sx={{ backgroundColor: 'white', border: '1px solid black' }}
+                          colSpan={months.length}
+                          key={year}
+                        >
+                          {year}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          backgroundColor: 'white',
+                          border: '1px solid black',
+                          padding: '8px',
+                        }}
+                      >
+                        Aylar
+                      </TableCell>
+                      {Object.entries(tabledata).flatMap(([year, months]) =>
+                        months.map((month, index) => (
+                          <TableCell
+                            sx={{ border: '1px solid black', padding: '8px' }}
+                            key={`${year}-${month}`}
+                          >
+                            {month}
+                          </TableCell>
+                        ))
+                      )}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          backgroundColor: 'white',
+                          border: '1px black',
+                          padding: '8px',
+                        }}
+                      >
+                        Tarixçə
+                      </TableCell>
+                      {Object.entries(tabledata).flatMap(([year, months]) =>
+                        months.map((month, index) => (
+                          <TableCell
+                            sx={{ border: '1px  black', padding: '8px' }}
+                            key={`${year}-${month}`}
+                          >
+                            {values[year][month]}
+                          </TableCell>
+                        ))
+                      )}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Stack>
           </Grid>
         )) ||

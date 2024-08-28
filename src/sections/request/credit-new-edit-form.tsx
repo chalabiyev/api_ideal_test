@@ -41,6 +41,7 @@ import {
   familyRelationshipOptions,
   whereToGetSignatureOptions,
 } from '../_examples/extra/form-validation-view/react-hook-form';
+import { ValuesType } from '../credits/credit-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -117,6 +118,8 @@ export function CreateCreditForm() {
     setCurrentTab(newValue);
   };
 
+
+
   const paymentHistory = [
     {
       date: '2022-05-01',
@@ -148,41 +151,28 @@ export function CreateCreditForm() {
     },
   ];
 
-  const creditsHistoryData = {
-    2022: [
-      { month: '05', value: 500 },
-      { month: '06', value: 600 },
-      { month: '07', value: 700 },
-      { month: '08', value: 800 },
-      { month: '09', value: 900 },
-      { month: '10', value: 1000 },
-      { month: '11', value: 1100 },
-      { month: '12', value: 1200 },
-    ],
-    2023: [
-      { month: '01', value: 100 },
-      { month: '02', value: 200 },
-      { month: '03', value: 300 },
-      { month: '04', value: 400 },
-      { month: '05', value: 500 },
-      { month: '06', value: 600 },
-      { month: '07', value: 700 },
-      { month: '08', value: 800 },
-      { month: '09', value: 900 },
-      { month: '10', value: 1000 },
-      { month: '11', value: 1100 },
-      { month: '12', value: 1200 },
-    ],
-    2024: [
-      { month: '01', value: 100 },
-      { month: '02', value: 200 },
-      { month: '03', value: 300 },
-      { month: '04', value: 400 },
-      { month: '05', value: 500 },
-      { month: '06', value: 600 },
-      { month: '07', value: 700 },
-      { month: '08', value: 800 },
-    ],
+  const tabledata = {
+    2024: ['01', '02', '03', '04', '05', '06', '07', '08'],
+    2023: ['12', '11', '10', '09', '08', '07', '06', '05', '04', '03', '02', '01'],
+    2022: ['12', '11'],
+  };
+  const values: ValuesType = {
+    2024: { '01': 10, '02': 20, '03': 30, '04': 40, '05': 50, '06': 60, '07': 70, '08': 80 },
+    2023: {
+      '12': 90,
+      '11': 100,
+      '10': 110,
+      '09': 120,
+      '08': 130,
+      '07': 140,
+      '06': 150,
+      '05': 160,
+      '04': 170,
+      '03': 180,
+      '02': 190,
+      '01': 200,
+    },
+    2022: { '12': 210, '11': 220 },
   };
   const sellingChannel = [
     { value: '1', label: 'Internet sayt' },
@@ -613,30 +603,73 @@ export function CreateCreditForm() {
               >
                 Borcalanın cari ödənişləri
               </Typography>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell> </TableCell>
-                    {Object.keys(creditsHistoryData).map((year) => (
-                      <TableCell>{year}</TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Aylar</TableCell>
-                    {Object.values(creditsHistoryData).map((yearData) => (
-                      <TableCell>{yearData.map((month) => month.month).join(' ')}</TableCell>
-                    ))}
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Tarixçə</TableCell>
-                    {Object.values(creditsHistoryData).map((yearData) => (
-                      <TableCell>{yearData.map((month) => month.value).join(' ')}</TableCell>
-                    ))}
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <TableContainer
+                sx={{
+                  border: '1px solid black',
+                }}
+              >
+                <Table
+                  sx={{ width: '100%', borderCollapse: 'collapse', border: '1px solid black' }}
+                  aria-label="simple table"
+                >
+                  <TableBody>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: 'white' }}> </TableCell>
+                      {Object.entries(tabledata).map(([year, months]) => (
+                        <TableCell
+                          sx={{ backgroundColor: 'white', border: '1px solid black' }}
+                          colSpan={months.length}
+                          key={year}
+                        >
+                          {year}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          backgroundColor: 'white',
+                          border: '1px solid black',
+                          padding: '8px',
+                        }}
+                      >
+                        Aylar
+                      </TableCell>
+                      {Object.entries(tabledata).flatMap(([year, months]) =>
+                        months.map((month, index) => (
+                          <TableCell
+                            sx={{ border: '1px solid black', padding: '8px' }}
+                            key={`${year}-${month}`}
+                          >
+                            {month}
+                          </TableCell>
+                        ))
+                      )}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          backgroundColor: 'white',
+                          border: '1px black',
+                          padding: '8px',
+                        }}
+                      >
+                        Tarixçə
+                      </TableCell>
+                      {Object.entries(tabledata).flatMap(([year, months]) =>
+                        months.map((month, index) => (
+                          <TableCell
+                            sx={{ border: '1px  black', padding: '8px' }}
+                            key={`${year}-${month}`}
+                          >
+                            {values[year][month]}
+                          </TableCell>
+                        ))
+                      )}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Stack>
           </Grid>
         )) ||
