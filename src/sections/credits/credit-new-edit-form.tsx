@@ -425,7 +425,7 @@ export function CreateCreditForm() {
                     fontWeight: 700,
                   }}
                 >
-                  Borc: 400m
+                  Borc: 400&#x20BC;
                 </Typography>
                 <Box
                   sx={{
@@ -512,7 +512,7 @@ export function CreateCreditForm() {
                       <TableCell sx={{ backgroundColor: 'white' }}> </TableCell>
                       {Object.entries(tabledata).map(([year, months]) => (
                         <TableCell
-                          sx={{ backgroundColor: 'white', border: '1px solid black' }}
+                          sx={{ backgroundColor: 'white', border: '1px solid black', textAlign:'center' }}
                           colSpan={months.length}
                           key={year}
                         >

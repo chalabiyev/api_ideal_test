@@ -407,7 +407,7 @@ export function CreateCreditForm() {
                     fontWeight: 700,
                   }}
                 >
-                  Borc: 400m
+                  Borc: 400&#x20BC;
                 </Typography>
                 <Box
                   sx={{
@@ -479,7 +479,7 @@ export function CreateCreditForm() {
               >
                 Borcalanın cari ödənişləri
               </Typography>
-              padding: '8px'
+             
             </Stack>
           </Grid>
         )) ||
@@ -637,7 +637,7 @@ export function CreateCreditForm() {
                     fontWeight: 700,
                   }}
                 >
-                  Borc: 400m
+                  Borc: 400&#x20BC;
                 </Typography>
                 <Box
                   sx={{

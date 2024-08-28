@@ -531,7 +531,7 @@ export function CreateCreditForm() {
                     fontWeight: 700,
                   }}
                 >
-                  Borc: 400m
+                  Borc: 400&#x20BC;
                 </Typography>
                 <Box
                   sx={{
@@ -827,7 +827,7 @@ export function CreateCreditForm() {
                     fontWeight: 700,
                   }}
                 >
-                  Borc: 400m
+                  Borc: 400&#x20BC;
                 </Typography>
                 <Box
                   sx={{
