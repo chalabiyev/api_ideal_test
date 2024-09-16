@@ -47,7 +47,7 @@ export function UserTableFiltersResult({ filters, onResetPage, totalResults, sx 
 
   return (
     <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>
-      <FiltersBlock label="Status:" isShow={filters.state.status !== 'all'}>
+      <FiltersBlock label="Status:" isShow={filters.state.status !== 'Hamısı'}>
         <Chip
           {...chipProps}
           label={filters.state.status}

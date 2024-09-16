@@ -136,7 +136,6 @@ export function HeaderBase({
 
             {/* -- Workspace popover -- */}
             {workspaces && <WorkspacesPopover data-slot="workspaces" data={data?.workspaces} />}
-         
 
             {slots?.leftAreaEnd}
           </>
