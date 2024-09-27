@@ -17,11 +17,12 @@ import {
   Slider,
   Divider,
   Table,
-  TableHead,
   TableRow,
   TableBody,
   TableCell,
   TableContainer,
+  Input,
+  TextField,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -33,11 +34,13 @@ import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
+import SearchIconSVG from 'src/components/searchIcon';
 
 import {
   familyRelationshipOptions,
   whereToGetSignatureOptions,
 } from '../_examples/extra/form-validation-view/react-hook-form';
+
 
 // ----------------------------------------------------------------------
 export type ValuesType = {
@@ -146,7 +149,6 @@ export function CreateCreditForm() {
   const handleTabChange = (event: any, newValue: string) => {
     setCurrentTab(newValue);
   };
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Tabs value={currentTab} onChange={handleTabChange}>
@@ -185,7 +187,23 @@ export function CreateCreditForm() {
                   columnGap={2}
                   gridTemplateColumns={{ xs: 'repeat(3  , 1fr)' }}
                 >
-                  <Field.Text name="fin" label="Fin" />
+                  <TextField
+                    variant="outlined"
+                    required
+                 
+                    fullWidth
+                    name="fin"
+                    label="Fin"
+                    id="fin"
+                    autoFocus
+                    InputProps={{
+                      endAdornment: <SearchIconSVG />, 
+                    }}
+                  />
+                  {/* <div>
+                      <SearchIconSVG />
+                    </div> */}
+
                   <Field.Text name="serialNumber" label="Ş/V seriyası və nömrəsi" />
                   <Field.Text name="passportStatus" label="Vəsiqənin statusu" />
                 </Box>
@@ -298,27 +316,27 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
               >
-                <Field.Text name="name" label="Аktiv kreditlər üzrə ümumi borc" />
+                <Field.Text name="total" label="Аktiv kreditlər üzrə ümumi borc" />
 
                 <Field.Text name="subDescription" label="Sayı" />
 
                 <Field.Text
-                  name="name"
+                  name="totalZamin"
                   label="Müştərinin zamin kimi çıxış etdiyi kreditlər üzrə borcun ümumi məbləği"
                 />
 
-                <Field.Text name="subDescription" label="Sayı" />
+                <Field.Text name="countZamin" label="Sayı" />
 
                 <Field.Text
                   name="name"
                   label="Son 24 ayda ödənilmiş kreditlər üzrə borcun ümumi məbləği"
                 />
 
-                <Field.Text name="subDescription" label="Sayı" />
+                <Field.Text name="countTotal24" label="Sayı" />
 
-                <Field.Text name="name" label="Son 24 aydan əvvəl ödənilmiş borcun ümumi məbləği" />
+                <Field.Text name="before24Months" label="Son 24 aydan əvvəl ödənilmiş borcun ümumi məbləği" />
 
-                <Field.Text name="subDescription" label="Sayı" />
+                <Field.Text name="countBefore24" label="Sayı" />
               </Box>
             </Stack>
             <Divider sx={{ my: 3 }} />
@@ -353,9 +371,9 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
               >
-                <Field.Text name="name" label="AKB məlumatlarına əsasən" />
+                <Field.Text name="ActiveDueToAKB" label="AKB məlumatlarına əsasən" />
 
-                <Field.Text name="subDescription" label="Daxili risk sistemi üzrə" />
+                <Field.Text name="ActiveDueToRisk" label="Daxili risk sistemi üzrə" />
               </Stack>
               <Typography
                 sx={{
@@ -373,9 +391,9 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
               >
-                <Field.Text name="name" label="AKB məlumatlarına əsasən" />
+                <Field.Text name="ZaminDueToAKB" label="AKB məlumatlarına əsasən" />
 
-                <Field.Text name="subDescription" label="Daxili risk sistemi üzrə" />
+                <Field.Text name="ZaminDueToRisk" label="Daxili risk sistemi üzrə" />
               </Box>
               <Typography
                 sx={{
@@ -512,7 +530,11 @@ export function CreateCreditForm() {
                       <TableCell sx={{ backgroundColor: 'white' }}> </TableCell>
                       {Object.entries(tabledata).map(([year, months]) => (
                         <TableCell
-                          sx={{ backgroundColor: 'white', border: '1px solid black', textAlign:'center' }}
+                          sx={{
+                            backgroundColor: 'white',
+                            border: '1px solid black',
+                            textAlign: 'center',
+                          }}
                           colSpan={months.length}
                           key={year}
                         >

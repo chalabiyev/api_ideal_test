@@ -127,6 +127,8 @@ export function CreateCreditForm() {
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
+
+      
       <Tabs value={currentTab} onChange={handleTabChange}>
         <Tab value="s/v" label="Ş/V" />
         <Tab value="akb" label="AKB" />
@@ -155,8 +157,8 @@ export function CreateCreditForm() {
                         color: 'text.disabled',
                       }}
                     >
-                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(3145728)}
+                      İcazə verilənlər; *.jpeg, *.jpg, *.png, *.gif
+                      <br /> maximum həcm {fData(3145728)}
                     </Typography>
                   }
                 />
@@ -801,8 +803,8 @@ export function CreateCreditForm() {
                               color: 'text.disabled',
                             }}
                           >
-                            Allowed *.jpeg, *.jpg, *.png, *.gif
-                            <br /> max size of {fData(3145728)}
+                            İcazə verilənlər; *.jpeg, *.jpg, *.png, *.gif
+                            <br /> maksimum həcm {fData(3145728)}
                           </Typography>
                         }
                       />
@@ -898,8 +900,8 @@ export function CreateCreditForm() {
                               color: 'text.disabled',
                             }}
                           >
-                            Allowed *.jpeg, *.jpg, *.png, *.gif
-                            <br /> max size of {fData(3145728)}
+                            İcazə verilərlər; *.jpeg, *.jpg, *.png, *.gif
+                            <br /> maximum həcm {fData(3145728)}
                           </Typography>
                         }
                       />
