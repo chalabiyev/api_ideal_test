@@ -23,6 +23,7 @@ import {
   TableContainer,
   Input,
   TextField,
+  TableHead,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -33,14 +34,14 @@ import { fData } from 'src/utils/format-number';
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
 import SearchIconSVG from 'src/components/searchIcon';
+import { Form, Field, schemaHelper } from 'src/components/hook-form';
+import ScoreCard from './scoreBoard';
 
 import {
   familyRelationshipOptions,
   whereToGetSignatureOptions,
 } from '../_examples/extra/form-validation-view/react-hook-form';
-
 
 // ----------------------------------------------------------------------
 export type ValuesType = {
@@ -74,8 +75,76 @@ export const NewUserSchema = zod.object({
   country: zod.string().min(1, { message: 'Country is required!' }),
   status: zod.string().optional(),
   whereToGetSignature: zod.string().min(1, { message: 'Where to get signature is required!' }),
+  reportNum: zod.string().min(1, { message: 'Report is required!' }),
+  dateMade: zod.string().min(1, { message: 'Date made is required!' }),
+  historyMadeDate: zod.string().min(1, { message: 'History made date is required!' }),
+  loanerId: zod.string().min(1, { message: 'Loaner ID is required!' }),
+  loanerScore: zod.number().min(1, { message: 'Loaner score is required!' }),
 });
 
+const getBackgroundColor = (daysLate: any) => {
+  if (daysLate === '-') return '#C6C6C6'; // No information (gray)
+  if (daysLate === 0) return '#00B0F0'; // 0 days delay (blue)
+  if (daysLate <= 30) return '#FFFF00'; // 1-30 days delay (yellow)
+  if (daysLate <= 90) return '#FFC000'; // 31-90 days delay (orange)
+  if (daysLate <= 180) return '#FF0000'; // 91-180 days delay (red)
+  if (daysLate <= 360) return '#7030A0'; // 181-360 days delay (dark red)
+  if (daysLate > 360) return '#C00000'; // 361+ days delay (deep red)
+  return '#FFFFFF'; // Default (white)
+};
+const creditData = [
+  0,
+  '-',
+  0,
+  30,
+  90,
+  180,
+  0,
+  361,
+  0,
+  '-',
+  180,
+  30,
+  0,
+  30,
+  0,
+  '-',
+  90,
+  361,
+  0,
+  30,
+  '-',
+  180,
+  90,
+  0,
+];
+
+const combinedHeaders = [
+  { label: '04/2024' },
+  { label: '03/2024' },
+  { label: '02/2024' },
+  { label: '01/2024' },
+  { label: '12/2023' },
+  { label: '11/2023' },
+  { label: '10/2023' },
+  { label: '09/2023' },
+  { label: '08/2023' },
+  { label: '07/2023' },
+  { label: '06/2023' },
+  { label: '05/2023' },
+  { label: '04/2023' },
+  { label: '03/2023' },
+  { label: '02/2023' },
+  { label: '01/2023' },
+  { label: '12/2022' },
+  { label: '11/2022' },
+  { label: '10/2022' },
+  { label: '09/2022' },
+  { label: '08/2022' },
+  { label: '07/2022' },
+  { label: '06/2022' },
+  { label: '05/2022' },
+];
 const _customerRole = [
   { value: 'customer', label: 'Müştəri' },
   { value: 'guarantor', label: 'Zamin' },
@@ -83,7 +152,116 @@ const _customerRole = [
 ];
 
 export function CreateCreditForm() {
-  const [currentTab, setCurrentTab] = useState('s/v');
+  const [currentTab, setCurrentTab] = useState('akb2');
+
+  const sorguTarixcesi = [
+    {
+      bankName: 'Bank 1',
+      date: '2023-12-12',
+      purpose: 'Kredit Müraciəti',
+    },
+    {
+      bankName: 'Bank 2',
+      date: '2022-11-02',
+      purpose: 'Kredit Müraciəti',
+    },
+  ];
+
+  const loanData = {
+    dataProvider: 'XXX',
+    KIN: 'ZZ42VZ3A0M',
+    accountNumber: '*****',
+    totalAmount: 47521.55,
+    monthlyPayment: 386,
+    lastPaymentDate: '05.03.2018',
+    loanPurpose: 'Fiziki şəxslərə ipoteka kreditləri',
+    overdueDaysMainDebt: 0,
+    interestAmount: 170.99,
+    issuanceDate: '14.01.2014',
+    initialContractEndDate: '31.12.2039',
+    lastContractEndDate: '31.12.2039',
+    overdueDaysInterest: 0,
+    collateralType: 'Daşınmaz əmlak',
+    collateralValue: 90000,
+    collateralDescription: 'Bakı şəhəri / Nəsimi rayonunda iki otaqlı mənzil',
+    registrationAuthority: 'DƏDYDR xidməti',
+    registrationDate: '14.01.2014',
+  };
+
+  const oldLoanData = {
+    totalAmount: '1 500 AZN',
+    KIN: 'ZZ42VZ3A0M',
+    dataProvider: 'XXX',
+    accountNumber: '*****',
+    monthlyPayment: 386,
+    lastPaymentDate: '05.03.2012',
+    loanPurpose: 'Fiziki şəxslərə istehlak kreditləri',
+    overdueDaysMainDebt: 0,
+    issuanceDate: '14.01.2014',
+    initialContractEndDate: '31.12.2034',
+    lastContractEndDate: '31.12.2034',
+    overdueDaysInterest: 0,
+  };
+
+  const guarantorLoanData = {
+    totalAmount: '2 500 AZN',
+    KIN: 'ZZ42VZ3A0M',
+    dataProvider: 'XXX',
+    accountNumber: '*****',
+    monthlyPayment: 386,
+    lastPaymentDate: '05.03.2012',
+    loanPurpose: 'Fiziki şəxslərə istehlak kreditləri',
+    overdueDaysMainDebt: 0,
+    issuanceDate: '14.01.2014',
+    initialContractEndDate: '31.12.2034',
+    lastContractEndDate: '31.12.2034',
+    overdueDaysInterest: 0,
+  };
+
+  const paymentHistory = [
+    {
+      title: 'Aktiv kreditlərin cəmi qalıq məbləği',
+      amount: '1 894.07',
+      creditCount: '2',
+      creditCompanyCount: '2',
+    },
+    {
+      title: 'Kreditlər üzrə qalıq məbləğ',
+      amount: '632',
+      creditCount: '0',
+      creditCompanyCount: '2',
+    },
+    {
+      title: ' Kredit xətləri üzrə qalıq məbləğ',
+      amount: '1 894.07',
+      creditCount: '2',
+      creditCompanyCount: '2',
+    },
+    {
+      title: 'Qarantiya üzrə qalıq məbləğ',
+      amount: '1 894.07',
+      creditCount: '2',
+      creditCompanyCount: '2',
+    },
+    {
+      title: 'Cəmi aylıq ödəniş məbləği',
+      amount: '1 894.07',
+      creditCount: '2',
+      creditCompanyCount: '2',
+    },
+    {
+      title: 'Tam ödənilmiş kreditlərin cəmi məbləği',
+      amount: '1 894.07',
+      creditCount: '2',
+      creditCompanyCount: '2',
+    },
+    {
+      title: 'Zamin olduğu öhdəliyin məbləği',
+      amount: '1 894.07',
+      creditCount: '2',
+      creditCompanyCount: '2',
+    },
+  ];
 
   const tabledata = {
     2024: ['01', '02', '03', '04', '05', '06', '07', '08'],
@@ -114,15 +292,20 @@ export function CreateCreditForm() {
     mode: 'onSubmit',
     resolver: zodResolver(NewUserSchema),
     defaultValues: {
-      fin: '',
-      serialNumber: '',
+      fin: 'fin',
+      serialNumber: 'serialnumber',
       passportStatus: '',
-      name: '',
-      surname: '',
-      fatherName: '',
+      name: 'testName',
+      surname: 'testSurname',
+      fatherName: 'testFatherName',
       born: '',
+      reportNum: 'testreport',
       familyRelationship: '',
       whereToGetSignature: '',
+      dateMade: '11 oktyabr 2001',
+      historyMadeDate: '11 oktyabr 2002',
+      loanerId: 'AZE000000',
+      loanerScore: 400,
     },
   });
 
@@ -149,9 +332,12 @@ export function CreateCreditForm() {
   const handleTabChange = (event: any, newValue: string) => {
     setCurrentTab(newValue);
   };
+
+  const loanerScore = Number(watch('loanerScore'));
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Tabs value={currentTab} onChange={handleTabChange}>
+        <Tab value="akb2" label="AKB 2" />
         <Tab value="s/v" label="Ş/V" />
         <Tab value="akb" label="AKB" />
         <Tab value="workplace" label="İş yeri" />
@@ -160,140 +346,594 @@ export function CreateCreditForm() {
         <Tab value="familyMembers" label="Ailə üzvləri" />
         <Tab value="credits" label="Kreditlər" />
       </Tabs>
-      {(currentTab === 's/v' && (
+      {(currentTab === 'akb2' && (
         <Grid container gap="55px" mt={3}>
-          <Box>
-            <Field.UploadAvatar
-              name="avatarUrl"
-              maxSize={3145728}
-              sx={{
-                height: '128px',
-                width: '128px',
-              }}
-            />
+          <Box
+            sx={{
+              display: 'grid',
+              rowGap: 3,
+              columnGap: 2,
+              gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' },
+            }}
+          >
+            <Field.Text name="name" label="Ad" />
+            <Field.Text name="surname" label="Soyad" />
+            <Field.Text name="fatherName" label="Ata adı" />
           </Box>
-
-          <Grid xs={12} md={8}>
-            <Card sx={{ p: 3 }}>
+          <Box
+            sx={{
+              display: 'grid',
+              rowGap: 3,
+              columnGap: 2,
+              gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
+            }}
+          >
+            <Field.Text name="reportNum" label="Hesabat" />
+            <Field.Text name="dateMade" label="Tərtib olunma tarixi:" />
+            <Field.Text name="dateMade" label="Borcalan haqqında tarixçənin açıldığı tarix" />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexDirection: 'column',
+              gap: 5,
+            }}
+          >
+            <Typography>1. Borcalanın şəxsi məlumatları</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 5,
+              }}
+            >
               <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                sx={{
+                  width: '45%',
+                }}
               >
-                <Box
-                  display="grid"
-                  rowGap={3}
-                  columnGap={2}
-                  gridTemplateColumns={{ xs: 'repeat(3  , 1fr)' }}
-                >
-                  <TextField
-                    variant="outlined"
-                    required
-                 
-                    fullWidth
-                    name="fin"
-                    label="Fin"
-                    id="fin"
-                    autoFocus
-                    InputProps={{
-                      endAdornment: <SearchIconSVG />, 
-                    }}
-                  />
-                  {/* <div>
-                      <SearchIconSVG />
-                    </div> */}
-
-                  <Field.Text name="serialNumber" label="Ş/V seriyası və nömrəsi" />
-                  <Field.Text name="passportStatus" label="Vəsiqənin statusu" />
-                </Box>
-
-                <Box
-                  display="grid"
-                  rowGap={3}
-                  columnGap={2}
-                  gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-                >
-                  <Field.Text name="name" label="Adı" />
-                  <Field.Text name="surname" label="Soyadı" />
-                  <Field.Text name="fatherName" label="Ata adı" />
-                  <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" />
-                  <Field.Text name="state" label="Şəhər" />
-                  <Field.Text name="city" label="Rayon" />
-                  <Field.Text name="role" label="Vəzifə" />
-                  <Field.Select
-                    native
-                    name="familyRelationship"
-                    label="Rol"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {_customerRole.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
-                  <Field.Select
-                    native
-                    name="familyRelationship"
-                    label="Ailə vəziyyəti"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {familyRelationshipOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
-                  <Field.Select
-                    native
-                    name="gender"
-                    label="Cinsi"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {PRODUCT_GENDER_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
-                </Box>
-                <Field.Text name="address" label="Qeydiyyatda olduğu ünvan" />
-                <Field.Text name="phoneNumber" label="Telefon nömrəsi" />
-                <Box
-                  display="grid"
-                  rowGap={3}
-                  columnGap={2}
-                  gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-                >
-                  <Field.Select
-                    native
-                    name="whereToGetSignature"
-                    label="Müqavilənin əldə ediləcəyi vasitələr"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {whereToGetSignatureOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
-
-                  {selectedOption === 'tg' && (
-                    <Field.Text name="telegramUsername" label="Telegram Username" />
-                  )}
-
-                  {selectedOption === 'wp' && (
-                    <Field.Text name="whatsappNumber" label="WhatsApp Number" />
-                  )}
-
-                  {selectedOption === 'em' && <Field.Text name="email" label="Email" />}
-                </Box>
+                <Field.Text sx={{ marginBottom: 2 }} name="loanerId" label="Borcalanın İD-si:" />
+                <Field.Text sx={{ marginBottom: 2 }} name="reportNum" label="Ünvanı:" />
+                <Field.Text sx={{ marginBottom: 2 }} name="reportNum" label="Doğum yeri:" />
+                <Field.Text sx={{ marginBottom: 2 }} name="reportNum" label="Doğum tarixi:" />
               </Box>
-            </Card>
-          </Grid>
+              <Box
+                sx={{
+                  width: '45%',
+                }}
+              >
+                <ScoreCard score={loanerScore} />
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexDirection: 'column',
+              gap: 5,
+              width: '100%',
+            }}
+          >
+            <Typography>2. Kredit məlumatlarının icmalı (manatla)</Typography>
+            <TableContainer my={4} component={Box}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>N</TableCell>
+                    <TableCell> </TableCell>
+                    <TableCell>Məbləğ</TableCell>
+                    <TableCell>Kreditlərin sayı</TableCell>
+                    <TableCell>Kr.təşkilatlarının sayı</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {paymentHistory.map((payment, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell
+                        sx={{
+                          fontWeight: 700,
+                        }}
+                      >
+                        {payment.title}
+                      </TableCell>
+                      <TableCell>{payment.amount}</TableCell>
+                      <TableCell>{payment.creditCount}</TableCell>
+                      <TableCell>{payment.creditCompanyCount}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexDirection: 'column',
+              gap: 5,
+              width: '100%',
+            }}
+          >
+            <Typography>2.1 Borcalanın sorğu tarixçəsi</Typography>
+            <TableContainer my={4} component={Box}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>N</TableCell>
+                    <TableCell>Bankın adı</TableCell>
+                    <TableCell>Tarix</TableCell>
+                    <TableCell>Məqsəd</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {sorguTarixcesi.map((sorgu, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{sorgu.bankName}</TableCell>
+                      <TableCell>{sorgu.date}</TableCell>
+                      <TableCell>{sorgu.purpose}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexDirection: 'column',
+              gap: 5,
+              width: '100%',
+            }}
+          >
+            <Typography>3. Borcalanın aktiv öhdəlikləri</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Typography>3.1 Kredit - {loanData.totalAmount}</Typography>
+              <Typography>KIN: {loanData.KIN}</Typography>
+            </Box>
+            <TableContainer component={Box} my={4}>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      <Typography variant="body2">Məlumat təchizatçısı:</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{loanData.dataProvider}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography variant="body2">Hesab nömrəsi:</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{loanData.accountNumber}</Typography>
+                    </TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell colSpan={2} sx={{ backgroundColor: '#E3F2FD' }}>
+                      <Typography variant="h5">Qalıq məbləği</Typography>
+                      <Typography variant="h4">{loanData.totalAmount.toFixed(2)}</Typography>
+                    </TableCell>
+                    <TableCell colSpan={3} sx={{ backgroundColor: '#E3F2FD' }}>
+                      <Typography variant="h5">Faiz məbləği</Typography>
+                      <Typography variant="h4">{loanData.interestAmount.toFixed(2)}</Typography>
+                    </TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>Aylıq ödəniş məbləği</TableCell>
+                    <TableCell>{loanData.monthlyPayment}</TableCell>
+                    <TableCell>Verilmə tarixi</TableCell>
+                    <TableCell>{loanData.issuanceDate}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Sonuncu ödəniş tarixi</TableCell>
+                    <TableCell>{loanData.lastPaymentDate}</TableCell>
+                    <TableCell>İlkin müqavilə ilə bitmə tarixi</TableCell>
+                    <TableCell>{loanData.initialContractEndDate}</TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>Məqsədi</TableCell>
+                    <TableCell>{loanData.loanPurpose}</TableCell>
+                    <TableCell>Son müqavilə ilə bitmə tarixi</TableCell>
+                    <TableCell>{loanData.lastContractEndDate}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Əsas borcun gecikdirildiyi gün sayı</TableCell>
+                    <TableCell>{loanData.overdueDaysMainDebt}</TableCell>
+                    <TableCell>Faizlərin gecikdirildiyi gün sayı</TableCell>
+                    <TableCell>{loanData.overdueDaysInterest}</TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell colSpan={4} sx={{ backgroundColor: '#E3F2FD' }}>
+                      <Typography variant="h6" align="right">
+                        Təminat
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Növü</TableCell>
+                    <TableCell>{loanData.collateralType}</TableCell>
+                    <TableCell>Dəyəri (manatla)</TableCell>
+                    <TableCell>{loanData.collateralValue}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Predmeti və təsviri:</TableCell>
+                    <TableCell colSpan={4}>{loanData.collateralDescription}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Qeydiyyata almış orqan</TableCell>
+                    <TableCell colSpan={3}>{loanData.registrationAuthority}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={4} align="right">
+                      Tarixi: {loanData.registrationDate}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <TableContainer component={Box} my={4}>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell
+                      align="center"
+                      sx={{ backgroundColor: '#0070C0', color: 'white', padding: '8px' }}
+                    >
+                      <Typography variant="body2">Tarixçə</Typography>
+                    </TableCell>
+                    {combinedHeaders.reverse().map((header, index) => (
+                      <TableCell
+                        key={index}
+                        align="center"
+                        sx={{ backgroundColor: '#1F4E79', color: 'white', padding: '8px' }}
+                      >
+                        <Typography variant="body2">{header.label}</Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  {/* Data Row */}
+                  <TableRow>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        backgroundColor: '#0070C0',
+                        color: 'white',
+                        border: '1px solid black',
+                        padding: '8px',
+                      }}
+                    >
+                      <Typography variant="body2">Ödəniş Tarixçəsi</Typography>
+                    </TableCell>
+                    {creditData.map((daysLate, index) => (
+                      <TableCell
+                        key={index}
+                        align="center"
+                        sx={{
+                          backgroundColor: getBackgroundColor(daysLate),
+                          color: daysLate === '-' ? 'black' : 'white',
+                          border: '1px solid black',
+                          padding: '8px',
+                          height: '50px',
+                          width: '50px',
+                        }}
+                      >
+                        <Typography variant="body2">{daysLate}</Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Typography>4. Borcalanın bağlanmış öhdəlikləri</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Typography>4.1 Kredit - {oldLoanData.totalAmount}</Typography>
+              <Typography>KIN: {oldLoanData.KIN}</Typography>
+            </Box>
+            <TableContainer component={Box} my={4}>
+              <Table>
+                <TableBody>
+                  <TableRow
+                    sx={{
+                      backgroundColor: '#e3f2fd',
+                    }}
+                  >
+                    <TableCell>
+                      <Typography variant="body2">Məlumat təchizatçısı:</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{oldLoanData.dataProvider}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography variant="body2">Hesab nömrəsi:</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{oldLoanData.accountNumber}</Typography>
+                    </TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>Aylıq ödəniş məbləği</TableCell>
+                    <TableCell>{oldLoanData.monthlyPayment}</TableCell>
+                    <TableCell>Verilmə tarixi</TableCell>
+                    <TableCell>{oldLoanData.issuanceDate}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      backgroundColor: '#e3f2fd',
+                    }}
+                  >
+                    <TableCell>Sonuncu ödəniş tarixi</TableCell>
+                    <TableCell>{oldLoanData.lastPaymentDate}</TableCell>
+                    <TableCell>İlkin müqavilə ilə bitmə tarixi</TableCell>
+                    <TableCell>{oldLoanData.initialContractEndDate}</TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>Məqsədi</TableCell>
+                    <TableCell>{oldLoanData.loanPurpose}</TableCell>
+                    <TableCell>Son müqavilə ilə bitmə tarixi</TableCell>
+                    <TableCell>{oldLoanData.lastContractEndDate}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      backgroundColor: '#e3f2fd',
+                    }}
+                  >
+                    <TableCell>Əsas borcun gecikdirildiyi gün sayı</TableCell>
+                    <TableCell>{oldLoanData.overdueDaysMainDebt}</TableCell>
+                    <TableCell>Faizlərin gecikdirildiyi gün sayı</TableCell>
+                    <TableCell>{oldLoanData.overdueDaysInterest}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Typography>5. Borcalanın zamin olduğu öhdəlikləri</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Typography>5.1 Kredit Xətti - {guarantorLoanData.totalAmount}</Typography>
+              <Typography>KIN: {guarantorLoanData.KIN}</Typography>
+            </Box>
+            <TableContainer component={Box} my={4}>
+              <Table>
+                <TableBody>
+                  <TableRow
+                    sx={{
+                      backgroundColor: '#e3f2fd',
+                    }}
+                  >
+                    <TableCell>
+                      <Typography variant="body2">Məlumat təchizatçısı:</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{guarantorLoanData.dataProvider}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography variant="body2">Hesab nömrəsi:</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{guarantorLoanData.accountNumber}</Typography>
+                    </TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>Aylıq ödəniş məbləği</TableCell>
+                    <TableCell>{guarantorLoanData.monthlyPayment}</TableCell>
+                    <TableCell>Verilmə tarixi</TableCell>
+                    <TableCell>{guarantorLoanData.issuanceDate}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      backgroundColor: '#e3f2fd',
+                    }}
+                  >
+                    <TableCell>Sonuncu ödəniş tarixi</TableCell>
+                    <TableCell>{guarantorLoanData.lastPaymentDate}</TableCell>
+                    <TableCell>İlkin müqavilə ilə bitmə tarixi</TableCell>
+                    <TableCell>{guarantorLoanData.initialContractEndDate}</TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>Məqsədi</TableCell>
+                    <TableCell>{guarantorLoanData.loanPurpose}</TableCell>
+                    <TableCell>Son müqavilə ilə bitmə tarixi</TableCell>
+                    <TableCell>{guarantorLoanData.lastContractEndDate}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      backgroundColor: '#e3f2fd',
+                    }}
+                  >
+                    <TableCell>Əsas borcun gecikdirildiyi gün sayı</TableCell>
+                    <TableCell>{guarantorLoanData.overdueDaysMainDebt}</TableCell>
+                    <TableCell>Faizlərin gecikdirildiyi gün sayı</TableCell>
+                    <TableCell>{guarantorLoanData.overdueDaysInterest}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+          <div
+            style={{
+              width: '100%',
+              borderBottom: '1px solid blue',
+              borderTop: '1px solid blue',
+              padding: '10px 0',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: '10px 0',
+              color: 'blue',
+            }}
+          >
+            <span>Hesabatın sonu</span>
+          </div>
         </Grid>
       )) ||
+        (currentTab === 's/v' && (
+          <Grid container gap="55px" mt={3}>
+            <Box>
+              <Field.UploadAvatar
+                name="avatarUrl"
+                maxSize={3145728}
+                sx={{
+                  height: '128px',
+                  width: '128px',
+                }}
+              />
+            </Box>
+
+            <Grid xs={12} md={8}>
+              <Card sx={{ p: 3 }}>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                >
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(3  , 1fr)' }}
+                  >
+                    <Field.Text
+                      variant="outlined"
+                      required
+                      name="fin"
+                      fullWidth
+                      label="Fin"
+                      id="fin"
+                      autoFocus
+                      InputProps={{
+                        endAdornment: <SearchIconSVG />,
+                      }}
+                    />
+
+                    <Field.Text name="serialNumber" label="Ş/V seriyası və nömrəsi" />
+                    <Field.Text name="passportStatus" label="Vəsiqənin statusu" />
+                  </Box>
+
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+                  >
+                    <Field.Text name="name" label="Adı" />
+                    <Field.Text name="surname" label="Soyadı" />
+                    <Field.Text name="fatherName" label="Ata adı" />
+                    <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" />
+                    <Field.Text name="state" label="Şəhər" />
+                    <Field.Text name="city" label="Rayon" />
+                    <Field.Text name="role" label="Vəzifə" />
+                    <Field.Select
+                      native
+                      name="familyRelationship"
+                      label="Rol"
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      {_customerRole.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field.Select>
+                    <Field.Select
+                      native
+                      name="familyRelationship"
+                      label="Ailə vəziyyəti"
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      {familyRelationshipOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field.Select>
+                    <Field.Select
+                      native
+                      name="gender"
+                      label="Cinsi"
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      {PRODUCT_GENDER_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field.Select>
+                  </Box>
+                  <Field.Text name="address" label="Qeydiyyatda olduğu ünvan" />
+                  <Field.Text name="phoneNumber" label="Telefon nömrəsi" />
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+                  >
+                    <Field.Select
+                      native
+                      name="whereToGetSignature"
+                      label="Müqavilənin əldə ediləcəyi vasitələr"
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      {whereToGetSignatureOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field.Select>
+
+                    {selectedOption === 'tg' && (
+                      <Field.Text name="telegramUsername" label="Telegram Username" />
+                    )}
+
+                    {selectedOption === 'wp' && (
+                      <Field.Text name="whatsappNumber" label="WhatsApp Number" />
+                    )}
+
+                    {selectedOption === 'em' && <Field.Text name="email" label="Email" />}
+                  </Box>
+                </Box>
+              </Card>
+            </Grid>
+          </Grid>
+        )) ||
         (currentTab === 'akb' && (
           <Grid spacing={3}>
             <Stack>
@@ -334,7 +974,10 @@ export function CreateCreditForm() {
 
                 <Field.Text name="countTotal24" label="Sayı" />
 
-                <Field.Text name="before24Months" label="Son 24 aydan əvvəl ödənilmiş borcun ümumi məbləği" />
+                <Field.Text
+                  name="before24Months"
+                  label="Son 24 aydan əvvəl ödənilmiş borcun ümumi məbləği"
+                />
 
                 <Field.Text name="countBefore24" label="Sayı" />
               </Box>
