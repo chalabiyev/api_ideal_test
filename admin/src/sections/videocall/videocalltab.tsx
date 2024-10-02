@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import AddUserModal from './MeetComponents/AddUserModal';
+import MeetHero from './MeetComponents/MeetHero';
 
-export function VideoCallTab()  {
+export function VideoCallTab() {
   return (
-    <div>
-        Muraciet eden; Zeynalov Rasim Eli oglu
-    </div>
-  )
+    <>
+      <AddUserModal />
+      <MeetHero />
+    </>
+  );
 }

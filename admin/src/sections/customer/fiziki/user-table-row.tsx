@@ -30,12 +30,10 @@ type Props = {
 };
 
 export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) {
-
-  const router = useRouter()
+  const router = useRouter();
   const confirm = useBoolean();
 
   const popover = usePopover();
-
 
   return (
     <>
@@ -44,8 +42,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           <Checkbox id={row.id} checked={selected} onClick={onSelectRow} />
         </TableCell>
         <TableCell onClick={onEditRow} sx={{ cursor: 'pointer' }}>
-          {/* {row.} */}
-2
+          {/* {row.} */}2
         </TableCell>
 
         <TableCell>
@@ -61,18 +58,10 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
           11.12.2023
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.state}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.city}
-        </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.phoneNumber}
-        </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.role}
-        </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {row.status}
-        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.city}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.phoneNumber}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.role}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.status}</TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center">
@@ -116,7 +105,15 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
             }}
           >
             <Iconify icon="solar:pen-bold" />
-            Request
+            Sorğu yarat
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              router.push(`/dashboard/customer/${row.id}/createcredit`);
+            }}
+          >
+            <Iconify icon="solar:pen-bold" />
+            Kredit yarat
           </MenuItem>
         </MenuList>
       </CustomPopover>

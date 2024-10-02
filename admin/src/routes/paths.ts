@@ -105,7 +105,7 @@ export const paths = {
     videoCall: '/videocall',
     credits: {
       root: `${ROOTS.DASHBOARD}/credits`,
-      new: `${ROOTS.DASHBOARD}/credits/new`,
+      new: `${ROOTS.DASHBOARD}/credits/`,
       list: `${ROOTS.DASHBOARD}/credits/list`,
       details: (id: string) => `${ROOTS.DASHBOARD}/credits/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/credits/${id}/edit`,

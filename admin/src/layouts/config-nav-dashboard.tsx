@@ -267,16 +267,6 @@ export const navData = [
         ],
       },
       {
-        title: 'Əsas vəsaitlər',
-        path: paths.dashboard.tour.root,
-        icon: ICONS.tour,
-        children: [
-          { title: 'İnvertarlar', path: paths.dashboard.tour.root },
-          { title: 'Amartizasiya', path: paths.dashboard.tour.demo.details },
-          { title: 'Balansda əks olunma', path: paths.dashboard.tour.demo.details },
-        ],
-      },
-      {
         title: 'Gecikmə portfeli',
         path: paths.dashboard.tour.root,
         icon: ICONS.tour,
