@@ -4,11 +4,11 @@ import az.esam.kredit.kredit.dtos.AuthenticationResponse;
 import az.esam.kredit.kredit.dtos.ChangeNameRequest;
 import az.esam.kredit.kredit.dtos.LoginRequest;
 import az.esam.kredit.kredit.dtos.RegisterRequest;
-import az.esam.kredit.kredit.entities.ERole;
-import az.esam.kredit.kredit.entities.EUserStatus;
+import az.esam.kredit.kredit.entities.enums.ERole;
+import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import az.esam.kredit.kredit.entities.Role;
 import az.esam.kredit.kredit.entities.Token;
-import az.esam.kredit.kredit.entities.TokenType;
+import az.esam.kredit.kredit.entities.enums.TokenType;
 import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.repos.RoleRepository;
 import az.esam.kredit.kredit.repos.TokenRepository;
@@ -120,16 +120,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         roles.add(adminRole);
 
                         break;
-                    case "manager", "ROLE_MANAGER":
-                        Role manager = roleRepository.findByName(ERole.ROLE_MANAGER)
+                    case "hr", "ROLE_HR":
+                        Role hr = roleRepository.findByName(ERole.ROLE_HR)
                                 .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-                        roles.add(manager);
+                        roles.add(hr);
 
                         break;
-                    case "operator", "ROLE_OPERATOR":
-                        Role operator = roleRepository.findByName(ERole.ROLE_OPERATOR)
+                    case "credit_manager", "ROLE_CREDIT_MANAGER":
+                        Role credit_manager = roleRepository.findByName(ERole.ROLE_CREDIT_MANAGER)
                                 .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
-                        roles.add(operator);
+                        roles.add(credit_manager);
+
+                        break;
+                    case "accountant", "ROLE_ACCOUNTANT":
+                        Role accountant = roleRepository.findByName(ERole.ROLE_ACCOUNTANT)
+                                .orElseThrow(() -> new RuntimeException(ERROR_ROLE_IS_NOT_FOUND));
+                        roles.add(accountant);
 
                         break;
                     default:

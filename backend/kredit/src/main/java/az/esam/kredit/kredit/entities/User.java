@@ -1,10 +1,12 @@
 package az.esam.kredit.kredit.entities;
 
+import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,15 +15,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
 @Document(collection = "users")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     private String id;
@@ -64,7 +63,7 @@ public class User {
 
     @NotBlank
     @Size(max = 120)
-    private String familyRelationship;
+    private String maritalStatus;
 
     @NotBlank
     @Size(max = 50)
@@ -119,15 +118,5 @@ public class User {
 
     private String photo;
 
-    @CreatedBy
-    private String createdBy;
-
-    @LastModifiedBy
-    private String updatedBy;
-
-    @CreatedDate
-    private Date createdDate;
-
-    @LastModifiedDate
-    private Date updatedDate;
+    private String departmentId;
 }

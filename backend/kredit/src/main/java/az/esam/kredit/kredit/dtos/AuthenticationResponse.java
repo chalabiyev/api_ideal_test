@@ -1,6 +1,6 @@
 package az.esam.kredit.kredit.dtos;
 
-import az.esam.kredit.kredit.entities.TokenType;
+import az.esam.kredit.kredit.entities.enums.TokenType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

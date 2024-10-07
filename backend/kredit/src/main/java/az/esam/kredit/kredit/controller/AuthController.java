@@ -10,7 +10,7 @@ import az.esam.kredit.kredit.dtos.MessageResponse;
 import az.esam.kredit.kredit.dtos.OTPRequest;
 import az.esam.kredit.kredit.dtos.PasswordResetRequest;
 import az.esam.kredit.kredit.dtos.RegisterRequest;
-import az.esam.kredit.kredit.entities.ERole;
+import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.Role;
 import az.esam.kredit.kredit.otp.OTPService;
 import az.esam.kredit.kredit.repos.RoleRepository;
@@ -76,8 +76,9 @@ public class AuthController {
         if (roleRepository.findAll().isEmpty()) {
             roleRepository.insert(new Role(ERole.ROLE_ADMIN));
             roleRepository.insert(new Role(ERole.ROLE_USER));
-            roleRepository.insert(new Role(ERole.ROLE_MANAGER));
-            roleRepository.insert(new Role(ERole.ROLE_OPERATOR));
+            roleRepository.insert(new Role(ERole.ROLE_HR));
+            roleRepository.insert(new Role(ERole.ROLE_CREDIT_MANAGER));
+            roleRepository.insert(new Role(ERole.ROLE_ACCOUNTANT));
         }
 
         if (userRepository.findAll().isEmpty()) {

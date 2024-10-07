@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.entities;
 
+import az.esam.kredit.kredit.entities.enums.TokenType;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

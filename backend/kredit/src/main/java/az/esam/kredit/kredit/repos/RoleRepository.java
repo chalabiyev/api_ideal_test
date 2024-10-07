@@ -1,6 +1,6 @@
 package az.esam.kredit.kredit.repos;
 
-import az.esam.kredit.kredit.entities.ERole;
+import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.Role;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
