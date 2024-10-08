@@ -1,18 +1,18 @@
 package az.esam.kredit.kredit.security.auth;
 
-import az.esam.kredit.kredit.dtos.AuthenticationResponse;
-import az.esam.kredit.kredit.dtos.ChangeNameRequest;
-import az.esam.kredit.kredit.dtos.LoginRequest;
-import az.esam.kredit.kredit.dtos.RegisterRequest;
+import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
+import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
+import az.esam.kredit.kredit.dtos.requests.LoginRequest;
+import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import az.esam.kredit.kredit.entities.Role;
 import az.esam.kredit.kredit.entities.Token;
 import az.esam.kredit.kredit.entities.enums.TokenType;
 import az.esam.kredit.kredit.entities.User;
-import az.esam.kredit.kredit.repos.RoleRepository;
-import az.esam.kredit.kredit.repos.TokenRepository;
-import az.esam.kredit.kredit.repos.UserRepository;
+import az.esam.kredit.kredit.repositories.RoleRepository;
+import az.esam.kredit.kredit.repositories.TokenRepository;
+import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.security.jwt.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

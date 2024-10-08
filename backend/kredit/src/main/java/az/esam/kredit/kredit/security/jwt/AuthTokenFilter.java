@@ -1,7 +1,7 @@
 package az.esam.kredit.kredit.security.jwt;
 
 import az.esam.kredit.kredit.entities.User;
-import az.esam.kredit.kredit.repos.TokenRepository;
+import az.esam.kredit.kredit.repositories.TokenRepository;
 import az.esam.kredit.kredit.security.auth.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

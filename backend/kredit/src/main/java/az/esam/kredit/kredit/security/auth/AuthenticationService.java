@@ -1,9 +1,9 @@
 package az.esam.kredit.kredit.security.auth;
 
-import az.esam.kredit.kredit.dtos.AuthenticationResponse;
-import az.esam.kredit.kredit.dtos.ChangeNameRequest;
-import az.esam.kredit.kredit.dtos.LoginRequest;
-import az.esam.kredit.kredit.dtos.RegisterRequest;
+import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
+import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
+import az.esam.kredit.kredit.dtos.requests.LoginRequest;
+import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
