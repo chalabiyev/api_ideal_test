@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.Set;
+
 import org.springframework.data.mongodb.core.index.Indexed;
 
 @Data
@@ -95,4 +96,6 @@ public class RegisterRequest {
     private String address;
 
     private String photo;
+
+    private String departmentId;
 }

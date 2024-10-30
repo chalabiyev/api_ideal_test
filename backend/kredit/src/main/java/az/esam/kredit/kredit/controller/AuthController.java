@@ -10,6 +10,8 @@ import az.esam.kredit.kredit.dtos.responses.MessageResponse;
 import az.esam.kredit.kredit.dtos.requests.OTPRequest;
 import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
 import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
+import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.Role;
 import az.esam.kredit.kredit.services.internal.otp.OTPService;
@@ -23,6 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +33,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -88,6 +92,7 @@ public class AuthController {
                         .username(ADMIN_USER_NAME)
                         .email("admin@admin.com")
                         .fullName(ADMIN_USER_NAME)
+                        .gender("MALE")
                         .roles(new HashSet<>(List.of(ADMIN_USER_NAME)))
                         .phoneNumber("994504809988")
                         .build());
@@ -104,14 +109,8 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> create(
             @Valid @RequestBody RegisterRequest registerRequest,
             HttpServletRequest httpRequest) {
-        try {
-            AuthenticationResponse response = authenticationService.register(registerRequest);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build();
-        }
+        AuthenticationResponse response = authenticationService.register(registerRequest);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
@@ -120,14 +119,8 @@ public class AuthController {
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletRequest httpRequest
     ) {
-        try {
-            AuthenticationResponse response = authenticationService.authenticate(loginRequest);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build();
-        }
+        AuthenticationResponse response = authenticationService.authenticate(loginRequest);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/refresh-token")
@@ -138,14 +131,8 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
-        try {
-            authenticationService.refreshToken(request, response);
-            return ResponseEntity.status(200).body("Token refreshed successfully");
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
-        }
+        authenticationService.refreshToken(request, response);
+        return ResponseEntity.status(200).body("Token refreshed successfully");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -166,20 +153,13 @@ public class AuthController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/deleteAccount/{id}")
-    public ResponseEntity<?> deleteAccount(@PathVariable String id) {
-        try {
-            if (authenticationService.delete(id)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "Account deleted successfully"));
-            }
+    public ResponseEntity<Boolean> deleteAccount(@PathVariable String id) {
+        if (authenticationService.delete(id)) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new MessageResponse(HttpStatus.UNAUTHORIZED, "User not found"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new MessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadCredentialsException("User not found");
         }
     }
 
@@ -187,43 +167,28 @@ public class AuthController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/deleteMyAccount")
-    public ResponseEntity<?> deleteMyAccount(@RequestParam String password, Authentication authentication) {
-        try {
-            if (authenticationService.deleteMyAccount(password, authentication)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "Account deleted successfully"));
-            }
+    public ResponseEntity<Boolean> deleteMyAccount(@RequestParam String password, Authentication authentication) {
+        if (authenticationService.deleteMyAccount(password, authentication)) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new MessageResponse(HttpStatus.UNAUTHORIZED, "User not found"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new MessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadCredentialsException("User not found");
         }
     }
 
-    // TODO change path variable to request param
-    @PostMapping("/send-otp/{isPhone}")
+    @PostMapping("/send-otp")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> sendOtpCode(
+    public ResponseEntity<Boolean> sendOtpCode(
             @Valid @RequestBody OTPRequest request,
-            @PathVariable boolean isPhone,
-            HttpServletRequest httpRequest) {
-        try {
-            if (otpService.sendOtp(request, isPhone)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "OTP sent successfully"));
-            }
+            @RequestParam String platform,
+            HttpServletRequest httpRequest) throws BadRequestException {
+        if (otpService.sendOtp(request, platform.toUpperCase())) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, "OTP not sent"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("OTP not sent");
         }
     }
 
@@ -231,24 +196,17 @@ public class AuthController {
     @SecurityRequirement(name = "authentication")
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> changePassword(
+    public ResponseEntity<Boolean> changePassword(
             @Valid @RequestBody ChangePasswordRequest request,
             Authentication authentication,
             HttpServletRequest httpRequest
-    ) {
-        try {
-            if (otpService.changePassword(request, httpRequest, authentication)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "Password changed successfully"));
-            }
+    ) throws BadRequestException {
+        if (otpService.changePassword(request, httpRequest, authentication)) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, "Password not changed"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("Password not changed");
         }
     }
 
@@ -256,23 +214,16 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> changeEmail(
+    public ResponseEntity<Boolean> changeEmail(
             @Valid @RequestBody ChangeEmailRequest request,
             HttpServletRequest httpRequest
-    ) {
-        try {
-            if (otpService.changeEmail(request, httpRequest)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "Email changed successfully"));
-            }
+    ) throws BadRequestException {
+        if (otpService.changeEmail(request, httpRequest)) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, "Email not changed"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("Email not changed");
         }
     }
 
@@ -280,24 +231,17 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> changeFullName(
+    public ResponseEntity<Boolean> changeFullName(
             @Valid @RequestBody ChangeNameRequest request,
             Authentication authentication,
             HttpServletRequest httpRequest
-    ) {
-        try {
-            if (authenticationService.changeName(request, httpRequest, authentication)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "Full name changed successfully"));
-            }
+    ) throws BadRequestException {
+        if (authenticationService.changeName(request, httpRequest, authentication)) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, "Full name not changed"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("Full name not changed");
         }
     }
 
@@ -305,46 +249,32 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> changePhone(
+    public ResponseEntity<Boolean> changePhone(
             @Valid @RequestBody ChangePhoneRequest request,
             HttpServletRequest httpRequest
-    ) {
-        try {
-            if (otpService.changePhone(request, httpRequest)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "Phone changed successfully"));
-            }
+    ) throws BadRequestException {
+        if (otpService.changePhone(request, httpRequest)) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, "Phone not changed"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("Phone not changed");
         }
     }
 
-    @PostMapping("/reset-password/{isPhone}")
+    @PostMapping("/reset-password")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> resetPassword(
+    public ResponseEntity<Boolean> resetPassword(
             @Valid @RequestBody PasswordResetRequest request,
-            @PathVariable boolean isPhone,
+            @RequestParam String platform,
             HttpServletRequest httpRequest
-    ) {
-        try {
-            if (otpService.resetPassword(request, httpRequest, isPhone)) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(new MessageResponse(HttpStatus.OK, "Password reset successfully"));
-            }
+    ) throws BadRequestException {
+        if (otpService.resetPassword(request, httpRequest, platform.toUpperCase())) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, "Password not reset"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("Password not reset");
         }
     }
 
@@ -352,14 +282,8 @@ public class AuthController {
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> listUsers() {
-        try {
-            return ResponseEntity.ok(userRepository.findAll());
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
-        }
+    public ResponseEntity<List<User>> listUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -367,22 +291,17 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/setUserPhoto")
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, Authentication authentication) {
-        try {
-            var user = userRepository.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            String fileName = authentication.getName().concat(".jpg");
-            storageService.store(file, fileName);
-            user.setPhoto(fileName);
-            userRepository.save(user);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(new MessageResponse(HttpStatus.OK, fileName));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
-        }
+        var user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        String fileName = authentication.getName().concat(".jpg");
+        storageService.store(file, fileName);
+        user.setPhoto(fileName);
+        userRepository.save(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MessageResponse(HttpStatus.OK, fileName));
     }
+
 
     @GetMapping("/getUserPhoto/{photoName}")
     @SecurityRequirement(name = "X-API-KEY")
@@ -422,13 +341,7 @@ public class AuthController {
 
     @GetMapping("/me")
     @SecurityRequirement(name = "X-API-KEY")
-    public ResponseEntity<?> me(HttpServletRequest request) {
-        try {
-            return ResponseEntity.ok(authenticationService.me(request));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new MessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage()));
-        }
+    public ResponseEntity<User> me(HttpServletRequest request) {
+        return ResponseEntity.ok(authenticationService.me(request));
     }
 }

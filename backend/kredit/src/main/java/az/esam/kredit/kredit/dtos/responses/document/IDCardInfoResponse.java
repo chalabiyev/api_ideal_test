@@ -1,18 +1,15 @@
-package az.esam.kredit.kredit.entities.documents;
+package az.esam.kredit.kredit.dtos.responses.document;
 
-import az.esam.kredit.kredit.entities.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
 @Document(collection = "idCard_Info")
-public class IDCardInfo extends BaseEntity {
+public class IDCardInfoResponse {
 
     private String documentType;
     private String documentNumber;

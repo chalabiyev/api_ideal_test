@@ -132,11 +132,11 @@ public class FileSystemStorageService implements StorageService {
                 return resource;
             } else {
                 Logger.getLogger("FileSystemStorage").info("Could not read file: " + filename);
-                throw new RuntimeException("Could not read file, or file doesn't exits " + filename);
+                throw new StorageException("Could not read file, or file doesn't exits " + filename);
             }
         } catch (MalformedURLException e) {
             Logger.getLogger("FileSystemStorage").info("Could not read file: " + filename);
-            throw new RuntimeException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
     }
 

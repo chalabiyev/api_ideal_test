@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.apache.coyote.BadRequestException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -88,7 +89,7 @@ public class SMSServiceImpl implements SMSService {
     public boolean sendSMS(String phoneNumber, String otpCode) {
         try {
             if (getSMSBalance() <= 0) {
-                throw new RuntimeException("SMS balance is empty");
+                throw new BadRequestException("SMS balance is empty");
             }
             String passwordMd5 = md5Hash(prop.getPassword());
             String concat = passwordMd5 + prop.getLogin() + otpCode + phoneNumber + prop.getSenderName();

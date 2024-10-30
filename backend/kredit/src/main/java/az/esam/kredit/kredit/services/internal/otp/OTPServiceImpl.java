@@ -5,6 +5,8 @@ import az.esam.kredit.kredit.dtos.requests.ChangePasswordRequest;
 import az.esam.kredit.kredit.dtos.requests.ChangePhoneRequest;
 import az.esam.kredit.kredit.dtos.requests.OTPRequest;
 import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
+import az.esam.kredit.kredit.entities.enums.EPlatform;
+import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import az.esam.kredit.kredit.services.external.email.EmailService;
 import az.esam.kredit.kredit.entities.OTPRecord;
 import az.esam.kredit.kredit.entities.User;
@@ -13,13 +15,17 @@ import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.services.external.sms.SMSService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.BadAttributeValueExpException;
 import java.util.*;
 
 @Service
@@ -45,10 +51,10 @@ public class OTPServiceImpl implements OTPService {
     SMSService smsService;
 
     @Override
-    public boolean sendOtp(OTPRequest request, boolean isPhone) {
+    public boolean sendOtp(OTPRequest request, String platform) throws BadRequestException {
         try {
             if (request.getContact() == null) {
-                throw new RuntimeException("Contact is required");
+                throw new BadRequestException("Contact is required");
             }
 
             String otpCode = createOtpCode();
@@ -64,10 +70,10 @@ public class OTPServiceImpl implements OTPService {
             calendar.add(Calendar.MINUTE, 3);
             otpRecord.setExpirationDate(calendar.getTime());
 
-            if (isPhone) {
+            if (platform.equals(EPlatform.PHONE.name())) {
                 otpRecord.setPhone(request.getContact());
                 if (smsService.getSMSBalance() <= 0) {
-                    throw new RuntimeException("SMS balance is empty");
+                    throw new BadRequestException("SMS balance is empty");
                 }
                 if (!request.getContact().substring(0, 3).equals("994")) {
                     request.setContact("994" + request.getContact());
@@ -84,7 +90,7 @@ public class OTPServiceImpl implements OTPService {
                     otpRepository.insert(otpRecord);
                 }
                 return result;
-            } else {
+            } else if (platform.equals(EPlatform.EMAIL.name())) {
                 otpRecord.setEmail(request.getContact());
 
                 if (emailService.sendEmail(from, request.getContact(), "OTP Code", otpCode)) {
@@ -95,23 +101,27 @@ public class OTPServiceImpl implements OTPService {
             return false;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
     }
 
-    public boolean validateOTP(String contact, String otpCode, boolean isPhone) {
+    @Override
+    public boolean validateOTP(String contact, String otpCode, EPlatform platform) throws BadRequestException {
         try {
-            List<OTPRecord> otpRecord = isPhone ?
-                    otpRepository.findByPhone(contact) :
-                    otpRepository.findByEmail(contact);
+            List<OTPRecord> otpRecord = new ArrayList<>();
+            if (platform.equals(EPlatform.PHONE)) {
+                otpRecord = otpRepository.findByPhone(contact);
+            } else if (platform.equals(EPlatform.EMAIL)) {
+                otpRecord = otpRepository.findByEmail(contact);
+            }
 
             if (otpRecord.isEmpty()) {
-                throw new RuntimeException("OTP record not found");
+                throw new BadRequestException("OTP record not found");
             }
 
             if (otpRecord.get(otpRecord.size() - 1).getExpirationDate().before(new Date())
                     || otpRecord.get(otpRecord.size() - 1).getValidationDate() != null) {
-                throw new RuntimeException("OTP code is expired");
+                throw new BadRequestException("OTP code is expired");
             }
 
             boolean result = passwordEncoder.matches(otpCode, otpRecord.get(otpRecord.size() - 1).getOtpCode());
@@ -122,13 +132,13 @@ public class OTPServiceImpl implements OTPService {
             return result;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
     }
 
     @Override
-    public boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, boolean isPhone) {
-        if (isPhone) {
+    public boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform) {
+        if (platform.equals(EPlatform.PHONE.name())) {
             request.setContact(request.getContact()
                     .replace("(", "")
                     .replace(")", "")
@@ -141,32 +151,32 @@ public class OTPServiceImpl implements OTPService {
             }
         }
         try {
-            User user = isPhone ?
+            User user = platform.equals(EPlatform.PHONE.name()) ?
                     userRepository.findByPhoneNumber(request.getContact())
                             .orElseThrow(() -> new UsernameNotFoundException("User not found")) :
                     userRepository.findByEmail(request.getContact())
                             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (request.getNewPassword().equals(request.getPassword())) {
-                if (validateOTP(request.getContact(), request.getOtpCode(), isPhone)) {
+                if (validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform))) {
                     user.setPassword(passwordEncoder.encode(request.getPassword()));
                     userRepository.save(user);
                     return true;
                 }
             } else {
-                throw new RuntimeException("Passwords do not match");
+                throw new BadCredentialsException("Passwords do not match");
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new BadCredentialsException(e.getMessage());
         }
         return false;
     }
 
     @Override
-    public boolean changePassword(ChangePasswordRequest request, HttpServletRequest httpRequest, Authentication authentication) {
+    public boolean changePassword(ChangePasswordRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException {
         try {
-            var user = userRepository.findByUsername(authentication.getName())
+            var user = userRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())
@@ -176,66 +186,66 @@ public class OTPServiceImpl implements OTPService {
                 userRepository.save(user);
                 return true;
             } else {
-                throw new RuntimeException("Passwords do not match");
+                throw new BadRequestException("Passwords do not match");
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
     }
 
     @Override
-    public boolean changeEmail(ChangeEmailRequest request, HttpServletRequest httpRequest) {
+    public boolean changeEmail(ChangeEmailRequest request, HttpServletRequest httpRequest) throws BadRequestException {
         try {
             User userExists = userRepository.findByEmail(request.getNewEmail()).orElse(null);
 
-            if (userExists != null) {
-                throw new RuntimeException("Email already exists");
+            if (userExists != null && !userExists.getStatus().equals(EUserStatus.DELETED)) {
+                throw new BadRequestException("Email already exists");
             }
 
             User user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            if (validateOTP(request.getNewEmail(), request.getOtpCode(), false)) {
+            if (validateOTP(request.getNewEmail(), request.getOtpCode(), EPlatform.EMAIL)) {
                 if (request.getEmail().equals(user.getEmail())) {
                     user.setEmail(request.getNewEmail());
                     userRepository.save(user);
                     return true;
                 } else {
-                    throw new RuntimeException("Emails do not match");
+                    throw new BadRequestException("Emails do not match");
                 }
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
         return false;
     }
 
     @Override
-    public boolean changePhone(ChangePhoneRequest request, HttpServletRequest httpRequest) {
+    public boolean changePhone(ChangePhoneRequest request, HttpServletRequest httpRequest) throws BadRequestException {
         try {
             User userExists = userRepository.findByPhoneNumber(request.getNewPhone()).orElse(null);
 
-            if (userExists != null) {
-                throw new RuntimeException("Phone number already exists");
+            if (userExists != null && !userExists.getStatus().equals(EUserStatus.DELETED)) {
+                throw new BadRequestException("Phone number already exists");
             }
 
             User user = userRepository.findByPhoneNumber(request.getPhone())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            if (validateOTP(request.getNewPhone(), request.getOtpCode(), true)) {
+            if (validateOTP(request.getNewPhone(), request.getOtpCode(), EPlatform.PHONE)) {
                 if (request.getPhone().equals(user.getPhoneNumber())) {
                     user.setPhoneNumber(request.getNewPhone());
                     userRepository.save(user);
                     return true;
                 } else {
-                    throw new RuntimeException("Emails do not match");
+                    throw new BadRequestException("Emails do not match");
                 }
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
         return false;
     }

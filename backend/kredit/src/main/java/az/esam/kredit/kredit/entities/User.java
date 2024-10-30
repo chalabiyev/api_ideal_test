@@ -1,8 +1,6 @@
 package az.esam.kredit.kredit.entities;
 
-import az.esam.kredit.kredit.entities.documents.IDCardInfo;
-import az.esam.kredit.kredit.entities.documents.MigrationDocumentInfo;
-import az.esam.kredit.kredit.entities.documents.PassportDocumentInfo;
+import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -51,7 +49,7 @@ public class User extends BaseEntity {
 
     @NotBlank
     @Size(max = 50)
-    private String gender;
+    private EGender gender;
 
     @NotBlank
     @Size(max = 20)
@@ -61,15 +59,6 @@ public class User extends BaseEntity {
     @Indexed(unique = true)
     @Email
     private String email;
-
-    @DBRef
-    PassportDocumentInfo passportDocumentInfo;
-
-    @DBRef
-    IDCardInfo idCardInfo;
-
-    @DBRef
-    MigrationDocumentInfo migrationDocumentInfo;
 
     @NotBlank
     private String password;
@@ -82,9 +71,13 @@ public class User extends BaseEntity {
     @DBRef
     private List<Token> tokens;
 
+    private Date birthDate;
+
     private EUserStatus status;
 
     private Date signUpDate;
+
+    private String photo;
 
     private String departmentId;
 }

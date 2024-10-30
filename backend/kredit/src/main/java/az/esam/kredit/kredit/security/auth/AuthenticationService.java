@@ -7,6 +7,7 @@ import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
@@ -32,5 +33,5 @@ public interface AuthenticationService {
 
     User me(HttpServletRequest request);
 
-    boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication);
+    boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException;
 }
