@@ -1,6 +1,5 @@
 package az.esam.kredit.kredit;
 
-import az.esam.kredit.kredit.services.external.idService.DocumentInfoServiceImpl;
 import az.esam.kredit.kredit.services.internal.storage.StorageService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

@@ -5,47 +5,74 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @Slf4j
+@Service
 public class SendRequest {
 
     @Autowired
-    static ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
-    public static JsonNode executeRequest(String bodyStr, String url, String authKey) {
+    @Value("${azinbridge.key}")
+    private String authKey;
+
+    @Value("${azinbridge.host}")
+    private String host;
+
+    public JsonNode executeRequest(String url) {
         JsonNode result = null;
+        Response response = null;
+        log.info("authKey : {} ", authKey);
+        log.info("host : {} ", host);
         try {
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                    .build();
-            Request.Builder builder = new Request.Builder()
-                    .url(url)
-                    .addHeader("Accept", "application/json")
-                    .addHeader("Content-Type", "application/json; charset=utf-8");
+            url = host + url;
+            // Create an OkHttpClient instance
+            OkHttpClient client = new OkHttpClient();
 
-            if (authKey != null && !authKey.isEmpty()) {
-                builder.addHeader("X-Bridge-AuthorizationKey", authKey);
-            }
+            // Build the request with headers
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get() // HTTP GET method
+                    .addHeader("X-Bridge-AuthorizationKey", authKey)
+                    .build();
 
             log.info("Service url : {} ", url);
-            if (bodyStr != null && !bodyStr.isEmpty()) {
-                okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(bodyStr, mediaType);
-                builder = builder.method("POST", body);
-                log.info("Service body : {}", bodyStr);
-            } else {
-                builder = builder.method("GET", null);
+            log.info("Service request : {} ", request);
+
+            try {
+                // Execute the request
+                response = client.newCall(request).execute();
+
+                // Print the response
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseStr = response.body().string();
+                    log.info("Service resp : {} ", responseStr);
+                    result = objectMapper.readTree(responseStr);
+
+                    log.info("Service result : {} ", result);
+                } else {
+                    log.error("Request failed with status code: {}", response.code());
+                }
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            } finally {
+                // Close the response to avoid connection leaks
+                if (response != null) {
+                    response.close();
+                }
             }
-            Request request = builder
-                    .build();
-            Response response = client.newCall(request).execute();
-            String responseStr = response.body().string();
-            log.info("Service resp : {} ", responseStr);
-            result = objectMapper.readTree(responseStr);
         } catch (Exception e) {
             log.error(e.getMessage());
+        } finally {
+            if (response != null) {
+                response.close();
+            }
         }
         return result;
     }

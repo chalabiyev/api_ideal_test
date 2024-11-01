@@ -1,6 +1,5 @@
 package az.esam.kredit.kredit.services.external.idService;
 
-import az.esam.kredit.kredit.dtos.responses.document.IDCardInfoResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public interface DocumentInfoService {
@@ -9,4 +8,15 @@ public interface DocumentInfoService {
 
     JsonNode getMobileNumbersWithPin(String pin);
 
+    JsonNode getCheckNumberWithPin(String pin, String number);
+
+    JsonNode getDocumentInfoByPhone(String phoneNumber);
+
+    JsonNode getVehicleInfoByPin(String pin);
+
+    JsonNode getMigrationInfo(String migrationDocNumber, String migrationPin);
+
+    JsonNode getPassportInfo(String foreignDocNumber, String foreignPin);
+
+    JsonNode getInfoByVoen(String voen);
 }

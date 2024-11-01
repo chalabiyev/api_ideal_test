@@ -140,13 +140,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/verify-token")
     public ResponseEntity<?> verifyToken() {
-        try {
-            return ResponseEntity.ok(true);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new MessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage()));
-        }
+        return ResponseEntity.ok(true);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

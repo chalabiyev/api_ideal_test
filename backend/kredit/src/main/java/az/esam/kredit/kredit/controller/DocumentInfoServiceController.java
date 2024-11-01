@@ -1,12 +1,11 @@
 package az.esam.kredit.kredit.controller;
 
 import az.esam.kredit.kredit.services.external.idService.DocumentInfoService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
@@ -18,13 +17,14 @@ public class DocumentInfoServiceController {
     DocumentInfoService documentInfoService;
 
     @GetMapping("/getIdCardInfo")
-    public String getIdCardInfo(String documentNumber, String pin) {
-        return documentInfoService.getIdCardInfo(documentNumber, pin).toString();
+    public ResponseEntity<?> getIdCardInfo(@RequestParam String documentNumber, @RequestParam String pin, HttpServletRequest request) {
+        log.info("Request from : {}", request.getRemoteAddr());
+        return ResponseEntity.ok(documentInfoService.getIdCardInfo(documentNumber, pin));
     }
 
     @GetMapping("/getMobileNumbersWithPin")
-    public String getMobileNumbersWithPin(String pin) {
-        return documentInfoService.getMobileNumbersWithPin(pin).toString();
+    public ResponseEntity<?> getMobileNumbersWithPin(@RequestParam String pin) {
+        return ResponseEntity.ok(documentInfoService.getMobileNumbersWithPin(pin));
     }
 
 }
