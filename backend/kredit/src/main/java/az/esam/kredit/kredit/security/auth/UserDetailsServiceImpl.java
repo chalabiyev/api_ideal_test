@@ -1,7 +1,7 @@
 package az.esam.kredit.kredit.security.auth;
 
 import az.esam.kredit.kredit.entities.User;
-import az.esam.kredit.kredit.repos.UserRepository;
+import az.esam.kredit.kredit.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

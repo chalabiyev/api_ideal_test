@@ -1,6 +1,6 @@
 package az.esam.kredit.kredit.security.auth;
 
-import az.esam.kredit.kredit.repos.TokenRepository;
+import az.esam.kredit.kredit.repositories.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

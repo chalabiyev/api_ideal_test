@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.entities;
 
+import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,21 +28,6 @@ public class User extends BaseEntity {
 
     @Indexed(unique = true)
     @NotBlank
-    @Size(max = 20)
-    private String fin;
-
-    @Indexed(unique = true)
-    @NotBlank
-    @Size(max = 20)
-    private String serialNumber;
-
-    @Indexed(unique = true)
-    @NotBlank
-    @Size(max = 20)
-    private String passportStatus;
-
-    @Indexed(unique = true)
-    @NotBlank
     @Size(max = 100)
     private String username;
 
@@ -51,7 +37,7 @@ public class User extends BaseEntity {
 
     @NotBlank
     @Size(max = 120)
-    private String surName;
+    private String surname;
 
     @NotBlank
     @Size(max = 120)
@@ -62,38 +48,13 @@ public class User extends BaseEntity {
     private String fatherName;
 
     @NotBlank
-    @Size(max = 120)
-    private String maritalStatus;
-
-    @NotBlank
     @Size(max = 50)
-    private String gender;
-
-    @NotBlank
-    @Size(max = 100)
-    private String state;
-
-    @NotBlank
-    @Size(max = 100)
-    private String city;
-
-    @NotBlank
-    @Size(max = 100)
-    private String country;
-
-    @NotBlank
-    @Size(max = 100)
-    private String zipCode;
+    private EGender gender;
 
     @NotBlank
     @Size(max = 20)
     @Indexed(unique = true)
     private String phoneNumber;
-
-    @NotBlank
-    @Size(max = 500)
-    @Indexed(unique = true)
-    private String address;
 
     @Indexed(unique = true)
     @Email
