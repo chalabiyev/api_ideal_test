@@ -29,8 +29,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getMobileNumbersWithPin(String pin) {
         try {
             String url = "mobile/numbers/getmobileNumbersWithPin/?Pin=" + pin;
-            sendRequest.executeRequest(url);
-            return null;
+            System.out.println("url = " + url);
+            return sendRequest.executeRequest(url);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -41,8 +41,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getCheckNumberWithPin(String pin, String number) {
         try {
             String url = "mobile/numbers/getCheckNumberWithPin/?phone=" + number + "&Pin=" + pin;
-            sendRequest.executeRequest(url);
-            return null;
+            return sendRequest.executeRequest(url);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -53,8 +52,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getDocumentInfoByPhone(String phoneNumber) {
         try {
             String url = "mobile/numbers/getDocumentInfoByPhone/?phone=" + phoneNumber;
-            sendRequest.executeRequest(url);
-            return null;
+            return sendRequest.executeRequest(url);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -65,8 +63,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getVehicleInfoByPin(String pin) {
         try {
             String url = "general/vehicle/getVehicleInfoByPin/?Pin=" + pin;
-            sendRequest.executeRequest(url);
-            return null;
+            return sendRequest.executeRequest(url);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -78,8 +75,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = "iamas/document/getMigrationInfo/?MigrationDocNumber=" + migrationDocNumber
                     + "&MigrationPin=" + migrationPin;
-            sendRequest.executeRequest(url);
-            return null;
+            return sendRequest.executeRequest(url);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -91,8 +87,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = "iamas/document/getPassportInfo/?ForeignDocNumber=" + foreignDocNumber
                     + "&ForeignPin=" + foreignPin;
-            sendRequest.executeRequest(url);
-            return null;
+            return sendRequest.executeRequest(url);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -103,8 +98,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getInfoByVoen(String voen) {
         try {
             String url = "general/etaxes/getInfoByVoen?Voen=" + voen;
-            sendRequest.executeRequest(url);
-            return null;
+            return sendRequest.executeRequest(url);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
