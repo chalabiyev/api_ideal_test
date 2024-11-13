@@ -18,7 +18,7 @@ public interface OTPService {
 
     boolean validateOTP(String contact, String otpCode, EPlatform platform) throws BadRequestException;
 
-    boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform);
+    boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform) throws BadRequestException;
 
     boolean changePassword(ChangePasswordRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException;
 

@@ -137,7 +137,7 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform) {
+    public boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform) throws BadRequestException {
         if (platform.equals(EPlatform.PHONE.name())) {
             request.setContact(request.getContact()
                     .replace("(", "")
@@ -164,11 +164,11 @@ public class OTPServiceImpl implements OTPService {
                     return true;
                 }
             } else {
-                throw new BadCredentialsException("Passwords do not match");
+                throw new BadRequestException("Passwords do not match");
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new BadCredentialsException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
         return false;
     }
