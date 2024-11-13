@@ -7,7 +7,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,13 +18,7 @@ public class SendRequest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Value("${azinbridge.key}")
-    private String authKey;
-
-    @Value("${azinbridge.host}")
-    private String host;
-
-    public JsonNode executeRequest(String url) {
+    public JsonNode executeRequest(String url, String authName, String authKey, String host) {
         JsonNode result = null;
         Response response = null;
         log.info("authKey : {} ", authKey);
@@ -39,7 +32,7 @@ public class SendRequest {
             Request request = new Request.Builder()
                     .url(url)
                     .get() // HTTP GET method
-                    .addHeader("X-Bridge-AuthorizationKey", authKey)
+                    .addHeader(authName, authKey)
                     .build();
 
             log.info("Service url : {} ", url);

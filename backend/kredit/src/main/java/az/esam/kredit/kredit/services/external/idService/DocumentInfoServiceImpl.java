@@ -4,6 +4,7 @@ import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -13,12 +14,20 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Autowired
     SendRequest sendRequest;
 
+    @Value("${azinbridge.key}")
+    private String authKey;
+
+    @Value("${azinbridge.host}")
+    private String host;
+
+    private String authName = "X-Bridge-AuthorizationKey";
+
     @Override
     public JsonNode getIdCardInfo(String documentNumber, String pin) {
         try {
             String url = "iamas/document/getIdCardInfo?Pin=" + pin + "&DocumentNumber=" + documentNumber;
             System.out.println("url = " + url);
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -30,7 +39,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = "mobile/numbers/getmobileNumbersWithPin/?Pin=" + pin;
             System.out.println("url = " + url);
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -41,7 +50,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getCheckNumberWithPin(String pin, String number) {
         try {
             String url = "mobile/numbers/getCheckNumberWithPin/?phone=" + number + "&Pin=" + pin;
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -52,7 +61,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getDocumentInfoByPhone(String phoneNumber) {
         try {
             String url = "mobile/numbers/getDocumentInfoByPhone/?phone=" + phoneNumber;
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -63,7 +72,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getVehicleInfoByPin(String pin) {
         try {
             String url = "general/vehicle/getVehicleInfoByPin/?Pin=" + pin;
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -75,7 +84,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = "iamas/document/getMigrationInfo/?MigrationDocNumber=" + migrationDocNumber
                     + "&MigrationPin=" + migrationPin;
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -87,7 +96,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = "iamas/document/getPassportInfo/?ForeignDocNumber=" + foreignDocNumber
                     + "&ForeignPin=" + foreignPin;
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
@@ -98,7 +107,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public JsonNode getInfoByVoen(String voen) {
         try {
             String url = "general/etaxes/getInfoByVoen?Voen=" + voen;
-            return sendRequest.executeRequest(url);
+            return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
             return null;
