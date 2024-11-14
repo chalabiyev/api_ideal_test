@@ -6,7 +6,7 @@ import { STORAGE_KEY } from './constant';
 // ----------------------------------------------------------------------
 
 export type SignInParams = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -20,13 +20,20 @@ export type SignUpParams = {
 /** **************************************
  * Sign in
  *************************************** */
-export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
+export const signInWithPassword = async ({ username, password }: SignInParams): Promise<void> => {
   try {
-    const params = { email, password };
+    const params = { username, password };
 
-    const res = await axios.post(endpoints.auth.signIn, params);
+    const res = await axios.post('https://api.studentall.az:9899/api/auth/login', 
+   params, {
+      headers: {
+        'x-api-key': 'ce728500-f1c0-43dd-b093-4fc672a0f8ce',
+      },
+    });
 
     const { accessToken } = res.data;
+
+    console.log(res.data);
 
     if (!accessToken) {
       throw new Error('Access token not found in response');
