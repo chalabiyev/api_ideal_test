@@ -1,5 +1,6 @@
 import axios, { endpoints } from 'src/utils/axios';
 
+import { CONFIG } from 'src/config-global';
 import { setSession } from './utils';
 import { STORAGE_KEY } from './constant';
 
@@ -24,10 +25,10 @@ export const signInWithPassword = async ({ username, password }: SignInParams): 
   try {
     const params = { username, password };
 
-    const res = await axios.post('https://api.studentall.az:9899/api/auth/login', 
+    const res = await axios.post(endpoints.auth.signIn, 
    params, {
       headers: {
-        'x-api-key': 'ce728500-f1c0-43dd-b093-4fc672a0f8ce',
+        'x-api-key': import.meta.env.VITE_APP_X_API_KEY,
       },
     });
 
