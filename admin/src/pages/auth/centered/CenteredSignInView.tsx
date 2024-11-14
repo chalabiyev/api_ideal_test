@@ -31,10 +31,9 @@ import { signInWithPassword } from 'src/auth/context/jwt';
 export type SignInSchemaType = zod.infer<typeof SignInSchema>;
 
 export const SignInSchema = zod.object({
-  email: zod
+  username: zod
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
+    .min(1, { message: 'Username is required!' }),
   password: zod
     .string()
     .min(1, { message: 'Password is required!' })
@@ -52,8 +51,8 @@ export function CenteredSignInView() {
   const password = useBoolean();
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: '@demo1',
+    username: 'admin',
+    password: '123456',
   };
 
   const methods = useForm<SignInSchemaType>({
@@ -67,9 +66,9 @@ export function CenteredSignInView() {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    if (data.email === defaultValues.email && data.password === defaultValues.password) {
+    if (data.username === defaultValues.username && data.password === defaultValues.password) {
       try {
-        await signInWithPassword({ email: data.email, password: data.password });
+        await signInWithPassword({ username: data.username, password: data.password });
         await checkUserSession?.();
 
         router.refresh();
@@ -78,7 +77,7 @@ export function CenteredSignInView() {
         setErrorMsg(error instanceof Error ? error.message : error);
       }
     } else {
-      setErrorMsg('Invalid email or password!');
+      setErrorMsg('Invalid username or password!');
     }
   });
 
@@ -92,7 +91,7 @@ export function CenteredSignInView() {
 
   const renderForm = (
     <Stack spacing={3}>
-      <Field.Text name="email" label="Email address" InputLabelProps={{ shrink: true }} />
+      <Field.Text name="username" label="İstifadəçi adı" InputLabelProps={{ shrink: true }} />
       <Stack spacing={1.5}>
         <Link
           component={RouterLink}
@@ -170,7 +169,7 @@ export function CenteredSignInView() {
       <div className="flex items-center justify-center">{renderLogo}</div>
       {renderHead}
       <Alert severity="info" sx={{ mb: 3 }}>
-        Use <strong>{defaultValues.email}</strong>
+        Use <strong>{defaultValues.username}</strong>
         {' with password '}
         <strong>{defaultValues.password}</strong>
       </Alert>

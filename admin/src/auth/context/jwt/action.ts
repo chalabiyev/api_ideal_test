@@ -1,12 +1,13 @@
 import axios, { endpoints } from 'src/utils/axios';
 
+import { CONFIG } from 'src/config-global';
 import { setSession } from './utils';
 import { STORAGE_KEY } from './constant';
 
 // ----------------------------------------------------------------------
 
 export type SignInParams = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -20,13 +21,20 @@ export type SignUpParams = {
 /** **************************************
  * Sign in
  *************************************** */
-export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
+export const signInWithPassword = async ({ username, password }: SignInParams): Promise<void> => {
   try {
-    const params = { email, password };
+    const params = { username, password };
 
-    const res = await axios.post(endpoints.auth.signIn, params);
+    const res = await axios.post(endpoints.auth.signIn, 
+   params, {
+      headers: {
+        'x-api-key': import.meta.env.VITE_APP_X_API_KEY,
+      },
+    });
 
     const { accessToken } = res.data;
+
+    console.log(res.data);
 
     if (!accessToken) {
       throw new Error('Access token not found in response');

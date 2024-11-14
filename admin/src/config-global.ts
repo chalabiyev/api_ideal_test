@@ -6,6 +6,7 @@ import packageJson from '../package.json';
 
 export type ConfigValue = {
   site: {
+    xApiKey: string;
     name: string;
     serverUrl: string;
     assetURL: string;
@@ -37,6 +38,7 @@ export const CONFIG: ConfigValue = {
   site: {
     name: 'Ideal Kredit',
     serverUrl: import.meta.env.VITE_SERVER_URL ?? '',
+    xApiKey: import.meta.env.VITE_X_API_KEY ?? '',
     assetURL: import.meta.env.VITE_ASSET_URL ?? '',
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
     version: packageJson.version,
