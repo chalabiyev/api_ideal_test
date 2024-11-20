@@ -6,7 +6,7 @@ import { CreditCreateView } from 'src/sections/credits/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Create a new Credit | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `Kredit yarat | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (
