@@ -12,7 +12,7 @@ export function CreditCreateView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Create a new Credit"
+        heading="Yeni kredit yarat"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Kreditlər', href: paths.dashboard.credits.root },
