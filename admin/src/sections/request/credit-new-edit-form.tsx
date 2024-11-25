@@ -14,23 +14,20 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Tab,
   Tabs,
+  Table,
+  Button,
   Slider,
   Divider,
-  Table,
-  TableHead,
   TableRow,
+  TableHead,
   TableBody,
   TableCell,
-  TableContainer,
   CardHeader,
-  Button,
-  Paper,
+  TableContainer,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
-import { fData } from 'src/utils/format-number';
 
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
@@ -41,7 +38,8 @@ import {
   familyRelationshipOptions,
   whereToGetSignatureOptions,
 } from '../_examples/extra/form-validation-view/react-hook-form';
-import { ValuesType } from '../credits/credit-new-edit-form';
+
+import type { ValuesType } from '../credits/credit-new-edit-form';
 
 // ----------------------------------------------------------------------
 

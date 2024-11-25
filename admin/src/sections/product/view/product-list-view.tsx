@@ -45,7 +45,6 @@ import { ProductTableFiltersResult } from '../product-table-filters-result';
 import {
   RenderCellStock,
   RenderCellPrice,
-  RenderCellPublish,
   RenderCellProduct,
   RenderCellCreatedAt,
 } from '../product-table-row';

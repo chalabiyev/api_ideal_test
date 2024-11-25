@@ -1,7 +1,9 @@
+import { Box } from '@mui/material';
+
+import { formatDate, formatTime, useCurrentTime } from 'src/utils/dateTimeUtils';
+
 import { useStore } from 'src/store/store';
 
-import { Box } from '@mui/material';
-import { formatDate, formatTime, useCurrentTime } from 'src/utils/dateTimeUtils';
 import DefaultProfilePic from '../../../../public/DefaultProfilePic.png';
 
 const MeetStatusBar = () => {

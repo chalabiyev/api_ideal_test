@@ -56,7 +56,7 @@ type Props = {
 
 export function ProductNewEditForm({ currentProduct }: Props) {
   const router = useRouter();
-
+  // eslint-disable-next-line
   const [includeTaxes, setIncludeTaxes] = useState(false);
 
   const defaultValues = useMemo(

@@ -9,11 +9,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
-import { usePathname, useRouter } from 'src/routes/hooks';
 
 import { useResponsive } from 'src/hooks/use-responsive';
-
-import { _mock } from 'src/_mock';
 
 import { varFade, MotionContainer } from 'src/components/animate';
 
@@ -28,8 +25,6 @@ export function HomeHero({ sx, ...other }: StackProps) {
   const theme = useTheme();
 
   const scroll = useScrollPercent();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const mdUp = useResponsive('up', mdKey);
 

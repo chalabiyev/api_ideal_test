@@ -1,6 +1,6 @@
-import HomeBackground from '../../../../public/HomeBgImage.jpg';
-import MeetStatusBar from './MeetStatusBar';
 import MeetContent from './MeetContent';
+import MeetStatusBar from './MeetStatusBar';
+import HomeBackground from '../../../../public/HomeBgImage.jpg';
 
 const MeetHero = () => (
     <section

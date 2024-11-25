@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+
 import { Box } from '@mui/material';
-import customerPic from '../../../../public/customer.png';
-import supportPic from '../../../../public/circle.png';
-import icon2 from '../../../../public/attachment.png';
-import crosscircleicon from '../../../../public/crosscircle.png';
+
 import cross from '../../../../public/cross.png';
-import sendicon from '../../../../public/SendIcon.png';
 import addicon from '../../../../public/addicon.png';
+import icon2 from '../../../../public/attachment.png';
+import supportPic from '../../../../public/circle.png';
+import sendicon from '../../../../public/SendIcon.png';
+import customerPic from '../../../../public/customer.png';
+import crosscircleicon from '../../../../public/crosscircle.png';
 
 type UploadedFile = {
   name: string;
@@ -30,7 +32,7 @@ const MeetChat = () => {
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
       const items: DataTransferItem[] = Array.from(event.clipboardData?.items || []);
-      items.forEach(item => {
+      items.forEach((item) => {
         if (item.kind === 'file') {
           const file = item.getAsFile();
           if (file) {
@@ -133,13 +135,13 @@ const MeetChat = () => {
               <ul className="flex flex-col gap-2 pt-4 pb-9 relative">
                 <img
                   src={cross}
-                  alt='cross icon'
+                  alt="cross icon"
                   onClick={closeModal}
                   role="presentation"
                   className="absolute right-0 top-0 w-3 h-3 cursor-pointer"
                 />
                 <img
-                alt='send icon'
+                  alt="send icon"
                   onClick={sendFiles}
                   src={sendicon}
                   role="presentation"

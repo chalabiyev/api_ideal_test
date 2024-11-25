@@ -63,8 +63,6 @@ export function GirovDetailsSummary({
     subDescription,
   } = girov;
 
-  const existGirov = !!items?.length && items.map((item) => item.id).includes(id);
-
   const isMaxQuantity =
     !!items?.length &&
     items.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;

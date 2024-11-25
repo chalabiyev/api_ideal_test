@@ -14,7 +14,6 @@ import { Snackbar } from 'src/components/snackbar';
 import { ProgressBar } from 'src/components/progress-bar/index';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
-import { Suspense } from 'react';
 
 import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt/index';
 

@@ -1,41 +1,18 @@
-import { useFormContext } from 'react-hook-form';
-
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { MenuItem } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 
-import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { _addressBooks } from 'src/_mock';
 
-import { Iconify } from 'src/components/iconify';
-
 import { Field } from 'src/components/hook-form';
-import { Box, CardHeader, MenuItem } from '@mui/material';
-
-import { AddressListDialog } from '../address';
 
 // ----------------------------------------------------------------------
 
 export function InvoiceNewEditAddress() {
-  const {
-    watch,
-    setValue,
-    formState: { errors },
-  } = useFormContext();
 
   const mdUp = useResponsive('up', 'md');
-
-  const values = watch();
-
-  const { invoiceFrom, invoiceTo } = values;
-
-  const from = useBoolean();
-
-  const to = useBoolean();
 
   return (
       <Stack

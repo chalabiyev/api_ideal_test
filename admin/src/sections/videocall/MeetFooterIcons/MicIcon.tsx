@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
-import { useState } from "react";
+import { useState } from 'react';
+
+import { Box } from '@mui/material';
 
 const MicIcon = () => {
   const [mic, setMic] = useState(false);
@@ -11,25 +12,23 @@ const MicIcon = () => {
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: true,
         });
-        setMic(!!stream); 
+        setMic(!!stream);
       } else {
         setMic(false);
       }
-      showNotification(
-        newMicState ? "Mikrofon aktiv edildi" : "Mikrofon deaktiv edildi"
-      );
+      showNotification(newMicState ? 'Mikrofon aktiv edildi' : 'Mikrofon deaktiv edildi');
     } catch (err) {
-      showNotification("Mikrofon əlçatan deyil");
+      showNotification('Mikrofon əlçatan deyil');
     }
   };
 
   const showNotification = (message: string) => {
-    if (Notification.permission === "granted") {
-      const notification = new Notification(message);
-    } else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-          const notification = new Notification(message);
+    if (Notification.permission === 'granted') {
+      console.log('Notification granted');
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('Notification granted');
         }
       });
     }
@@ -38,7 +37,7 @@ const MicIcon = () => {
     <Box
       onClick={handleMic}
       className={`${
-        mic ? "bg-[#C3FA1C]" : "bg-[#434343]"
+        mic ? 'bg-[#C3FA1C]' : 'bg-[#434343]'
       } w-[45px] hover:opacity-50 h-[45px] duration-100 cursor-pointer flex items-center justify-center  rounded-full`}
     >
       <svg
@@ -55,7 +54,7 @@ const MicIcon = () => {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`${mic ? "stroke-[#434343] fill-[#434343]" : ""}`}
+          className={`${mic ? 'stroke-[#434343] fill-[#434343]' : ''}`}
         />
         <path
           d="M25 17C25.0025 18.4554 24.7249 19.8969 24.183 21.242C23.6412 22.5871 22.8458 23.8092 21.8424 24.8383C20.839 25.8674 19.6474 26.6833 18.336 27.239C17.0245 27.7948 15.619 28.0795 14.2 28.0769H11.8C10.3808 28.0801 8.97503 27.7959 7.66329 27.2403C6.35155 26.6848 5.15971 25.869 4.15621 24.8398C3.15271 23.8106 2.35731 22.5882 1.81568 21.2428C1.27405 19.8974 0.996863 18.4556 1.00003 17M13 28.0769V33"
@@ -63,7 +62,7 @@ const MicIcon = () => {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`${mic ? "stroke-[#434343]" : ""}`}
+          className={`${mic ? 'stroke-[#434343]' : ''}`}
         />
       </svg>
     </Box>

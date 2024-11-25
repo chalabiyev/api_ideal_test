@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
 import { useState } from "react";
+
+import { Box } from "@mui/material";
 
 const PayIcon = () => {
   const [payment, setPayment] = useState(false);

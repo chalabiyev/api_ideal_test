@@ -14,30 +14,26 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Tab,
   Tabs,
+  Table,
   Slider,
   Divider,
-  Table,
   TableRow,
+  TableHead,
   TableBody,
   TableCell,
   TableContainer,
-  Input,
-  TextField,
-  TableHead,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
-import { fData } from 'src/utils/format-number';
 
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import SearchIconSVG from 'src/components/searchIcon';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import ScoreCard from './scoreBoard';
 
+import ScoreCard from './scoreBoard';
 import {
   familyRelationshipOptions,
   whereToGetSignatureOptions,
@@ -117,6 +113,44 @@ const creditData = [
   180,
   90,
   0,
+];
+const familyData = [
+  {
+    id: '1',
+    title: 'Ata',
+    fields: {
+      avatarUrl:
+        'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      fin: '123456789',
+      serialNumber: '132456789',
+      passportStatus: 'Active',
+      name: 'TestFather',
+      surname: 'TestFather',
+      fatherName: 'TestFather',
+      born: '11.10.2001',
+      familyRelationship: 'Married',
+      gender: 'Men',
+      address: 'Baki azerbaycan',
+    },
+  },
+  {
+    id: '2',
+    title: 'Ana',
+    fields: {
+      avatarUrl:
+        'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      fin: '123456789',
+      serialNumber: '132456789',
+      passportStatus: 'Active',
+      name: 'TestFather',
+      surname: 'TestFather',
+      fatherName: 'TestFather',
+      born: '11.10.2001',
+      familyRelationship: 'Married',
+      gender: 'Women',
+      address: 'Baki azerbaycan',
+    },
+  },
 ];
 
 const combinedHeaders = [
@@ -218,6 +252,10 @@ export function CreateCreditForm() {
     overdueDaysInterest: 0,
   };
 
+  const vehicleData = [
+    { id: '1', title: 'Audi', year: '2021', model: 'A6', vin: '123456789', licensePlate: 'AA1234' },
+  ];
+
   const paymentHistory = [
     {
       title: 'Aktiv kreditlərin cəmi qalıq məbləği',
@@ -298,7 +336,7 @@ export function CreateCreditForm() {
       name: 'testName',
       surname: 'testSurname',
       fatherName: 'testFatherName',
-      born: '',
+      born: '11.10.2001',
       reportNum: 'testreport',
       familyRelationship: '',
       whereToGetSignature: '',
@@ -396,9 +434,9 @@ export function CreateCreditForm() {
                 }}
               >
                 <Field.Text sx={{ marginBottom: 2 }} name="loanerId" label="Borcalanın İD-si:" />
-                <Field.Text sx={{ marginBottom: 2 }} name="reportNum" label="Ünvanı:" />
-                <Field.Text sx={{ marginBottom: 2 }} name="reportNum" label="Doğum yeri:" />
-                <Field.Text sx={{ marginBottom: 2 }} name="reportNum" label="Doğum tarixi:" />
+                <Field.Text sx={{ marginBottom: 2 }} name="loanerAdd" label="Ünvanı:" />
+                <Field.Text sx={{ marginBottom: 2 }} name="loanerBornAdd" label="Doğum yeri:" />
+                <Field.Text sx={{ marginBottom: 2 }} name="loanerBornDate" label="Doğum tarixi:" />
               </Box>
               <Box
                 sx={{
@@ -1054,7 +1092,7 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
               >
-                <Field.Text name="name" label="AKB məlumatlarına əsasən" />
+                <Field.Text name="totalPrice" label="AKB məlumatlarına əsasən" />
 
                 <Field.Text name="subDescription" label="Daxili risk sistemi üzrə" />
               </Box>
@@ -1118,33 +1156,33 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
               >
-                <Field.Text name="name" label="Informasiya provideri" />
+                <Field.Text name="informationProvider" label="Informasiya provideri" />
 
-                <Field.Text name="subDescription" label="Kredit balansının məbləği" />
+                <Field.Text name="creditBalanceAmount" label="Kredit balansının məbləği" />
 
-                <Field.Text name="name" label="Aylıq ödəniş məbləği" />
+                <Field.Text name="monthlyPaymentAmount" label="Aylıq ödəniş məbləği" />
 
-                <Field.Text name="subDescription" label="Son ödəniş tarixi" />
+                <Field.Text name="lastPaymentDate" label="Son ödəniş tarixi" />
 
-                <Field.Text name="name" label="Məqsəd" />
+                <Field.Text name="aim" label="Məqsəd" />
 
                 <Field.Text
-                  name="subDescription"
+                  name="mainDebtOverdueDays"
                   label="Əsas borc üzrə vaxtı keçmiş günlərin sayı"
                 />
 
-                <Field.Text name="name" label="Hesab nömrəsi" />
+                <Field.Text name="AccountNumber" label="Hesab nömrəsi" />
 
-                <Field.Text name="subDescription" label="Faiz məbləği" />
-                <Field.Text name="subDescription" label="Faiz dərəcəsi" />
-                <Field.Text name="subDescription" label="Kreditin verilmə tarixi" />
-                <Field.Text name="subDescription" label="Kreditin bitmə tarixi" />
+                <Field.Text name="percentAmount" label="Faiz məbləği" />
+                <Field.Text name="percentDegree" label="Faiz dərəcəsi" />
+                <Field.Text name="creditGivenDate" label="Kreditin verilmə tarixi" />
+                <Field.Text name="creditEndDate" label="Kreditin bitmə tarixi" />
                 <Field.Text
-                  name="subDescription"
+                  name="interestOverdueDays"
                   label="Faizli borc üzrə vaxtı keçmiş günlərin sayı"
                 />
                 <Field.Text
-                  name="subDescription"
+                  name="monthlyPaymentAmountDueToRisk"
                   label="Daxili risk sistemlərinin hesablanmasına uyğun olaraq aylıq ödəniş"
                 />
               </Stack>
@@ -1322,8 +1360,7 @@ export function CreateCreditForm() {
         )) ||
         (currentTab === 'vehicle' && (
           <Grid spacing={3}>
-            <Stack>
-              <Typography
+            <Typography
                 sx={{
                   my: 3,
                   fontSize: 20,
@@ -1336,32 +1373,53 @@ export function CreateCreditForm() {
 
               <Divider sx={{ mb: 3 }} />
 
-              <Box
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-              >
-                <Field.Text name="name" label="Tipi" />
-
-                <Field.Text name="subDescription" label="Qeydiyyat nömrə nişanı" />
-              </Box>
-            </Stack>
+              {vehicleData.map((vehicle) => (
+                <Box
+                  key={vehicle.id}
+                  display="grid"
+                  rowGap={3}
+                  columnGap={2}
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+                >
+                  <Field.Text
+                    aria-disabled
+                    name={`vehicleBrand_${vehicle.id}`}
+                    label="Marka"
+                    defaultValue={vehicle.title}
+                  />
+                  <Field.Text
+                    aria-disabled
+                    name={`vehicleNumber_${vehicle.id}`}
+                    label="Qeydiyyat nömrə nişanı"
+                    defaultValue={vehicle.licensePlate}
+                  />
+                  <Field.Text
+                    aria-disabled
+                    name={`vehicleYear_${vehicle.id}`}
+                    label="İl"
+                    defaultValue={vehicle.year}
+                  />
+                  <Field.Text
+                    aria-disabled
+                    name={`vehicleModel_${vehicle.id}`}
+                    label="Model"
+                    defaultValue={vehicle.model}
+                  />
+                  <Field.Text
+                    aria-disabled
+                    name={`vehicleVin_${vehicle.id}`}
+                    label="VIN"
+                    defaultValue={vehicle.vin}
+                  />
+                </Box>
+              ))}
           </Grid>
         )) ||
         (currentTab === 'familyMembers' && (
-          <>
-            <Box
-              sx={{
-                mt: 3,
-              }}
-            >
-              <Grid container spacing={3}>
-                <Box
-                  sx={{
-                    mr: 2,
-                  }}
-                >
+          <Box sx={{ mt: 3 }}>
+            {familyData.map((member) => (
+              <Grid container spacing={3} key={member.id}>
+                <Box sx={{ mr: 2 }}>
                   <Typography
                     sx={{
                       my: 3,
@@ -1370,16 +1428,18 @@ export function CreateCreditForm() {
                       fontWeight: 700,
                     }}
                   >
-                    Həyat yoldaşı
+                    {member.title}
                   </Typography>
 
                   <Field.UploadAvatar
-                    name="avatarUrl"
+                    name={`avatarUrl_${member.id}`}
                     maxSize={3145728}
+                    value={member.fields.avatarUrl}
                     sx={{
                       height: '128px',
                       width: '128px',
                     }}
+                    disabled
                   />
                 </Box>
 
@@ -1391,147 +1451,106 @@ export function CreateCreditForm() {
                       display="grid"
                       gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                     >
+                      {/* Row 1 */}
                       <Box
                         display="grid"
                         rowGap={3}
                         columnGap={2}
-                        gridTemplateColumns={{ xs: 'repeat(3  , 1fr)' }}
+                        gridTemplateColumns={{ xs: 'repeat(3, 1fr)' }}
                       >
-                        <Field.Text name="fin" label="Fin" />
-                        <Field.Text name="serialNumber" label="Ş/V seriyası və nömrəsi" />
-                        <Field.Text name="passportStatus" label="Vəsiqənin statusu" />
+                        <Field.Text
+                          name={`fin_${member.id}`}
+                          label="Fin"
+                          value={member.fields.fin}
+                          aria-disabled
+                        />
+                        <Field.Text
+                          name={`serialNumber_${member.id}`}
+                          label="Ş/V seriyası və nömrəsi"
+                          value={member.fields.serialNumber}
+                          aria-disabled
+                        />
+                        <Field.Text
+                          name={`passportStatus_${member.id}`}
+                          label="Vəsiqənin statusu"
+                          value={member.fields.passportStatus}
+                          aria-disabled
+                        />
                       </Box>
 
+                      {/* Row 2 */}
                       <Box
                         display="grid"
                         rowGap={3}
                         columnGap={2}
-                        gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
+                        gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
                       >
-                        <Field.Text name="name" label="Adı" />
-                        <Field.Text name="surname" label="Soyadı" />
-                        <Field.Text name="fatherName" label="Ata adı" />
-                        <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" />
+                        <Field.Text
+                          name={`name_${member.id}`}
+                          label="Adı"
+                          value={member.fields.name}
+                          aria-disabled
+                        />
+                        <Field.Text
+                          name={`surname_${member.id}`}
+                          label="Soyadı"
+                          value={member.fields.surname}
+                          aria-disabled
+                        />
+                        <Field.Text
+                          name={`fatherName_${member.id}`}
+                          label="Ata adı"
+                          value={member.fields.fatherName}
+                          aria-disabled
+                        />
+                        <Field.Text
+                          name={`born_${member.id}`}
+                          label="Doğum tarixi(xx.xx.xxxx)"
+                          value={member.fields.born}
+                          aria-disabled
+                        />
                         <Field.Select
                           native
-                          name="familyRelationship"
+                          name={`familyRelationship_${member.id}`}
                           label="Ailə vəziyyəti"
+                          value={member.fields.familyRelationship}
                           InputLabelProps={{ shrink: true }}
+                          aria-disabled
                         >
                           {familyRelationshipOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
+                            <option aria-disabled key={option.value} value={option.value}>
                               {option.label}
                             </option>
                           ))}
                         </Field.Select>
                         <Field.Select
+                          aria-disabled
                           native
-                          name="gender"
+                          name={`gender_${member.id}`}
                           label="Cinsi"
+                          value={member.fields.gender}
                           InputLabelProps={{ shrink: true }}
                         >
                           {PRODUCT_GENDER_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
+                            <option aria-disabled key={option.value} value={option.value}>
                               {option.label}
                             </option>
                           ))}
                         </Field.Select>
                       </Box>
-                      <Field.Text name="name" label="Qeydiyyatda olduğu ünvan" />
+
+                      <Field.Text
+                        aria-disabled
+                        name={`address_${member.id}`}
+                        label="Qeydiyyatda olduğu ünvan"
+                        value={member.fields.address}
+                      />
                     </Box>
                   </Card>
                 </Grid>
               </Grid>
-            </Box>
-            <Box>
-              <Grid container spacing={3}>
-                <Box
-                  sx={{
-                    mr: 2,
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      my: 3,
-                      fontSize: 20,
-                      lineHeight: 1.5,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Həyat yoldaşı
-                  </Typography>
-
-                  <Field.UploadAvatar
-                    name="avatarUrl"
-                    maxSize={3145728}
-                    sx={{
-                      height: '128px',
-                      width: '128px',
-                    }}
-                  />
-                </Box>
-
-                <Grid xs={12} md={8}>
-                  <Card sx={{ p: 3 }}>
-                    <Box
-                      rowGap={3}
-                      columnGap={2}
-                      display="grid"
-                      gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                    >
-                      <Box
-                        display="grid"
-                        rowGap={3}
-                        columnGap={2}
-                        gridTemplateColumns={{ xs: 'repeat(3  , 1fr)' }}
-                      >
-                        <Field.Text name="fin" label="Fin" />
-                        <Field.Text name="serialNumber" label="Ş/V seriyası və nömrəsi" />
-                        <Field.Text name="passportStatus" label="Vəsiqənin statusu" />
-                      </Box>
-
-                      <Box
-                        display="grid"
-                        rowGap={3}
-                        columnGap={2}
-                        gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-                      >
-                        <Field.Text name="name" label="Adı" />
-                        <Field.Text name="surname" label="Soyadı" />
-                        <Field.Text name="fatherName" label="Ata adı" />
-                        <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" />
-                        <Field.Select
-                          native
-                          name="familyRelationship"
-                          label="Ailə vəziyyəti"
-                          InputLabelProps={{ shrink: true }}
-                        >
-                          {familyRelationshipOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </Field.Select>
-                        <Field.Select
-                          native
-                          name="gender"
-                          label="Cinsi"
-                          InputLabelProps={{ shrink: true }}
-                        >
-                          {PRODUCT_GENDER_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </Field.Select>
-                      </Box>
-                      <Field.Text name="name" label="Qeydiyyatda olduğu ünvan" />
-                    </Box>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-          </>
+            ))}
+          </Box>
         )) ||
         (currentTab === 'credits' && (
           <Grid spacing={3}>

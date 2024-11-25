@@ -79,7 +79,6 @@ const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission')
 const ParamsPage = lazy(() => import('src/pages/dashboard/params'));
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 // Credit Page
-const CreditPage = lazy(() => import('src/pages/dashboard/credits/profile'));
 const NewCreditPage = lazy(() => import('src/pages/dashboard/credits/new'));
 const EditCreditPage = lazy(() => import('src/pages/dashboard/credits/edit'));
 const CreditListPage = lazy(() => import('src/pages/dashboard/credits/list'));

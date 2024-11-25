@@ -1,6 +1,6 @@
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -53,8 +53,6 @@ type Props = {
 export function ChannelNewEditForm({ currentChannel }: Props) {
   const router = useRouter();
 
-  const [includeTaxes, setIncludeTaxes] = useState(false);
-
   const defaultValues = useMemo(
     () => ({
       name: currentChannel?.name || '',
@@ -69,8 +67,6 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -81,8 +77,6 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
     { value: 'partner', label: 'Partnyor' },
     { value: 'mobile', label: 'Mobil Tətbiq' },
   ];
-
-  const values = watch();
 
   useEffect(() => {
     if (currentChannel) {
@@ -147,7 +141,7 @@ export function ChannelNewEditForm({ currentChannel }: Props) {
   );
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto', }}>
+      <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto' }}>
         {renderDetails}
 
         {renderActions}

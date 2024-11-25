@@ -1,5 +1,6 @@
-import { useRef, useEffect, useState } from "react";
-import { useStore } from "src/store/store";
+import { useRef, useState } from 'react';
+
+import { useStore } from 'src/store/store';
 
 const VideoDisplay = ({
   src,
@@ -14,7 +15,6 @@ const VideoDisplay = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-
   return (
     <video
       ref={videoRef}
@@ -23,7 +23,7 @@ const VideoDisplay = ({
       muted
       loop={!isFullView}
       src={!isFullView ? src : undefined}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: '100%', height: '100%' }}
       onClick={toggleView}
       className="object-cover"
     />
@@ -32,11 +32,11 @@ const VideoDisplay = ({
 
 const VideoInterface = () => {
   const [isMainStream, setIsMainStream] = useState(false);
-  const videoStream = useStore(state => state.videoStream);
+  const videoStream = useStore((state) => state.videoStream);
   const demoVideoUrl =
-    "https://static.vecteezy.com/system/resources/previews/006/618/818/mp4/ai-head-wire-frame-loop-free-video.mp4";
+    'https://static.vecteezy.com/system/resources/previews/006/618/818/mp4/ai-head-wire-frame-loop-free-video.mp4';
 
-  const toggleMainVideo = () => setIsMainStream(prevState => !prevState);
+  const toggleMainVideo = () => setIsMainStream((prevState) => !prevState);
 
   return (
     <div className="bg-[#272727] border rounded-[10px] relative border-[#C3FA1C] w-full h-[70%] overflow-hidden">

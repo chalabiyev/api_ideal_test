@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import { CardHeader } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
@@ -20,11 +21,8 @@ import { _addressBooks } from 'src/_mock';
 
 import { Form, schemaHelper } from 'src/components/hook-form';
 
-import { CardHeader } from '@mui/material';
-
 import { InvoiceNewEditDetails } from './invoice-new-edit-details';
 import { InvoiceNewEditAddress } from './invoice-new-edit-address';
-import { InvoiceNewEditStatusDate } from './invoice-new-edit-status-date';
 
 // ----------------------------------------------------------------------
 

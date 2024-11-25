@@ -21,8 +21,8 @@ import { EmptyContent } from 'src/components/empty-content';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { CartIcon } from '../components/cart-icon';
-import { useCheckoutContext } from '../../checkout/context';
 import { GirovDetailsSkeleton } from '../girov-skeleton';
+import { useCheckoutContext } from '../../checkout/context';
 import { GirovDetailsReview } from '../girov-details-review';
 import { GirovDetailsSummary } from '../girov-details-summary';
 import { GirovDetailsCarousel } from '../girov-details-carousel';

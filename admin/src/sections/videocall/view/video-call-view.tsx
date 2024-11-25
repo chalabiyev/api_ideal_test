@@ -15,7 +15,7 @@ export function VideoCallView() {
         heading="VIdeo Call"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Videocall', href: paths.dashboard.videoCall },
+          { name: 'Video Zəng', href: paths.dashboard.videoCall },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

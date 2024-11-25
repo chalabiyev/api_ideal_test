@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+
 import { useStore } from "src/store/store";
 
 const ShareIcon = () => {
@@ -28,7 +29,6 @@ const ShareIcon = () => {
   };
 
   return (
-    <>
       <Box
         onClick={shareScreen}
         className={` 
@@ -47,7 +47,6 @@ const ShareIcon = () => {
           />
         </svg>
       </Box>
-    </>
   );
 };
 

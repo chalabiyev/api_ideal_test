@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+
 import { Box } from '@mui/material';
+
 import checkIcon from '../../../../public/checkIcon.png';
 
 interface DeviceInfo {

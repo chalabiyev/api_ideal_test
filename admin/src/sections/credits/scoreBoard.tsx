@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography, Grid, LinearProgress } from '@mui/material';
+
+import { Box, Grid, Typography, LinearProgress } from '@mui/material';
 
 type ScoreCardProps = {
   score: number;
@@ -23,7 +24,7 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
         borderRadius: 2,
         padding: 3,
         textAlign: 'center',
-       width:"100%",
+        width: '100%',
         margin: 'auto',
       }}
     >

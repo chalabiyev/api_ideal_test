@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
+
 import { useStore } from "src/store/store";
-import { useEffect, useState } from "react";
-import cross from "../../../../public/cross.png";
+
 import copy from "../../../../public/copy.png";
+import cross from "../../../../public/cross.png";
 
 const AddUserModal = () => {
   const { AddUserModal1, setAddUserModal1 } = useStore(state => ({
