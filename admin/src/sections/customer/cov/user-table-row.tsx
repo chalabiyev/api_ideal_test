@@ -115,15 +115,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
             }}
           >
             <Iconify icon="solar:pen-bold" />
-            Sorğu yarat
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              router.push(`/dashboard/customer/${row.id}/createcredit`);
-            }}
-          >
-            <Iconify icon="solar:pen-bold" />
-           Kredit yarat
+            Request
           </MenuItem>
         </MenuList>
       </CustomPopover>

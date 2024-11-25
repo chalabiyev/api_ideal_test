@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
 
-import { VideoCallView } from 'src/sections/videocall/view';
+// import { VideoCallView } from 'src/sections/videocall/view';
 
 export default function VideoCallPage() {
   const metadata = { title: `Video Zəng | Dashboard - ${CONFIG.site.name}` };
@@ -13,7 +13,7 @@ export default function VideoCallPage() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <VideoCallView />
+      {/* <VideoCallView /> */}
     </>
   );
 }

@@ -132,7 +132,6 @@ export const dashboardRoutes = [
           { path: 'teminat/list', element: <TeminatCustomerListPage /> },
           { path: 'covmusteri/list', element: <CovCustomerListPage /> },
           { path: ':id/createrequest', element: <CreateRequestPage /> },
-          { path: ':id/createcredit', element: <NewCreditPage /> },
         ],
       },
       {
@@ -240,6 +239,10 @@ export const dashboardRoutes = [
           {
             path: ':id/edit',
             element: <EditCreditPage />,
+          },
+          {
+            path: 'new',
+            element: <NewCreditPage />,
           },
         ],
       },

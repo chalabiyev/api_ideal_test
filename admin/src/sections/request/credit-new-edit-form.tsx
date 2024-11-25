@@ -116,6 +116,8 @@ export function CreateCreditForm() {
     setCurrentTab(newValue);
   };
 
+
+
   const paymentHistory = [
     {
       date: '2022-05-01',
@@ -1226,62 +1228,63 @@ export function CreateCreditForm() {
         )) ||
         (currentTab === 'payment' && (
           <>
-            <TableContainer my={4} component={Box}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>#</TableCell>
-                    <TableCell>Nağd Pul Krediti</TableCell>
-                    <TableCell>Monthly Payment Value</TableCell>
-                    <TableCell>Main Price</TableCell>
-                    <TableCell>Percentage Price</TableCell>
-                    <TableCell>Status</TableCell>
+          
+          <TableContainer my={4} component={Box}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Nağd Pul Krediti</TableCell>
+                  <TableCell>Monthly Payment Value</TableCell>
+                  <TableCell>Main Price</TableCell>
+                  <TableCell>Percentage Price</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paymentHistory.map((payment, index) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{payment.date}</TableCell>
+                    <TableCell>{payment.monthlyPayment}</TableCell>
+                    <TableCell>{payment.total}</TableCell>
+                    <TableCell>{payment.percentageValue}</TableCell>
+                    <TableCell>{payment.status}</TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paymentHistory.map((payment, index) => (
-                    <TableRow key={index}>
-                      <TableCell component="th" scope="row">
-                        {index + 1}
-                      </TableCell>
-                      <TableCell>{payment.date}</TableCell>
-                      <TableCell>{payment.monthlyPayment}</TableCell>
-                      <TableCell>{payment.total}</TableCell>
-                      <TableCell>{payment.percentageValue}</TableCell>
-                      <TableCell>{payment.status}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TableContainer my={4} component={Box}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>#</TableCell>
-                    <TableCell>Icbari sığorta N/V</TableCell>
-                    <TableCell>Monthly Payment Value</TableCell>
-                    <TableCell>Main Price</TableCell>
-                    <TableCell>Percentage Price</TableCell>
-                    <TableCell>Status</TableCell>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer my={4} component={Box}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Icbari sığorta N/V</TableCell>
+                  <TableCell>Monthly Payment Value</TableCell>
+                  <TableCell>Main Price</TableCell>
+                  <TableCell>Percentage Price</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paymentHistory.map((payment, index) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{payment.date}</TableCell>
+                    <TableCell>{payment.monthlyPayment}</TableCell>
+                    <TableCell>{payment.total}</TableCell>
+                    <TableCell>{payment.percentageValue}</TableCell>
+                    <TableCell>{payment.status}</TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paymentHistory.map((payment, index) => (
-                    <TableRow key={index}>
-                      <TableCell component="th" scope="row">
-                        {index + 1}
-                      </TableCell>
-                      <TableCell>{payment.date}</TableCell>
-                      <TableCell>{payment.monthlyPayment}</TableCell>
-                      <TableCell>{payment.total}</TableCell>
-                      <TableCell>{payment.percentageValue}</TableCell>
-                      <TableCell>{payment.status}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           </>
         ))}
       <Stack alignItems="flex-end" sx={{ mt: 3 }}>
