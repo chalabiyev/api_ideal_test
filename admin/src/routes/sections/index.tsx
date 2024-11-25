@@ -1,9 +1,4 @@
-import { lazy, Suspense } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
-
-import { MainLayout } from 'src/layouts/main/index';
-
-import { SplashScreen } from 'src/components/loading-screen/index';
 
 import { authRoutes } from './auth';
 import { mainRoutes } from './main';
@@ -11,8 +6,6 @@ import { dashboardRoutes } from './dashboard';
 import { componentsRoutes } from './components';
 
 // ----------------------------------------------------------------------
-
-const HomePage = lazy(() => import('src/pages/home'));
 
 export function Router() {
   return useRoutes([

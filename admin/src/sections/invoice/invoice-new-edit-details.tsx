@@ -7,14 +7,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import { inputBaseClasses } from '@mui/material/InputBase';
 
 import { fCurrency } from 'src/utils/format-number';
-
-import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
 
 import { Field } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
@@ -53,29 +49,6 @@ export function InvoiceNewEditDetails() {
   const handleRemove = (index: number) => {
     remove(index);
   };
-
-  const handleClearService = useCallback(
-    (index: number) => {
-      setValue(`items[${index}].quantity`, 1);
-      setValue(`items[${index}].price`, 0);
-      setValue(`items[${index}].total`, 0);
-    },
-    [setValue]
-  );
-
-  const handleSelectService = useCallback(
-    (index: number, option: string) => {
-      setValue(
-        `items[${index}].price`,
-        INVOICE_SERVICE_OPTIONS.find((service) => service.name === option)?.price
-      );
-      setValue(
-        `items[${index}].total`,
-        values.items.map((item: IInvoiceItem) => item.quantity * item.price)[index]
-      );
-    },
-    [setValue, values.items]
-  );
 
   const handleChangeQuantity = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {

@@ -26,8 +26,8 @@ import { EmptyContent } from 'src/components/empty-content';
 import { GirovList } from '../girov-list';
 import { GirovSort } from '../girov-sort';
 import { GirovSearch } from '../girov-search';
-import { CartIcon } from '../components/cart-icon';
 import { GirovFilters } from '../girov-filters';
+import { CartIcon } from '../components/cart-icon';
 import { useCheckoutContext } from '../../checkout/context';
 import { GirovFiltersResult } from '../girov-filters-result';
 
@@ -151,7 +151,7 @@ type ApplyFilterProps = {
 };
 
 function applyFilter({ inputData, filters, sortBy }: ApplyFilterProps) {
-  const { gender, category, colors, priceRange, rating } = filters;
+  const {  category, colors, priceRange, rating } = filters;
 
   const min = priceRange[0];
 

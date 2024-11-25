@@ -3,16 +3,12 @@ import type { IInvoice, IInvoiceTableFilters } from 'src/types/invoice';
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableBody from '@mui/material/TableBody';
-import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
@@ -22,14 +18,11 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
-import { sumBy } from 'src/utils/helper';
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
 
-import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { _invoices, INVOICE_SERVICE_OPTIONS } from 'src/_mock';
 
-import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -66,8 +59,6 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export function InvoiceListView() {
-  const theme = useTheme();
-
   const router = useRouter();
 
   const table = useTable({ defaultOrderBy: 'createDate' });
@@ -102,51 +93,6 @@ export function InvoiceListView() {
     (!!filters.state.startDate && !!filters.state.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-
-  const getInvoiceLength = (status: string) =>
-    tableData.filter((item) => item.status === status).length;
-
-  const getTotalAmount = (status: string) =>
-    sumBy(
-      tableData.filter((item) => item.status === status),
-      (invoice) => invoice.totalAmount
-    );
-
-  const getPercentByStatus = (status: string) =>
-    (getInvoiceLength(status) / tableData.length) * 100;
-
-  const TABS = [
-    {
-      value: 'all',
-      label: 'All',
-      color: 'default',
-      count: tableData.length,
-    },
-    {
-      value: 'paid',
-      label: 'Paid',
-      color: 'success',
-      count: getInvoiceLength('paid'),
-    },
-    {
-      value: 'pending',
-      label: 'Pending',
-      color: 'warning',
-      count: getInvoiceLength('pending'),
-    },
-    {
-      value: 'overdue',
-      label: 'Overdue',
-      color: 'error',
-      count: getInvoiceLength('overdue'),
-    },
-    {
-      value: 'draft',
-      label: 'Draft',
-      color: 'default',
-      count: getInvoiceLength('draft'),
-    },
-  ] as const;
 
   const handleDeleteRow = useCallback(
     (id: string) => {
@@ -186,14 +132,6 @@ export function InvoiceListView() {
       router.push(paths.dashboard.invoice.details(id));
     },
     [router]
-  );
-
-  const handleFilterStatus = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
-      table.onResetPage();
-      filters.setState({ status: newValue });
-    },
-    [filters, table]
   );
 
   return (

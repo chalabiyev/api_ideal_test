@@ -8,27 +8,21 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
+import { Button } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import {
-  _tags,
-  PRODUCT_COLOR_NAME_OPTIONS,
-  PRODUCT_GENDER_OPTIONS,
   PRODUCT_SIZE_OPTIONS,
   USER_CATEGORY_GROUP_OPTIONS,
 } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { Button } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +58,7 @@ type Props = {
 export function GirovNewEditForm({ currentProduct }: Props) {
   const router = useRouter();
 
+  // eslint-disable-next-line
   const [includeTaxes, setIncludeTaxes] = useState(false);
   const [displayCredit, setDisplayCredit] = useState(false);
 
@@ -104,6 +99,7 @@ export function GirovNewEditForm({ currentProduct }: Props) {
     watch,
     setValue,
     handleSubmit,
+    // eslint-disable-next-line
     formState: { isSubmitting },
   } = methods;
 

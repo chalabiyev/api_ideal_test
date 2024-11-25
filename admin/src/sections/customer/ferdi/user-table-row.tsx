@@ -10,14 +10,13 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useRouter } from 'src/routes/hooks';
 
-import DownloadIcon from 'src/svgIcons/downloadIcon';
+import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-import { useRouter } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
 

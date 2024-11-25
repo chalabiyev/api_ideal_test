@@ -1,34 +1,32 @@
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import {
+  Card,
+  Stack,
+  Select,
+  Button,
+  MenuItem,
+  CardHeader,
+  InputLabel,
+  FormControl,
+  OutlinedInput,
+} from '@mui/material'
 
 import { useRouter } from 'src/routes/hooks';
 
-import { _analyticTrafficbysite, _analyticTrafficbymobile } from 'src/_mock';
+import DownloadIcon from 'src/svgIcons/downloadIcon';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
-
-// import { useMockedUser } from 'src/auth/hooks';
-import {
-  Box,
-  Button,
-  Card,
-  CardHeader,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Stack,
-} from '@mui/material';
+import { _analyticTrafficbysite, _analyticTrafficbymobile } from 'src/_mock';
 
 import { VideoCallIcon } from 'src/components/videocall';
-import DownloadIcon from 'src/svgIcons/downloadIcon';
 
 import { AppAreaInstalled } from '../app-area-installed';
 import { AppCurrentDownload } from '../app-current-download';
 import { AnalyticsWidgetSummary } from '../../analytics/analytics-widget-summary';
 import { AnalyticsTrafficBySite } from '../../analytics/analytics-traffic-by-site';
+
+// import { useMockedUser } from 'src/auth/hooks';
 
 const CreditDataWidget = [
   {

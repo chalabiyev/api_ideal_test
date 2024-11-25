@@ -1,15 +1,10 @@
 import type { NavSectionProps } from 'src/components/nav-section';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import { styled, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
-import { usePathname } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
-
-import {LogoIdealKredit} from 'src/svgIcons/logoIdealKredit';
 
 import { HeaderSection } from './header-section';
 import { Searchbar } from '../components/searchbar';
@@ -95,20 +90,16 @@ export function HeaderBase({
   slotsDisplay: {
     signIn = true,
     account = true,
-    helpLink = true,
-    settings = true,
     purchase = true,
     contacts = true,
     searchbar = true,
     workspaces = true,
     menuButton = true,
-    localization = true,
     notifications = true,
   } = {},
   ...other
 }: HeaderBaseProps) {
   const theme = useTheme();
-  const pathname = usePathname();
 
   return (
     <HeaderSection

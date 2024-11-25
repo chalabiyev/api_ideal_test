@@ -144,6 +144,7 @@ export const paths = {
       edit: (id: string) => `${ROOTS.DASHBOARD}/channels/${id}/edit`,
     },
     customer: {
+      root: `${ROOTS.DASHBOARD}/customer`,
       fiziki: `${ROOTS.DASHBOARD}/customer/fiziki/list`,
       ferdi: `${ROOTS.DASHBOARD}/customer/ferdi/list`,
       huquqi: `${ROOTS.DASHBOARD}/customer/huquqi/list`,

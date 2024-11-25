@@ -6,9 +6,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import {
   _analyticTasks,
   _analyticPosts,
-  _analyticTrafficbymobile,
-  _analyticTrafficbysite,
   _analyticOrderTimeline,
+  _analyticTrafficbysite,
+  _analyticTrafficbymobile,
 } from 'src/_mock';
 
 import { AnalyticsNews } from '../analytics-news';

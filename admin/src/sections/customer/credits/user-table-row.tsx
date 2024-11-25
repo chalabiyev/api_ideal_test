@@ -12,11 +12,10 @@ import IconButton from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import DownloadIcon from 'src/svgIcons/downloadIcon';
-
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
+// eslint-disable-next-line 
 import { useRouter } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
