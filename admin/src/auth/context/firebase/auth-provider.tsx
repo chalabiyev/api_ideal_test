@@ -14,12 +14,6 @@ import type { AuthState } from '../../types';
 
 // ----------------------------------------------------------------------
 
-/**
- * NOTE:
- * We only build demo at basic level.
- * Customer will need to do some extra handling yourself if you want to extend the logic and other features...
- */
-
 type Props = {
   children: React.ReactNode;
 };
@@ -34,10 +28,7 @@ export function AuthProvider({ children }: Props) {
     try {
       onAuthStateChanged(AUTH, async (user: AuthState['user']) => {
         if (user && user.emailVerified) {
-          /*
-           * (1) If skip emailVerified
-           * Remove the condition (if/else) : user.emailVerified
-           */
+     
           const userProfile = doc(FIRESTORE, 'users', user.uid);
 
           const docSnap = await getDoc(userProfile);

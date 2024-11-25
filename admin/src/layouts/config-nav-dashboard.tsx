@@ -50,30 +50,30 @@ export const navData = [
       { title: 'Ana səhifə', path: paths.dashboard.root, icon: ICONS.dashboard },
       {
         title: 'Kreditlər',
-        path: paths.dashboard.general.ecommerce,
+        path: paths.dashboard.credits.root,
         icon: ICONS.ecommerce,
         children: [
-          { title: 'Yarat', path: paths.dashboard.credits.root},
+          { title: 'Yarat', path: paths.dashboard.credits.root },
           { title: 'Cari', path: paths.dashboard.credits.list },
-          { title: 'Planlaşdırılmış ödənişlər', path: paths.dashboard.general.ecommerce },
-          { title: 'Silinmiş Kreditlər', path: paths.dashboard.general.ecommerce },
-          { title: 'Arxiv', path: paths.dashboard.general.ecommerce },
-          { title: 'Kredit idarə edəni dəyişmək', path: paths.dashboard.general.ecommerce },
-          { title: 'KP', path: paths.dashboard.general.ecommerce },
-          { title: 'ROP', path: paths.dashboard.general.ecommerce },
-          { title: 'Kredit ödənişləri', path: paths.dashboard.general.ecommerce },
-          { title: 'MKR-də olmayan', path: paths.dashboard.general.ecommerce },
+          { title: 'Planlaşdırılmış ödənişlər', path: paths.dashboard.credits.root },
+          { title: 'Silinmiş Kreditlər', path: paths.dashboard.credits.root },
+          { title: 'Arxiv', path: paths.dashboard.credits.root },
+          { title: 'Kredit idarə edəni dəyişmək', path: paths.dashboard.credits.root },
+          { title: 'KP', path: paths.dashboard.credits.root },
+          { title: 'ROP', path: paths.dashboard.credits.root },
+          { title: 'Kredit ödənişləri', path: paths.dashboard.credits.root },
+          { title: 'MKR-də olmayan', path: paths.dashboard.credits.root },
         ],
       },
       {
         title: 'Müştərilər',
-        path: paths.dashboard.user.root,
+        path: paths.dashboard.customer.root,
         icon: ICONS.user,
         children: [
           { title: 'Fiziki Şəxslər', path: paths.dashboard.customer.fiziki },
           { title: 'Fərdi Sahibkarlar', path: paths.dashboard.customer.ferdi },
           { title: 'Hüquqi Şəxslər', path: paths.dashboard.customer.huquqi },
-          { title: 'Təminat', path: paths.dashboard.customer.teminat},
+          { title: 'Təminat', path: paths.dashboard.customer.teminat },
           { title: 'COV müştəri', path: paths.dashboard.customer.covmusteri },
         ],
       },
@@ -87,7 +87,7 @@ export const navData = [
       //     { title: 'Profil Yarat', path: paths.dashboard.user.new },
       //   ],
       // },
-  
+
       // {
       //   title: 'Məhsullar',
       //   path: paths.dashboard.product.root,
@@ -116,7 +116,7 @@ export const navData = [
       //     { title: 'Yarat', path: paths.dashboard.invoice.new },
       //   ],
       // },
-      
+
       // { title: 'Fayllar', path: paths.dashboard.general.file, icon: ICONS.file },
       // {
       //   title: 'Girov',

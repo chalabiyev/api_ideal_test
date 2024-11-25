@@ -12,7 +12,7 @@ export function VideoCallView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="VIdeo Call"
+        heading="VIdeo Zəng"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Video Zəng', href: paths.dashboard.videoCall },
