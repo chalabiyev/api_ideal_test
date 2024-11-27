@@ -339,7 +339,7 @@ export function OverviewAppView() {
             <AppAreaInstalled
               sx={{ height: 500 }}
               title="Partnyor mənbəsi - kredit statistikası"
-              subheader="(+43%) than last year"
+              subheader="Keçən ildən 43 % daha çox"
               chart={{
                 categories: [
                   'Jan',
