@@ -117,6 +117,14 @@ export const NewUserSchema = zod.object({
   mortgageStatus: zod.string().min(1, { message: 'İpoteka statusu tələb olunur!' }),
   monthlyRent: zod.string().min(1, { message: 'Aylıq icarə məbləği tələb olunur!' }),
   avatarUrl: zod.string().optional(),
+  loanTotal: zod.number().min(1, { message: 'Kredit məbləği boş buraxıla bilməz!' }),
+  loanPercentagePerYear: zod
+    .number()
+    .min(1, { message: 'İllik faiz dərəcəsi boş buraxıla bilməz!' }),
+  payPerMonth: zod.number().min(1, { message: 'Aylıq ödəniş məbləği boş buraxıla bilməz!' }),
+  totalCredit: zod.number().min(1, { message: 'Cəmi kredit məbləği boş buraxıla bilməz!' }),
+  totalPercetange: zod.number().min(1, { message: 'Cəmi faiz dərəcəsi boş buraxıla bilməz!' }),
+  comissionDecide: zod.boolean().optional(),
 });
 
 const getBackgroundColor = (daysLate: any) => {
@@ -184,6 +192,7 @@ export function CreateCreditForm() {
       marketValue: '150000',
       mortgageStatus: 'No Mortgage',
       monthlyRent: '1000',
+      loanTotal: 0,
     },
   });
 
@@ -1161,20 +1170,30 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
               >
-                <Field.Text name="education" label="Təhsili" />
-                <Field.Text name="workplaceName" label="İşlədiyi yerin hüquqi adı" />
-                <Field.Text name="workplaceAddress" label="İşlədiyi yerin ünvanı" />
-                <Field.Text name="positionAndExperience" label="Tutduğu vəzifə və staj" />
-                <Field.Text name="monthlySalary" label="Aylıq əmək haqqı" />
-                <Field.Text name="totalMonthlyIncome" label="Aylıq cəmi gəlirlərin məbləği" />
-                <Field.Text name="totalExpenses" label="Xərclərin cəmi" />
-                <Field.Text name="netIncome" label="Xalis gəlir (ixrac)" />
-                <Field.Text name="contractStartDate" label="Əmək müqaviləsinin bağlandığı tarix" />
+                <Field.Text name="education" label="Təhsili" disabled />
+                <Field.Text name="workplaceName" label="İşlədiyi yerin hüquqi adı" disabled />
+                <Field.Text name="workplaceAddress" label="İşlədiyi yerin ünvanı" disabled />
+                <Field.Text name="positionAndExperience" label="Tutduğu vəzifə və staj" disabled />
+                <Field.Text name="monthlySalary" label="Aylıq əmək haqqı" disabled />
                 <Field.Text
+                  name="totalMonthlyIncome"
+                  label="Aylıq cəmi gəlirlərin məbləği"
+                  disabled
+                />
+                <Field.Text name="totalExpenses" label="Xərclərin cəmi" disabled />
+                <Field.Text name="netIncome" label="Xalis gəlir (ixrac)" disabled />
+                <Field.Text
+                  name="contractStartDate"
+                  label="Əmək müqaviləsinin bağlandığı tarix"
+                  disabled
+                />
+                <Field.Text
+                  disabled
                   name="contractEndDate"
                   label="Müddətli əmək müqaviləsinin qurtardığı tarix"
                 />
                 <Field.Text
+                  disabled
                   name="monthlySalaryAmount"
                   label="İşçinin aylıq əməkhaqqının məbləği(manatla)"
                   sx={{
@@ -1198,8 +1217,8 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
               >
-                <Field.Text name="akbInfo" label="AKB məlumatlarına əsasən" />
-                <Field.Text name="internalRiskSystem" label="Daxili risk sistemi üzrə" />
+                <Field.Text name="akbInfo" label="AKB məlumatlarına əsasən" disabled />
+                <Field.Text name="internalRiskSystem" label="Daxili risk sistemi üzrə" disabled />
               </Box>
             </Stack>
             <Divider sx={{ my: 3 }} />
@@ -1253,6 +1272,7 @@ export function CreateCreditForm() {
                       />
                       <Field.Text
                         name={`zaminFin_${zamin.id}`}
+                        disabled
                         label="Fin"
                         defaultValue={zamin.fin}
                       />
@@ -1339,16 +1359,16 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
               >
-                <Field.Text name="propertyType" label="Tipi" />
-                <Field.Text name="registrationNumber" label="Qeyd No." />
-                <Field.Text name="occupancyAddress" label="Ünvan" />
-                <Field.Text name="ownershipStatus" label="Mülkiyyət statusu" />
-                <Field.Text name="numberOfRooms" label="Otaqların sayı" />
-                <Field.Text name="area" label="Sahə (m²)" />
-                <Field.Text name="constructionYear" label="Tikinti ili" />
-                <Field.Text name="marketValue" label="Bazar dəyəri" />
-                <Field.Text name="mortgageStatus" label="İpoteka statusu" />
-                <Field.Text name="monthlyRent" label="Aylıq kirayə" />
+                <Field.Text name="propertyType" label="Tipi" disabled />
+                <Field.Text name="registrationNumber" label="Qeyd No." disabled />
+                <Field.Text name="occupancyAddress" label="Ünvan" disabled />
+                <Field.Text name="ownershipStatus" label="Mülkiyyət statusu" disabled />
+                <Field.Text name="numberOfRooms" label="Otaqların sayı" disabled />
+                <Field.Text name="area" label="Sahə (m²)" disabled />
+                <Field.Text name="constructionYear" label="Tikinti ili" disabled />
+                <Field.Text name="marketValue" label="Bazar dəyəri" disabled />
+                <Field.Text name="mortgageStatus" label="İpoteka statusu" disabled />
+                <Field.Text name="monthlyRent" label="Aylıq kirayə" disabled />
               </Box>
             </Stack>
           </Grid>
@@ -1569,9 +1589,9 @@ export function CreateCreditForm() {
                 columnGap={2}
                 gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
               >
-                <Field.Text name="loanTotal" label="Kreditin məbləği" />
+                <Field.Text name="loanTotal" label="Kreditin məbləği" type="number" />
 
-                <Field.Text name="loanPercentagePerYear" label="İllik dərəcəsi(%)" />
+                <Field.Text name="loanPercentagePerYear" label="İllik dərəcəsi(%)" type="number" />
 
                 <Box
                   sx={{
@@ -1605,13 +1625,14 @@ export function CreateCreditForm() {
                     <Typography sx={{ fontSize: 14 }}>84 ay</Typography>
                   </Box>
                 </Box>
-                <Field.Text name="payPerMonth" label="Aylıq ödəniş" />
+                <Field.Text name="payPerMonth" label="Aylıq ödəniş" type="number" />
 
-                <Field.Text name="totalCredit" label="Cəmi ödəniləcək məbləğ" />
-                <Field.Text name="totalPercetange" label="Cəmi faiz" />
+                <Field.Text name="totalCredit" label="Cəmi ödəniləcək məbləğ" type="number" />
+                <Field.Text name="totalPercetange" label="Cəmi faiz" type="number" />
               </Box>
               <Typography mt={4}>
-                Komissiyaya qərar üçün göndər <Switch color="info" defaultChecked />
+                Komissiyaya qərar üçün göndər{' '}
+                <Switch color="info" defaultChecked name="comissionDecide" />
               </Typography>
             </Stack>
           </Grid>
