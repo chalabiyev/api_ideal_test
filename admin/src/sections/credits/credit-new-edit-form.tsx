@@ -53,15 +53,12 @@ import {
   guarantorLoanData,
 } from './credit-data';
 
-// ----------------------------------------------------------------------
 export type ValuesType = {
   [year: string]: {
     [month: string]: number;
   };
 };
-
 export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
-
 export const NewUserSchema = zod.object({
   fin: zod.string().min(1, { message: 'Fin tələb olunur!' }),
   serialNumber: zod.string().min(1, { message: 'Ş/V seriyası və nömrəsi tələb olunur!' }),
@@ -126,7 +123,6 @@ export const NewUserSchema = zod.object({
   totalPercetange: zod.number().min(1, { message: 'Cəmi faiz dərəcəsi boş buraxıla bilməz!' }),
   comissionDecide: zod.boolean().optional(),
 });
-
 const getBackgroundColor = (daysLate: any) => {
   if (daysLate === '-') return '#C6C6C6'; // No information (gray)
   if (daysLate === 0) return '#00B0F0'; // 0 days delay (blue)
@@ -139,9 +135,7 @@ const getBackgroundColor = (daysLate: any) => {
 };
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState('s/v');
-
   const router = useRouter();
-
   const methods = useForm<NewUserSchemaType>({
     mode: 'onSubmit',
     resolver: zodResolver(NewUserSchema),
@@ -195,16 +189,13 @@ export function CreateCreditForm() {
       loanTotal: 0,
     },
   });
-
   const {
     reset,
     watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const selectedOption = watch('whereToGetSignature');
-
   const onSubmit = handleSubmit(async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -216,13 +207,10 @@ export function CreateCreditForm() {
       console.error(error);
     }
   });
-
   const handleTabChange = (event: any, newValue: string) => {
     setCurrentTab(newValue);
   };
-
   const loanerScore = Number(watch('loanerScore'));
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Tabs value={currentTab} onChange={handleTabChange}>
@@ -433,7 +421,6 @@ export function CreateCreditForm() {
                       <Typography variant="body2">{loanData.accountNumber}</Typography>
                     </TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell colSpan={2} sx={{ backgroundColor: '#E3F2FD' }}>
                       <Typography variant="h5">Qalıq məbləği</Typography>
@@ -444,7 +431,6 @@ export function CreateCreditForm() {
                       <Typography variant="h4">{loanData.interestAmount.toFixed(2)}</Typography>
                     </TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell>Aylıq ödəniş məbləği</TableCell>
                     <TableCell>{loanData.monthlyPayment}</TableCell>
@@ -457,7 +443,6 @@ export function CreateCreditForm() {
                     <TableCell>İlkin müqavilə ilə bitmə tarixi</TableCell>
                     <TableCell>{loanData.initialContractEndDate}</TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell>Məqsədi</TableCell>
                     <TableCell>{loanData.loanPurpose}</TableCell>
@@ -470,7 +455,6 @@ export function CreateCreditForm() {
                     <TableCell>Faizlərin gecikdirildiyi gün sayı</TableCell>
                     <TableCell>{loanData.overdueDaysInterest}</TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell colSpan={4} sx={{ backgroundColor: '#E3F2FD' }}>
                       <Typography variant="h6" align="right">
@@ -500,7 +484,6 @@ export function CreateCreditForm() {
                 </TableBody>
               </Table>
             </TableContainer>
-
             <TableContainer component={Box} my={4}>
               <Table>
                 <TableBody>
@@ -521,8 +504,6 @@ export function CreateCreditForm() {
                       </TableCell>
                     ))}
                   </TableRow>
-
-                  {/* Data Row */}
                   <TableRow>
                     <TableCell
                       align="center"
@@ -588,7 +569,6 @@ export function CreateCreditForm() {
                       <Typography variant="body2">{oldLoanData.accountNumber}</Typography>
                     </TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell>Aylıq ödəniş məbləği</TableCell>
                     <TableCell>{oldLoanData.monthlyPayment}</TableCell>
@@ -605,7 +585,6 @@ export function CreateCreditForm() {
                     <TableCell>İlkin müqavilə ilə bitmə tarixi</TableCell>
                     <TableCell>{oldLoanData.initialContractEndDate}</TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell>Məqsədi</TableCell>
                     <TableCell>{oldLoanData.loanPurpose}</TableCell>
@@ -658,7 +637,6 @@ export function CreateCreditForm() {
                       <Typography variant="body2">{guarantorLoanData.accountNumber}</Typography>
                     </TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell>Aylıq ödəniş məbləği</TableCell>
                     <TableCell>{guarantorLoanData.monthlyPayment}</TableCell>
@@ -675,7 +653,6 @@ export function CreateCreditForm() {
                     <TableCell>İlkin müqavilə ilə bitmə tarixi</TableCell>
                     <TableCell>{guarantorLoanData.initialContractEndDate}</TableCell>
                   </TableRow>
-
                   <TableRow>
                     <TableCell>Məqsədi</TableCell>
                     <TableCell>{guarantorLoanData.loanPurpose}</TableCell>
@@ -725,7 +702,6 @@ export function CreateCreditForm() {
                 }}
               />
             </Box>
-
             <Grid xs={12} md={8}>
               <Card sx={{ p: 3 }}>
                 <Box
@@ -749,7 +725,6 @@ export function CreateCreditForm() {
                       id="fin"
                       autoFocus
                     />
-
                     <Field.Text
                       name="serialNumber"
                       label="Ş/V seriyası və nömrəsi"
@@ -763,7 +738,6 @@ export function CreateCreditForm() {
                     />
                     <Field.Text name="passportStatus" disabled label="Vəsiqənin statusu" />
                   </Box>
-
                   <Box
                     display="grid"
                     rowGap={3}
@@ -836,15 +810,12 @@ export function CreateCreditForm() {
                         </option>
                       ))}
                     </Field.Select>
-
                     {selectedOption === 'tg' && (
                       <Field.Text name="telegramUsername" label="Telegram Username" />
                     )}
-
                     {selectedOption === 'wp' && (
                       <Field.Text name="whatsappNumber" label="WhatsApp Number" />
                     )}
-
                     {selectedOption === 'em' && <Field.Text name="email" label="Email" />}
                   </Box>
                 </Box>
@@ -852,305 +823,6 @@ export function CreateCreditForm() {
             </Grid>
           </Grid>
         )) ||
-        // (currentTab === 'akb' && (
-        //   <Grid spacing={3}>
-        //     <Stack>
-        //       <Typography
-        //         sx={{
-        //           my: 3,
-        //           fontSize: 20,
-        //           lineHeight: 1.5,
-        //           fontWeight: 700,
-        //         }}
-        //       >
-        //         Kredit tarixçəsi haqqında ümumi məlumat
-        //       </Typography>
-
-        //       <Divider sx={{ mb: 3 }} />
-
-        //       <Box
-        //         display="grid"
-        //         rowGap={3}
-        //         columnGap={2}
-        //         gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-        //       >
-        //         <Field.Text name="total" label="Аktiv kreditlər üzrə ümumi borc" />
-
-        //         <Field.Text name="subDescription" label="Sayı" />
-
-        //         <Field.Text
-        //           name="totalZamin"
-        //           label="Müştərinin zamin kimi çıxış etdiyi kreditlər üzrə borcun ümumi məbləği"
-        //         />
-
-        //         <Field.Text name="countZamin" label="Sayı" />
-
-        //         <Field.Text
-        //           name="name"
-        //           label="Son 24 ayda ödənilmiş kreditlər üzrə borcun ümumi məbləği"
-        //         />
-
-        //         <Field.Text name="countTotal24" label="Sayı" />
-
-        //         <Field.Text
-        //           name="before24Months"
-        //           label="Son 24 aydan əvvəl ödənilmiş borcun ümumi məbləği"
-        //         />
-
-        //         <Field.Text name="countBefore24" label="Sayı" />
-        //       </Box>
-        //     </Stack>
-        //     <Divider sx={{ my: 3 }} />
-
-        //     <Stack>
-        //       <Typography
-        //         sx={{
-        //           my: 3,
-        //           fontSize: 20,
-        //           lineHeight: 1.5,
-        //           fontWeight: 700,
-        //         }}
-        //       >
-        //         Ödənişlər haqqında məlumat{' '}
-        //       </Typography>
-        //       <Typography
-        //         sx={{
-        //           my: 3,
-        //           fontSize: 20,
-        //           lineHeight: 1.5,
-        //           fontWeight: 700,
-        //         }}
-        //       >
-        //         Aktiv kreditlər üzrə ödənişlərin ümumi məbləği{' '}
-        //       </Typography>
-
-        //       <Divider sx={{ mb: 3 }} />
-
-        //       <Stack
-        //         display="grid"
-        //         rowGap={3}
-        //         columnGap={2}
-        //         gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-        //       >
-        //         <Field.Text name="ActiveDueToAKB" label="AKB məlumatlarına əsasən" />
-
-        //         <Field.Text name="ActiveDueToRisk" label="Daxili risk sistemi üzrə" />
-        //       </Stack>
-        //       <Typography
-        //         sx={{
-        //           my: 3,
-        //           fontSize: 20,
-        //           lineHeight: 1.5,
-        //           fontWeight: 700,
-        //         }}
-        //       >
-        //         Müştərinin zamin kimi çıxış etdiyi kreditlər üzrə ödənişlərin ümumi məbləği{' '}
-        //       </Typography>
-        //       <Box
-        //         display="grid"
-        //         rowGap={3}
-        //         columnGap={2}
-        //         gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-        //       >
-        //         <Field.Text name="ZaminDueToAKB" label="AKB məlumatlarına əsasən" />
-
-        //         <Field.Text name="ZaminDueToRisk" label="Daxili risk sistemi üzrə" />
-        //       </Box>
-        //       <Typography
-        //         sx={{
-        //           my: 3,
-        //           fontSize: 20,
-        //           lineHeight: 1.5,
-        //           fontWeight: 700,
-        //         }}
-        //       >
-        //         Toplam ödənişin yekun məbləği{' '}
-        //       </Typography>
-        //       <Box
-        //         display="grid"
-        //         rowGap={3}
-        //         columnGap={2}
-        //         gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-        //       >
-        //         <Field.Text name="totalPrice" label="AKB məlumatlarına əsasən" />
-
-        //         <Field.Text name="subDescription" label="Daxili risk sistemi üzrə" />
-        //       </Box>
-        //     </Stack>
-        //     <Divider sx={{ my: 3 }} />
-
-        //     <Stack>
-        //       <Typography
-        //         sx={{
-        //           my: 3,
-        //           fontSize: 20,
-        //           lineHeight: 1.5,
-        //           fontWeight: 700,
-        //         }}
-        //       >
-        //         Borcalanın cari öhdəlikləri{' '}
-        //       </Typography>
-        //       <Box
-        //         display="grid"
-        //         rowGap={3}
-        //         columnGap={2}
-        //         gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-        //       >
-        //         <Typography
-        //           sx={{
-        //             my: 3,
-        //             fontSize: 22,
-        //             lineHeight: 1.5,
-        //             fontWeight: 700,
-        //           }}
-        //         >
-        //           Borc: 400&#x20BC;
-        //         </Typography>
-        //         <Box
-        //           sx={{
-        //             display: 'flex',
-        //             alignItems: 'center',
-        //             justifyContent: 'start',
-        //             gap: 2,
-        //           }}
-        //         >
-        //           <Typography
-        //             sx={{
-        //               my: 3,
-        //               fontSize: 20,
-        //               lineHeight: 1.5,
-        //               fontWeight: 600,
-        //             }}
-        //           >
-        //             Yenidən maliyyələşdirmə üçün uyğundur
-        //           </Typography>
-        //           <Switch defaultChecked />
-        //         </Box>
-        //       </Box>
-
-        //       <Divider sx={{ mb: 3 }} />
-
-        //       <Stack
-        //         display="grid"
-        //         rowGap={3}
-        //         columnGap={2}
-        //         gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
-        //       >
-        //         <Field.Text name="informationProvider" label="Informasiya provideri" />
-
-        //         <Field.Text name="creditBalanceAmount" label="Kredit balansının məbləği" />
-
-        //         <Field.Text name="monthlyPaymentAmount" label="Aylıq ödəniş məbləği" />
-
-        //         <Field.Text name="lastPaymentDate" label="Son ödəniş tarixi" />
-
-        //         <Field.Text name="aim" label="Məqsəd" />
-
-        //         <Field.Text
-        //           name="mainDebtOverdueDays"
-        //           label="Əsas borc üzrə vaxtı keçmiş günlərin sayı"
-        //         />
-
-        //         <Field.Text name="AccountNumber" label="Hesab nömrəsi" />
-
-        //         <Field.Text name="percentAmount" label="Faiz məbləği" />
-        //         <Field.Text name="percentDegree" label="Faiz dərəcəsi" />
-        //         <Field.Text name="creditGivenDate" label="Kreditin verilmə tarixi" />
-        //         <Field.Text name="creditEndDate" label="Kreditin bitmə tarixi" />
-        //         <Field.Text
-        //           name="interestOverdueDays"
-        //           label="Faizli borc üzrə vaxtı keçmiş günlərin sayı"
-        //         />
-        //         <Field.Text
-        //           name="monthlyPaymentAmountDueToRisk"
-        //           label="Daxili risk sistemlərinin hesablanmasına uyğun olaraq aylıq ödəniş"
-        //         />
-        //       </Stack>
-        //       <Typography
-        //         sx={{
-        //           my: 3,
-        //           fontSize: 22,
-        //           lineHeight: 1.5,
-        //           fontWeight: 700,
-        //         }}
-        //       >
-        //         Borcalanın cari ödənişləri
-        //       </Typography>
-
-        //       <TableContainer
-        //         sx={{
-        //           border: '1px solid black',
-        //         }}
-        //       >
-        //         <Table
-        //           sx={{ width: '100%', borderCollapse: 'collapse', border: '1px solid black' }}
-        //           aria-label="simple table"
-        //         >
-        //           <TableBody>
-        //             <TableRow>
-        //               <TableCell sx={{ backgroundColor: 'white' }}> </TableCell>
-        //               {Object.entries(tabledata).map(([year, months]) => (
-        //                 <TableCell
-        //                   sx={{
-        //                     backgroundColor: 'white',
-        //                     border: '1px solid black',
-        //                     textAlign: 'center',
-        //                   }}
-        //                   colSpan={months.length}
-        //                   key={year}
-        //                 >
-        //                   {year}
-        //                 </TableCell>
-        //               ))}
-        //             </TableRow>
-        //             <TableRow>
-        //               <TableCell
-        //                 sx={{
-        //                   backgroundColor: 'white',
-        //                   border: '1px solid black',
-        //                   padding: '8px',
-        //                 }}
-        //               >
-        //                 Aylar
-        //               </TableCell>
-        //               {Object.entries(tabledata).flatMap(([year, months]) =>
-        //                 months.map((month, index) => (
-        //                   <TableCell
-        //                     sx={{ border: '1px solid black', padding: '8px' }}
-        //                     key={`${year}-${month}`}
-        //                   >
-        //                     {month}
-        //                   </TableCell>
-        //                 ))
-        //               )}
-        //             </TableRow>
-        //             <TableRow>
-        //               <TableCell
-        //                 sx={{
-        //                   backgroundColor: 'white',
-        //                   border: '1px black',
-        //                   padding: '8px',
-        //                 }}
-        //               >
-        //                 Tarixçə
-        //               </TableCell>
-        //               {Object.entries(tabledata).flatMap(([year, months]) =>
-        //                 months.map((month, index) => (
-        //                   <TableCell
-        //                     sx={{ border: '1px  black', padding: '8px' }}
-        //                     key={`${year}-${month}`}
-        //                   >
-        //                     {values[year][month]}
-        //                   </TableCell>
-        //                 ))
-        //               )}
-        //             </TableRow>
-        //           </TableBody>
-        //         </Table>
-        //       </TableContainer>
-        //     </Stack>
-        //   </Grid>
-        // )) ||
         (currentTab === 'workplace' && (
           <Grid spacing={3}>
             <Stack>
@@ -1238,9 +910,7 @@ export function CreateCreditForm() {
                 >
                   Zamin barəsində məlumatlar
                 </Typography>
-
                 <Divider sx={{ mb: 3 }} />
-
                 {zaminData.map((zamin) => (
                   <Box
                     key={zamin.id}
@@ -1350,9 +1020,7 @@ export function CreateCreditForm() {
               >
                 Daşınmaz əmlak
               </Typography>
-
               <Divider sx={{ mb: 3 }} />
-
               <Box
                 display="grid"
                 rowGap={3}
@@ -1385,9 +1053,7 @@ export function CreateCreditForm() {
             >
               Nəqliyyat vasitələri
             </Typography>
-
             <Divider sx={{ mb: 3 }} />
-
             {vehicleData.map((vehicle) => (
               <Box
                 key={vehicle.id}
@@ -1457,7 +1123,6 @@ export function CreateCreditForm() {
                     disabled
                   />
                 </Box>
-
                 <Grid xs={12} md={8}>
                   <Card sx={{ p: 3 }}>
                     <Box
@@ -1466,7 +1131,6 @@ export function CreateCreditForm() {
                       display="grid"
                       gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                     >
-                      {/* Row 1 */}
                       <Box
                         display="grid"
                         rowGap={3}
@@ -1492,8 +1156,6 @@ export function CreateCreditForm() {
                           disabled
                         />
                       </Box>
-
-                      {/* Row 2 */}
                       <Box
                         display="grid"
                         rowGap={3}
@@ -1553,7 +1215,6 @@ export function CreateCreditForm() {
                           ))}
                         </Field.Select>
                       </Box>
-
                       <Field.Text
                         disabled
                         name={`address_${member.id}`}
@@ -1580,9 +1241,7 @@ export function CreateCreditForm() {
               >
                 Nağd pul krediti
               </Typography>
-
               <Divider sx={{ mb: 3 }} />
-
               <Box
                 display="grid"
                 rowGap={3}
@@ -1590,9 +1249,7 @@ export function CreateCreditForm() {
                 gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
               >
                 <Field.Text name="loanTotal" label="Kreditin məbləği" type="number" />
-
                 <Field.Text name="loanPercentagePerYear" label="İllik dərəcəsi(%)" type="number" />
-
                 <Box
                   sx={{
                     gridArea: '2 / 1 / 3 / 3',
@@ -1626,7 +1283,6 @@ export function CreateCreditForm() {
                   </Box>
                 </Box>
                 <Field.Text name="payPerMonth" label="Aylıq ödəniş" type="number" />
-
                 <Field.Text name="totalCredit" label="Cəmi ödəniləcək məbləğ" type="number" />
                 <Field.Text name="totalPercetange" label="Cəmi faiz" type="number" />
               </Box>
