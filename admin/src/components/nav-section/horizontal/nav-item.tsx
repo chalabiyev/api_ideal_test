@@ -24,7 +24,6 @@ export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
       info,
       title,
       caption,
-      //
       open,
       depth,
       render,

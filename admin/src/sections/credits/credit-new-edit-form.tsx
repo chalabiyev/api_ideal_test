@@ -299,6 +299,22 @@ export function CreateCreditForm() {
       avatarUrl:
         'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     },
+    {
+      id: '2',
+      name: 'John Doe 2',
+      fin: '12345678',
+      serialNumber: 'AA12345',
+      passportStatus: 'aktiv',
+      identityCard: '12345678',
+      issuedBy: 'Yasamal Rayon Polis İdarəsi',
+      fullName: 'Rasim Vəliyev',
+      borrowerInfo: 'Some info about borrower',
+      registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+      residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+      phones: '123-456-7890',
+      avatarUrl:
+        'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    },
   ];
   const paymentHistory = [
     {
@@ -383,7 +399,8 @@ export function CreateCreditForm() {
       fatherName: 'testFatherName',
       born: '11.10.2001',
       reportNum: 'testreport №229',
-      familyRelationship: '',
+      familyRelationship: 'married',
+      gender: "Men",
       whereToGetSignature: '',
       dateMade: '11 oktyabr 2001',
       historyMadeDate: '123456',
@@ -401,7 +418,7 @@ export function CreateCreditForm() {
       workplaceName: '"Soliton LTD "MMC',
       workplaceAddress: 'Bakı şəh.Babək pr.11-26 Quter Mebel salonu',
       positionAndExperience: 'menecer',
-      monthlySalary: '',
+      monthlySalary: '1200 AZN',
       totalMonthlyIncome: '2500',
       totalExpenses: '969',
       netIncome: '1531',
@@ -474,9 +491,9 @@ export function CreateCreditForm() {
               gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' },
             }}
           >
-            <Field.Text name="name" label="Ad" aria-disabled />
-            <Field.Text name="surname" label="Soyad" aria-disabled />
-            <Field.Text name="fatherName" label="Ata adı" aria-disabled />
+            <Field.Text name="name" label="Ad" disabled />
+            <Field.Text name="surname" label="Soyad" disabled />
+            <Field.Text name="fatherName" label="Ata adı" disabled />
           </Box>
           <Box
             sx={{
@@ -486,12 +503,12 @@ export function CreateCreditForm() {
               gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
             }}
           >
-            <Field.Text name="reportNum" label="Hesabat" aria-disabled />
-            <Field.Text name="dateMade" label="Tərtib olunma tarixi:" aria-disabled />
+            <Field.Text name="reportNum" label="Hesabat" disabled />
+            <Field.Text name="dateMade" label="Tərtib olunma tarixi:" disabled />
             <Field.Text
               name="historyMadeDate"
               label="Borcalan haqqında tarixçənin açıldığı tarix"
-              aria-disabled
+              disabled
             />
           </Box>
           <Box
@@ -521,25 +538,25 @@ export function CreateCreditForm() {
                   sx={{ marginBottom: 2 }}
                   name="loanerId"
                   label="Borcalanın İD-si:"
-                  aria-disabled
+                  disabled
                 />
                 <Field.Text
                   sx={{ marginBottom: 2 }}
                   name="loanerAdd"
                   label="Ünvanı:"
-                  aria-disabled
+                  disabled
                 />
                 <Field.Text
                   sx={{ marginBottom: 2 }}
                   name="loanerBornAdd"
                   label="Doğum yeri:"
-                  aria-disabled
+                  disabled
                 />
                 <Field.Text
                   sx={{ marginBottom: 2 }}
                   name="loanerBornDate"
                   label="Doğum tarixi:"
-                  aria-disabled
+                  disabled
                 />
               </Box>
               <Box
@@ -980,15 +997,15 @@ export function CreateCreditForm() {
                       fullWidth
                       label="Fin"
                       id="fin"
-                      aria-disabled
+                      disabled
                       autoFocus
                       InputProps={{
                         endAdornment: <SearchIconSVG />,
                       }}
                     />
 
-                    <Field.Text aria-disabled name="serialNumber" label="Ş/V seriyası və nömrəsi" />
-                    <Field.Text name="passportStatus" aria-disabled label="Vəsiqənin statusu" />
+                    <Field.Text disabled name="serialNumber" label="Ş/V seriyası və nömrəsi" />
+                    <Field.Text name="passportStatus" disabled label="Vəsiqənin statusu" />
                   </Box>
 
                   <Box
@@ -997,17 +1014,17 @@ export function CreateCreditForm() {
                     columnGap={2}
                     gridTemplateColumns={{ xs: 'repeat(2  , 1fr)' }}
                   >
-                    <Field.Text aria-disabled name="name" label="Adı" />
-                    <Field.Text name="surname" aria-disabled label="Soyadı" />
-                    <Field.Text name="fatherName" label="Ata adı" aria-disabled />
-                    <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" aria-disabled />
-                    <Field.Text name="state" label="Şəhər" aria-disabled />
-                    <Field.Text name="city" label="Rayon" aria-disabled />
-                    <Field.Text name="role" label="Vəzifə" aria-disabled />
+                    <Field.Text disabled name="name" label="Adı" />
+                    <Field.Text name="surname" disabled label="Soyadı" />
+                    <Field.Text name="fatherName" label="Ata adı" disabled />
+                    <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" disabled />
+                    <Field.Text name="state" label="Şəhər" disabled />
+                    <Field.Text name="city" label="Rayon" disabled />
+                    <Field.Text name="role" label="Vəzifə" disabled />
                     <Field.Select
                       native
-                      aria-disabled
-                      name="familyRelationship"
+                      disabled
+                      name="role"
                       label="Rol"
                       InputLabelProps={{ shrink: true }}
                     >
@@ -1018,7 +1035,7 @@ export function CreateCreditForm() {
                       ))}
                     </Field.Select>
                     <Field.Select
-                      native
+                    disabled
                       name="familyRelationship"
                       label="Ailə vəziyyəti"
                       InputLabelProps={{ shrink: true }}
@@ -1030,6 +1047,7 @@ export function CreateCreditForm() {
                       ))}
                     </Field.Select>
                     <Field.Select
+                    disabled
                       native
                       name="gender"
                       label="Cinsi"
@@ -1484,7 +1502,7 @@ export function CreateCreditForm() {
                         name={`zaminName_${zamin.id}`}
                         label="Adı"
                         defaultValue={zamin.name}
-                        aria-disabled
+                        disabled
                       />
                       <Field.Text
                         name={`zaminFin_${zamin.id}`}
@@ -1494,54 +1512,54 @@ export function CreateCreditForm() {
                       <Field.Text
                         name={`zaminSerialNumber_${zamin.id}`}
                         label="Ş/V seriyası və nömrəsi"
-                        aria-disabled
+                        disabled
                         defaultValue={zamin.serialNumber}
                       />
                       <Field.Text
                         name={`zaminPassportStatus_${zamin.id}`}
-                        aria-disabled
+                        disabled
                         label="Vəsiqənin statusu"
                         defaultValue={zamin.passportStatus}
                       />
                       <Field.Text
-                        aria-disabled
+                        disabled
                         name={`zaminIdentityCard_${zamin.id}`}
                         label="Şəxsiyyət vəsiqəsi"
                         defaultValue={zamin.identityCard}
                       />
                       <Field.Text
                         name={`zaminIssuedBy_${zamin.id}`}
-                        aria-disabled
+                        disabled
                         label="Kim tərəfindən verilib"
                         defaultValue={zamin.issuedBy}
                       />
                       <Field.Text
                         name={`zaminFullName_${zamin.id}`}
-                        aria-disabled
+                        disabled
                         label="Ad, Soy ad, Atasının adı"
                         defaultValue={zamin.fullName}
                       />
                       <Field.Text
                         name={`zaminBorrowerInfo_${zamin.id}`}
-                        aria-disabled
+                        disabled
                         label="Borcalan Haqında"
                         defaultValue={zamin.borrowerInfo}
                       />
                       <Field.Text
                         name={`zaminRegistrationAddress_${zamin.id}`}
-                        aria-disabled
+                        disabled
                         label="Qeydiyyat ünvanı"
                         defaultValue={zamin.registrationAddress}
                       />
                       <Field.Text
                         name={`zaminResidentialAddress_${zamin.id}`}
-                        aria-disabled
+                        disabled
                         label="Yaşadığı ünvanı"
                         defaultValue={zamin.residentialAddress}
                       />
                       <Field.Text
                         name={`zaminPhones_${zamin.id}`}
-                        aria-disabled
+                        disabled
                         label="Telefonlar"
                         defaultValue={zamin.phones}
                       />
@@ -1612,31 +1630,31 @@ export function CreateCreditForm() {
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
               >
                 <Field.Text
-                  aria-disabled
+                  disabled
                   name={`vehicleBrand_${vehicle.id}`}
                   label="Marka"
                   defaultValue={vehicle.title}
                 />
                 <Field.Text
-                  aria-disabled
+                  disabled
                   name={`vehicleNumber_${vehicle.id}`}
                   label="Qeydiyyat nömrə nişanı"
                   defaultValue={vehicle.licensePlate}
                 />
                 <Field.Text
-                  aria-disabled
+                  disabled
                   name={`vehicleYear_${vehicle.id}`}
                   label="İl"
                   defaultValue={vehicle.year}
                 />
                 <Field.Text
-                  aria-disabled
+                  disabled
                   name={`vehicleModel_${vehicle.id}`}
                   label="Model"
                   defaultValue={vehicle.model}
                 />
                 <Field.Text
-                  aria-disabled
+                  disabled
                   name={`vehicleVin_${vehicle.id}`}
                   label="VIN"
                   defaultValue={vehicle.vin}
@@ -1692,19 +1710,19 @@ export function CreateCreditForm() {
                           name={`fin_${member.id}`}
                           label="Fin"
                           value={member.fields.fin}
-                          aria-disabled
+                          disabled
                         />
                         <Field.Text
                           name={`serialNumber_${member.id}`}
                           label="Ş/V seriyası və nömrəsi"
                           value={member.fields.serialNumber}
-                          aria-disabled
+                          disabled
                         />
                         <Field.Text
                           name={`passportStatus_${member.id}`}
                           label="Vəsiqənin statusu"
                           value={member.fields.passportStatus}
-                          aria-disabled
+                          disabled
                         />
                       </Box>
 
@@ -1719,25 +1737,25 @@ export function CreateCreditForm() {
                           name={`name_${member.id}`}
                           label="Adı"
                           value={member.fields.name}
-                          aria-disabled
+                          disabled
                         />
                         <Field.Text
                           name={`surname_${member.id}`}
                           label="Soyadı"
                           value={member.fields.surname}
-                          aria-disabled
+                          disabled
                         />
                         <Field.Text
                           name={`fatherName_${member.id}`}
                           label="Ata adı"
                           value={member.fields.fatherName}
-                          aria-disabled
+                          disabled
                         />
                         <Field.Text
                           name={`born_${member.id}`}
                           label="Doğum tarixi(xx.xx.xxxx)"
                           value={member.fields.born}
-                          aria-disabled
+                          disabled
                         />
                         <Field.Select
                           native
@@ -1745,16 +1763,16 @@ export function CreateCreditForm() {
                           label="Ailə vəziyyəti"
                           value={member.fields.familyRelationship}
                           InputLabelProps={{ shrink: true }}
-                          aria-disabled
+                          disabled
                         >
                           {familyRelationshipOptions.map((option) => (
-                            <option aria-disabled key={option.value} value={option.value}>
+                            <option disabled key={option.value} value={option.value}>
                               {option.label}
                             </option>
                           ))}
                         </Field.Select>
                         <Field.Select
-                          aria-disabled
+                          disabled
                           native
                           name={`gender_${member.id}`}
                           label="Cinsi"
@@ -1762,7 +1780,7 @@ export function CreateCreditForm() {
                           InputLabelProps={{ shrink: true }}
                         >
                           {PRODUCT_GENDER_OPTIONS.map((option) => (
-                            <option aria-disabled key={option.value} value={option.value}>
+                            <option disabled key={option.value} value={option.value}>
                               {option.label}
                             </option>
                           ))}
@@ -1770,7 +1788,7 @@ export function CreateCreditForm() {
                       </Box>
 
                       <Field.Text
-                        aria-disabled
+                        disabled
                         name={`address_${member.id}`}
                         label="Qeydiyyatda olduğu ünvan"
                         value={member.fields.address}
