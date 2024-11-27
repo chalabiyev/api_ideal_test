@@ -23,15 +23,12 @@ import { Form, Field } from 'src/components/hook-form';
 import { useAuthContext } from 'src/auth/hooks';
 import { signInWithPassword } from 'src/auth/context/jwt';
 
-
 // ----------------------------------------------------------------------
 
 export type SignInSchemaType = zod.infer<typeof SignInSchema>;
 
 export const SignInSchema = zod.object({
-  username: zod
-    .string()
-    .min(1, { message: 'Username is required!' }),
+  username: zod.string().min(1, { message: 'Username is required!' }),
   password: zod
     .string()
     .min(1, { message: 'Password is required!' })
@@ -48,17 +45,15 @@ export function JwtSignInView() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const password = useBoolean();
-
-  // the auth starts from here
-  
   const defaultValues = {
     username: 'admin',
     password: '123456',
-  };
+  }
 
+  // the auth starts from here
   const methods = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
-    defaultValues,
+    defaultValues
   });
 
   const {
@@ -91,7 +86,13 @@ export function JwtSignInView() {
 
   const renderForm = (
     <Stack spacing={3}>
-      <Field.Text name="username" label="İstifadəçi adı" InputLabelProps={{ shrink: true }} />
+      <Field.Text
+      placeholder='İstifadəçi adı'
+      type='text'
+        name="username"
+        label="İstifadəçi adı"
+        InputLabelProps={{ shrink: true }}
+      />
 
       <Stack spacing={1.5}>
         <Field.Text
