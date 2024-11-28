@@ -25,7 +25,7 @@ import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
-import { familyRelationshipOptions } from '../_examples/extra/form-validation-view/react-hook-form';
+import { _familyRelationshipOptions } from '../_examples/extra/form-validation-view/react-hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -203,7 +203,7 @@ export function UserNewEditForm({ currentUser }: Props) {
                   label="Ailə vəziyyəti"
                   InputLabelProps={{ shrink: true }}
                 >
-                  {familyRelationshipOptions.map((option: any) => (
+                  {_familyRelationshipOptions.map((option: any) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>

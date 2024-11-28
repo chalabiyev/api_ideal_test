@@ -28,10 +28,15 @@ import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
-// eslint-disable-next-line
-import type { ValuesType } from 'src/sections/credits/credit-new-edit-form';
 
-import { familyRelationshipOptions, whereToGetSignatureOptions } from 'src/sections/_examples/extra/form-validation-view/react-hook-form';
+import { _familyRelationshipOptions, whereToGetSignatureOptions } from 'src/sections/_examples/extra/form-validation-view/react-hook-form';
+
+// eslint-disable-next-line
+export type ValuesType = {
+  [year: string]: {
+    [month: string]: number;
+  };
+};
 
 // ----------------------------------------------------------------------
 
@@ -198,7 +203,7 @@ export function CreateCreditForm() {
                     label="Ailə vəziyyəti"
                     InputLabelProps={{ shrink: true }}
                   >
-                    {familyRelationshipOptions.map((option) => (
+                    {_familyRelationshipOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
@@ -840,7 +845,7 @@ export function CreateCreditForm() {
                           label="Ailə vəziyyəti"
                           InputLabelProps={{ shrink: true }}
                         >
-                          {familyRelationshipOptions.map((option) => (
+                          {_familyRelationshipOptions.map((option) => (
                             <option key={option.value} value={option.value}>
                               {option.label}
                             </option>
@@ -937,7 +942,7 @@ export function CreateCreditForm() {
                           label="Ailə vəziyyəti"
                           InputLabelProps={{ shrink: true }}
                         >
-                          {familyRelationshipOptions.map((option) => (
+                          {_familyRelationshipOptions.map((option) => (
                             <option key={option.value} value={option.value}>
                               {option.label}
                             </option>

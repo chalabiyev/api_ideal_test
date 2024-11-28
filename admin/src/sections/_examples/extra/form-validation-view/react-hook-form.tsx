@@ -37,7 +37,7 @@ const OPTIONS = [
   { value: 'option 8', label: 'Option 8' },
 ];
 
-export const familyRelationshipOptions = [
+export const _familyRelationshipOptions = [
   { value: 'married', label: 'Married' },
   { value: 'single', label: 'Single' },
   { value: 'divorced', label: 'Divorced' },
@@ -47,8 +47,8 @@ export const familyRelationshipOptions = [
 ];
 
 export const whereToGetSignatureOptions = [
-  { value: 'wp', label: 'Whatsapp' },
   { value: 'em', label: 'Email' },
+  { value: 'wp', label: 'Whatsapp' },
   { value: 'tg', label: 'Telegram' },
 ];
 
