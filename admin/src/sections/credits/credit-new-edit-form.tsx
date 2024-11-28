@@ -28,6 +28,8 @@ import { Form, Field } from 'src/components/hook-form';
 
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
+import { GridAddIcon } from '@mui/x-data-grid';
+
 import ScoreCard from './scoreBoard';
 import {
   _familyRelationshipOptions,
@@ -39,7 +41,6 @@ import {
   creditData,
   familyData,
   oldLoanData,
-  vehicleData,
   _customerRole,
   paymentHistory,
   sorguTarixcesi,
@@ -56,7 +57,7 @@ export type ValuesType = {
 const users = [
   {
     fin: '1234567',
-    serialNumber: 'aze16883446',
+    serialNumber: 'aze12345678',
     avatarUrl:
       'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     passportStatus: 'aktiv',
@@ -101,6 +102,26 @@ const users = [
     marketValue: '150000',
     mortgageStatus: 'No Mortgage',
     monthlyRent: '1000',
+    vehicleData: [
+      {
+        id: '1',
+        vehicleBrand: 'Audi',
+        vehicleYear: '2021',
+        vehicleModel: 'A6',
+        vehicleVin: '123456789',
+        vehicleMarketValue: '10000',
+        vehicleNumber: 'AA1234',
+      },
+      {
+        id: '2',
+        vehicleBrand: 'Audiqqq',
+        vehicleMarketValue: '10000',
+        vehicleYear: '202122',
+        vehicleModel: 'A622',
+        vehicleVin: '123456789222',
+        vehicleNumber: 'AA12322224',
+      },
+    ],
   },
   {
     fin: '7654321',
@@ -149,6 +170,26 @@ const users = [
     marketValue: '150000',
     mortgageStatus: 'No Mortgage',
     monthlyRent: '1000',
+    vehicleData: [
+      {
+        id: '1',
+        vehicleBrand: 'Audi',
+        vehicleYear: '2021',
+        vehicleModel: 'A6',
+        vehicleMarketValue: '10000',
+        vehicleVin: '123456789',
+        vehicleNumber: 'AA1234',
+      },
+      {
+        id: '2',
+        vehicleBrand: 'Audiqqq',
+        vehicleYear: '202122',
+        vehicleModel: 'A622',
+        vehicleMarketValue: '10000',
+        vehicleVin: '123456789222',
+        vehicleNumber: 'AA12322224',
+      },
+    ],
   },
   {
     fin: '1235678',
@@ -197,9 +238,28 @@ const users = [
     marketValue: '150000',
     mortgageStatus: 'No Mortgage',
     monthlyRent: '1000',
+    vehicleData: [
+      {
+        id: '1',
+        vehicleBrand: 'Audi',
+        vehicleYear: '2021',
+        vehicleModel: 'A6',
+        vehicleMarketValue: '10000',
+        vehicleVin: '123456789',
+        vehicleNumber: 'AA1234',
+      },
+      {
+        id: '2',
+        vehicleBrand: 'Audiqqq',
+        vehicleMarketValue: '10000',
+        vehicleYear: '202122',
+        vehicleModel: 'A622',
+        vehicleVin: '123456789222',
+        vehicleNumber: 'AA12322224',
+      },
+    ],
   },
 ];
-
 export const schema = zod
   .object({
     fin: zod
@@ -262,6 +322,15 @@ export const schema = zod
     mortgageStatus: zod.string().min(1, { message: 'İpoteka statusu tələb olunur!' }),
     monthlyRent: zod.string().min(1, { message: 'Aylıq icarə məbləği tələb olunur!' }),
     avatarUrl: zod.string(),
+    vehicleData: zod.object({
+      vehicleBrand: zod.string().min(1, { message: 'Marka tələb olunur!' }),
+      vehicleModel: zod.string().min(1, { message: 'Model tələb olunur!' }),
+      vehicleYear: zod.string().min(1, { message: 'İl tələb olunur!' }),
+      vehicleMarketValue: zod.string().min(1, { message: 'Bazar dəyəri tələb olunur!' }),
+      vehicleVin: zod.string().min(1, { message: 'VIN nömrəsi tələb olunur!' }),
+      vehicleNumber: zod.string().min(1, { message: 'Nömrə tələb olunur!' }),
+      
+    }),
     loanTotal: zod.number().min(1, { message: 'Kredit məbləği boş buraxıla bilməz!' }),
     loanPercentagePerYear: zod
       .number()
@@ -296,7 +365,6 @@ const getBackgroundColor = (daysLate: any) => {
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState('s/v');
   const [selectedOption, setSelectedOption] = useState('em');
-
   const methods = useForm({
     mode: 'onSubmit',
     resolver: zodResolver(schema),
@@ -306,33 +374,19 @@ export function CreateCreditForm() {
       whereToGetSignature: '',
     },
   });
-
   const {
     reset,
     watch,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
-
   const handleOptionChange = (event: any) => {
     setSelectedOption(event.target.value);
   };
-
   const handleSearch = () => {
     const fin = watch('fin');
     const serialNumber = watch('serialNumber');
     const user = users.find((u) => u.fin === fin && u.serialNumber === serialNumber);
-    // if (fin.length === 0) {
-    //   toast.error('Fin tələb olunur!');
-    // } else if (serialNumber.length === 0) {
-    //   toast.error('Ş/V seriyası və nömrəsi tələb olunur!');
-    // }
-    // if (user) {
-    //   reset(user);
-    //   toast.success('Məlumatlar tapıldı!');
-    // } else {
-    //   toast.error('Daxil edilən Ş/V seriyası və ya fin səhvdir!');
-    // }
     try {
       if (serialNumber.length === 0) {
         throw new Error('Ş/V seriyası və nömrəsi tələb olunur!');
@@ -361,6 +415,11 @@ export function CreateCreditForm() {
       );
     }
   });
+
+  const handleAddGuarantor = (id: string) => {
+    console.log('Guarantor ID:', id);
+    toast.success('Zamin əlavə edildi!');
+  };
 
   const handleTabChange = (event: any, newValue: string) => {
     setCurrentTab(newValue);
@@ -397,22 +456,7 @@ export function CreateCreditForm() {
                 gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }}
               >
                 <Field.Text name="serialNumber" label="Serial Number" required variant="outlined" />
-                <Field.Text
-                  name="fin"
-                  label="FIN"
-                  required
-                  variant="outlined"
-                  // InputProps={{
-                  //   endAdornment: (
-                  //     <Button
-                  //       onClick={handleSearch}
-                  //       sx={{ ':hover': { backgroundColor: 'transparent' } }}
-                  //     >
-                  //       <SearchIconSVG />
-                  //     </Button>
-                  //   ),
-                  // }}
-                />
+                <Field.Text name="fin" label="FIN" required variant="outlined" />
               </Box>
               <Button
                 onClick={handleSearch}
@@ -460,20 +504,6 @@ export function CreateCreditForm() {
                   />
                   <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" disabled />
                   <Field.Text name="state" label="Doğum yeri" disabled />
-                  <Field.Text name="role" label="Vəzifə" disabled />
-                  <Field.Select
-                    native
-                    disabled
-                    name="role"
-                    label="Rol"
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    {_customerRole.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Field.Select>
                   <Field.Select
                     native
                     disabled
@@ -769,53 +799,35 @@ export function CreateCreditForm() {
               Nəqliyyat vasitələri
             </Typography>
             <Divider sx={{ mb: 3 }} />
-            {vehicleData.map((vehicle) => (
-              <Box
-                key={vehicle.id}
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
-              >
-                <Field.Text
-                  disabled
-                  name={`vehicleBrand_${vehicle.id}`}
-                  label="Marka"
-                  defaultValue={vehicle.title}
-                />
-                <Field.Text
-                  disabled
-                  name={`vehicleNumber_${vehicle.id}`}
-                  label="Qeydiyyat nömrə nişanı"
-                  defaultValue={vehicle.licensePlate}
-                />
-                <Field.Text
-                  disabled
-                  name={`vehicleYear_${vehicle.id}`}
-                  label="İl"
-                  defaultValue={vehicle.year}
-                />
-                <Field.Text
-                  disabled
-                  name={`vehicleModel_${vehicle.id}`}
-                  label="Model"
-                  defaultValue={vehicle.model}
-                />
-                <Field.Text
-                  disabled
-                  name={`vehicleVin_${vehicle.id}`}
-                  label="VIN"
-                  defaultValue={vehicle.vin}
-                />
-              </Box>
-            ))}
+            <Box
+              display="grid"
+              rowGap={3}
+              columnGap={2}
+              gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+            >
+              <Field.Text disabled name="vehicleBrand" label="Marka" />
+              <Field.Text disabled name="vehicleNumber" label="Qeydiyyat nömrə nişanı" />
+              <Field.Text disabled name="vehicleYear" label="İl" />
+              <Field.Text disabled name="vehicleModel" label="Model" />
+              <Field.Text disabled name="vehicleVin" label="VIN" />
+              <Field.Text disabled name="vehicleMarketValue" label="Bazar dəyəri" />
+
+            </Box>
           </Grid>
         )) ||
         (currentTab === 'familyMembers' && (
           <Box sx={{ mt: 3 }}>
             {familyData.map((member) => (
-              <Grid container spacing={3} key={member.id}>
-                <Box sx={{ mr: 2 }}>
+              <Grid container spacing={3} mb={10} key={member.id}>
+                <Box
+                  sx={{
+                    mr: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'start',
+                  }}
+                >
                   <Typography
                     sx={{
                       my: 3,
@@ -837,6 +849,22 @@ export function CreateCreditForm() {
                     }}
                     disabled
                   />
+                  <Button
+                    onClick={() => handleAddGuarantor(member.id)}
+                    sx={{
+                      backgroundColor: '#2D9CDB',
+                      color: '#fff',
+                      mt: 2,
+                      p: 2,
+                      ':hover': {
+                        backgroundColor: '#2D8CBC',
+                        color: '#fff',
+                      },
+                    }}
+                  >
+                    <Typography>Zamin olaraq əlavə et</Typography>
+                    <GridAddIcon />
+                  </Button>
                 </Box>
                 <Grid xs={12} md={8}>
                   <Card sx={{ p: 3 }}>
