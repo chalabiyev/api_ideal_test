@@ -55,8 +55,8 @@ export type ValuesType = {
 // Dummy data for users
 const users = [
   {
-    fin: '12345678B',
-    serialNumber: '12345678B',
+    fin: '1234567',
+    serialNumber: 'aze16883446',
     avatarUrl:
       'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     passportStatus: 'aktiv',
@@ -75,7 +75,6 @@ const users = [
     loanerBornAdd: 'Baku, Hovsan, xyz',
     loanerBornDate: '11.10.2001',
     state: 'Baku',
-    city: 'Baku',
     role: 'customer',
     address: 'Baku, Hovsan, xyz',
     phoneNumber: '+994 50 123 45 67',
@@ -104,8 +103,8 @@ const users = [
     monthlyRent: '1000',
   },
   {
-    fin: '123456789A',
-    serialNumber: '12345678A',
+    fin: '7654321',
+    serialNumber: 'aa1234567',
     avatarUrl:
       'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     passportStatus: 'aktiv',
@@ -124,7 +123,6 @@ const users = [
     loanerBornAdd: 'Baku, Hovsan, xyz',
     loanerBornDate: '11.10.2001',
     state: 'Baku',
-    city: 'Baku',
     role: 'customer',
     address: 'Baku, Hovsan, xyz',
     phoneNumber: '+994 50 123 45 67',
@@ -153,8 +151,8 @@ const users = [
     monthlyRent: '1000',
   },
   {
-    fin: '123456789',
-    serialNumber: '123456789',
+    fin: '1235678',
+    serialNumber: 'aze12345678',
     avatarUrl:
       'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     passportStatus: 'aktiv',
@@ -173,7 +171,6 @@ const users = [
     loanerBornAdd: 'Baku, Hovsan, xyz',
     loanerBornDate: '11.10.2001',
     state: 'Baku',
-    city: 'Baku',
     role: 'customer',
     address: 'Baku, Hovsan, xyz',
     phoneNumber: '+994 50 123 45 67',
@@ -205,25 +202,32 @@ const users = [
 
 export const schema = zod
   .object({
-    fin: zod.string().min(1, { message: 'Fin tələb olunur!' }),
-    serialNumber: zod.string().min(1, { message: 'Ş/V seriyası və nömrəsi tələb olunur!' }),
+    fin: zod
+      .string()
+      .min(7, { message: 'Fin 7 simvoldan az ola bilməz!' })
+      .max(7, { message: 'Fini 7 simvoldan çox ola bilməz!' }),
+    serialNumber: zod
+      .string()
+      .max(11, { message: 'Ş/V seriyası 11 simvoldan çox ola bilməz!' })
+      .min(9, {
+        message: 'Ş/V seriyası və nömrəsi 9 simvoldan az ola bilməz!',
+      }),
     passportStatus: zod.string().min(1, { message: 'Vəsiqənin statusu tələb olunur!' }),
-    name: zod.string().min(1, { message: 'Name tələb olunur!' }),
-    surname: zod.string().min(1, { message: 'Surname tələb olunur!' }),
-    fatherName: zod.string().min(1, { message: 'Father name tələb olunur!' }),
-    born: zod.string().min(1, { message: 'Born tələb olunur!' }),
-    familyRelationship: zod.string().min(1, { message: 'Family relationship tələb olunur!' }),
-    gender: zod.string().min(1, { message: 'Gender tələb olunur!' }),
-    state: zod.string().min(1, { message: 'State tələb olunur!' }),
-    city: zod.string().min(1, { message: 'City tələb olunur!' }),
-    zipCode: zod.string().min(1, { message: 'Zip code tələb olunur!' }),
-    role: zod.string().min(1, { message: 'Role tələb olunur!' }),
+    name: zod.string().min(1, { message: 'Ad tələb olunur!' }),
+    surname: zod.string().min(1, { message: 'Soyad tələb olunur!' }),
+    fatherName: zod.string().min(1, { message: 'Ata adı tələb olunur!' }),
+    born: zod.string().min(1, { message: 'Doğum tarixi tələb olunur!' }),
+    familyRelationship: zod.string().min(1, { message: 'Ailə vəziyyəti tələb olunur!' }),
+    gender: zod.string().min(1, { message: 'Cinsiyyət tələb olunur!' }),
+    state: zod.string().min(1, { message: 'Doğum yeri tələb olunur!' }),
+    zipCode: zod.string().min(1, { message: 'Zip kodu tələb olunur!' }),
+    role: zod.string().min(1, { message: 'Rol tələb olunur!' }),
     email: zod
       .string()
       .min(1, { message: 'Email tələb olunur!' })
-      .email({ message: 'Email must be a valid email address!' }),
-    phoneNumber: zod.string().min(1, { message: 'Phone number tələb olunur!' }),
-    address: zod.string().min(1, { message: 'Address tələb olunur!' }),
+      .email({ message: 'Email Adresini düzgün daxil edin!' }),
+    phoneNumber: zod.string().min(1, { message: 'Telefon nömrəsi tələb olunur!' }),
+    address: zod.string().min(1, { message: 'Yaşayış yeri tələb olunur!' }),
     country: zod.string().min(1, { message: 'Ölkə tələb olunur!' }),
     status: zod.string(),
     reportNum: zod.string().min(1, { message: 'Hesabat nömrəsi tələb olunur!' }),
@@ -275,13 +279,10 @@ export const schema = zod
     whatsappNumberToGet: zod.string().min(1, { message: 'WhatsApp nömrəsi tələb olunur!' }),
     emailToGet: zod.string().min(1, { message: 'Email tələb olunur!' }),
   })
-  .refine(
-    (data) => data.telegramUsernameToGet || data.whatsappNumberToGet || data.emailToGet,
-    {
-      message: 'At least one of Telegram Username, WhatsApp Number, or Email is required!',
-      path: ['telegramUsernameToGet', 'whatsappNumberToGet', 'emailToGet'],
-    }
-  );
+  .refine((data) => data.telegramUsernameToGet || data.whatsappNumberToGet || data.emailToGet, {
+    message: 'At least one of Telegram Username, WhatsApp Number, or Email is required!',
+    path: ['telegramUsernameToGet', 'whatsappNumberToGet', 'emailToGet'],
+  });
 const getBackgroundColor = (daysLate: any) => {
   if (daysLate === '-') return '#C6C6C6'; // No information (gray)
   if (daysLate === 0) return '#00B0F0'; // 0 days delay (blue)
@@ -302,6 +303,7 @@ export function CreateCreditForm() {
     defaultValues: {
       fin: '',
       serialNumber: '',
+      whereToGetSignature: '',
     },
   });
 
@@ -309,7 +311,7 @@ export function CreateCreditForm() {
     reset,
     watch,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methods;
 
   const handleOptionChange = (event: any) => {
@@ -320,17 +322,44 @@ export function CreateCreditForm() {
     const fin = watch('fin');
     const serialNumber = watch('serialNumber');
     const user = users.find((u) => u.fin === fin && u.serialNumber === serialNumber);
-    if (user) {
-      reset(user);
-      toast.success('User found!');
-    } else {
-      toast.error('User not found!');
+    // if (fin.length === 0) {
+    //   toast.error('Fin tələb olunur!');
+    // } else if (serialNumber.length === 0) {
+    //   toast.error('Ş/V seriyası və nömrəsi tələb olunur!');
+    // }
+    // if (user) {
+    //   reset(user);
+    //   toast.success('Məlumatlar tapıldı!');
+    // } else {
+    //   toast.error('Daxil edilən Ş/V seriyası və ya fin səhvdir!');
+    // }
+    try {
+      if (serialNumber.length === 0) {
+        throw new Error('Ş/V seriyası və nömrəsi tələb olunur!');
+      } else if (fin.length === 0) {
+        throw new Error('Fin tələb olunur!');
+      }
+      if (user) {
+        reset(user);
+        toast.success('Məlumatlar tapıldı!');
+      } else {
+        toast.error('Daxil edilən Ş/V seriyası və ya fin səhvdir!');
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
   const onSubmit = handleSubmit((data) => {
     console.log('Submitted Data:', data);
     toast.success('Form submitted successfully!');
+    if (Object.keys(errors).length > 0) {
+      toast.error(
+        Object.values(errors)
+          .map((error) => error.message)
+          .join('\n')
+      );
+    }
   });
 
   const handleTabChange = (event: any, newValue: string) => {
@@ -430,8 +459,7 @@ export function CreateCreditForm() {
                     placeholder="asdf"
                   />
                   <Field.Text name="born" label="Doğum tarixi(xx.xx.xxxx)" disabled />
-                  <Field.Text name="state" label="Şəhər" disabled />
-                  <Field.Text name="city" label="Rayon" disabled />
+                  <Field.Text name="state" label="Doğum yeri" disabled />
                   <Field.Text name="role" label="Vəzifə" disabled />
                   <Field.Select
                     native
@@ -501,7 +529,9 @@ export function CreateCreditForm() {
                   {selectedOption === 'wp' && (
                     <Field.Text name="whereToGetSignature" label="WhatsApp Number" />
                   )}
-                  {selectedOption === 'em' && <Field.Text name="whereToGetSignature" label="Email" type='email' />}
+                  {selectedOption === 'em' && (
+                    <Field.Text name="whereToGetSignature" label="Email" type="email" />
+                  )}
                 </Box>
               </Box>
             </Card>
