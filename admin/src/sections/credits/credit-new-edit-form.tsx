@@ -1,5 +1,5 @@
 import { z as zod } from 'zod';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -21,6 +21,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TextField,
 } from '@mui/material';
 import { toast } from 'src/components/snackbar';
 
@@ -39,7 +40,6 @@ import {
   loanData,
   zaminData,
   creditData,
-  familyData,
   oldLoanData,
   _customerRole,
   paymentHistory,
@@ -102,6 +102,46 @@ const users = [
     marketValue: '150000',
     mortgageStatus: 'No Mortgage',
     monthlyRent: '1000',
+    familyData: [
+      {
+        id: '1',
+        title: 'Ata',
+        fields: {
+          avatarUrl:
+            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+          fin: '123456789',
+          serialNumber: '132456789',
+          isGuarantor: false,
+          passportStatus: 'Active',
+          name: 'TestFather',
+          surname: 'TestFather',
+          fatherName: 'TestFather',
+          born: '11.10.2001',
+          familyRelationship: 'Married',
+          gender: 'Men',
+          address: 'Baki azerbaycan',
+        },
+      },
+      {
+        id: '2',
+        title: 'Ana',
+        fields: {
+          avatarUrl:
+            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+          fin: '123456789',
+          serialNumber: '132456789',
+          isGuarantor: false,
+          passportStatus: 'Active',
+          name: 'TestFather',
+          surname: 'TestFather',
+          fatherName: 'TestFather',
+          born: '11.10.2001',
+          familyRelationship: 'Married',
+          gender: 'Women',
+          address: 'Baki azerbaycan',
+        },
+      },
+    ],
     vehicleData: [
       {
         id: '1',
@@ -204,6 +244,46 @@ const users = [
     marketValue: '150000',
     mortgageStatus: 'No Mortgage',
     monthlyRent: '1000',
+    familyData: [
+      {
+        id: '1',
+        title: 'Ata',
+        fields: {
+          avatarUrl:
+            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+          fin: '123456789',
+          serialNumber: '132456789',
+          passportStatus: 'Active',
+          name: 'TestFather',
+          surname: 'TestFather',
+          fatherName: 'TestFather',
+          born: '11.10.2001',
+          familyRelationship: 'Married',
+          isGuarantor: false,
+          gender: 'Men',
+          address: 'Baki azerbaycan',
+        },
+      },
+      {
+        id: '2',
+        title: 'Ana',
+        fields: {
+          avatarUrl:
+            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+          fin: '123456789',
+          serialNumber: '132456789',
+          passportStatus: 'Active',
+          name: 'TestFather',
+          isGuarantor: false,
+          surname: 'TestFather',
+          fatherName: 'TestFather',
+          born: '11.10.2001',
+          familyRelationship: 'Married',
+          gender: 'Women',
+          address: 'Baki azerbaycan',
+        },
+      },
+    ],
     vehicleData: [
       {
         id: '1',
@@ -306,6 +386,46 @@ const users = [
     marketValue: '150000',
     mortgageStatus: 'No Mortgage',
     monthlyRent: '1000',
+    familyData: [
+      {
+        id: '1',
+        title: 'Ata',
+        fields: {
+          avatarUrl:
+            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+          fin: '123456789',
+          serialNumber: '132456789',
+          passportStatus: 'Active',
+          isGuarantor: false,
+          name: 'TestFather',
+          surname: 'TestFather',
+          fatherName: 'TestFather',
+          born: '11.10.2001',
+          familyRelationship: 'Married',
+          gender: 'Men',
+          address: 'Baki azerbaycan',
+        },
+      },
+      {
+        id: '2',
+        title: 'Ana',
+        fields: {
+          avatarUrl:
+            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+          fin: '123456789',
+          serialNumber: '132456789',
+          passportStatus: 'Active',
+          name: 'TestFather',
+          surname: 'TestFather',
+          fatherName: 'TestFather',
+          isGuarantor: false,
+          born: '11.10.2001',
+          familyRelationship: 'Married',
+          gender: 'Women',
+          address: 'Baki azerbaycan',
+        },
+      },
+    ],
     vehicleData: [
       {
         id: '1',
@@ -496,11 +616,12 @@ export const schema = zod
 // };
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState(1);
+  const [userData, setUserData] = useState(false);
   const [selectedOption, setSelectedOption] = useState('em');
   const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<any>([]);
   const [selectedUserGuarantorData, setselectedUserGuarantorData] = useState<any>([]);
+  const [selectedUserFamilyData, setSelectedUserFamilyData] = useState<any>([]);
   const [showNewForm, setShowNewForm] = useState(false);
-  const [isGuarantor, setIsGuarantor] = useState(false);
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -524,6 +645,7 @@ export function CreateCreditForm() {
     const fin = watch('fin');
     const serialNumber = watch('serialNumber');
     const user = users.find((u) => u.fin === fin && u.serialNumber === serialNumber);
+    setUserData(true);
     try {
       if (serialNumber.length === 0) {
         throw new Error('Ş/V seriyası və nömrəsi tələb olunur!');
@@ -541,6 +663,7 @@ export function CreateCreditForm() {
     }
     setSelectedUserVehicleData(user?.vehicleData);
     setselectedUserGuarantorData(user?.zaminData);
+    setSelectedUserFamilyData(user?.familyData);
   };
 
   const onSubmit = handleSubmit((data) => {
@@ -554,16 +677,24 @@ export function CreateCreditForm() {
       );
     }
   });
+  const handleAddGuarantor = (fin: string) => {
+    setSelectedUserFamilyData((prevData: any[]) =>
+      prevData.map((member) =>
+        member.fields.fin === fin
+          ? {
+              ...member,
+              fields: {
+                ...member.fields,
+                isGuarantor: true,
+              },
+            }
+          : member
+      )
+    );
 
-  const handleAddGuarantor = (id: string) => {
-    console.log('Guarantor ID:', id);
-   // add data field isGuarantor: true
-
-   
-    
     toast.success('Zamin əlavə edildi!');
   };
-
+  
   const addNewGuarantor = () => {
     setShowNewForm(true);
   };
@@ -817,6 +948,9 @@ export function CreateCreditForm() {
                     display="grid"
                     rowGap={3}
                     columnGap={2}
+                    sx={{
+                      mb: 4
+                    }}
                     gridTemplateColumns={{ xs: '128px 1fr', sm: '128px 1fr' }}
                   >
                     <Field.UploadAvatar
@@ -890,14 +1024,13 @@ export function CreateCreditForm() {
                       />
                       <Field.Text
                         name={`zaminPhones_${zamin.id}`}
-                        disabled
-                        label="Telefonlar"
+                        label="Telefon"
                         defaultValue={zamin.phones}
                       />
                     </Box>
                   </Box>
                 ))}
-                {!showNewForm && (
+                {userData && !showNewForm && (
                   <Button
                     sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '100%', color: 'white' }}
                     onClick={addNewGuarantor}
@@ -993,38 +1126,33 @@ export function CreateCreditForm() {
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
                 mb={2}
               >
-                <Field.Text
-                  name={`vehicleBrand_${vehicle.id}`}
-                  label="Marka"
-                  disabled
-                  defaultValue={vehicle.vehicleBrand}
-                />
-                <Field.Text
-                  name={`vehicleModel_${vehicle.id}`}
+                <TextField label="Marka" disabled defaultValue={vehicle.vehicleBrand} />
+                <TextField
+                  name="vehicleModel"
                   label="Model"
                   disabled
                   defaultValue={vehicle.vehicleModel}
                 />
-                <Field.Text
-                  name={`vehicleYear_${vehicle.id}`}
+                <TextField
+                  name="vehicleYear"
                   label="İl"
                   disabled
                   defaultValue={vehicle.vehicleYear}
                 />
-                <Field.Text
-                  name={`vehicleMarketValue_${vehicle.id}`}
+                <TextField
+                  name="vehicleMarketValue"
                   label="Bazar dəyəri"
                   disabled
                   defaultValue={vehicle.vehicleMarketValue}
                 />
-                <Field.Text
-                  name={`vehicleVin_${vehicle.id}`}
+                <TextField
+                  name="vehicleVin"
                   label="VIN nömrəsi"
                   disabled
                   defaultValue={vehicle.vehicleVin}
                 />
-                <Field.Text
-                  name={`vehicleNumber_${vehicle.id}`}
+                <TextField
+                  name="vehicleNumber"
                   label="Nömrə"
                   disabled
                   defaultValue={vehicle.vehicleNumber}
@@ -1033,9 +1161,9 @@ export function CreateCreditForm() {
             ))}
           </Grid>
         )) ||
-        (currentTab === 6 && (
+        (currentTab === 6 && selectedUserFamilyData && (
           <Box sx={{ mt: 3 }}>
-            {familyData.map((member) => (
+            {selectedUserFamilyData.map((member: any) => (
               <Grid container spacing={3} mb={10} key={member.id}>
                 <Box
                   sx={{
@@ -1058,7 +1186,7 @@ export function CreateCreditForm() {
                   </Typography>
 
                   <Field.UploadAvatar
-                    name={`avatarUrl_${member.id}`}
+                    name="avatarUrl"
                     maxSize={3145728}
                     value={member.fields.avatarUrl}
                     sx={{
@@ -1067,22 +1195,13 @@ export function CreateCreditForm() {
                     }}
                     disabled
                   />
-                  <Button
-                    onClick={() => handleAddGuarantor(member.id)}
-                    sx={{
-                      backgroundColor: '#2D9CDB',
-                      color: '#fff',
-                      mt: 2,
-                      p: 2,
-                      ':hover': {
-                        backgroundColor: '#2D8CBC',
-                        color: '#fff',
-                      },
-                    }}
-                  >
-                    <Typography>Zamin olaraq əlavə et</Typography>
-                    <GridAddIcon />
-                  </Button>
+                    <Button
+                      onClick={() => handleAddGuarantor(member.fields.fin)}
+                      variant="contained"
+                      sx={{ mt: 2, width: '100%', backgroundColor: '#2D9CDB' }}
+                    >
+                      Zamin et
+                    </Button>
                 </Box>
                 <Grid xs={12} md={8} item>
                   <Card sx={{ p: 3 }}>
@@ -1099,19 +1218,19 @@ export function CreateCreditForm() {
                         gridTemplateColumns={{ xs: 'repeat(3, 1fr)' }}
                       >
                         <Field.Text
-                          name={`fin_${member.id}`}
+                          name="fin"
                           label="Fin"
                           value={member.fields.fin}
                           disabled
                         />
                         <Field.Text
-                          name={`serialNumber_${member.id}`}
+                          name="serialNumber"
                           label="Ş/V seriyası və nömrəsi"
                           value={member.fields.serialNumber}
                           disabled
                         />
                         <Field.Text
-                          name={`passportStatus_${member.id}`}
+                          name="passportStatus"
                           label="Vəsiqənin statusu"
                           value={member.fields.passportStatus}
                           disabled
@@ -1124,32 +1243,32 @@ export function CreateCreditForm() {
                         gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
                       >
                         <Field.Text
-                          name={`name_${member.id}`}
+                          name="name"
                           label="Adı"
                           value={member.fields.name}
                           disabled
                         />
                         <Field.Text
-                          name={`surname_${member.id}`}
+                          name="surname"
                           label="Soyadı"
                           value={member.fields.surname}
                           disabled
                         />
                         <Field.Text
-                          name={`fatherName_${member.id}`}
+                          name="fatherName"
                           label="Ata adı"
                           value={member.fields.fatherName}
                           disabled
                         />
                         <Field.Text
-                          name={`born_${member.id}`}
+                          name="born"
                           label="Doğum tarixi(xx.xx.xxxx)"
                           value={member.fields.born}
                           disabled
                         />
                         <Field.Select
                           native
-                          name={`familyRelationship_${member.id}`}
+                          name="familyRelationship"
                           label="Ailə vəziyyəti"
                           value={member.fields.familyRelationship}
                           InputLabelProps={{ shrink: true }}
@@ -1164,7 +1283,7 @@ export function CreateCreditForm() {
                         <Field.Select
                           disabled
                           native
-                          name={`gender_${member.id}`}
+                          name="gender"
                           label="Cinsi"
                           value={member.fields.gender}
                           InputLabelProps={{ shrink: true }}
@@ -1178,7 +1297,7 @@ export function CreateCreditForm() {
                       </Box>
                       <Field.Text
                         disabled
-                        name={`address_${member.id}`}
+                        name="address"
                         label="Qeydiyyatda olduğu ünvan"
                         value={member.fields.address}
                       />
