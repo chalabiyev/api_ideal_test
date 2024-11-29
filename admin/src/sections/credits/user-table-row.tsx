@@ -37,7 +37,7 @@ export function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRo
   console.log(row.files);
   return (
     <>
-      <TableRow hover selected={selected} aria-checked={selected} tabIndex={-1}>
+      <TableRow  hover selected={selected} aria-checked={selected} tabIndex={-1}>
         <TableCell padding="checkbox">
           <Checkbox id={row.id} checked={selected} onClick={onSelectRow} />
         </TableCell>
