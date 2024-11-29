@@ -1,5 +1,5 @@
 import { z as zod } from 'zod';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -351,18 +351,18 @@ export const schema = zod
     message: 'At least one of Telegram Username, WhatsApp Number, or Email is required!',
     path: ['telegramUsernameToGet', 'whatsappNumberToGet', 'emailToGet'],
   });
-const getBackgroundColor = (daysLate: any) => {
-  if (daysLate === '-') return '#C6C6C6'; // No information (gray)
-  if (daysLate === 0) return '#00B0F0'; // 0 days delay (blue)
-  if (daysLate <= 30) return '#FFFF00'; // 1-30 days delay (yellow)
-  if (daysLate <= 90) return '#FFC000'; // 31-90 days delay (orange)
-  if (daysLate <= 180) return '#FF0000'; // 91-180 days delay (red)
-  if (daysLate <= 360) return '#7030A0'; // 181-360 days delay (dark red)
-  if (daysLate > 360) return '#C00000'; // 361+ days delay (deep red)
-  return '#FFFFFF'; // Default (white)
-};
+// const getBackgroundColor = (daysLate: any) => {
+//   if (daysLate === '-') return '#C6C6C6'; // No information (gray)
+//   if (daysLate === 0) return '#00B0F0'; // 0 days delay (blue)
+//   if (daysLate <= 30) return '#FFFF00'; // 1-30 days delay (yellow)
+//   if (daysLate <= 90) return '#FFC000'; // 31-90 days delay (orange)
+//   if (daysLate <= 180) return '#FF0000'; // 91-180 days delay (red)
+//   if (daysLate <= 360) return '#7030A0'; // 181-360 days delay (dark red)
+//   if (daysLate > 360) return '#C00000'; // 361+ days delay (deep red)
+//   return '#FFFFFF'; // Default (white)
+// };
 export function CreateCreditForm() {
-  const [currentTab, setCurrentTab] = useState('s/v');
+  const [currentTab, setCurrentTab] = useState(1);
   const [selectedOption, setSelectedOption] = useState('em');
   const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<any>([]);
 
@@ -406,7 +406,6 @@ export function CreateCreditForm() {
     setSelectedUserVehicleData(user?.vehicleData);
   };
 
-
   const onSubmit = handleSubmit((data) => {
     console.log('Submitted Data:', data);
     toast.success('Form submitted successfully!');
@@ -424,25 +423,34 @@ export function CreateCreditForm() {
     toast.success('Zamin əlavə edildi!');
   };
 
-  const handleTabChange = (event: any, newValue: string) => {
+  const handleTabChange = (event: any, newValue: number) => {
     setCurrentTab(newValue);
   };
+
+  const handleTabIndexChanger = ( action: string)=> {
+   if (action === 'next') {
+      setCurrentTab(currentTab + 1);
+   } else {
+      setCurrentTab(currentTab - 1);
+   }
+
+  }
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Tabs value={currentTab} onChange={handleTabChange}>
-        <Tab value="s/v" label="Ş/V" />
+        <Tab value={1} label="Ş/V" />
         {/* didn't added for now */}
         {/* <Tab value="akb2" label="Müştəri skoru" /> */}
         {/* <Tab value="akb" label="AKB" /> */}
-        <Tab value="workplace" label="İş yeri" />
-        <Tab value="zamin" label="Zaminlik haqqında məlumat" />
-        <Tab value="occupancy" label="Əmlakları" />
-        <Tab value="vehicle" label="Nəqliyyat vasitələri" />
-        <Tab value="familyMembers" label="Ailə üzvləri" />
-        <Tab value="credits" label="Kreditlər" />
+        <Tab value={2} label="İş yeri" />
+        <Tab value={3} label="Zaminlik haqqında məlumat" />
+        <Tab value={4} label="Əmlakları" />
+        <Tab value={5} label="Nəqliyyat vasitələri" />
+        <Tab value={6} label="Ailə üzvləri" />
+        <Tab value={8} label="Kreditlər" />
       </Tabs>
-      {(currentTab === 's/v' && (
+      {(currentTab === 1 && (
         <Grid container gap="55px" mt={3}>
           <Grid
             item
@@ -471,7 +479,7 @@ export function CreateCreditForm() {
             </Card>
           </Grid>
 
-          <Grid  item xs={12}>
+          <Grid item xs={12}>
             <Box>
               <Field.UploadAvatar
                 disabled
@@ -571,7 +579,7 @@ export function CreateCreditForm() {
           </Grid>
         </Grid>
       )) ||
-        (currentTab === 'workplace' && (
+        (currentTab === 2 && (
           <Grid spacing={3}>
             <Stack>
               <Typography
@@ -644,7 +652,7 @@ export function CreateCreditForm() {
             <Divider sx={{ my: 3 }} />
           </Grid>
         )) ||
-        (currentTab === 'zamin' && (
+        (currentTab === 3 && (
           <Grid spacing={3}>
             <Grid xs={12}>
               <Stack>
@@ -755,7 +763,7 @@ export function CreateCreditForm() {
             </Grid>
           </Grid>
         )) ||
-        (currentTab === 'occupancy' && (
+        (currentTab === 4 && (
           <Grid spacing={3}>
             <Stack>
               <Typography
@@ -789,7 +797,7 @@ export function CreateCreditForm() {
             </Stack>
           </Grid>
         )) ||
-        currentTab === 'vehicle' && selectedUserVehicleData && (
+        (currentTab === 5 && selectedUserVehicleData && (
           <Grid spacing={3}>
             <Typography
               sx={{
@@ -802,8 +810,7 @@ export function CreateCreditForm() {
               Nəqliyyat vasitələri
             </Typography>
             <Divider sx={{ mb: 3 }} />
-            <Divider sx={{ mb: 3 }} />
-            {selectedUserVehicleData.map((vehicle: any ) => (
+            {selectedUserVehicleData.map((vehicle: any) => (
               <Box
                 key={vehicle.id}
                 display="grid"
@@ -851,8 +858,8 @@ export function CreateCreditForm() {
               </Box>
             ))}
           </Grid>
-        )||
-        (currentTab === 'familyMembers' && (
+        )) ||
+        (currentTab === 6 && (
           <Box sx={{ mt: 3 }}>
             {familyData.map((member) => (
               <Grid container spacing={3} mb={10} key={member.id}>
@@ -1008,7 +1015,7 @@ export function CreateCreditForm() {
             ))}
           </Box>
         )) ||
-        (currentTab === 'credits' && (
+        (currentTab === 7 && (
           <Grid spacing={3}>
             <Stack>
               <Typography
@@ -1073,6 +1080,28 @@ export function CreateCreditForm() {
             </Stack>
           </Grid>
         ))}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={3}
+          sx={{ gap: 2 }}
+          width="100%"
+        >
+          <Button
+            onClick={(e) => handleTabIndexChanger( 'back')}
+            variant="contained"
+            sx={{ mt: 3, backgroundColor: '#2D9CDB' , width:'300px'}}
+          >
+            Geri
+          </Button>
+          <Button
+            onClick={(e) => handleTabIndexChanger('next')}
+            variant="contained"
+            sx={{ mt: 3, backgroundColor: '#2D9CDB' , width:'300px'}}          >
+            İrəli
+          </Button>
+        </Box>
       <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
         <Button
           type="submit"
