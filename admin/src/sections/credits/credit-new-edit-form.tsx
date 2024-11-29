@@ -122,6 +122,40 @@ const users = [
         vehicleNumber: 'AA12322224',
       },
     ],
+    zaminData: [
+      {
+        id: '1',
+        name: 'John',
+        surname: 'Doe',
+        fin: '123456789',
+        serialNumber: 'AA123456',
+        passportStatus: 'aktiv',
+        identityCard: '123456789',
+        issuedBy: 'Lənkəran Rayon Polis İdarəsi',
+        borrowerInfo: 'Some info about borrower',
+        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        phones: '123-456-7890',
+        avatarUrl:
+          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      },
+      {
+        id: '2',
+        name: 'Rasim',
+        surname: 'Veliyev',
+        fin: '12345678',
+        serialNumber: 'AA12345',
+        passportStatus: 'aktiv',
+        identityCard: '12345678',
+        issuedBy: 'Yasamal Rayon Polis İdarəsi',
+        borrowerInfo: 'Some info about borrower',
+        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        phones: '123-456-7890',
+        avatarUrl:
+          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      },
+    ],
   },
   {
     fin: '7654321',
@@ -188,6 +222,40 @@ const users = [
         vehicleMarketValue: '10000',
         vehicleVin: '123456789222',
         vehicleNumber: 'AA12322224',
+      },
+    ],
+    zaminData: [
+      {
+        id: '1',
+        name: 'John',
+        surname: 'Doe aaaa',
+        fin: '123456789',
+        serialNumber: 'AA123456',
+        passportStatus: 'aktiv',
+        identityCard: '123456789',
+        issuedBy: 'Lənkəran Rayon Polis İdarəsi',
+        borrowerInfo: 'Some info about borrower',
+        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        phones: '123-456-7890',
+        avatarUrl:
+          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      },
+      {
+        id: '2',
+        name: 'John',
+        surname: 'mimimi',
+        fin: '12345678',
+        serialNumber: 'AA12345',
+        passportStatus: 'aktiv',
+        identityCard: '12345678',
+        issuedBy: 'Yasamal Rayon Polis İdarəsi',
+        borrowerInfo: 'Some info about borrower',
+        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        phones: '123-456-7890',
+        avatarUrl:
+          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       },
     ],
   },
@@ -258,6 +326,40 @@ const users = [
         vehicleNumber: 'AA12322224',
       },
     ],
+    zaminData: [
+      {
+        id: '1',
+        name: 'John',
+        surname: 'Doe',
+        fin: '123456789',
+        serialNumber: 'AA123456',
+        passportStatus: 'aktiv',
+        identityCard: '123456789',
+        issuedBy: 'Lənkəran Rayon Polis İdarəsi',
+        borrowerInfo: 'Some info about borrower',
+        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        phones: '123-456-7890',
+        avatarUrl:
+          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      },
+      {
+        id: '2',
+        name: 'John',
+        surname: 'Doe',
+        fin: '12345678',
+        serialNumber: 'AA12345',
+        passportStatus: 'aktiv',
+        identityCard: '12345678',
+        issuedBy: 'Yasamal Rayon Polis İdarəsi',
+        borrowerInfo: 'Some info about borrower',
+        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
+        phones: '123-456-7890',
+        avatarUrl:
+          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      },
+    ],
   },
 ];
 export const schema = zod
@@ -322,14 +424,45 @@ export const schema = zod
     mortgageStatus: zod.string().min(1, { message: 'İpoteka statusu tələb olunur!' }),
     monthlyRent: zod.string().min(1, { message: 'Aylıq icarə məbləği tələb olunur!' }),
     avatarUrl: zod.string(),
-    vehicleData: zod.object({
-      vehicleBrand: zod.string().min(1, { message: 'Marka tələb olunur!' }),
-      vehicleModel: zod.string().min(1, { message: 'Model tələb olunur!' }),
-      vehicleYear: zod.string().min(1, { message: 'İl tələb olunur!' }),
-      vehicleMarketValue: zod.string().min(1, { message: 'Bazar dəyəri tələb olunur!' }),
-      vehicleVin: zod.string().min(1, { message: 'VIN nömrəsi tələb olunur!' }),
-      vehicleNumber: zod.string().min(1, { message: 'Nömrə tələb olunur!' }),
-    }),
+    vehicleData: zod
+      .object({
+        vehicleBrand: zod.string().min(1, { message: 'Marka tələb olunur!' }),
+        vehicleModel: zod.string().min(1, { message: 'Model tələb olunur!' }),
+        vehicleYear: zod.string().min(1, { message: 'İl tələb olunur!' }),
+        vehicleMarketValue: zod.string().min(1, { message: 'Bazar dəyəri tələb olunur!' }),
+        vehicleVin: zod.string().min(1, { message: 'VIN nömrəsi tələb olunur!' }),
+        vehicleNumber: zod.string().min(1, { message: 'Nömrə tələb olunur!' }),
+      })
+      .optional(),
+    zaminData: zod
+      .object({
+        name: zod.string().min(1, { message: 'Ad tələb olunur!' }),
+        surname: zod.string().min(1, { message: 'Soyad tələb olunur!' }),
+        fin: zod.string().min(1, { message: 'Fin tələb olunur!' }),
+        serialNumber: zod.string().min(1, { message: 'Ş/V seriyası tələb olunur!' }),
+        passportStatus: zod.string().min(1, { message: 'Vəsiqənin statusu tələb olunur!' }),
+        identityCard: zod.string().min(1, { message: 'Ş/V nömrəsi tələb olunur!' }),
+        issuedBy: zod.string().min(1, { message: 'Verən orqan tələb olunur!' }),
+        borrowerInfo: zod.string().min(1, { message: 'Borcalanın məlumatı tələb olunur!' }),
+        registrationAddress: zod.string().min(1, { message: 'Qeydiyyat ünvanı tələb olunur!' }),
+        residentialAddress: zod.string().min(1, { message: 'Yaşayış ünvanı tələb olunur!' }),
+        phones: zod.string().min(1, { message: 'Telefon nömrəsi tələb olunur!' }),
+        newZaminName: zod.string().min(1, { message: 'Ad tələb olunur!' }),
+        newZaminSurname: zod.string().min(1, { message: 'Soyad tələb olunur!' }),
+        newZaminFin: zod.string().min(1, { message: 'Fin tələb olunur!' }),
+        newZaminSerialNumber: zod.string().min(1, { message: 'Ş/V seriyası tələb olunur!' }),
+        newZaminPassportStatus: zod.string().min(1, { message: 'Vəsiqənin statusu tələb olunur!' }),
+        newZaminIdentityCard: zod.string().min(1, { message: 'Ş/V nömrəsi tələb olunur!' }),
+        newZaminIssuedBy: zod.string().min(1, { message: 'Verən orqan tələb olunur!' }),
+        newZaminRegistrationAddress: zod
+          .string()
+          .min(1, { message: 'Qeydiyyat ünvanı tələb olunur!' }),
+        newZaminResidentialAddress: zod
+          .string()
+          .min(1, { message: 'Yaşayış ünvanı tələb olunur!' }),
+        newZaminPhones: zod.string().min(1, { message: 'Telefon nömrəsi tələb olunur!' }),
+      })
+      .optional(),
     loanTotal: zod.number().min(1, { message: 'Kredit məbləği boş buraxıla bilməz!' }),
     loanPercentagePerYear: zod
       .number()
@@ -365,6 +498,9 @@ export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState(1);
   const [selectedOption, setSelectedOption] = useState('em');
   const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<any>([]);
+  const [selectedUserGuarantorData, setselectedUserGuarantorData] = useState<any>([]);
+  const [showNewForm, setShowNewForm] = useState(false);
+  const [isGuarantor, setIsGuarantor] = useState(false);
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -404,6 +540,7 @@ export function CreateCreditForm() {
       toast.error(error.message);
     }
     setSelectedUserVehicleData(user?.vehicleData);
+    setselectedUserGuarantorData(user?.zaminData);
   };
 
   const onSubmit = handleSubmit((data) => {
@@ -420,21 +557,28 @@ export function CreateCreditForm() {
 
   const handleAddGuarantor = (id: string) => {
     console.log('Guarantor ID:', id);
+   // add data field isGuarantor: true
+
+   
+    
     toast.success('Zamin əlavə edildi!');
+  };
+
+  const addNewGuarantor = () => {
+    setShowNewForm(true);
   };
 
   const handleTabChange = (event: any, newValue: number) => {
     setCurrentTab(newValue);
   };
 
-  const handleTabIndexChanger = ( action: string)=> {
-   if (action === 'next') {
+  const handleTabIndexChanger = (action: string) => {
+    if (action === 'next') {
       setCurrentTab(currentTab + 1);
-   } else {
+    } else {
       setCurrentTab(currentTab - 1);
-   }
-
-  }
+    }
+  };
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -652,7 +796,7 @@ export function CreateCreditForm() {
             <Divider sx={{ my: 3 }} />
           </Grid>
         )) ||
-        (currentTab === 3 && (
+        (currentTab === 3 && selectedUserGuarantorData && (
           <Grid spacing={3}>
             <Grid xs={12}>
               <Stack>
@@ -667,7 +811,7 @@ export function CreateCreditForm() {
                   Zamin barəsində məlumatlar
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
-                {zaminData.map((zamin) => (
+                {selectedUserGuarantorData.map((zamin: any) => (
                   <Box
                     key={zamin.id}
                     display="grid"
@@ -727,12 +871,6 @@ export function CreateCreditForm() {
                         defaultValue={zamin.issuedBy}
                       />
                       <Field.Text
-                        name={`zaminFullName_${zamin.id}`}
-                        disabled
-                        label="Ad, Soy ad, Atasının adı"
-                        defaultValue={zamin.fullName}
-                      />
-                      <Field.Text
                         name={`zaminBorrowerInfo_${zamin.id}`}
                         disabled
                         label="Borcalan Haqında"
@@ -759,6 +897,42 @@ export function CreateCreditForm() {
                     </Box>
                   </Box>
                 ))}
+                {!showNewForm && (
+                  <Button
+                    sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '100%', color: 'white' }}
+                    onClick={addNewGuarantor}
+                  >
+                    Yeni zamin əlavə et.
+                  </Button>
+                )}
+                {showNewForm && (
+                  <Button
+                    sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '100%', color: 'white' }}
+                    onClick={() => setShowNewForm(false)}
+                  >
+                    Zamini çıxar
+                  </Button>
+                )}
+                {showNewForm && (
+                  <Box
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+                    mt={3}
+                  >
+                    <Field.Text name="newZaminName" label="Adı" />
+                    <Field.Text name="newZaminSurname" label="Soyadı" />
+                    <Field.Text name="newZaminFin" label="Fin" />
+                    <Field.Text name="newZaminSerialNumber" label="Ş/V seriyası və nömrəsi" />
+                    <Field.Text name="newZaminPassportStatus" label="Vəsiqənin statusu" />
+                    <Field.Text name="newZaminIdentityCard" label="Şəxsiyyət vəsiqəsi" />
+                    <Field.Text name="newZaminIssuedBy" label="Kim tərəfindən verilib" />
+                    <Field.Text name="newZaminRegistrationAddress" label="Qeydiyyat ünvanı" />
+                    <Field.Text name="newZaminResidentialAddress" label="Yaşadığı ünvanı" />
+                    <Field.Text name="newZaminPhones" label="Telefonlar" />{' '}
+                  </Box>
+                )}
               </Stack>
             </Grid>
           </Grid>
@@ -1080,28 +1254,29 @@ export function CreateCreditForm() {
             </Stack>
           </Grid>
         ))}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={3}
-          sx={{ gap: 2 }}
-          width="100%"
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mt={3}
+        sx={{ gap: 2 }}
+        width="100%"
+      >
+        <Button
+          onClick={(e) => handleTabIndexChanger('back')}
+          variant="contained"
+          sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '300px' }}
         >
-          <Button
-            onClick={(e) => handleTabIndexChanger( 'back')}
-            variant="contained"
-            sx={{ mt: 3, backgroundColor: '#2D9CDB' , width:'300px'}}
-          >
-            Geri
-          </Button>
-          <Button
-            onClick={(e) => handleTabIndexChanger('next')}
-            variant="contained"
-            sx={{ mt: 3, backgroundColor: '#2D9CDB' , width:'300px'}}          >
-            İrəli
-          </Button>
-        </Box>
+          Geri
+        </Button>
+        <Button
+          onClick={(e) => handleTabIndexChanger('next')}
+          variant="contained"
+          sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '300px' }}
+        >
+          İrəli
+        </Button>
+      </Box>
       <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
         <Button
           type="submit"
