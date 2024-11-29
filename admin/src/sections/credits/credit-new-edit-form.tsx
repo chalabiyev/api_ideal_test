@@ -1,5 +1,5 @@
 import { z as zod } from 'zod';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -105,7 +105,7 @@ const users = [
     vehicleData: [
       {
         id: '1',
-        vehicleBrand: 'Audi',
+        vehicleBrand: 'Audi gagaaa miyauuu',
         vehicleYear: '2021',
         vehicleModel: 'A6',
         vehicleVin: '123456789',
@@ -125,7 +125,7 @@ const users = [
   },
   {
     fin: '7654321',
-    serialNumber: 'aa1234567',
+    serialNumber: 'aa7654321',
     avatarUrl:
       'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     passportStatus: 'aktiv',
@@ -173,7 +173,7 @@ const users = [
     vehicleData: [
       {
         id: '1',
-        vehicleBrand: 'Audi',
+        vehicleBrand: 'Audi meowmeo',
         vehicleYear: '2021',
         vehicleModel: 'A6',
         vehicleMarketValue: '10000',
@@ -329,7 +329,6 @@ export const schema = zod
       vehicleMarketValue: zod.string().min(1, { message: 'Bazar dəyəri tələb olunur!' }),
       vehicleVin: zod.string().min(1, { message: 'VIN nömrəsi tələb olunur!' }),
       vehicleNumber: zod.string().min(1, { message: 'Nömrə tələb olunur!' }),
-      
     }),
     loanTotal: zod.number().min(1, { message: 'Kredit məbləği boş buraxıla bilməz!' }),
     loanPercentagePerYear: zod
@@ -365,6 +364,8 @@ const getBackgroundColor = (daysLate: any) => {
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState('s/v');
   const [selectedOption, setSelectedOption] = useState('em');
+  const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<any>([]);
+
   const methods = useForm({
     mode: 'onSubmit',
     resolver: zodResolver(schema),
@@ -402,7 +403,9 @@ export function CreateCreditForm() {
     } catch (error) {
       toast.error(error.message);
     }
+    setSelectedUserVehicleData(user?.vehicleData);
   };
+
 
   const onSubmit = handleSubmit((data) => {
     console.log('Submitted Data:', data);
@@ -468,7 +471,7 @@ export function CreateCreditForm() {
             </Card>
           </Grid>
 
-          <Grid xs={12}>
+          <Grid  item xs={12}>
             <Box>
               <Field.UploadAvatar
                 disabled
@@ -786,7 +789,7 @@ export function CreateCreditForm() {
             </Stack>
           </Grid>
         )) ||
-        (currentTab === 'vehicle' && (
+        currentTab === 'vehicle' && selectedUserVehicleData && (
           <Grid spacing={3}>
             <Typography
               sx={{
@@ -799,22 +802,56 @@ export function CreateCreditForm() {
               Nəqliyyat vasitələri
             </Typography>
             <Divider sx={{ mb: 3 }} />
-            <Box
-              display="grid"
-              rowGap={3}
-              columnGap={2}
-              gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
-            >
-              <Field.Text disabled name="vehicleBrand" label="Marka" />
-              <Field.Text disabled name="vehicleNumber" label="Qeydiyyat nömrə nişanı" />
-              <Field.Text disabled name="vehicleYear" label="İl" />
-              <Field.Text disabled name="vehicleModel" label="Model" />
-              <Field.Text disabled name="vehicleVin" label="VIN" />
-              <Field.Text disabled name="vehicleMarketValue" label="Bazar dəyəri" />
-
-            </Box>
+            <Divider sx={{ mb: 3 }} />
+            {selectedUserVehicleData.map((vehicle: any ) => (
+              <Box
+                key={vehicle.id}
+                display="grid"
+                rowGap={3}
+                columnGap={2}
+                gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+                mb={2}
+              >
+                <Field.Text
+                  name={`vehicleBrand_${vehicle.id}`}
+                  label="Marka"
+                  disabled
+                  defaultValue={vehicle.vehicleBrand}
+                />
+                <Field.Text
+                  name={`vehicleModel_${vehicle.id}`}
+                  label="Model"
+                  disabled
+                  defaultValue={vehicle.vehicleModel}
+                />
+                <Field.Text
+                  name={`vehicleYear_${vehicle.id}`}
+                  label="İl"
+                  disabled
+                  defaultValue={vehicle.vehicleYear}
+                />
+                <Field.Text
+                  name={`vehicleMarketValue_${vehicle.id}`}
+                  label="Bazar dəyəri"
+                  disabled
+                  defaultValue={vehicle.vehicleMarketValue}
+                />
+                <Field.Text
+                  name={`vehicleVin_${vehicle.id}`}
+                  label="VIN nömrəsi"
+                  disabled
+                  defaultValue={vehicle.vehicleVin}
+                />
+                <Field.Text
+                  name={`vehicleNumber_${vehicle.id}`}
+                  label="Nömrə"
+                  disabled
+                  defaultValue={vehicle.vehicleNumber}
+                />
+              </Box>
+            ))}
           </Grid>
-        )) ||
+        )||
         (currentTab === 'familyMembers' && (
           <Box sx={{ mt: 3 }}>
             {familyData.map((member) => (
@@ -866,7 +903,7 @@ export function CreateCreditForm() {
                     <GridAddIcon />
                   </Button>
                 </Box>
-                <Grid xs={12} md={8}>
+                <Grid xs={12} md={8} item>
                   <Card sx={{ p: 3 }}>
                     <Box
                       rowGap={3}
