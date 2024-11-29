@@ -33,7 +33,6 @@ export const signInWithPassword = async ({ username, password }: SignInParams): 
 
     const { accessToken } = res.data;
 
-    console.log(res.data);
 
     if (!accessToken) {
       throw new Error('Access token not found in response');

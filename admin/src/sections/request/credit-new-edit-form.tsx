@@ -35,12 +35,17 @@ import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
 import {
-  familyRelationshipOptions,
+  _familyRelationshipOptions,
   whereToGetSignatureOptions,
 } from '../_examples/extra/form-validation-view/react-hook-form';
 
-import type { ValuesType } from '../credits/credit-new-edit-form';
 
+
+export type ValuesType = {
+  [year: string]: {
+    [month: string]: number;
+  };
+};
 // ----------------------------------------------------------------------
 
 export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
@@ -325,7 +330,7 @@ export function CreateCreditForm() {
                       label="Ailə vəziyyəti"
                       InputLabelProps={{ shrink: true }}
                     >
-                      {familyRelationshipOptions.map((option) => (
+                      {_familyRelationshipOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
@@ -1022,7 +1027,7 @@ export function CreateCreditForm() {
                           label="Ailə vəziyyəti"
                           InputLabelProps={{ shrink: true }}
                         >
-                          {familyRelationshipOptions.map((option) => (
+                          {_familyRelationshipOptions.map((option) => (
                             <option key={option.value} value={option.value}>
                               {option.label}
                             </option>
@@ -1109,7 +1114,7 @@ export function CreateCreditForm() {
                           label="Ailə vəziyyəti"
                           InputLabelProps={{ shrink: true }}
                         >
-                          {familyRelationshipOptions.map((option) => (
+                          {_familyRelationshipOptions.map((option) => (
                             <option key={option.value} value={option.value}>
                               {option.label}
                             </option>

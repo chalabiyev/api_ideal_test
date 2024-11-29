@@ -46,8 +46,8 @@ export function JwtSignInView() {
 
   const password = useBoolean();
   const defaultValues = {
-    username: 'admin',
-    password: '123456',
+    username: '',
+    password: '',
   }
 
   // the auth starts from here

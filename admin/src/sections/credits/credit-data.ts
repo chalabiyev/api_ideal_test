@@ -1,3 +1,5 @@
+
+
 export const sorguTarixcesi = [
   {
     bankName: 'Bank 1',
@@ -61,10 +63,6 @@ export const guarantorLoanData = {
   lastContractEndDate: '31.12.2034',
   overdueDaysInterest: 0,
 };
-
-export const vehicleData = [
-  { id: '1', title: 'Audi', year: '2021', model: 'A6', vin: '123456789', licensePlate: 'AA1234' },
-];
 
 export const zaminData = [
   {
