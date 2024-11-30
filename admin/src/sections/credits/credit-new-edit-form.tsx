@@ -38,7 +38,6 @@ import {
 } from '../_examples/extra/form-validation-view/react-hook-form';
 import {
   loanData,
-  zaminData,
   creditData,
   oldLoanData,
   _customerRole,
@@ -168,7 +167,7 @@ const users = [
         name: 'John',
         surname: 'Doe',
         fin: '123456789',
-        serialNumber: 'AA123456',
+        serialNumber: 'AA1234567',
         passportStatus: 'aktiv',
         identityCard: '123456789',
         issuedBy: 'Lənkəran Rayon Polis İdarəsi',
@@ -630,6 +629,8 @@ export function CreateCreditForm() {
       fin: '',
       serialNumber: '',
       whereToGetSignature: '',
+      newZaminFin: '',
+      newZaminSerialNumber: '',
     },
   });
   const {
@@ -665,6 +666,36 @@ export function CreateCreditForm() {
     setselectedUserGuarantorData(user?.zaminData);
     setSelectedUserFamilyData(user?.familyData);
   };
+
+  const handleSearchNewGuarantor = () => {
+    const fin = watch('newZaminFin');
+    const serialNumber = watch('newZaminSerialNumber');
+    const user = users.find((u) => u.fin === fin && u.serialNumber === serialNumber);
+    try {
+      if (serialNumber.length === 0) {
+        throw new Error('Ş/V seriyası və nömrəsi tələb olunur!');
+      } else if (fin.length === 0) {
+        throw new Error('Fin tələb olunur!');
+      }
+      if (user) {
+        setselectedUserGuarantorData((prevData: any[]) => [
+          ...prevData,
+          {
+            id: Math.random().toString(),
+            fields: {
+              ...user,
+              isGuarantor: false,
+            },
+          },
+        ]);
+        toast.success('Məlumatlar tapıldı!');
+      } else {
+        toast.error('Daxil edilən Ş/V seriyası və ya fin səhvdir!');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   const onSubmit = handleSubmit((data) => {
     console.log('Submitted Data:', data);
@@ -941,6 +972,24 @@ export function CreateCreditForm() {
                 >
                   Zamin barəsində məlumatlar
                 </Typography>
+                <Card sx={{ p: 3 }}>
+              <Box
+                display="grid"
+                rowGap={2}
+                columnGap={2}
+                gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }}
+              >
+                <Field.Text name="serialNumber" label="Serial Number" required variant="outlined" />
+                <Field.Text name="fin" label="FIN" required variant="outlined" />
+              </Box>
+              <Button
+                onClick={handleSearchNewGuarantor}
+                variant="contained"
+                sx={{ mt: 2, width: '100%', backgroundColor: '#2D9CDB' }}
+              >
+                Axtar
+              </Button>
+            </Card>
                 <Divider sx={{ mb: 3 }} />
                 {selectedUserGuarantorData.map((zamin: any) => (
                   <Box
