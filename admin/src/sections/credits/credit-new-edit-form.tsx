@@ -43,6 +43,8 @@ import {
   sorguTarixcesi,
   combinedHeaders,
   guarantorLoanData,
+  users,
+  randomGuarantorData,
 } from './credit-data';
 import { creditSchema } from '../_examples/extra/form-validation-view/schema';
 
@@ -52,434 +54,6 @@ export type ValuesType = {
   };
 };
 // Dummy data for users
-const users = [
-  {
-    fin: '1234567',
-    serialNumber: 'aze12345678',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    passportStatus: 'aktiv',
-    name: 'Aysel',
-    surname: 'Aliyev',
-    fatherName: 'Cavid',
-    born: '11.10.2001',
-    reportNum: 'testreport №229',
-    familyRelationship: 'single',
-    gender: 'Women',
-    dateMade: '11 oktyabr 2001',
-    historyMadeDate: '123456',
-    loanerId: 'AZE000000',
-    loanerAdd: 'Baku, Hovsan, xyz',
-    loanerScore: 400,
-    loanerBornAdd: 'Baku, Hovsan, xyz',
-    loanerBornDate: '11.10.2001',
-    state: 'Baku',
-    role: 'customer',
-    address: 'Baku, Hovsan, xyz',
-    phoneNumber: '+994 50 123 45 67',
-    education: 'ali',
-    workplaceName: '"Soliton LTD "MMC',
-    workplaceAddress: 'Bakı şəh.Babək pr.11-26 Quter Mebel salonu',
-    positionAndExperience: 'menecer',
-    monthlySalary: '1200 AZN',
-    totalMonthlyIncome: '2500',
-    totalExpenses: '969',
-    netIncome: '1531',
-    contractStartDate: '11 yanvar 2024',
-    contractEndDate: '11 yanvar 2025',
-    monthlySalaryAmount: '500',
-    akbInfo: '6000',
-    internalRiskSystem: '6000',
-    propertyType: 'həyət evi',
-    registrationNumber: '12345',
-    occupancyAddress: '123 Main St, Baku',
-    ownershipStatus: 'öz adınadır',
-    numberOfRooms: '3',
-    area: '120',
-    constructionYear: '2010',
-    marketValue: '150000',
-    mortgageStatus: 'No Mortgage',
-    monthlyRent: '1000',
-    familyData: [
-      {
-        id: '1',
-        title: 'Ata',
-        fields: {
-          avatarUrl:
-            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          fin: '123456789',
-          serialNumber: '132456789',
-          isGuarantor: false,
-          passportStatus: 'Active',
-          name: 'TestFather',
-          surname: 'TestFather',
-          fatherName: 'TestFather',
-          born: '11.10.2001',
-          familyRelationship: 'Married',
-          gender: 'Men',
-          address: 'Baki azerbaycan',
-        },
-      },
-      {
-        id: '2',
-        title: 'Ana',
-        fields: {
-          avatarUrl:
-            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          fin: '123456789',
-          serialNumber: '132456789',
-          isGuarantor: false,
-          passportStatus: 'Active',
-          name: 'TestFather',
-          surname: 'TestFather',
-          fatherName: 'TestFather',
-          born: '11.10.2001',
-          familyRelationship: 'Married',
-          gender: 'Women',
-          address: 'Baki azerbaycan',
-        },
-      },
-    ],
-    vehicleData: [
-      {
-        id: '1',
-        vehicleBrand: 'Audi gagaaa miyauuu',
-        vehicleYear: '2021',
-        vehicleModel: 'A6',
-        vehicleVin: '123456789',
-        vehicleMarketValue: '10000',
-        vehicleNumber: 'AA1234',
-      },
-      {
-        id: '2',
-        vehicleBrand: 'Audiqqq',
-        vehicleMarketValue: '10000',
-        vehicleYear: '202122',
-        vehicleModel: 'A622',
-        vehicleVin: '123456789222',
-        vehicleNumber: 'AA12322224',
-      },
-    ],
-    zaminData: [
-      {
-        id: '1',
-        name: 'John',
-        surname: 'Doe',
-        fin: '123456789',
-        serialNumber: 'AA1234567',
-        passportStatus: 'aktiv',
-        identityCard: '123456789',
-        issuedBy: 'Lənkəran Rayon Polis İdarəsi',
-        borrowerInfo: 'Some info about borrower',
-        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        phones: '123-456-7890',
-        avatarUrl:
-          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      },
-      {
-        id: '2',
-        name: 'Rasim',
-        surname: 'Veliyev',
-        fin: '12345678',
-        serialNumber: 'AA12345',
-        passportStatus: 'aktiv',
-        identityCard: '12345678',
-        issuedBy: 'Yasamal Rayon Polis İdarəsi',
-        borrowerInfo: 'Some info about borrower',
-        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        phones: '123-456-7890',
-        avatarUrl:
-          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      },
-    ],
-  },
-  {
-    fin: '7654321',
-    serialNumber: 'aa7654321',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    passportStatus: 'aktiv',
-    name: 'testName',
-    surname: 'testSurname',
-    fatherName: 'testFatherName',
-    born: '11.10.2001',
-    reportNum: 'testreport №229',
-    familyRelationship: 'married',
-    gender: 'Men',
-    dateMade: '11 oktyabr 2001',
-    historyMadeDate: '123456',
-    loanerId: 'AZE000000',
-    loanerAdd: 'Baku, Hovsan, xyz',
-    loanerScore: 400,
-    loanerBornAdd: 'Baku, Hovsan, xyz',
-    loanerBornDate: '11.10.2001',
-    state: 'Baku',
-    role: 'customer',
-    address: 'Baku, Hovsan, xyz',
-    phoneNumber: '+994 50 123 45 67',
-    education: 'ali',
-    workplaceName: '"Soliton LTD "MMC',
-    workplaceAddress: 'Bakı şəh.Babək pr.11-26 Quter Mebel salonu',
-    positionAndExperience: 'menecer',
-    monthlySalary: '1200 AZN',
-    totalMonthlyIncome: '2500',
-    totalExpenses: '969',
-    netIncome: '1531',
-    contractStartDate: '11 yanvar 2024',
-    contractEndDate: '11 yanvar 2025',
-    monthlySalaryAmount: '500',
-    akbInfo: '6000',
-    internalRiskSystem: '6000',
-    propertyType: 'həyət evi',
-    registrationNumber: '12345',
-    occupancyAddress: '123 Main St, Baku',
-    ownershipStatus: 'öz adınadır',
-    numberOfRooms: '3',
-    area: '120',
-    constructionYear: '2010',
-    marketValue: '150000',
-    mortgageStatus: 'No Mortgage',
-    monthlyRent: '1000',
-    familyData: [
-      {
-        id: '1',
-        title: 'Ata',
-        fields: {
-          avatarUrl:
-            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          fin: '123456789',
-          serialNumber: '132456789',
-          passportStatus: 'Active',
-          name: 'TestFather',
-          surname: 'TestFather',
-          fatherName: 'TestFather',
-          born: '11.10.2001',
-          familyRelationship: 'Married',
-          isGuarantor: false,
-          gender: 'Men',
-          address: 'Baki azerbaycan',
-        },
-      },
-      {
-        id: '2',
-        title: 'Ana',
-        fields: {
-          avatarUrl:
-            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          fin: '123456789',
-          serialNumber: '132456789',
-          passportStatus: 'Active',
-          name: 'TestFather',
-          isGuarantor: false,
-          surname: 'TestFather',
-          fatherName: 'TestFather',
-          born: '11.10.2001',
-          familyRelationship: 'Married',
-          gender: 'Women',
-          address: 'Baki azerbaycan',
-        },
-      },
-    ],
-    vehicleData: [
-      {
-        id: '1',
-        vehicleBrand: 'Audi meowmeo',
-        vehicleYear: '2021',
-        vehicleModel: 'A6',
-        vehicleMarketValue: '10000',
-        vehicleVin: '123456789',
-        vehicleNumber: 'AA1234',
-      },
-      {
-        id: '2',
-        vehicleBrand: 'Audiqqq',
-        vehicleYear: '202122',
-        vehicleModel: 'A622',
-        vehicleMarketValue: '10000',
-        vehicleVin: '123456789222',
-        vehicleNumber: 'AA12322224',
-      },
-    ],
-    zaminData: [
-      {
-        id: '1',
-        name: 'John',
-        surname: 'Doe aaaa',
-        fin: '123456789',
-        serialNumber: 'AA123456',
-        passportStatus: 'aktiv',
-        identityCard: '123456789',
-        issuedBy: 'Lənkəran Rayon Polis İdarəsi',
-        borrowerInfo: 'Some info about borrower',
-        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        phones: '123-456-7890',
-        avatarUrl:
-          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      },
-      {
-        id: '2',
-        name: 'John',
-        surname: 'mimimi',
-        fin: '12345678',
-        serialNumber: 'AA12345',
-        passportStatus: 'aktiv',
-        identityCard: '12345678',
-        issuedBy: 'Yasamal Rayon Polis İdarəsi',
-        borrowerInfo: 'Some info about borrower',
-        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        phones: '123-456-7890',
-        avatarUrl:
-          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      },
-    ],
-  },
-  {
-    fin: '1235678',
-    serialNumber: 'aze12345678',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    passportStatus: 'aktiv',
-    name: 'testName',
-    surname: 'testSurname',
-    fatherName: 'testFatherName',
-    born: '11.10.2001',
-    reportNum: 'testreport №229',
-    familyRelationship: 'married',
-    gender: 'Men',
-    dateMade: '11 oktyabr 2001',
-    historyMadeDate: '123456',
-    loanerId: 'AZE000000',
-    loanerAdd: 'Baku, Hovsan, xyz',
-    loanerScore: 400,
-    loanerBornAdd: 'Baku, Hovsan, xyz',
-    loanerBornDate: '11.10.2001',
-    state: 'Baku',
-    role: 'customer',
-    address: 'Baku, Hovsan, xyz',
-    phoneNumber: '+994 50 123 45 67',
-    education: 'ali',
-    workplaceName: '"Soliton LTD "MMC',
-    workplaceAddress: 'Bakı şəh.Babək pr.11-26 Quter Mebel salonu',
-    positionAndExperience: 'menecer',
-    monthlySalary: '1200 AZN',
-    totalMonthlyIncome: '2500',
-    totalExpenses: '969',
-    netIncome: '1531',
-    contractStartDate: '11 yanvar 2024',
-    contractEndDate: '11 yanvar 2025',
-    monthlySalaryAmount: '500',
-    akbInfo: '6000',
-    internalRiskSystem: '6000',
-    propertyType: 'həyət evi',
-    registrationNumber: '12345',
-    occupancyAddress: '123 Main St, Baku',
-    ownershipStatus: 'öz adınadır',
-    numberOfRooms: '3',
-    area: '120',
-    constructionYear: '2010',
-    marketValue: '150000',
-    mortgageStatus: 'No Mortgage',
-    monthlyRent: '1000',
-    familyData: [
-      {
-        id: '1',
-        title: 'Ata',
-        fields: {
-          avatarUrl:
-            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          fin: '123456789',
-          serialNumber: '132456789',
-          passportStatus: 'Active',
-          isGuarantor: false,
-          name: 'TestFather',
-          surname: 'TestFather',
-          fatherName: 'TestFather',
-          born: '11.10.2001',
-          familyRelationship: 'Married',
-          gender: 'Men',
-          address: 'Baki azerbaycan',
-        },
-      },
-      {
-        id: '2',
-        title: 'Ana',
-        fields: {
-          avatarUrl:
-            'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          fin: '123456789',
-          serialNumber: '132456789',
-          passportStatus: 'Active',
-          name: 'TestFather',
-          surname: 'TestFather',
-          fatherName: 'TestFather',
-          isGuarantor: false,
-          born: '11.10.2001',
-          familyRelationship: 'Married',
-          gender: 'Women',
-          address: 'Baki azerbaycan',
-        },
-      },
-    ],
-    vehicleData: [
-      {
-        id: '1',
-        vehicleBrand: 'Audi',
-        vehicleYear: '2021',
-        vehicleModel: 'A6',
-        vehicleMarketValue: '10000',
-        vehicleVin: '123456789',
-        vehicleNumber: 'AA1234',
-      },
-      {
-        id: '2',
-        vehicleBrand: 'Audiqqq',
-        vehicleMarketValue: '10000',
-        vehicleYear: '202122',
-        vehicleModel: 'A622',
-        vehicleVin: '123456789222',
-        vehicleNumber: 'AA12322224',
-      },
-    ],
-    zaminData: [
-      {
-        id: '1',
-        name: 'John',
-        surname: 'Doe',
-        fin: '123456789',
-        serialNumber: 'AA123456',
-        passportStatus: 'aktiv',
-        identityCard: '123456789',
-        issuedBy: 'Lənkəran Rayon Polis İdarəsi',
-        borrowerInfo: 'Some info about borrower',
-        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        phones: '123-456-7890',
-        avatarUrl:
-          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      },
-      {
-        id: '2',
-        name: 'John',
-        surname: 'Doe',
-        fin: '12345678',
-        serialNumber: 'AA12345',
-        passportStatus: 'aktiv',
-        identityCard: '12345678',
-        issuedBy: 'Yasamal Rayon Polis İdarəsi',
-        borrowerInfo: 'Some info about borrower',
-        registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
-        phones: '123-456-7890',
-        avatarUrl:
-          'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      },
-    ],
-  },
-];
 
 // const getBackgroundColor = (daysLate: any) => {
 //   if (daysLate === '-') return '#C6C6C6'; // No information (gray)
@@ -498,7 +72,8 @@ export function CreateCreditForm() {
   const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<any>([]);
   const [selectedUserGuarantorData, setselectedUserGuarantorData] = useState<any>([]);
   const [selectedUserFamilyData, setSelectedUserFamilyData] = useState<any>([]);
-  const [showNewForm, setShowNewForm] = useState(false);
+  const [guarantorData, setGuarantorData] = useState(false);
+  const [newGuarantorData, setNewGuarantorData] = useState<any>([]);
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -545,34 +120,24 @@ export function CreateCreditForm() {
     setSelectedUserFamilyData(user?.familyData);
   };
 
+  const guarantors = randomGuarantorData;
   const handleSearchNewGuarantor = () => {
     const fin = watch('newZaminFin');
     const serialNumber = watch('newZaminSerialNumber');
-    const user = users.find((u) => u.fin === fin && u.serialNumber === serialNumber);
+    const guarantor = guarantors.find((g) => g.fin === fin && g.serialNumber === serialNumber);
     try {
       if (serialNumber.length === 0) {
-        throw new Error('Ş/V seriyası və nömrəsi tələb olunur!');
+        throw new Error('Zaminin Ş/V seriyası və nömrəsi tələb olunur!');
       } else if (fin.length === 0) {
-        throw new Error('Fin tələb olunur!');
-      }
-      if (user) {
-        setselectedUserGuarantorData((prevData: any[]) => [
-          ...prevData,
-          {
-            id: Math.random().toString(),
-            fields: {
-              ...user,
-              isGuarantor: false,
-            },
-          },
-        ]);
-        toast.success('Məlumatlar tapıldı!');
-      } else {
-        toast.error('Daxil edilən Ş/V seriyası və ya fin səhvdir!');
+        throw new Error('Zaminin fini tələb olunur!');
       }
     } catch (error) {
       toast.error(error.message);
     }
+    setNewGuarantorData(guarantor);
+    setGuarantorData(true);
+
+    console.log('New Guarantor:', guarantor);
   };
 
   const onSubmit = handleSubmit((data) => {
@@ -584,6 +149,11 @@ export function CreateCreditForm() {
           .map((error) => error.message)
           .join('\n')
       );
+    }
+    try {
+      toast.success('Form submitted successfully!');
+    } catch (error) {
+      toast.error(error.message);
     }
   });
   const handleAddGuarantor = (fin: string) => {
@@ -600,12 +170,7 @@ export function CreateCreditForm() {
           : member
       )
     );
-
     toast.success('Zamin əlavə edildi!');
-  };
-
-  const addNewGuarantor = () => {
-    setShowNewForm(true);
   };
 
   const handleTabChange = (event: any, newValue: number) => {
@@ -632,7 +197,7 @@ export function CreateCreditForm() {
         <Tab value={4} label="Əmlakları" />
         <Tab value={5} label="Nəqliyyat vasitələri" />
         <Tab value={6} label="Ailə üzvləri" />
-        <Tab value={8} label="Kreditlər" />
+        <Tab value={7} label="Kredit ver" />
       </Tabs>
       {(currentTab === 1 && (
         <Grid container gap="55px" mt={3}>
@@ -850,49 +415,61 @@ export function CreateCreditForm() {
                 >
                   Zamin barəsində məlumatlar
                 </Typography>
-                <Card sx={{ p: 3 }}>
+                {userData && (
+                  <Card sx={{ p: 3 }}>
+                    <Typography
+                      sx={{
+                        mb: 3,
+                        textAlign: 'center',
+                        fontSize: 20,
+                        lineHeight: 1.5,
+                        fontWeight: 700,
+                      }}
+                    >
+                      Yeni Zamin əlavə etmək üçün aşağıdakı məlumatları doldurun
+                    </Typography>
+                    <Box
+                      display="grid"
+                      rowGap={2}
+                      columnGap={2}
+                      gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }}
+                    >
+                      <Field.Text
+                        name="newZaminSerialNumber"
+                        label="Serial Number"
+                        variant="outlined"
+                      />
+                      <Field.Text name="newZaminFin" label="FIN" variant="outlined" />
+                    </Box>
+                    <Button
+                      onClick={handleSearchNewGuarantor}
+                      variant="contained"
+                      sx={{ mt: 2, width: '100%', backgroundColor: '#2D9CDB' }}
+                    >
+                      Axtar
+                    </Button>
+                  </Card>
+                )}
+
+                {guarantorData ? (
                   <Box
-                    display="grid"
-                    rowGap={2}
-                    columnGap={2}
-                    gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }}
-                  >
-                    <Field.Text
-                      name="serialNumber"
-                      label="Serial Number"
-                      required
-                      variant="outlined"
-                    />
-                    <Field.Text name="fin" label="FIN" required variant="outlined" />
-                  </Box>
-                  <Button
-                    onClick={handleSearchNewGuarantor}
-                    variant="contained"
-                    sx={{ mt: 2, width: '100%', backgroundColor: '#2D9CDB' }}
-                  >
-                    Axtar
-                  </Button>
-                </Card>
-                <Divider sx={{ mb: 3 }} />
-                {selectedUserGuarantorData.map((zamin: any) => (
-                  <Box
-                    key={zamin.id}
-                    display="grid"
+                    display="flex"
                     rowGap={3}
-                    columnGap={2}
                     sx={{
-                      mb: 4,
+                      my: 4,
                     }}
-                    gridTemplateColumns={{ xs: '128px 1fr', sm: '128px 1fr' }}
+                    columnGap={2}
+                    flexDirection="column"
                   >
                     <Field.UploadAvatar
-                      name="avatarUrl"
+                      name="newZaminAvatarUrl"
                       maxSize={3145728}
                       sx={{
                         height: '128px',
                         width: '128px',
                       }}
                       disabled
+                      value={newGuarantorData.avatarUrl}
                     />
                     <Box
                       display="grid"
@@ -901,103 +478,155 @@ export function CreateCreditForm() {
                       gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
                     >
                       <Field.Text
-                        name={`zaminName_${zamin.id}`}
+                        name="zaminName"
                         label="Adı"
-                        defaultValue={zamin.name}
+                        defaultValue={newGuarantorData.name}
                         disabled
                       />
                       <Field.Text
-                        name={`zaminFin_${zamin.id}`}
-                        disabled
+                        name="zaminFin"
                         label="Fin"
-                        defaultValue={zamin.fin}
+                        defaultValue={newGuarantorData.fin}
+                        disabled
                       />
                       <Field.Text
-                        name={`zaminSerialNumber_${zamin.id}`}
+                        disabled
+                        name="zaminSerialNumber"
                         label="Ş/V seriyası və nömrəsi"
-                        disabled
-                        defaultValue={zamin.serialNumber}
+                        defaultValue={newGuarantorData.serialNumber}
                       />
                       <Field.Text
-                        name={`zaminPassportStatus_${zamin.id}`}
                         disabled
+                        name="zaminPassportStatus"
                         label="Vəsiqənin statusu"
-                        defaultValue={zamin.passportStatus}
+                        defaultValue={newGuarantorData.passportStatus}
                       />
                       <Field.Text
                         disabled
-                        name={`zaminIdentityCard_${zamin.id}`}
+                        name="zaminIdentityCard"
                         label="Şəxsiyyət vəsiqəsi"
-                        defaultValue={zamin.identityCard}
+                        defaultValue={newGuarantorData.identityCard}
                       />
                       <Field.Text
-                        name={`zaminIssuedBy_${zamin.id}`}
                         disabled
+                        name="zaminIssuedBy"
                         label="Kim tərəfindən verilib"
-                        defaultValue={zamin.issuedBy}
+                        defaultValue={newGuarantorData.issuedBy}
                       />
                       <Field.Text
-                        name={`zaminBorrowerInfo_${zamin.id}`}
                         disabled
-                        label="Borcalan Haqında"
-                        defaultValue={zamin.borrowerInfo}
-                      />
-                      <Field.Text
-                        name={`zaminRegistrationAddress_${zamin.id}`}
-                        disabled
+                        name="zaminRegistrationAddress"
                         label="Qeydiyyat ünvanı"
-                        defaultValue={zamin.registrationAddress}
+                        defaultValue={newGuarantorData.registrationAddress}
                       />
                       <Field.Text
-                        name={`zaminResidentialAddress_${zamin.id}`}
                         disabled
+                        name="zaminResidentialAddress"
                         label="Yaşadığı ünvanı"
-                        defaultValue={zamin.residentialAddress}
+                        defaultValue={newGuarantorData.residentialAddress}
                       />
                       <Field.Text
-                        name={`zaminPhones_${zamin.id}`}
+                        disabled
+                        name="zaminPhones"
                         label="Telefon"
-                        defaultValue={zamin.phones}
+                        defaultValue={newGuarantorData.phones}
                       />
                     </Box>
                   </Box>
-                ))}
-                {userData && !showNewForm && (
-                  <Button
-                    sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '100%', color: 'white' }}
-                    onClick={addNewGuarantor}
-                  >
-                    Yeni zamin əlavə et.
-                  </Button>
-                )}
-                {showNewForm && (
-                  <Button
-                    sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '100%', color: 'white' }}
-                    onClick={() => setShowNewForm(false)}
-                  >
-                    Zamini çıxar
-                  </Button>
-                )}
-                {showNewForm && (
+                ) : null}
+                <Divider sx={{ mb: 3 }} />
+                {selectedUserGuarantorData.map((zamin: any) => (
                   <Box
-                    display="grid"
+                    display="flex"
                     rowGap={3}
+                    sx={{
+                      my: 4,
+                    }}
                     columnGap={2}
-                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
-                    mt={3}
+                    flexDirection="column"
                   >
-                    <Field.Text name="newZaminName" label="Adı" />
-                    <Field.Text name="newZaminSurname" label="Soyadı" />
-                    <Field.Text name="newZaminFin" label="Fin" />
-                    <Field.Text name="newZaminSerialNumber" label="Ş/V seriyası və nömrəsi" />
-                    <Field.Text name="newZaminPassportStatus" label="Vəsiqənin statusu" />
-                    <Field.Text name="newZaminIdentityCard" label="Şəxsiyyət vəsiqəsi" />
-                    <Field.Text name="newZaminIssuedBy" label="Kim tərəfindən verilib" />
-                    <Field.Text name="newZaminRegistrationAddress" label="Qeydiyyat ünvanı" />
-                    <Field.Text name="newZaminResidentialAddress" label="Yaşadığı ünvanı" />
-                    <Field.Text name="newZaminPhones" label="Telefonlar" />{' '}
+                    <Box
+                      display="flex"
+                      rowGap={3}
+                      sx={{
+                        my: 4,
+                      }}
+                      columnGap={2}
+                      flexDirection="column"
+                    >
+                      <Field.UploadAvatar
+                        name="zaminAvatarUrl"
+                        maxSize={3145728}
+                        sx={{
+                          height: '128px',
+                          width: '128px',
+                        }}
+                        value={zamin.avatarUrl}
+                        disabled
+                      />
+                      <Box
+                        display="grid"
+                        rowGap={3}
+                        columnGap={2}
+                        gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+                      >
+                        <Field.Text
+                          name={`zaminName_${zamin.id}`}
+                          label="Adı"
+                          defaultValue={zamin.name}
+                          disabled
+                        />
+                        <Field.Text
+                          name={`zaminFin_${zamin.id}`}
+                          disabled
+                          label="Fin"
+                          defaultValue={zamin.fin}
+                        />
+                        <Field.Text
+                          name={`zaminSerialNumber_${zamin.id}`}
+                          label="Ş/V seriyası və nömrəsi"
+                          disabled
+                          defaultValue={zamin.serialNumber}
+                        />
+                        <Field.Text
+                          name={`zaminPassportStatus_${zamin.id}`}
+                          disabled
+                          label="Vəsiqənin statusu"
+                          defaultValue={zamin.passportStatus}
+                        />
+                        <Field.Text
+                          disabled
+                          name={`zaminIdentityCard_${zamin.id}`}
+                          label="Şəxsiyyət vəsiqəsi"
+                          defaultValue={zamin.identityCard}
+                        />
+                        <Field.Text
+                          name={`zaminIssuedBy_${zamin.id}`}
+                          disabled
+                          label="Kim tərəfindən verilib"
+                          defaultValue={zamin.issuedBy}
+                        />
+                        <Field.Text
+                          name={`zaminRegistrationAddress_${zamin.id}`}
+                          disabled
+                          label="Qeydiyyat ünvanı"
+                          defaultValue={zamin.registrationAddress}
+                        />
+                        <Field.Text
+                          name={`zaminResidentialAddress_${zamin.id}`}
+                          disabled
+                          label="Yaşadığı ünvanı"
+                          defaultValue={zamin.residentialAddress}
+                        />
+                        <Field.Text
+                          name={`zaminPhones_${zamin.id}`}
+                          label="Telefon"
+                          defaultValue={zamin.phones}
+                        />
+                      </Box>
+                    </Box>
                   </Box>
-                )}
+                ))}
               </Stack>
             </Grid>
           </Grid>
@@ -1118,7 +747,7 @@ export function CreateCreditForm() {
                   </Typography>
 
                   <Field.UploadAvatar
-                    name="avatarUrl"
+                    name="familyMemberAvatarUrl"
                     maxSize={3145728}
                     value={member.fields.avatarUrl}
                     sx={{
@@ -1289,7 +918,7 @@ export function CreateCreditForm() {
                 <Field.Text name="totalPercetange" label="Cəmi faiz" type="number" />
               </Box>
               <Typography mt={4}>
-                Komissiyaya qərar üçün göndər{' '}
+                Komissiyaya qərar üçün göndər
                 <Switch color="info" defaultChecked name="comissionDecide" />
               </Typography>
             </Stack>
