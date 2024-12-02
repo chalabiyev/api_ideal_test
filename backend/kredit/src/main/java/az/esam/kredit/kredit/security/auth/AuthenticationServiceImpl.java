@@ -64,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private static final String ERROR_USERNAME_IS_ALREADY_TAKEN = "Error: USERNAME is already taken!";
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request) throws BadRequestException {
         try {
             var existingUser = userRepository.findByUsername(request.getUsername())
                     .orElse(null);
@@ -82,13 +82,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             if (existingUser == null) {
                 if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-                    throw new UsernameNotFoundException("Error: Phone number is already taken!");
+                    throw new BadRequestException("Error: Phone number is already taken!");
                 }
                 if (userRepository.existsByEmail(request.getEmail())) {
-                    throw new UsernameNotFoundException("Error: Email is already taken!");
+                    throw new BadRequestException("Error: Email is already taken!");
                 }
             } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)) {
-                throw new UsernameNotFoundException(ERROR_USERNAME_IS_ALREADY_TAKEN);
+                throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
             }
 
             var user = User.builder()
@@ -182,7 +182,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new UsernameNotFoundException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
     }
 

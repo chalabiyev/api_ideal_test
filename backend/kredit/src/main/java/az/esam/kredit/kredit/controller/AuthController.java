@@ -108,7 +108,7 @@ public class AuthController {
     @PostMapping("/create")
     public ResponseEntity<AuthenticationResponse> create(
             @Valid @RequestBody RegisterRequest registerRequest,
-            HttpServletRequest httpRequest) {
+            HttpServletRequest httpRequest) throws BadRequestException {
         AuthenticationResponse response = authenticationService.register(registerRequest);
         return ResponseEntity.ok(response);
     }
