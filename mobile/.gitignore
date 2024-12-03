@@ -1,0 +1,77 @@
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React Native
+android/app/build/
+ios/Pods/
+ios/build/
+android/.gradle/
+android/.idea/
+*.iml
+*.hmap
+*.lock
+*.xcuserstate
+*.xcworkspace/
+*.expo/
+.expo-shared/
+*.jks
+*.keystore
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+coverage/
+jest-cache/
+jest-test-results.json
+
+# Dependency directories
+.cocoapods/
+.flowconfig
+.expo/
+.expo-shared/
+
+# Build outputs
+*.apk
+*.aab
+*.ipa
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Buck
+buck-out/
+\.buckconfig.local
+\.buckconfig
+\.buckversion
+
+# Miscellaneous
+*.bak
+*.tmp
+*~
+*.orig
+*.lock
+yarn-error.log
+npm-debug.log*
+yarn-debug.log*
