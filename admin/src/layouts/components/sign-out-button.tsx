@@ -70,7 +70,7 @@ export function SignOutButton({ onClose, ...other }: Props) {
       onClick={CONFIG.auth.method === 'auth0' ? handleLogoutAuth0 : handleLogout}
       {...other}
     >
-      Logout
+      Log out
     </Button>
   );
 }
