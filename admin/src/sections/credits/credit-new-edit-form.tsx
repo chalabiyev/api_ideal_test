@@ -1,5 +1,5 @@
 import { z as zod } from 'zod';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -21,14 +21,13 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TextField,
 } from '@mui/material';
 import { toast } from 'src/components/snackbar';
 
 import { Form, Field } from 'src/components/hook-form';
 
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
-
-import { GridAddIcon } from '@mui/x-data-grid';
 
 import ScoreCard from './scoreBoard';
 import {
@@ -37,16 +36,17 @@ import {
 } from '../_examples/extra/form-validation-view/react-hook-form';
 import {
   loanData,
-  zaminData,
   creditData,
-  familyData,
   oldLoanData,
   _customerRole,
   paymentHistory,
   sorguTarixcesi,
   combinedHeaders,
   guarantorLoanData,
+  users,
+  randomGuarantorData,
 } from './credit-data';
+import { creditSchema } from '../_examples/extra/form-validation-view/schema';
 
 export type ValuesType = {
   [year: string]: {
@@ -54,303 +54,7 @@ export type ValuesType = {
   };
 };
 // Dummy data for users
-const users = [
-  {
-    fin: '1234567',
-    serialNumber: 'aze12345678',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    passportStatus: 'aktiv',
-    name: 'Aysel',
-    surname: 'Aliyev',
-    fatherName: 'Cavid',
-    born: '11.10.2001',
-    reportNum: 'testreport №229',
-    familyRelationship: 'single',
-    gender: 'Women',
-    dateMade: '11 oktyabr 2001',
-    historyMadeDate: '123456',
-    loanerId: 'AZE000000',
-    loanerAdd: 'Baku, Hovsan, xyz',
-    loanerScore: 400,
-    loanerBornAdd: 'Baku, Hovsan, xyz',
-    loanerBornDate: '11.10.2001',
-    state: 'Baku',
-    role: 'customer',
-    address: 'Baku, Hovsan, xyz',
-    phoneNumber: '+994 50 123 45 67',
-    education: 'ali',
-    workplaceName: '"Soliton LTD "MMC',
-    workplaceAddress: 'Bakı şəh.Babək pr.11-26 Quter Mebel salonu',
-    positionAndExperience: 'menecer',
-    monthlySalary: '1200 AZN',
-    totalMonthlyIncome: '2500',
-    totalExpenses: '969',
-    netIncome: '1531',
-    contractStartDate: '11 yanvar 2024',
-    contractEndDate: '11 yanvar 2025',
-    monthlySalaryAmount: '500',
-    akbInfo: '6000',
-    internalRiskSystem: '6000',
-    propertyType: 'həyət evi',
-    registrationNumber: '12345',
-    occupancyAddress: '123 Main St, Baku',
-    ownershipStatus: 'öz adınadır',
-    numberOfRooms: '3',
-    area: '120',
-    constructionYear: '2010',
-    marketValue: '150000',
-    mortgageStatus: 'No Mortgage',
-    monthlyRent: '1000',
-    vehicleData: [
-      {
-        id: '1',
-        vehicleBrand: 'Audi gagaaa miyauuu',
-        vehicleYear: '2021',
-        vehicleModel: 'A6',
-        vehicleVin: '123456789',
-        vehicleMarketValue: '10000',
-        vehicleNumber: 'AA1234',
-      },
-      {
-        id: '2',
-        vehicleBrand: 'Audiqqq',
-        vehicleMarketValue: '10000',
-        vehicleYear: '202122',
-        vehicleModel: 'A622',
-        vehicleVin: '123456789222',
-        vehicleNumber: 'AA12322224',
-      },
-    ],
-  },
-  {
-    fin: '7654321',
-    serialNumber: 'aa7654321',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    passportStatus: 'aktiv',
-    name: 'testName',
-    surname: 'testSurname',
-    fatherName: 'testFatherName',
-    born: '11.10.2001',
-    reportNum: 'testreport №229',
-    familyRelationship: 'married',
-    gender: 'Men',
-    dateMade: '11 oktyabr 2001',
-    historyMadeDate: '123456',
-    loanerId: 'AZE000000',
-    loanerAdd: 'Baku, Hovsan, xyz',
-    loanerScore: 400,
-    loanerBornAdd: 'Baku, Hovsan, xyz',
-    loanerBornDate: '11.10.2001',
-    state: 'Baku',
-    role: 'customer',
-    address: 'Baku, Hovsan, xyz',
-    phoneNumber: '+994 50 123 45 67',
-    education: 'ali',
-    workplaceName: '"Soliton LTD "MMC',
-    workplaceAddress: 'Bakı şəh.Babək pr.11-26 Quter Mebel salonu',
-    positionAndExperience: 'menecer',
-    monthlySalary: '1200 AZN',
-    totalMonthlyIncome: '2500',
-    totalExpenses: '969',
-    netIncome: '1531',
-    contractStartDate: '11 yanvar 2024',
-    contractEndDate: '11 yanvar 2025',
-    monthlySalaryAmount: '500',
-    akbInfo: '6000',
-    internalRiskSystem: '6000',
-    propertyType: 'həyət evi',
-    registrationNumber: '12345',
-    occupancyAddress: '123 Main St, Baku',
-    ownershipStatus: 'öz adınadır',
-    numberOfRooms: '3',
-    area: '120',
-    constructionYear: '2010',
-    marketValue: '150000',
-    mortgageStatus: 'No Mortgage',
-    monthlyRent: '1000',
-    vehicleData: [
-      {
-        id: '1',
-        vehicleBrand: 'Audi meowmeo',
-        vehicleYear: '2021',
-        vehicleModel: 'A6',
-        vehicleMarketValue: '10000',
-        vehicleVin: '123456789',
-        vehicleNumber: 'AA1234',
-      },
-      {
-        id: '2',
-        vehicleBrand: 'Audiqqq',
-        vehicleYear: '202122',
-        vehicleModel: 'A622',
-        vehicleMarketValue: '10000',
-        vehicleVin: '123456789222',
-        vehicleNumber: 'AA12322224',
-      },
-    ],
-  },
-  {
-    fin: '1235678',
-    serialNumber: 'aze12345678',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    passportStatus: 'aktiv',
-    name: 'testName',
-    surname: 'testSurname',
-    fatherName: 'testFatherName',
-    born: '11.10.2001',
-    reportNum: 'testreport №229',
-    familyRelationship: 'married',
-    gender: 'Men',
-    dateMade: '11 oktyabr 2001',
-    historyMadeDate: '123456',
-    loanerId: 'AZE000000',
-    loanerAdd: 'Baku, Hovsan, xyz',
-    loanerScore: 400,
-    loanerBornAdd: 'Baku, Hovsan, xyz',
-    loanerBornDate: '11.10.2001',
-    state: 'Baku',
-    role: 'customer',
-    address: 'Baku, Hovsan, xyz',
-    phoneNumber: '+994 50 123 45 67',
-    education: 'ali',
-    workplaceName: '"Soliton LTD "MMC',
-    workplaceAddress: 'Bakı şəh.Babək pr.11-26 Quter Mebel salonu',
-    positionAndExperience: 'menecer',
-    monthlySalary: '1200 AZN',
-    totalMonthlyIncome: '2500',
-    totalExpenses: '969',
-    netIncome: '1531',
-    contractStartDate: '11 yanvar 2024',
-    contractEndDate: '11 yanvar 2025',
-    monthlySalaryAmount: '500',
-    akbInfo: '6000',
-    internalRiskSystem: '6000',
-    propertyType: 'həyət evi',
-    registrationNumber: '12345',
-    occupancyAddress: '123 Main St, Baku',
-    ownershipStatus: 'öz adınadır',
-    numberOfRooms: '3',
-    area: '120',
-    constructionYear: '2010',
-    marketValue: '150000',
-    mortgageStatus: 'No Mortgage',
-    monthlyRent: '1000',
-    vehicleData: [
-      {
-        id: '1',
-        vehicleBrand: 'Audi',
-        vehicleYear: '2021',
-        vehicleModel: 'A6',
-        vehicleMarketValue: '10000',
-        vehicleVin: '123456789',
-        vehicleNumber: 'AA1234',
-      },
-      {
-        id: '2',
-        vehicleBrand: 'Audiqqq',
-        vehicleMarketValue: '10000',
-        vehicleYear: '202122',
-        vehicleModel: 'A622',
-        vehicleVin: '123456789222',
-        vehicleNumber: 'AA12322224',
-      },
-    ],
-  },
-];
-export const schema = zod
-  .object({
-    fin: zod
-      .string()
-      .min(7, { message: 'Fin 7 simvoldan az ola bilməz!' })
-      .max(7, { message: 'Fini 7 simvoldan çox ola bilməz!' }),
-    serialNumber: zod
-      .string()
-      .max(11, { message: 'Ş/V seriyası 11 simvoldan çox ola bilməz!' })
-      .min(9, {
-        message: 'Ş/V seriyası və nömrəsi 9 simvoldan az ola bilməz!',
-      }),
-    passportStatus: zod.string().min(1, { message: 'Vəsiqənin statusu tələb olunur!' }),
-    name: zod.string().min(1, { message: 'Ad tələb olunur!' }),
-    surname: zod.string().min(1, { message: 'Soyad tələb olunur!' }),
-    fatherName: zod.string().min(1, { message: 'Ata adı tələb olunur!' }),
-    born: zod.string().min(1, { message: 'Doğum tarixi tələb olunur!' }),
-    familyRelationship: zod.string().min(1, { message: 'Ailə vəziyyəti tələb olunur!' }),
-    gender: zod.string().min(1, { message: 'Cinsiyyət tələb olunur!' }),
-    state: zod.string().min(1, { message: 'Doğum yeri tələb olunur!' }),
-    zipCode: zod.string().min(1, { message: 'Zip kodu tələb olunur!' }),
-    role: zod.string().min(1, { message: 'Rol tələb olunur!' }),
-    email: zod
-      .string()
-      .min(1, { message: 'Email tələb olunur!' })
-      .email({ message: 'Email Adresini düzgün daxil edin!' }),
-    phoneNumber: zod.string().min(1, { message: 'Telefon nömrəsi tələb olunur!' }),
-    address: zod.string().min(1, { message: 'Yaşayış yeri tələb olunur!' }),
-    country: zod.string().min(1, { message: 'Ölkə tələb olunur!' }),
-    status: zod.string(),
-    reportNum: zod.string().min(1, { message: 'Hesabat nömrəsi tələb olunur!' }),
-    dateMade: zod.string().min(1, { message: 'Hesabatın yaradıldığı tarix tələb olunur!' }),
-    historyMadeDate: zod.string().min(1, { message: 'Tarixçənin açıldığı tarix tələb olunur!' }),
-    loanerId: zod.string().min(1, { message: 'Borcalanın ID-si tələb olunur!' }),
-    loanerScore: zod.number().min(1, { message: 'Borcalanın skoru tələb olunur!' }),
-    loanerAdd: zod.string().min(1, { message: 'Borcalanın ünvanı tələb olunur!' }),
-    loanerBornAdd: zod.string().min(1, { message: 'Borcalanın doğum yeri tələb olunur!' }),
-    loanerBornDate: zod.string().min(1, { message: 'Borcalanın doğum tarixi tələb olunur!' }),
-    education: zod.string().min(1, { message: 'Təhsil tələb olunur!' }),
-    workplaceName: zod.string().min(1, { message: 'İş yeri adı tələb olunur!' }),
-    workplaceAddress: zod.string().min(1, { message: 'İş yeri ünvanı tələb olunur!' }),
-    positionAndExperience: zod.string().min(1, { message: 'Vəzifə və təcrübə tələb olunur!' }),
-    monthlySalary: zod.string().min(1, { message: 'Aylıq maaş tələb olunur!' }),
-    totalMonthlyIncome: zod.string().min(1, { message: 'Cəmi aylıq gəlir tələb olunur!' }),
-    totalExpenses: zod.string().min(1, { message: 'Cəmi xərclər tələb olunur!' }),
-    netIncome: zod.string().min(1, { message: 'Net gəlir tələb olunur!' }),
-    contractStartDate: zod.string().min(1, { message: 'Müqavilənin başlama tarixi tələb olunur!' }),
-    contractEndDate: zod.string().min(1, { message: 'Müqavilənin bitmə tarixi tələb olunur!' }),
-    monthlySalaryAmount: zod.string().min(1, { message: 'Aylıq maaş məbləği tələb olunur!' }),
-    akbInfo: zod.string().min(1, { message: 'AKB məlumatı tələb olunur!' }),
-    internalRiskSystem: zod.string().min(1, { message: 'Daxili risk sistemi tələb olunur!' }),
-    propertyType: zod.string().min(1, { message: 'Əmlak növü tələb olunur!' }),
-    registrationNumber: zod.string().min(1, { message: 'Qeydiyyat nömrəsi tələb olunur!' }),
-    occupancyAddress: zod.string().min(1, { message: 'Ünvanı tələb olunur!' }),
-    ownershipStatus: zod.string().min(1, { message: 'Sahiblik statusu tələb olunur!' }),
-    numberOfRooms: zod.string().min(1, { message: 'Otaq sayı tələb olunur!' }),
-    area: zod.string().min(1, { message: 'Sahə tələb olunur!' }),
-    constructionYear: zod.string().min(1, { message: 'İnşa tarixi tələb olunur!' }),
-    marketValue: zod.string().min(1, { message: 'Bazar dəyəri tələb olunur!' }),
-    mortgageStatus: zod.string().min(1, { message: 'İpoteka statusu tələb olunur!' }),
-    monthlyRent: zod.string().min(1, { message: 'Aylıq icarə məbləği tələb olunur!' }),
-    avatarUrl: zod.string(),
-    vehicleData: zod.object({
-      vehicleBrand: zod.string().min(1, { message: 'Marka tələb olunur!' }),
-      vehicleModel: zod.string().min(1, { message: 'Model tələb olunur!' }),
-      vehicleYear: zod.string().min(1, { message: 'İl tələb olunur!' }),
-      vehicleMarketValue: zod.string().min(1, { message: 'Bazar dəyəri tələb olunur!' }),
-      vehicleVin: zod.string().min(1, { message: 'VIN nömrəsi tələb olunur!' }),
-      vehicleNumber: zod.string().min(1, { message: 'Nömrə tələb olunur!' }),
-    }),
-    loanTotal: zod.number().min(1, { message: 'Kredit məbləği boş buraxıla bilməz!' }),
-    loanPercentagePerYear: zod
-      .number()
-      .min(1, { message: 'İllik faiz dərəcəsi boş buraxıla bilməz!' }),
-    payPerMonth: zod.number().min(1, { message: 'Aylıq ödəniş məbləği boş buraxıla bilməz!' }),
-    totalCredit: zod.number().min(1, { message: 'Cəmi kredit məbləği boş buraxıla bilməz!' }),
-    totalPercetange: zod.number().min(1, { message: 'Cəmi faiz dərəcəsi boş buraxıla bilməz!' }),
-    comissionDecide: zod.boolean(),
-    whereToGetSignature: zod
-      .string()
-      .min(1, { message: 'Müqavilənin əldə ediləcəyi vasitə(lər) tələb olunur!' }),
-    telegramUsernameToGet: zod
-      .string()
-      .min(1, { message: 'Telegram istifadəçi adı tələb olunur!' }),
-    whatsappNumberToGet: zod.string().min(1, { message: 'WhatsApp nömrəsi tələb olunur!' }),
-    emailToGet: zod.string().min(1, { message: 'Email tələb olunur!' }),
-  })
-  .refine((data) => data.telegramUsernameToGet || data.whatsappNumberToGet || data.emailToGet, {
-    message: 'At least one of Telegram Username, WhatsApp Number, or Email is required!',
-    path: ['telegramUsernameToGet', 'whatsappNumberToGet', 'emailToGet'],
-  });
+
 // const getBackgroundColor = (daysLate: any) => {
 //   if (daysLate === '-') return '#C6C6C6'; // No information (gray)
 //   if (daysLate === 0) return '#00B0F0'; // 0 days delay (blue)
@@ -363,16 +67,23 @@ export const schema = zod
 // };
 export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState(1);
+  const [userData, setUserData] = useState(false);
   const [selectedOption, setSelectedOption] = useState('em');
   const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<any>([]);
+  const [selectedUserGuarantorData, setselectedUserGuarantorData] = useState<any>([]);
+  const [selectedUserFamilyData, setSelectedUserFamilyData] = useState<any>([]);
+  const [guarantorData, setGuarantorData] = useState(false);
+  const [newGuarantorData, setNewGuarantorData] = useState<any>([]);
 
   const methods = useForm({
     mode: 'onSubmit',
-    resolver: zodResolver(schema),
+    resolver: zodResolver(creditSchema),
     defaultValues: {
       fin: '',
       serialNumber: '',
       whereToGetSignature: '',
+      newZaminFin: '',
+      newZaminSerialNumber: '',
     },
   });
   const {
@@ -388,6 +99,7 @@ export function CreateCreditForm() {
     const fin = watch('fin');
     const serialNumber = watch('serialNumber');
     const user = users.find((u) => u.fin === fin && u.serialNumber === serialNumber);
+    setUserData(true);
     try {
       if (serialNumber.length === 0) {
         throw new Error('Ş/V seriyası və nömrəsi tələb olunur!');
@@ -404,6 +116,28 @@ export function CreateCreditForm() {
       toast.error(error.message);
     }
     setSelectedUserVehicleData(user?.vehicleData);
+    setselectedUserGuarantorData(user?.zaminData);
+    setSelectedUserFamilyData(user?.familyData);
+  };
+
+  const guarantors = randomGuarantorData;
+  const handleSearchNewGuarantor = () => {
+    const fin = watch('newZaminFin');
+    const serialNumber = watch('newZaminSerialNumber');
+    const guarantor = guarantors.find((g) => g.fin === fin && g.serialNumber === serialNumber);
+    try {
+      if (serialNumber.length === 0) {
+        throw new Error('Zaminin Ş/V seriyası və nömrəsi tələb olunur!');
+      } else if (fin.length === 0) {
+        throw new Error('Zaminin fini tələb olunur!');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setNewGuarantorData(guarantor);
+    setGuarantorData(true);
+
+    console.log('New Guarantor:', guarantor);
   };
 
   const onSubmit = handleSubmit((data) => {
@@ -416,10 +150,26 @@ export function CreateCreditForm() {
           .join('\n')
       );
     }
+    try {
+      toast.success('Form submitted successfully!');
+    } catch (error) {
+      toast.error(error.message);
+    }
   });
-
-  const handleAddGuarantor = (id: string) => {
-    console.log('Guarantor ID:', id);
+  const handleAddGuarantor = (fin: string) => {
+    setSelectedUserFamilyData((prevData: any[]) =>
+      prevData.map((member) =>
+        member.fields.fin === fin
+          ? {
+              ...member,
+              fields: {
+                ...member.fields,
+                isGuarantor: true,
+              },
+            }
+          : member
+      )
+    );
     toast.success('Zamin əlavə edildi!');
   };
 
@@ -427,14 +177,13 @@ export function CreateCreditForm() {
     setCurrentTab(newValue);
   };
 
-  const handleTabIndexChanger = ( action: string)=> {
-   if (action === 'next') {
+  const handleTabIndexChanger = (action: string) => {
+    if (action === 'next') {
       setCurrentTab(currentTab + 1);
-   } else {
+    } else {
       setCurrentTab(currentTab - 1);
-   }
-
-  }
+    }
+  };
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -448,7 +197,7 @@ export function CreateCreditForm() {
         <Tab value={4} label="Əmlakları" />
         <Tab value={5} label="Nəqliyyat vasitələri" />
         <Tab value={6} label="Ailə üzvləri" />
-        <Tab value={8} label="Kreditlər" />
+        <Tab value={7} label="Kredit ver" />
       </Tabs>
       {(currentTab === 1 && (
         <Grid container gap="55px" mt={3}>
@@ -652,7 +401,7 @@ export function CreateCreditForm() {
             <Divider sx={{ my: 3 }} />
           </Grid>
         )) ||
-        (currentTab === 3 && (
+        (currentTab === 3 && selectedUserGuarantorData && (
           <Grid spacing={3}>
             <Grid xs={12}>
               <Stack>
@@ -666,23 +415,61 @@ export function CreateCreditForm() {
                 >
                   Zamin barəsində məlumatlar
                 </Typography>
-                <Divider sx={{ mb: 3 }} />
-                {zaminData.map((zamin) => (
+                {userData && (
+                  <Card sx={{ p: 3 }}>
+                    <Typography
+                      sx={{
+                        mb: 3,
+                        textAlign: 'center',
+                        fontSize: 20,
+                        lineHeight: 1.5,
+                        fontWeight: 700,
+                      }}
+                    >
+                      Yeni Zamin əlavə etmək üçün aşağıdakı məlumatları doldurun
+                    </Typography>
+                    <Box
+                      display="grid"
+                      rowGap={2}
+                      columnGap={2}
+                      gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }}
+                    >
+                      <Field.Text
+                        name="newZaminSerialNumber"
+                        label="Serial Number"
+                        variant="outlined"
+                      />
+                      <Field.Text name="newZaminFin" label="FIN" variant="outlined" />
+                    </Box>
+                    <Button
+                      onClick={handleSearchNewGuarantor}
+                      variant="contained"
+                      sx={{ mt: 2, width: '100%', backgroundColor: '#2D9CDB' }}
+                    >
+                      Axtar
+                    </Button>
+                  </Card>
+                )}
+
+                {guarantorData ? (
                   <Box
-                    key={zamin.id}
-                    display="grid"
+                    display="flex"
                     rowGap={3}
+                    sx={{
+                      my: 4,
+                    }}
                     columnGap={2}
-                    gridTemplateColumns={{ xs: '128px 1fr', sm: '128px 1fr' }}
+                    flexDirection="column"
                   >
                     <Field.UploadAvatar
-                      name="avatarUrl"
+                      name="newZaminAvatarUrl"
                       maxSize={3145728}
                       sx={{
                         height: '128px',
                         width: '128px',
                       }}
                       disabled
+                      value={newGuarantorData.avatarUrl}
                     />
                     <Box
                       display="grid"
@@ -691,71 +478,152 @@ export function CreateCreditForm() {
                       gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
                     >
                       <Field.Text
-                        name={`zaminName_${zamin.id}`}
+                        name="zaminName"
                         label="Adı"
-                        defaultValue={zamin.name}
+                        defaultValue={newGuarantorData.name}
                         disabled
                       />
                       <Field.Text
-                        name={`zaminFin_${zamin.id}`}
-                        disabled
+                        name="zaminFin"
                         label="Fin"
-                        defaultValue={zamin.fin}
+                        defaultValue={newGuarantorData.fin}
+                        disabled
                       />
                       <Field.Text
-                        name={`zaminSerialNumber_${zamin.id}`}
+                        disabled
+                        name="zaminSerialNumber"
                         label="Ş/V seriyası və nömrəsi"
-                        disabled
-                        defaultValue={zamin.serialNumber}
+                        defaultValue={newGuarantorData.serialNumber}
                       />
                       <Field.Text
-                        name={`zaminPassportStatus_${zamin.id}`}
                         disabled
+                        name="zaminPassportStatus"
                         label="Vəsiqənin statusu"
-                        defaultValue={zamin.passportStatus}
+                        defaultValue={newGuarantorData.passportStatus}
                       />
                       <Field.Text
                         disabled
-                        name={`zaminIdentityCard_${zamin.id}`}
+                        name="zaminIdentityCard"
                         label="Şəxsiyyət vəsiqəsi"
-                        defaultValue={zamin.identityCard}
+                        defaultValue={newGuarantorData.identityCard}
                       />
                       <Field.Text
-                        name={`zaminIssuedBy_${zamin.id}`}
                         disabled
+                        name="zaminIssuedBy"
                         label="Kim tərəfindən verilib"
-                        defaultValue={zamin.issuedBy}
+                        defaultValue={newGuarantorData.issuedBy}
                       />
                       <Field.Text
-                        name={`zaminFullName_${zamin.id}`}
                         disabled
-                        label="Ad, Soy ad, Atasının adı"
-                        defaultValue={zamin.fullName}
-                      />
-                      <Field.Text
-                        name={`zaminBorrowerInfo_${zamin.id}`}
-                        disabled
-                        label="Borcalan Haqında"
-                        defaultValue={zamin.borrowerInfo}
-                      />
-                      <Field.Text
-                        name={`zaminRegistrationAddress_${zamin.id}`}
-                        disabled
+                        name="zaminRegistrationAddress"
                         label="Qeydiyyat ünvanı"
-                        defaultValue={zamin.registrationAddress}
+                        defaultValue={newGuarantorData.registrationAddress}
                       />
                       <Field.Text
-                        name={`zaminResidentialAddress_${zamin.id}`}
                         disabled
+                        name="zaminResidentialAddress"
                         label="Yaşadığı ünvanı"
-                        defaultValue={zamin.residentialAddress}
+                        defaultValue={newGuarantorData.residentialAddress}
                       />
                       <Field.Text
-                        name={`zaminPhones_${zamin.id}`}
                         disabled
-                        label="Telefonlar"
-                        defaultValue={zamin.phones}
+                        name="zaminPhones"
+                        label="Telefon"
+                        defaultValue={newGuarantorData.phones}
                       />
+                    </Box>
+                  </Box>
+                ) : null}
+                <Divider sx={{ mb: 3 }} />
+                {selectedUserGuarantorData.map((zamin: any) => (
+                  <Box
+                    display="flex"
+                    rowGap={3}
+                    sx={{
+                      my: 4,
+                    }}
+                    columnGap={2}
+                    flexDirection="column"
+                  >
+                    <Box
+                      display="flex"
+                      rowGap={3}
+                      sx={{
+                        my: 4,
+                      }}
+                      columnGap={2}
+                      flexDirection="column"
+                    >
+                      <Field.UploadAvatar
+                        name="zaminAvatarUrl"
+                        maxSize={3145728}
+                        sx={{
+                          height: '128px',
+                          width: '128px',
+                        }}
+                        value={zamin.avatarUrl}
+                        disabled
+                      />
+                      <Box
+                        display="grid"
+                        rowGap={3}
+                        columnGap={2}
+                        gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+                      >
+                        <Field.Text
+                          name={`zaminName_${zamin.id}`}
+                          label="Adı"
+                          defaultValue={zamin.name}
+                          disabled
+                        />
+                        <Field.Text
+                          name={`zaminFin_${zamin.id}`}
+                          disabled
+                          label="Fin"
+                          defaultValue={zamin.fin}
+                        />
+                        <Field.Text
+                          name={`zaminSerialNumber_${zamin.id}`}
+                          label="Ş/V seriyası və nömrəsi"
+                          disabled
+                          defaultValue={zamin.serialNumber}
+                        />
+                        <Field.Text
+                          name={`zaminPassportStatus_${zamin.id}`}
+                          disabled
+                          label="Vəsiqənin statusu"
+                          defaultValue={zamin.passportStatus}
+                        />
+                        <Field.Text
+                          disabled
+                          name={`zaminIdentityCard_${zamin.id}`}
+                          label="Şəxsiyyət vəsiqəsi"
+                          defaultValue={zamin.identityCard}
+                        />
+                        <Field.Text
+                          name={`zaminIssuedBy_${zamin.id}`}
+                          disabled
+                          label="Kim tərəfindən verilib"
+                          defaultValue={zamin.issuedBy}
+                        />
+                        <Field.Text
+                          name={`zaminRegistrationAddress_${zamin.id}`}
+                          disabled
+                          label="Qeydiyyat ünvanı"
+                          defaultValue={zamin.registrationAddress}
+                        />
+                        <Field.Text
+                          name={`zaminResidentialAddress_${zamin.id}`}
+                          disabled
+                          label="Yaşadığı ünvanı"
+                          defaultValue={zamin.residentialAddress}
+                        />
+                        <Field.Text
+                          name={`zaminPhones_${zamin.id}`}
+                          label="Telefon"
+                          defaultValue={zamin.phones}
+                        />
+                      </Box>
                     </Box>
                   </Box>
                 ))}
@@ -819,38 +687,33 @@ export function CreateCreditForm() {
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
                 mb={2}
               >
-                <Field.Text
-                  name={`vehicleBrand_${vehicle.id}`}
-                  label="Marka"
-                  disabled
-                  defaultValue={vehicle.vehicleBrand}
-                />
-                <Field.Text
-                  name={`vehicleModel_${vehicle.id}`}
+                <TextField label="Marka" disabled defaultValue={vehicle.vehicleBrand} />
+                <TextField
+                  name="vehicleModel"
                   label="Model"
                   disabled
                   defaultValue={vehicle.vehicleModel}
                 />
-                <Field.Text
-                  name={`vehicleYear_${vehicle.id}`}
+                <TextField
+                  name="vehicleYear"
                   label="İl"
                   disabled
                   defaultValue={vehicle.vehicleYear}
                 />
-                <Field.Text
-                  name={`vehicleMarketValue_${vehicle.id}`}
+                <TextField
+                  name="vehicleMarketValue"
                   label="Bazar dəyəri"
                   disabled
                   defaultValue={vehicle.vehicleMarketValue}
                 />
-                <Field.Text
-                  name={`vehicleVin_${vehicle.id}`}
+                <TextField
+                  name="vehicleVin"
                   label="VIN nömrəsi"
                   disabled
                   defaultValue={vehicle.vehicleVin}
                 />
-                <Field.Text
-                  name={`vehicleNumber_${vehicle.id}`}
+                <TextField
+                  name="vehicleNumber"
                   label="Nömrə"
                   disabled
                   defaultValue={vehicle.vehicleNumber}
@@ -859,9 +722,9 @@ export function CreateCreditForm() {
             ))}
           </Grid>
         )) ||
-        (currentTab === 6 && (
+        (currentTab === 6 && selectedUserFamilyData && (
           <Box sx={{ mt: 3 }}>
-            {familyData.map((member) => (
+            {selectedUserFamilyData.map((member: any) => (
               <Grid container spacing={3} mb={10} key={member.id}>
                 <Box
                   sx={{
@@ -884,7 +747,7 @@ export function CreateCreditForm() {
                   </Typography>
 
                   <Field.UploadAvatar
-                    name={`avatarUrl_${member.id}`}
+                    name="familyMemberAvatarUrl"
                     maxSize={3145728}
                     value={member.fields.avatarUrl}
                     sx={{
@@ -894,20 +757,11 @@ export function CreateCreditForm() {
                     disabled
                   />
                   <Button
-                    onClick={() => handleAddGuarantor(member.id)}
-                    sx={{
-                      backgroundColor: '#2D9CDB',
-                      color: '#fff',
-                      mt: 2,
-                      p: 2,
-                      ':hover': {
-                        backgroundColor: '#2D8CBC',
-                        color: '#fff',
-                      },
-                    }}
+                    onClick={() => handleAddGuarantor(member.fields.fin)}
+                    variant="contained"
+                    sx={{ mt: 2, width: '100%', backgroundColor: '#2D9CDB' }}
                   >
-                    <Typography>Zamin olaraq əlavə et</Typography>
-                    <GridAddIcon />
+                    Zamin et
                   </Button>
                 </Box>
                 <Grid xs={12} md={8} item>
@@ -924,20 +778,15 @@ export function CreateCreditForm() {
                         columnGap={2}
                         gridTemplateColumns={{ xs: 'repeat(3, 1fr)' }}
                       >
+                        <Field.Text name="fin" label="Fin" value={member.fields.fin} disabled />
                         <Field.Text
-                          name={`fin_${member.id}`}
-                          label="Fin"
-                          value={member.fields.fin}
-                          disabled
-                        />
-                        <Field.Text
-                          name={`serialNumber_${member.id}`}
+                          name="serialNumber"
                           label="Ş/V seriyası və nömrəsi"
                           value={member.fields.serialNumber}
                           disabled
                         />
                         <Field.Text
-                          name={`passportStatus_${member.id}`}
+                          name="passportStatus"
                           label="Vəsiqənin statusu"
                           value={member.fields.passportStatus}
                           disabled
@@ -949,33 +798,28 @@ export function CreateCreditForm() {
                         columnGap={2}
                         gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
                       >
+                        <Field.Text name="name" label="Adı" value={member.fields.name} disabled />
                         <Field.Text
-                          name={`name_${member.id}`}
-                          label="Adı"
-                          value={member.fields.name}
-                          disabled
-                        />
-                        <Field.Text
-                          name={`surname_${member.id}`}
+                          name="surname"
                           label="Soyadı"
                           value={member.fields.surname}
                           disabled
                         />
                         <Field.Text
-                          name={`fatherName_${member.id}`}
+                          name="fatherName"
                           label="Ata adı"
                           value={member.fields.fatherName}
                           disabled
                         />
                         <Field.Text
-                          name={`born_${member.id}`}
+                          name="born"
                           label="Doğum tarixi(xx.xx.xxxx)"
                           value={member.fields.born}
                           disabled
                         />
                         <Field.Select
                           native
-                          name={`familyRelationship_${member.id}`}
+                          name="familyRelationship"
                           label="Ailə vəziyyəti"
                           value={member.fields.familyRelationship}
                           InputLabelProps={{ shrink: true }}
@@ -990,7 +834,7 @@ export function CreateCreditForm() {
                         <Field.Select
                           disabled
                           native
-                          name={`gender_${member.id}`}
+                          name="gender"
                           label="Cinsi"
                           value={member.fields.gender}
                           InputLabelProps={{ shrink: true }}
@@ -1004,7 +848,7 @@ export function CreateCreditForm() {
                       </Box>
                       <Field.Text
                         disabled
-                        name={`address_${member.id}`}
+                        name="address"
                         label="Qeydiyyatda olduğu ünvan"
                         value={member.fields.address}
                       />
@@ -1074,44 +918,50 @@ export function CreateCreditForm() {
                 <Field.Text name="totalPercetange" label="Cəmi faiz" type="number" />
               </Box>
               <Typography mt={4}>
-                Komissiyaya qərar üçün göndər{' '}
+                Komissiyaya qərar üçün göndər
                 <Switch color="info" defaultChecked name="comissionDecide" />
               </Typography>
             </Stack>
           </Grid>
         ))}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={3}
-          sx={{ gap: 2 }}
-          width="100%"
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mt={3}
+        sx={{ gap: 2 }}
+        width="100%"
+      >
+        <Button
+          onClick={(e) => handleTabIndexChanger('back')}
+          variant="contained"
+          sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '300px' }}
         >
-          <Button
-            onClick={(e) => handleTabIndexChanger( 'back')}
-            variant="contained"
-            sx={{ mt: 3, backgroundColor: '#2D9CDB' , width:'300px'}}
-          >
-            Geri
-          </Button>
-          <Button
-            onClick={(e) => handleTabIndexChanger('next')}
-            variant="contained"
-            sx={{ mt: 3, backgroundColor: '#2D9CDB' , width:'300px'}}          >
-            İrəli
-          </Button>
-        </Box>
+          Geri
+        </Button>
+        <Button
+          onClick={(e) => handleTabIndexChanger('next')}
+          variant="contained"
+          sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '300px' }}
+        >
+          İrəli
+        </Button>
+      </Box>
       <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
         <Button
           type="submit"
           variant="contained"
           disabled={isSubmitting}
+          sx={{
+            backgroundColor: 'black',
+            width: '300px',
+            color: 'white',
+          }}
           onClick={() => {
             console.log('Submitted Data:', methods.getValues());
           }}
         >
-          Submit
+          Təsdiqlə
         </Button>
       </Stack>
     </Form>

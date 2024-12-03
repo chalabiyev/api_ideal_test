@@ -89,7 +89,8 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
 
         <Scrollbar>
           <Stack alignItems="center" sx={{ pt: 8 }}>
-            {renderAvatar}
+            admin profili datasi
+            {/* {renderAvatar}
 
             <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
               {user?.displayName}
@@ -100,7 +101,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
               {user?.phoneNumber}
-            </Typography>
+            </Typography> */}
           </Stack>
         </Scrollbar>
 
