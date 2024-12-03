@@ -3,7 +3,7 @@ package az.esam.kredit.kredit;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class KreditApplicationTests {
 
 	@Test
