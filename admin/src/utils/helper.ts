@@ -128,3 +128,12 @@ export const merge = (target: any, ...sources: any[]): any => {
 
   return merge(target, ...sources);
 };
+
+export function addSecond(initialTime: Date): Date {
+  const newTime = new Date(initialTime.getTime() + 1000);
+  return newTime;
+}
+
+export function checkTime(i: number): string {
+  return i < 10 ? `0${i}` : `${i}`;
+}
