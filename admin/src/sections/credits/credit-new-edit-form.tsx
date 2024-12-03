@@ -34,19 +34,19 @@ import {
   _familyRelationshipOptions,
   whereToGetSignatureOptions,
 } from '../_examples/extra/form-validation-view/react-hook-form';
+import { creditSchema } from '../_examples/extra/form-validation-view/schema';
 import {
   loanData,
   creditData,
   oldLoanData,
   _customerRole,
+  users,
   paymentHistory,
   sorguTarixcesi,
   combinedHeaders,
   guarantorLoanData,
-  users,
   randomGuarantorData,
 } from './credit-data';
-import { creditSchema } from '../_examples/extra/form-validation-view/schema';
 
 export type ValuesType = {
   [year: string]: {

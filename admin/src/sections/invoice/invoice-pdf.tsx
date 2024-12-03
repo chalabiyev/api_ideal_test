@@ -96,7 +96,7 @@ export function InvoicePDF({ invoice, currentStatus }: Props) {
 
   const renderHeader = (
     <View style={[styles.container, styles.mb40]}>
-      <Image source="/logo/logo-single.png" style={{ width: 48, height: 48 }} />
+      <Image source="/logo/logosingle.png" style={{ width: 48, height: 48 }} />
 
       <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
         <Text style={[styles.h3, { textTransform: 'capitalize' }]}>{currentStatus}</Text>
