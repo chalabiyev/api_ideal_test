@@ -1,0 +1,16 @@
+export default {
+  backgroundColor: '#FFFFFF',
+  blueText: '#415FB1',
+  whiteText: '#FFFFFF',
+  greyText: '#797979',
+  disabledButton: '#314F7A',
+  defaultdButton: '#3160A3',
+  defaultButtonSkyBlue: '#4A89DC',
+  tabBarColor: '#01549A',
+  presseddButton: '#110792',
+  disabledText: '#AF8582',
+  inputBackgroundColor: '#F0F0F0',
+  greyBackground: '#EFEEF3',
+  splashBackground: '#123566',
+  lightGrey: '#DEDEDE',
+};

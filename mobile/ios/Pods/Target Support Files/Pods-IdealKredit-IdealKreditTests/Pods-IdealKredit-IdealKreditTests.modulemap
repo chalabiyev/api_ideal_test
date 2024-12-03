@@ -1,0 +1,6 @@
+module Pods_IdealKredit_IdealKreditTests {
+  umbrella header "Pods-IdealKredit-IdealKreditTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

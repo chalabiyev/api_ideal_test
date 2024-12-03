@@ -1,0 +1,18 @@
+current directory: /Users/behruzveliyev/Desktop/projects/work/IdealKredit/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+/opt/homebrew/opt/ruby/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/behruzveliyev/Desktop/projects/work/IdealKredit/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240926-7610-8dd8lp sitelibdir\=./.gem.20240926-7610-8dd8lp clean
+
+current directory: /Users/behruzveliyev/Desktop/projects/work/IdealKredit/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240926-7610-8dd8lp sitelibdir\=./.gem.20240926-7610-8dd8lp
+compiling nkf.c
+linking shared-object nkf.bundle
+
+current directory: /Users/behruzveliyev/Desktop/projects/work/IdealKredit/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240926-7610-8dd8lp sitelibdir\=./.gem.20240926-7610-8dd8lp install
+/usr/bin/install -c -m 0755 nkf.bundle ./.gem.20240926-7610-8dd8lp
+
+current directory: /Users/behruzveliyev/Desktop/projects/work/IdealKredit/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240926-7610-8dd8lp sitelibdir\=./.gem.20240926-7610-8dd8lp clean
