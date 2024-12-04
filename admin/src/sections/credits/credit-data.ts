@@ -93,8 +93,8 @@ export const users = [
         fields: {
           avatarUrl:
             'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          fin: '123456789',
-          serialNumber: '132456789',
+          fin: '12345678',
+          serialNumber: '13245678',
           isGuarantor: false,
           passportStatus: 'Active',
           name: 'TestFather',
