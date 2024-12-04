@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import {
   CardStyleInterpolators,
   createStackNavigator,
-} from '@react-navigation/stack';
+} from "@react-navigation/stack";
 import {
   AccountSettings,
   Calculator,
@@ -14,10 +14,11 @@ import {
   Partners,
   Profile,
   Transaction,
-} from '../../screens';
+  VideoCall,
+} from "../../screens";
 
 export default function PrivateStack() {
-  const {Navigator, Screen} = createStackNavigator();
+  const { Navigator, Screen } = createStackNavigator();
   return (
     <Navigator
       initialRouteName="Home"
@@ -25,7 +26,8 @@ export default function PrivateStack() {
         headerShown: false,
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         gestureEnabled: false,
-      }}>
+      }}
+    >
       <Screen name="Home" component={Home} />
       <Screen name="Transaction" component={Transaction} />
       <Screen name="Partners" component={Partners} />
@@ -36,6 +38,7 @@ export default function PrivateStack() {
       <Screen name="Calculator" component={Calculator} />
       <Screen name="Profile" component={Profile} />
       <Screen name="AccountSettings" component={AccountSettings} />
+      <Screen name="VideoCall" component={VideoCall} />
     </Navigator>
   );
 }

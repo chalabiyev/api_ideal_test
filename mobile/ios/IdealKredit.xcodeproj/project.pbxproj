@@ -20,6 +20,7 @@
 		3A3725362CEE481400FE4381 /* SimaModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3725352CEE481400FE4381 /* SimaModule.swift */; };
 		3A3725382CEE48A900FE4381 /* SimaModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3725372CEE48A900FE4381 /* SimaModule.m */; };
 		3AF110082CFF7F1000C0605C /* SimaSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 3AF110072CFF7F1000C0605C /* SimaSDK */; };
+		3AF1100B2CFF971500C0605C /* SimaSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 3AF1100A2CFF971500C0605C /* SimaSDK */; };
 		3E225D56D12C46CD91D01D8E /* SourceSans3-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F3862EABE48A1951A83D9 /* SourceSans3-SemiBold.ttf */; };
 		4EB154F3CAE14AF98E3D9CB3 /* SourceSans3-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EBE59E60B884479A100AF62 /* SourceSans3-BlackItalic.ttf */; };
 		4FB928BA32314901904C8E68 /* SourceSans3-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A9B8B2691DD4D99A36FA194 /* SourceSans3-BoldItalic.ttf */; };
@@ -100,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AF1100B2CFF971500C0605C /* SimaSDK in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* libPods-IdealKredit.a in Frameworks */,
 				3AF110082CFF7F1000C0605C /* SimaSDK in Frameworks */,
 			);
@@ -262,6 +264,7 @@
 			name = IdealKredit;
 			packageProductDependencies = (
 				3AF110072CFF7F1000C0605C /* SimaSDK */,
+				3AF1100A2CFF971500C0605C /* SimaSDK */,
 			);
 			productName = IdealKredit;
 			productReference = 13B07F961A680F5B00A75B9A /* IdealKredit.app */;
@@ -294,7 +297,7 @@
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
-				3AF110062CFF7F1000C0605C /* XCLocalSwiftPackageReference "../../../../sima-sdk-core" */,
+				3AF110092CFF971500C0605C /* XCLocalSwiftPackageReference "../../../../../sima-sdk-core" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -802,14 +805,18 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		3AF110062CFF7F1000C0605C /* XCLocalSwiftPackageReference "../../../../sima-sdk-core" */ = {
+		3AF110092CFF971500C0605C /* XCLocalSwiftPackageReference "../../../../../sima-sdk-core" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../../../sima-sdk-core";
+			relativePath = "../../../../../sima-sdk-core";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		3AF110072CFF7F1000C0605C /* SimaSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SimaSDK;
+		};
+		3AF1100A2CFF971500C0605C /* SimaSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SimaSDK;
 		};

@@ -3,28 +3,31 @@ import {
   PaymentIcon,
   TransactionIcon,
   VideoRequestIcon,
-} from '../assets';
+} from "../assets";
 
 export default [
   {
-    id: '1',
+    id: "1",
     icon: <TransactionIcon />,
-    title: 'Köçürmə',
+    title: "Köçürmə",
+    navigateTo: "Calculator",
   },
   {
-    id: '2',
+    id: "2",
     icon: <VideoRequestIcon />,
-    title: 'Müraciət',
+    title: "Müraciət",
+    navigateTo: "VideoCall",
   },
   {
-    id: '3',
+    id: "3",
     icon: <CalculatorIcon />,
-    title: 'Kalkulyator',
-    navigateTo: 'Calculator',
+    title: "Kalkulyator",
+    navigateTo: "Calculator",
   },
   {
-    id: '4',
+    id: "4",
     icon: <PaymentIcon />,
-    title: 'Ödəniş',
+    title: "Ödəniş",
+    navigateTo: "Calculator",
   },
 ];
