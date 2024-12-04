@@ -26,6 +26,7 @@ import {
 import { toast } from 'src/components/snackbar';
 
 import { Form, Field } from 'src/components/hook-form';
+import { HouseData, VehicleData } from 'src/types/credit';
 
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
@@ -69,11 +70,15 @@ export function CreateCreditForm() {
   const [currentTab, setCurrentTab] = useState(1);
   const [userData, setUserData] = useState(false);
   const [selectedOption, setSelectedOption] = useState('em');
-  const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<any>([]);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
   const [selectedUserGuarantorData, setselectedUserGuarantorData] = useState<any>([]);
   const [selectedUserFamilyData, setSelectedUserFamilyData] = useState<any>([]);
   const [guarantorData, setGuarantorData] = useState(false);
   const [newGuarantorData, setNewGuarantorData] = useState<any>([]);
+  const [selectedUserHouseData, setSelectedUserHouseData] = useState<HouseData[] | null>(null);
+  const [selectedUserVehicleData, setSelectedUserVehicleData] = useState<VehicleData[] | null>(
+    null
+  );
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -100,6 +105,7 @@ export function CreateCreditForm() {
     const serialNumber = watch('serialNumber');
     const user = users.find((u) => u.fin === fin && u.serialNumber === serialNumber);
     setUserData(true);
+    setSelectedUser(user);
     try {
       if (serialNumber.length === 0) {
         throw new Error('Ş/V seriyası və nömrəsi tələb olunur!');
@@ -115,9 +121,12 @@ export function CreateCreditForm() {
     } catch (error) {
       toast.error(error.message);
     }
-    setSelectedUserVehicleData(user?.vehicleData);
     setselectedUserGuarantorData(user?.zaminData);
     setSelectedUserFamilyData(user?.familyData);
+    // @ts-expect-error
+    setSelectedUserHouseData(user?.occupancyData?.houseData || null);
+    // @ts-expect-error
+    setSelectedUserVehicleData(user?.occupancyData?.vehicleData || null);
   };
 
   const guarantors = randomGuarantorData;
@@ -136,8 +145,6 @@ export function CreateCreditForm() {
     }
     setNewGuarantorData(guarantor);
     setGuarantorData(true);
-
-    console.log('New Guarantor:', guarantor);
   };
 
   const onSubmit = handleSubmit((data) => {
@@ -194,10 +201,9 @@ export function CreateCreditForm() {
         {/* <Tab value="akb" label="AKB" /> */}
         <Tab value={2} label="İş yeri" />
         <Tab value={3} label="Zaminlik haqqında məlumat" />
-        <Tab value={4} label="Əmlakları" />
-        <Tab value={5} label="Nəqliyyat vasitələri" />
-        <Tab value={6} label="Ailə üzvləri" />
-        <Tab value={7} label="Kredit ver" />
+        <Tab value={4} label="Girovları" />
+        <Tab value={5} label="Ailə üzvləri" />
+        <Tab value={6} label="Kredit ver" />
       </Tabs>
       {(currentTab === 1 && (
         <Grid container gap="55px" mt={3}>
@@ -426,7 +432,7 @@ export function CreateCreditForm() {
                         fontWeight: 700,
                       }}
                     >
-                      Yeni Zamin əlavə etmək üçün aşağıdakı məlumatları doldurun
+                      Yeni Zamin əlavə et
                     </Typography>
                     <Box
                       display="grid"
@@ -456,7 +462,7 @@ export function CreateCreditForm() {
                     display="flex"
                     rowGap={3}
                     sx={{
-                      my: 4,
+                      mt: 4,
                     }}
                     columnGap={2}
                     flexDirection="column"
@@ -633,93 +639,151 @@ export function CreateCreditForm() {
         )) ||
         (currentTab === 4 && (
           <Grid spacing={3}>
-            <Stack>
-              <Typography
-                sx={{
-                  my: 3,
-                  fontSize: 20,
-                  lineHeight: 1.5,
-                  fontWeight: 700,
-                }}
-              >
-                Daşınmaz əmlak
-              </Typography>
-              <Divider sx={{ mb: 3 }} />
-              <Box
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
-              >
-                <Field.Text name="propertyType" label="Tipi" disabled />
-                <Field.Text name="registrationNumber" label="Qeyd No." disabled />
-                <Field.Text name="occupancyAddress" label="Ünvan" disabled />
-                <Field.Text name="ownershipStatus" label="Mülkiyyət statusu" disabled />
-                <Field.Text name="numberOfRooms" label="Otaqların sayı" disabled />
-                <Field.Text name="area" label="Sahə (m²)" disabled />
-                <Field.Text name="constructionYear" label="Tikinti ili" disabled />
-                <Field.Text name="marketValue" label="Bazar dəyəri" disabled />
-                <Field.Text name="mortgageStatus" label="İpoteka statusu" disabled />
-                <Field.Text name="monthlyRent" label="Aylıq kirayə" disabled />
-              </Box>
-            </Stack>
-          </Grid>
-        )) ||
-        (currentTab === 5 && selectedUserVehicleData && (
-          <Grid spacing={3}>
-            <Typography
-              sx={{
-                my: 3,
-                fontSize: 20,
-                lineHeight: 1.5,
-                fontWeight: 700,
-              }}
-            >
-              Nəqliyyat vasitələri
-            </Typography>
-            <Divider sx={{ mb: 3 }} />
-            {selectedUserVehicleData.map((vehicle: any) => (
-              <Box
-                key={vehicle.id}
-                display="grid"
-                rowGap={3}
-                columnGap={2}
-                gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
-                mb={2}
-              >
-                <TextField label="Marka" disabled defaultValue={vehicle.vehicleBrand} />
-                <TextField
-                  name="vehicleModel"
-                  label="Model"
-                  disabled
-                  defaultValue={vehicle.vehicleModel}
-                />
-                <TextField
-                  name="vehicleYear"
-                  label="İl"
-                  disabled
-                  defaultValue={vehicle.vehicleYear}
-                />
-                <TextField
-                  name="vehicleMarketValue"
-                  label="Bazar dəyəri"
-                  disabled
-                  defaultValue={vehicle.vehicleMarketValue}
-                />
-                <TextField
-                  name="vehicleVin"
-                  label="VIN nömrəsi"
-                  disabled
-                  defaultValue={vehicle.vehicleVin}
-                />
-                <TextField
-                  name="vehicleNumber"
-                  label="Nömrə"
-                  disabled
-                  defaultValue={vehicle.vehicleNumber}
-                />
-              </Box>
-            ))}
+            {/* Daşınmaz əmlak Bölümü */}
+            {selectedUserHouseData && (
+              <Stack>
+                <Typography
+                  sx={{
+                    my: 3,
+                    fontSize: 20,
+                    lineHeight: 1.5,
+                    fontWeight: 700,
+                  }}
+                >
+                  Daşınmaz əmlak
+                </Typography>
+                <Divider sx={{ mb: 3 }} />
+                {selectedUserHouseData?.map((house: any) => (
+                  <Box
+                    key={house.id}
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+                  >
+                    <Field.Text
+                      name={`propertyType-${house.id}`}
+                      label="Tipi"
+                      disabled
+                      defaultValue={house.propertyType}
+                    />
+                    <Field.Text
+                      name={`registrationNumber-${house.id}`}
+                      label="Qeyd No."
+                      disabled
+                      defaultValue={house.registrationNumber}
+                    />
+                    <Field.Text
+                      name={`occupancyAddress-${house.id}`}
+                      label="Ünvan"
+                      disabled
+                      defaultValue={house.occupancyAddress}
+                    />
+                    <Field.Text
+                      name={`ownershipStatus-${house.id}`}
+                      label="Mülkiyyət statusu"
+                      disabled
+                      defaultValue={house.ownershipStatus}
+                    />
+                    <Field.Text
+                      name={`numberOfRooms-${house.id}`}
+                      label="Otaqların sayı"
+                      disabled
+                      defaultValue={house.numberOfRooms}
+                    />
+                    <Field.Text
+                      name={`area-${house.id}`}
+                      label="Sahə (m²)"
+                      disabled
+                      defaultValue={house.area}
+                    />
+                    <Field.Text
+                      name={`constructionYear-${house.id}`}
+                      label="Tikinti ili"
+                      disabled
+                      defaultValue={house.constructionYear}
+                    />
+                    <Field.Text
+                      name={`marketValue-${house.id}`}
+                      label="Bazar dəyəri"
+                      disabled
+                      defaultValue={house.marketValue}
+                    />
+                    <Field.Text
+                      name={`mortgageStatus-${house.id}`}
+                      label="İpoteka statusu"
+                      disabled
+                      defaultValue={house.mortgageStatus}
+                    />
+                    <Field.Text
+                      name={`monthlyRent-${house.id}`}
+                      label="Aylıq kirayə"
+                      disabled
+                      defaultValue={house.monthlyRent}
+                    />
+                  </Box>
+                ))}
+              </Stack>
+            )}
+
+            {/* Nəqliyyat vasitələri Bölümü */}
+            {selectedUserVehicleData && (
+              <Stack>
+                <Typography
+                  sx={{
+                    my: 3,
+                    fontSize: 20,
+                    lineHeight: 1.5,
+                    fontWeight: 700,
+                  }}
+                >
+                  Nəqliyyat vasitələri
+                </Typography>
+                <Divider sx={{ mb: 3 }} />
+                {selectedUserVehicleData.map((vehicle: any) => (
+                  <Box
+                    key={vehicle.id}
+                    display="grid"
+                    rowGap={3}
+                    columnGap={2}
+                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
+                    mb={2}
+                  >
+                    <TextField label="Marka" disabled defaultValue={vehicle.vehicleBrand} />
+                    <TextField
+                      name={`vehicleModel-${vehicle.id}`}
+                      label="Model"
+                      disabled
+                      defaultValue={vehicle.vehicleModel}
+                    />
+                    <TextField
+                      name={`vehicleYear-${vehicle.id}`}
+                      label="İl"
+                      disabled
+                      defaultValue={vehicle.vehicleYear}
+                    />
+                    <TextField
+                      name={`vehicleMarketValue-${vehicle.id}`}
+                      label="Bazar dəyəri"
+                      disabled
+                      defaultValue={vehicle.vehicleMarketValue}
+                    />
+                    <TextField
+                      name={`vehicleVin-${vehicle.id}`}
+                      label="VIN nömrəsi"
+                      disabled
+                      defaultValue={vehicle.vehicleVin}
+                    />
+                    <TextField
+                      name={`vehicleNumber-${vehicle.id}`}
+                      label="Nömrə"
+                      disabled
+                      defaultValue={vehicle.vehicleNumber}
+                    />
+                  </Box>
+                ))}
+              </Stack>
+            )}
           </Grid>
         )) ||
         (currentTab === 6 && selectedUserFamilyData && (
@@ -933,6 +997,7 @@ export function CreateCreditForm() {
         width="100%"
       >
         <Button
+          disabled={currentTab === 1}
           onClick={(e) => handleTabIndexChanger('back')}
           variant="contained"
           sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '300px' }}
@@ -940,6 +1005,7 @@ export function CreateCreditForm() {
           Geri
         </Button>
         <Button
+          disabled={currentTab === 7}
           onClick={(e) => handleTabIndexChanger('next')}
           variant="contained"
           sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '300px' }}
