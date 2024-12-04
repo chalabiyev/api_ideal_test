@@ -48,12 +48,12 @@ export function JwtSignInView() {
   const defaultValues = {
     username: '',
     password: '',
-  }
+  };
 
   // the auth starts from here
   const methods = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
-    defaultValues
+    defaultValues,
   });
 
   const {
@@ -69,10 +69,9 @@ export function JwtSignInView() {
       router.refresh();
     } catch (error) {
       console.error(error);
-      setErrorMsg(error instanceof Error ? error.message : error);
+      setErrorMsg(error.message);
     }
   });
-
   const renderHead = (
     <Stack
       spacing={1.5}
@@ -87,8 +86,8 @@ export function JwtSignInView() {
   const renderForm = (
     <Stack spacing={3}>
       <Field.Text
-      placeholder='İstifadəçi adı'
-      type='text'
+        placeholder="İstifadəçi adı"
+        type="text"
         name="username"
         label="İstifadəçi adı"
         InputLabelProps={{ shrink: true }}
