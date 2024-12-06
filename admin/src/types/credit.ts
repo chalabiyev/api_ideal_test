@@ -26,3 +26,9 @@ export type OccupancyData = {
   houseData: HouseData[];
   vehicleData: VehicleData[];
 };
+
+export type ValuesType = {
+  [year: string]: {
+    [month: string]: number;
+  };
+};

@@ -1,5 +1,4 @@
-import { z as zod } from 'zod';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -26,7 +25,7 @@ import {
 import { toast } from 'src/components/snackbar';
 
 import { Form, Field } from 'src/components/hook-form';
-import { HouseData, VehicleData } from 'src/types/credit';
+import { HouseData, VehicleData, ValuesType } from 'src/types/credit';
 
 import { PRODUCT_GENDER_OPTIONS } from 'src/_mock';
 
@@ -48,14 +47,7 @@ import {
   guarantorLoanData,
   randomGuarantorData,
 } from './credit-data';
-
-export type ValuesType = {
-  [year: string]: {
-    [month: string]: number;
-  };
-};
 // Dummy data for users
-
 // const getBackgroundColor = (daysLate: any) => {
 //   if (daysLate === '-') return '#C6C6C6'; // No information (gray)
 //   if (daysLate === 0) return '#00B0F0'; // 0 days delay (blue)
@@ -128,25 +120,27 @@ export function CreateCreditForm() {
     // @ts-expect-error
     setSelectedUserVehicleData(user?.occupancyData?.vehicleData || null);
   };
-
   const guarantors = randomGuarantorData;
-  const handleSearchNewGuarantor = () => {
-    const fin = watch('newZaminFin');
-    const serialNumber = watch('newZaminSerialNumber');
-    const guarantor = guarantors.find((g) => g.fin === fin && g.serialNumber === serialNumber);
-    try {
-      if (serialNumber.length === 0) {
-        throw new Error('Zaminin Ş/V seriyası və nömrəsi tələb olunur!');
-      } else if (fin.length === 0) {
-        throw new Error('Zaminin fini tələb olunur!');
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-    setNewGuarantorData(guarantor);
-    setGuarantorData(true);
-  };
-
+  // const handleSearchNewGuarantor = () => {
+  //   const fin = watch('newZaminFin');
+  //   const serialNumber = watch('newZaminSerialNumber');
+  //   const guarantor = guarantors.find((g) => g.fin === fin && g.serialNumber === serialNumber);
+  //   try {
+  //     if (serialNumber.length === 0) {
+  //       throw new Error('Zaminin Ş/V seriyası və nömrəsi tələb olunur!');
+  //     } else if (fin.length === 0) {
+  //       throw new Error('Zaminin fini tələb olunur!');
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  //   setNewGuarantorData(guarantor);
+  //   setGuarantorData(true);
+  // if (!guarantor) {
+  //   toast.error('Zamin tapılmadı!');
+  //   return;
+  // }
+  // };
   const onSubmit = handleSubmit((data) => {
     console.log('Submitted Data:', data);
     toast.success('Form submitted successfully!');
@@ -182,17 +176,14 @@ export function CreateCreditForm() {
         .isGuarantor === false
     ) {
       toast.success('Zamin silindi!');
-
     } else {
       toast.success('Zamin əlavə edildi!');
     }
     console.log(selectedUserFamilyData);
   };
-
   const handleTabChange = (event: any, newValue: number) => {
     setCurrentTab(newValue);
   };
-
   const handleTabIndexChanger = (action: string) => {
     if (action === 'next') {
       setCurrentTab(currentTab + 1);
@@ -200,7 +191,6 @@ export function CreateCreditForm() {
       setCurrentTab(currentTab - 1);
     }
   };
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Tabs value={currentTab} onChange={handleTabChange}>
@@ -242,7 +232,6 @@ export function CreateCreditForm() {
               </Button>
             </Card>
           </Grid>
-
           <Grid item xs={12}>
             <Box>
               <Field.UploadAvatar
@@ -430,7 +419,7 @@ export function CreateCreditForm() {
                 >
                   Zamin barəsində məlumatlar
                 </Typography>
-                {userData && (
+                {/* {userData && (
                   <Card sx={{ p: 3 }}>
                     <Typography
                       sx={{
@@ -464,8 +453,8 @@ export function CreateCreditForm() {
                       Axtar
                     </Button>
                   </Card>
-                )}
-
+                )} */}
+                {/* zamin datasi burdan basliyir (eger varsa) */}
                 {guarantorData ? (
                   <Box
                     display="flex"
@@ -674,7 +663,6 @@ export function CreateCreditForm() {
                     >
                       {index + 1}
                     </Typography>
-
                     <Box
                       key={house.id}
                       display="grid"
@@ -750,7 +738,6 @@ export function CreateCreditForm() {
                 ))}
               </Stack>
             )}
-
             {/* Nəqliyyat vasitələri Bölümü */}
             {selectedUserVehicleData && (
               <Stack>

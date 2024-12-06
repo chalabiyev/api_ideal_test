@@ -662,7 +662,7 @@ export const randomGuarantorData = [
     serialNumber: 'AA12345',
     passportStatus: 'aktiv',
     identityCard: '12345678',
-    issuedBy: 'Yasamal Rayon Polis İdarəsi',
+    issuedBy: 'Yasamal Rayon Polis İdarəsi auuuuu',
     fullName: 'Rasim Vəliyev',
     registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
     residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
