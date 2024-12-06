@@ -19,10 +19,10 @@ public class RegisterRequest {
     @Size(max = 50)
     private String username;
 
-    @NotBlank
+//    @NotBlank
     private String email;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 20)
     private String phoneNumber;
 
@@ -36,21 +36,21 @@ public class RegisterRequest {
     @Size(min = 6)
     private String password;
 
-    @NotNull
+//    @NotNull
     private Date birthDate;
 
     @Indexed(unique = true)
-    @NotBlank
+//    @NotBlank
     @Size(max = 20)
     private String fin;
 
     @Indexed(unique = true)
-    @NotBlank
+//    @NotBlank
     @Size(max = 20)
     private String serialNumber;
 
-    @Indexed(unique = true)
-    @NotBlank
+//    @Indexed(unique = true)
+//    @NotBlank
     @Size(max = 20)
     private String passportStatus;
 
@@ -62,35 +62,35 @@ public class RegisterRequest {
     @Size(max = 120)
     private String surName;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 120)
     private String fatherName;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 120)
     private String familyRelationship;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 50)
     private String gender;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 100)
     private String state;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 100)
     private String city;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 100)
     private String country;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 100)
     private String zipCode;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 500)
     @Indexed(unique = true)
     private String address;

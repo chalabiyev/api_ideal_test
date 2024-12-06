@@ -48,7 +48,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (!checkApiKey(request)) {
+        if (!request.getRequestURI().contains("/api/sima") && !checkApiKey(request)) {
             if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Wrong API key or secret");
             }
@@ -59,7 +59,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if (request.getRequestURI().equals("/api/auth")
                 || request.getRequestURI().equals("/api/auth/register")
                 || request.getRequestURI().equals("/api/auth/login")
-                || request.getRequestURI().equals("/api/auth/reset-password")) {
+                || request.getRequestURI().equals("/api/auth/reset-password")
+                || request.getRequestURI().contains("/api/sima")) {
             filterChain.doFilter(request, response);
             return;
         }
