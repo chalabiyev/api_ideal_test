@@ -1,13 +1,19 @@
 package az.esam.kredit.kredit.dtos.responses.document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "passport_Info")
 public class PassportDocumentInfoResponse {
 
@@ -15,29 +21,25 @@ public class PassportDocumentInfoResponse {
     private String documentNumber;
     private String pin;
 
-    private String personAz_name;
-    private String personAz_surname;
-    private String personAz_patronymic;
-
-    private String personEn_name;
-    private String personEn_surname;
-    private String personEn_patronymic;
-
+    private PersonAz personAz;
+    private PersonEn personEn;
     private String gender;
-
     private Date birthDate;
-    private String birthPlace;
+    private String birthAddress;
     private String birthCountry;
 
     private String organisation;
     private Date eventDate;
     private Date expDate;
+    @JsonProperty("isActive")
     private boolean isActive;
 
     private String nationality;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date activationDate;
 
     private String signature;
-    private String image;
+    private String photo;
 
 }
