@@ -1,22 +1,25 @@
 package az.esam.kredit.kredit.services.external.idService;
 
+import az.esam.kredit.kredit.dtos.responses.document.*;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.List;
 
 public interface DocumentInfoService {
 
-    JsonNode getIdCardInfo(String documentNumber, String pin);
+    FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin);
 
-    JsonNode getMobileNumbersWithPin(String pin);
+    List<MobileNumberResponse> getMobileNumbersWithPin(String pin);
 
-    JsonNode getCheckNumberWithPin(String pin, String number);
+    CheckNumberWithPinResponse getCheckNumberWithPin(String pin, String number);
 
-    JsonNode getDocumentInfoByPhone(String phoneNumber);
+    DocumentInfoByMobileNumberResponse getDocumentInfoByPhone(String phoneNumber);
 
-    JsonNode getVehicleInfoByPin(String pin);
+    VehicleInfoResponse getVehicleInfoByPin(String pin);
 
-    JsonNode getMigrationInfo(String migrationDocNumber, String migrationPin);
+    MigrationDocumentInfoResponse getMigrationInfo(String migrationDocNumber, String migrationPin);
 
-    JsonNode getPassportInfo(String foreignDocNumber, String foreignPin);
+    PassportDocumentInfoResponse getPassportInfo(String foreignDocNumber, String foreignPin);
 
-    JsonNode getInfoByVoen(String voen);
+    VoenInfoResponse getInfoByVoen(String voen);
 }

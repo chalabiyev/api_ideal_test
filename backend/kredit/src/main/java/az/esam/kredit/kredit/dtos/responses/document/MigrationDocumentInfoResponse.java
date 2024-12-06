@@ -1,46 +1,39 @@
 package az.esam.kredit.kredit.dtos.responses.document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "migrationDocument_info")
 public class MigrationDocumentInfoResponse {
     private String documentType;
     private String documentNumber;
     private String pin;
 
-    private String personAz_name;
-    private String personAz_surname;
-
-    private String personEn_name;
-    private String personEn_surname;
-
+    private PersonAz personAz;
+    private PersonEn personEn;
     private String gender;
-
     private Date birthDate;
-    private String birthPlace;
+    private String birthAddress;
     private String birthCountry;
 
-    private String address_flat;
-    private String address_house;
-    private int address_regionId;
-    private String address_regionName;
-    private String address_street;
-
-    private int passport_documentType;
-    private String passport_documentNumber;
-    private Date passport_expDate;
-    private String passport_issuingCountry;
-    private Date passport_issuingDate;
-    private boolean passport_isActive;
+    private RegisterAddress registerAddress;
+    private PassportDetail passportDetail;
 
     private Date eventDate;
     private Date expDate;
+    private Date issuingDate;
+
+    @JsonProperty("isActive")
     private boolean isActive;
 
     private String imageFormat;

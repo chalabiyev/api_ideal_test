@@ -1,15 +1,19 @@
 package az.esam.kredit.kredit.dtos.responses.document;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Builder
 @Data
-@Document(collection = "document_info")
-public class DocumentInfoResponse {
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "document_info_by_mobile_number")
+public class DocumentInfoByMobileNumberResponse {
     private String type;
-    private String passportNumber;
+    private String pasportNumber;
     private String pin;
     private String firstName;
     private String lastName;
