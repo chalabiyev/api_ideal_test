@@ -1,41 +1,38 @@
 package az.esam.kredit.kredit.dtos.responses.document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
-@Document(collection = "idCard_Info")
-public class IDCardInfoResponse {
+@Document(collection = "id_card_info")
+public class FullIDCardInfoResponse {
 
     private String documentType;
-    private String documentNumber;
     private String pin;
+    private String documentNumber;
 
-    private String personAz_name;
-    private String personAz_surname;
-    private String personAz_patronymic;
-
+    private PersonAz personAz;
+    private PersonEn personEn;
     private String gender;
     private Date birthDate;
     private String birthAddress;
 
-    private String address_address;
-    private String address_flat;
-    private String address_house;
-    private String address_village;
-    private String address_region;
-    private String address_settlement;
-    private String address_street;
-
-    private int organisation_legacyId;
-    private String organisation_name;
+    private AddressDetail addressDetail;
+    private Organisation organisation;
 
     private Date eventDate;
     private Date expDate;
+    @JsonProperty("isActive")
     private boolean isActive;
 
     private String nationality;
@@ -45,8 +42,9 @@ public class IDCardInfoResponse {
     private String eyeColor;
     private int height;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date activationDate;
 
     private String image;
-
 }
+
