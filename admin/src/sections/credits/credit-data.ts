@@ -642,6 +642,8 @@ export const creditData = [
 export const randomGuarantorData = [
   {
     id: '1',
+    avatarUrl:
+      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     name: 'lalalal',
     serialNumber: 'AA123457',
     fin: '12345679',
@@ -652,11 +654,11 @@ export const randomGuarantorData = [
     registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
     residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
     phones: '123-456-7890',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   },
   {
     id: '2',
+    avatarUrl:
+      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     name: 'John Doe 2',
     fin: '12345678',
     serialNumber: 'AA12345',
@@ -667,46 +669,6 @@ export const randomGuarantorData = [
     registrationAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
     residentialAddress: 'Bakı şəhəri, Yasamal rayonu, 28 may küçəsi',
     phones: '123-456-7890',
-    avatarUrl:
-      'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  },
-];
-export const familyData = [
-  {
-    id: '1',
-    title: 'Ata',
-    fields: {
-      avatarUrl:
-        'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      fin: '123456789',
-      serialNumber: '132456789',
-      passportStatus: 'Active',
-      name: 'TestFather',
-      surname: 'TestFather',
-      fatherName: 'TestFather',
-      born: '11.10.2001',
-      familyRelationship: 'Married',
-      gender: 'Men',
-      address: 'Baki azerbaycan',
-    },
-  },
-  {
-    id: '2',
-    title: 'Ana',
-    fields: {
-      avatarUrl:
-        'https://images.pexels.com/photos/17455462/pexels-photo-17455462/free-photo-of-train-at-railway-station.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      fin: '123456789',
-      serialNumber: '132456789',
-      passportStatus: 'Active',
-      name: 'TestFather',
-      surname: 'TestFather',
-      fatherName: 'TestFather',
-      born: '11.10.2001',
-      familyRelationship: 'Married',
-      gender: 'Women',
-      address: 'Baki azerbaycan',
-    },
   },
 ];
 

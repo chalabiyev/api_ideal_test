@@ -175,9 +175,9 @@ export function CreateCreditForm() {
       selectedUserFamilyData.find((member: any) => member.fields.fin === fin)?.fields
         .isGuarantor === false
     ) {
-      toast.success('Zamin silindi!');
-    } else {
       toast.success('Zamin əlavə edildi!');
+    } else {
+      toast.success('Zamin silindi!');
     }
     console.log(selectedUserFamilyData);
   };
@@ -850,7 +850,7 @@ export function CreateCreditForm() {
                     variant="contained"
                     sx={{ mt: 2, width: '100%', backgroundColor: '#2D9CDB' }}
                   >
-                    {member.fields.isGuarantor === false ? 'Zamini sil' : 'Zamini əlavə et'}
+                    {member.fields.isGuarantor === false ? 'Zamini əlavə et' : 'Zamini sil'}
                   </Button>
                 </Box>
                 <Grid xs={12} md={8} item>
