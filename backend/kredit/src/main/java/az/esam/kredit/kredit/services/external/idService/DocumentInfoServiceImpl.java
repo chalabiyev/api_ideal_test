@@ -37,7 +37,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public JsonNode getMobileNumbersWithPin(String pin) {
         try {
-            String url = "mobile/numbers/getmobileNumbersWithPin/?Pin=" + pin;
+            String url = "mobile/numbers/getmobileNumbersWithPin?Pin=" + pin;
             System.out.println("url = " + url);
             return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
@@ -49,7 +49,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public JsonNode getCheckNumberWithPin(String pin, String number) {
         try {
-            String url = "mobile/numbers/getCheckNumberWithPin/?phone=" + number + "&Pin=" + pin;
+            String url = "mobile/numbers/getCheckNumberWithPin?phone=" + number + "&Pin=" + pin;
             return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
@@ -60,7 +60,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public JsonNode getDocumentInfoByPhone(String phoneNumber) {
         try {
-            String url = "mobile/numbers/getDocumentInfoByPhone/?phone=" + phoneNumber;
+            String url = "mobile/numbers/getDocumentInfoByPhone?phone=" + phoneNumber;
             return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
@@ -71,7 +71,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public JsonNode getVehicleInfoByPin(String pin) {
         try {
-            String url = "general/vehicle/getVehicleInfoByPin/?Pin=" + pin;
+            String url = "general/vehicle/getVehicleInfoByPin?Pin=" + pin;
             return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
             log.error(null, ex);
@@ -82,7 +82,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public JsonNode getMigrationInfo(String migrationDocNumber, String migrationPin) {
         try {
-            String url = "iamas/document/getMigrationInfo/?MigrationDocNumber=" + migrationDocNumber
+            String url = "iamas/document/getMigrationInfo?MigrationDocNumber=" + migrationDocNumber
                     + "&MigrationPin=" + migrationPin;
             return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
@@ -94,7 +94,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public JsonNode getPassportInfo(String foreignDocNumber, String foreignPin) {
         try {
-            String url = "iamas/document/getPassportInfo/?ForeignDocNumber=" + foreignDocNumber
+            String url = "iamas/document/getPassportInfo?ForeignDocNumber=" + foreignDocNumber
                     + "&ForeignPin=" + foreignPin;
             return sendRequest.executeRequest(url, authName, authKey, host);
         } catch (Exception ex) {
@@ -113,4 +113,5 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             return null;
         }
     }
+
 }

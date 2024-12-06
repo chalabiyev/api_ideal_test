@@ -37,12 +37,12 @@ public class SMSServiceImpl implements SMSService {
                     .url(url)
                     .addHeader("Accept", "application/json")
                     .addHeader("Content-Type", "application/json; charset=utf-8");
-            log.info("Service url : {0} ", url);
+            log.info("Service url : {} ", url);
             if (bodyStr != null && !bodyStr.isEmpty()) {
                 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
                 RequestBody body = RequestBody.create(bodyStr, mediaType);
                 builder = builder.method("POST", body);
-                log.info("Service body : {0} ", bodyStr);
+                log.info("Service body : {} ", bodyStr);
             } else {
                 builder = builder.method("GET", null);
             }
@@ -50,7 +50,7 @@ public class SMSServiceImpl implements SMSService {
                     .build();
             Response response = client.newCall(request).execute();
             String responseStr = response.body().string();
-            log.info("Service resp : {0} ", responseStr);
+            log.info("Service resp : {} ", responseStr);
             result = objectMapper.readTree(responseStr);
         } catch (Exception e) {
             log.error(e.getMessage());

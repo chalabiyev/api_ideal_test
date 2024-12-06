@@ -47,11 +47,11 @@ public class User extends BaseEntity {
     @Size(max = 120)
     private String fatherName;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 50)
     private EGender gender;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 20)
     @Indexed(unique = true)
     private String phoneNumber;

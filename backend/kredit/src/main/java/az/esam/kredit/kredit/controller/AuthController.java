@@ -8,12 +8,14 @@ import az.esam.kredit.kredit.dtos.requests.ChangePhoneRequest;
 import az.esam.kredit.kredit.dtos.requests.LoginRequest;
 import az.esam.kredit.kredit.dtos.responses.MessageResponse;
 import az.esam.kredit.kredit.dtos.requests.OTPRequest;
+import az.esam.kredit.kredit.dtos.requests.OTPValidateRequest;
 import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
 import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.entities.User;
-import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.Role;
+import az.esam.kredit.kredit.entities.enums.EPlatform;
+import az.esam.kredit.kredit.helper.Helper;
 import az.esam.kredit.kredit.services.internal.otp.OTPService;
 import az.esam.kredit.kredit.repositories.RoleRepository;
 import az.esam.kredit.kredit.repositories.UserRepository;
@@ -177,12 +179,29 @@ public class AuthController {
             @Valid @RequestBody OTPRequest request,
             @RequestParam String platform,
             HttpServletRequest httpRequest) throws BadRequestException {
+        request.setIpAddress(Helper.getClientIpAddress(httpRequest));
         if (otpService.sendOtp(request, platform.toUpperCase())) {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(true);
         } else {
             throw new BadRequestException("OTP not sent");
+        }
+    }
+
+    @PostMapping("/validate-otp")
+    @SecurityRequirement(name = "X-API-KEY")
+    public ResponseEntity<Boolean> validateOtpCode(
+            @Valid @RequestBody OTPValidateRequest request,
+            @RequestParam String platform,
+            HttpServletRequest httpRequest) throws BadRequestException {
+        request.setIpAddress(Helper.getClientIpAddress(httpRequest));
+        if (otpService.validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform.toUpperCase()))) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("OTP not valid");
         }
     }
 
@@ -295,7 +314,6 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(new MessageResponse(HttpStatus.OK, fileName));
     }
-
 
     @GetMapping("/getUserPhoto/{photoName}")
     @SecurityRequirement(name = "X-API-KEY")

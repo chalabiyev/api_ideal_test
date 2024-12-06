@@ -19,4 +19,5 @@ public interface DocumentInfoService {
     JsonNode getPassportInfo(String foreignDocNumber, String foreignPin);
 
     JsonNode getInfoByVoen(String voen);
+
 }

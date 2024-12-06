@@ -11,6 +11,7 @@ import az.esam.kredit.kredit.entities.Role;
 import az.esam.kredit.kredit.entities.Token;
 import az.esam.kredit.kredit.entities.enums.TokenType;
 import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.sima.SimaCertPersonInfo;
 import az.esam.kredit.kredit.repositories.RoleRepository;
 import az.esam.kredit.kredit.repositories.TokenRepository;
 import az.esam.kredit.kredit.repositories.UserRepository;
@@ -35,7 +36,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -69,22 +72,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             var existingUser = userRepository.findByUsername(request.getUsername())
                     .orElse(null);
 
-            request.setPhoneNumber(request.getPhoneNumber()
-                    .replace("(", "")
-                    .replace(")", "")
-                    .replace(" ", "")
-                    .replace("-", "")
-                    .replace("+", "")
-            );
-            if (!request.getPhoneNumber().startsWith("994")) {
-                request.setPhoneNumber("994" + request.getPhoneNumber());
+            if (request.getPhoneNumber() != null) {
+                request.setPhoneNumber(request.getPhoneNumber()
+                        .replace("(", "")
+                        .replace(")", "")
+                        .replace(" ", "")
+                        .replace("-", "")
+                        .replace("+", "")
+                );
+                if (!request.getPhoneNumber().startsWith("994")) {
+                    request.setPhoneNumber("994" + request.getPhoneNumber());
+                }
             }
 
             if (existingUser == null) {
-                if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+                if (request.getPhoneNumber() != null && userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
                     throw new BadRequestException("Error: Phone number is already taken!");
                 }
-                if (userRepository.existsByEmail(request.getEmail())) {
+                if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail())) {
                     throw new BadRequestException("Error: Email is already taken!");
                 }
             } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)) {
@@ -95,12 +100,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .username(request.getUsername())
                     .name(request.getName())
                     .surname(request.getSurName())
-                    .fullName(request.getFullName())
+                    .fullName(request.getName().concat(" ").concat(request.getSurName()))
                     .fatherName(request.getFatherName())
-                    .gender(EGender.valueOf(request.getGender().toUpperCase()))
+                    .gender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null)
                     .phoneNumber(request.getPhoneNumber())
                     .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .status(EUserStatus.ACTIVE)
                     .signUpDate(new Date())
                     .birthDate(request.getBirthDate())
@@ -369,8 +374,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication
-            authentication) throws BadRequestException {
+    public boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException {
         try {
             User userExists = userRepository.findByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User does not exists"));
@@ -409,5 +413,43 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             tokenRepository.save(token);
         });
         tokenRepository.saveAll(validUserTokens);
+    }
+
+    @Override
+    public AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person) {
+        Optional<User> findUser = userRepository.findByUsername(person.getFinCode());
+        if (findUser.isEmpty()) {
+            try {
+                RegisterRequest registerRequest = RegisterRequest.builder()
+                        .fin(person.getFinCode())
+                        .username(person.getFinCode())
+                        .name(person.getName())
+                        .surName(person.getSurName())
+                        .fatherName(person.getFatherName()).build();
+                return register(registerRequest);
+            } catch (BadRequestException ex) {
+            }
+        } else {
+            User savedUser = findUser.get();
+            UserDetails userDetails = UserDetailsImpl.build(savedUser);
+            var jwtToken = jwtService.generateJwtToken(userDetails);
+            var refreshToken = jwtService.generateRefreshToken(userDetails);
+            saveUserToken(savedUser, jwtToken);
+            return AuthenticationResponse.builder()
+                    .id(savedUser.getId())
+                    .fullName(savedUser.getFullName())
+                    .username(savedUser.getUsername())
+                    .photo(savedUser.getPhoto())
+                    .email(savedUser.getEmail())
+                    .phoneNumber(savedUser.getPhoneNumber())
+                    .birthDate(savedUser.getBirthDate())
+                    .roles(savedUser.getRoles().stream().map(role -> role.getName().name()).toList())
+                    .tokenType(TokenType.BEARER)
+                    .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
+        }
+
+        return null;
     }
 }
