@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -81,12 +81,17 @@ export function CreateCreditForm() {
       whereToGetSignature: '',
       newZaminFin: '',
       newZaminSerialNumber: '',
+      guarantors: [
+        { fin: '', serialNumber: '', name: '', surname: '', phones: '', registrationAddress: '' },
+      ],
     },
   });
   const {
     reset,
     watch,
     handleSubmit,
+    control,
+    register,
     formState: { isSubmitting, errors },
   } = methods;
   const handleOptionChange = (event: any) => {
@@ -121,26 +126,42 @@ export function CreateCreditForm() {
     setSelectedUserVehicleData(user?.occupancyData?.vehicleData || null);
   };
   const guarantors = randomGuarantorData;
-  // const handleSearchNewGuarantor = () => {
-  //   const fin = watch('newZaminFin');
-  //   const serialNumber = watch('newZaminSerialNumber');
-  //   const guarantor = guarantors.find((g) => g.fin === fin && g.serialNumber === serialNumber);
-  //   try {
-  //     if (serialNumber.length === 0) {
-  //       throw new Error('Zaminin Ş/V seriyası və nömrəsi tələb olunur!');
-  //     } else if (fin.length === 0) {
-  //       throw new Error('Zaminin fini tələb olunur!');
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  //   setNewGuarantorData(guarantor);
-  //   setGuarantorData(true);
-  // if (!guarantor) {
-  //   toast.error('Zamin tapılmadı!');
-  //   return;
-  // }
-  // };
+
+  const onSearchGuarantor = (serialNumber: string, fin: string) => {
+    const found = guarantors.find(
+      (guarantor) => guarantor.fin === fin && guarantor.serialNumber === serialNumber
+    );
+    if (found) {
+      append({
+        fin: found.fin,
+        serialNumber: found.serialNumber,
+        name: found.name,
+        surname: found.surname,
+        phones: found.phones,
+        registrationAddress: found.registrationAddress,
+      });
+      console.log(fin, serialNumber);
+      toast.success('Zamin tapıldı!');
+    } else {
+      toast.error('Zamin tapılmadı!');
+    }
+  };
+  // fieldleri acmagcun function
+  const addNewGuarantor = () => {
+    append({
+      fin: '',
+      serialNumber: '',
+      name: '',
+      surname: '',
+      phones: '',
+      registrationAddress: '',
+    });
+  };
+  const { fields, append } = useFieldArray({
+    control,
+    name: 'guarantors',
+  });
+
   const onSubmit = handleSubmit((data) => {
     console.log('Submitted Data:', data);
     toast.success('Form submitted successfully!');
@@ -419,6 +440,33 @@ export function CreateCreditForm() {
                 >
                   Zamin barəsində məlumatlar
                 </Typography>
+                {fields.map((field, index) => (
+                  <Box key={field.id}>
+                    <Box>Zamin {index + 1}</Box>
+                    <Field.Text
+                      placeholder="Seriya Nömrəsi"
+                      {...register(`guarantors.${index}.serialNumber`)}
+                    />
+                    <Field.Text placeholder="FIN" {...register(`guarantors.${index}.fin`)} />
+                    <Field.Text placeholder="Ad" {...register(`guarantors.${index}.name`)} />
+                    <Field.Text placeholder="Ad" {...register(`guarantors.${index}.surname`)} />
+                    <Field.Text placeholder="Telefon" {...register(`guarantors.${index}.phones`)} />
+                    <Field.Text
+                      placeholder="Qeydiyyat Ünvanı"
+                      {...register(`guarantors.${index}.registrationAddress`)}
+                    />
+                    <Button
+                      sx={{ mt: 3, backgroundColor: '#2D9CDB', width: '300px', color: 'white' }}
+                      type="button"
+                      onClick={() => onSearchGuarantor(watch('serialNumber'), watch('fin'))}
+                    >
+                      axtar
+                    </Button>
+                  </Box>
+                ))}
+                <Button type="button" onClick={addNewGuarantor}>
+                  Yeni Zamin əlavə et
+                </Button>
                 {/* {userData && (
                   <Card sx={{ p: 3 }}>
                     <Typography
