@@ -7,6 +7,8 @@ import { AuthContext } from '../auth-context';
 import { setSession, isValidToken } from './utils';
 
 import type { AuthState } from '../../types';
+import axios, { endpoints } from 'src/utils/axios';
+import { User } from '@auth0/auth0-react';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +24,7 @@ type Props = {
 
 export function AuthProvider({ children }: Props) {
   const { state, setState } = useSetState<AuthState>({
-    user: null,
+    user: User,
     loading: true,
   });
 
@@ -33,18 +35,21 @@ export function AuthProvider({ children }: Props) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        // const res = await axios.get(endpoints.auth.me);
+        const res = await axios.get(endpoints.auth.me, {
+          headers: {
+            'x-api-key': import.meta.env.VITE_APP_X_API_KEY,
+          },
+        });
 
-        // const { user } = res.data;
+        const  user  = res.data;
 
-        // setState({ user: { ...user, accessToken }, loading: false });
-        setState({ user: {  accessToken }, loading: false });
+        setState({ user: { user }, loading: false });
       } else {
-        setState({ user: null, loading: false });
+        setState({ user: undefined, loading: false });
       }
     } catch (error) {
       console.error(error);
-      setState({ user: null, loading: false });
+      setState({ user: undefined, loading: false });
     }
   }, [setState]);
 
@@ -59,13 +64,14 @@ export function AuthProvider({ children }: Props) {
 
   const status = state.loading ? 'loading' : checkAuthenticated;
 
+  console.log("state ", state);
+
   const memoizedValue = useMemo(
     () => ({
       user: state.user
         ? {
-            ...state.user,
-            role: state.user?.role ?? 'admin',
-          }
+            ...state.user
+        }
         : null,
       checkUserSession,
       loading: status === 'loading',
