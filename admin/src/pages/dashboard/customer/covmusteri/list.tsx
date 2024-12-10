@@ -6,7 +6,7 @@ import { CovCustomerListView } from 'src/sections/customer/cov/view/user-list-vi
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `User list | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `İstifadəçi siyahısı | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (
