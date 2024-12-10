@@ -13,7 +13,6 @@ import { fShortenNumber } from 'src/utils/format-number';
 
 import { _socials } from 'src/_mock';
 import { varAlpha } from 'src/theme/styles';
-import { AvatarShape } from 'src/assets/illustrations';
 
 import { Image } from 'src/components/image';
 import { SocialIcon } from 'src/components/iconify';
@@ -28,17 +27,6 @@ export function UserCard({ user }: Props) {
   return (
     <Card sx={{ textAlign: 'center' }}>
       <Box sx={{ position: 'relative' }}>
-        <AvatarShape
-          sx={{
-            left: 0,
-            right: 0,
-            zIndex: 10,
-            mx: 'auto',
-            bottom: -26,
-            position: 'absolute',
-          }}
-        />
-
         <Avatar
           alt={user.name}
           src={user.avatarUrl}
