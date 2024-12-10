@@ -2,7 +2,7 @@ import { paths } from 'src/routes/paths';
 
 import axios from 'src/utils/axios';
 
-import { STORAGE_KEY } from './constant';
+import { OPERATOR_NAME, STORAGE_KEY } from './constant';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +59,7 @@ export function tokenExpired(exp: number) {
     try {
       alert('Token expired!');
       sessionStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(OPERATOR_NAME);
       window.location.href = paths.auth.jwt.signIn;
     } catch (error) {
       console.error('Error during token expiration:', error);
@@ -85,6 +86,7 @@ export async function setSession(accessToken: string | null) {
       }
     } else {
       sessionStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(OPERATOR_NAME);
       delete axios.defaults.headers.common.Authorization;
     }
   } catch (error) {

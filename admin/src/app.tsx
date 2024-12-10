@@ -17,6 +17,7 @@ import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
 import { AuthProvider as JwtAuthProvider } from 'src/auth/context/jwt/index';
+import { WebsocketProvider } from './services/WebsocketProvider';
 
 
 // ----------------------------------------------------------------------
@@ -32,12 +33,14 @@ export default function App() {
         <AuthProvider>
           <SettingsProvider settings={defaultSettings}>
             <ThemeProvider>
-              <MotionLazy>
-                <Snackbar />
-                <ProgressBar />
-                <SettingsDrawer />
-                <Router />
-              </MotionLazy>
+              <WebsocketProvider>
+                <MotionLazy>
+                  <Snackbar />
+                  <ProgressBar />
+                  <SettingsDrawer />
+                  <Router />
+                </MotionLazy>
+              </WebsocketProvider>
             </ThemeProvider>
           </SettingsProvider>
         </AuthProvider>

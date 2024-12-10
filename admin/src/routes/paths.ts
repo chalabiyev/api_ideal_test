@@ -103,6 +103,7 @@ export const paths = {
     fileManager: `${ROOTS.DASHBOARD}/file-manager`,
     permission: `${ROOTS.DASHBOARD}/permission`,
     videoCall: '/videocall',
+    webCamTest: '/webcamtest',
     credits: {
       root: `${ROOTS.DASHBOARD}/credits`,
       new: `${ROOTS.DASHBOARD}/credits/new`,

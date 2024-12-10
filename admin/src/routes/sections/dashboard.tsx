@@ -7,6 +7,7 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { AuthGuard } from 'src/auth/guard';
+import WebCamTestView from 'src/pages/dashboard/webcamtest/view';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
 // Order
 const OrderListPage = lazy(() => import('src/pages/dashboard/order/list'));
 const VideoCallPage = lazy(() => import('src/pages/dashboard/videocall/videocall'));
+const WebCamTestPage = lazy(() => import('src/pages/dashboard/webcamtest/webcamtest'));
 const OrderDetailsPage = lazy(() => import('src/pages/dashboard/order/details'));
 // Invoice
 const InvoiceListPage = lazy(() => import('src/pages/dashboard/invoice/list'));
@@ -103,6 +105,7 @@ export const dashboardRoutes = [
     element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     children: [
       { element: <VideoCallPage />, path: 'videocall' },
+      { element: <WebCamTestPage />, path: 'webcamtest' },
       { element: <IndexPage />, index: true },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
