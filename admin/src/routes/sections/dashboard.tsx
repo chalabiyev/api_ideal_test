@@ -12,7 +12,6 @@ import { AuthGuard } from 'src/auth/guard';
 
 // Overview
 const IndexPage = lazy(() => import('src/pages/dashboard'));
-// VideoCall
 const VideoCallPage = lazy(() => import('src/pages/dashboard/videocall/videocall'));
 // User
 const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
