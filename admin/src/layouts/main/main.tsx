@@ -7,6 +7,7 @@ import { layoutClasses } from '../classes';
 // ----------------------------------------------------------------------
 
 export function Main({ children, sx, ...other }: BoxProps) {
+
   return (
     <Box
       component="main"
@@ -19,7 +20,7 @@ export function Main({ children, sx, ...other }: BoxProps) {
       }}
       {...other}
     >
-      {children}
+      {children}     
     </Box>
   );
 }

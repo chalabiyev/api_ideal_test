@@ -10,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Slf4j
 @Service
@@ -68,5 +74,87 @@ public class SendRequest {
             }
         }
         return result;
+    }
+
+    public JsonNode sendRequest(String url, String data) throws IOException, InterruptedException {
+        JsonNode result = null;
+        HttpClient client = HttpClient.newHttpClient();
+
+        // Prepare the builder
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Authorization", "Basic TUFNTUFET1YgQUxJMjpCQWhraks0SA==")
+                .header("Content-Type", "application/json")
+                .header("Connection", "keep-alive")
+                .header("Referer", "http://app.acb.az:8002/")
+                .header("Origin", "http://app.acb.az:8002");
+
+        // Add a body to the GET request if data is not null or empty
+        if (data != null && !data.isEmpty()) {
+            requestBuilder.method("GET", HttpRequest.BodyPublishers.ofString(data));
+        } else {
+            requestBuilder.GET();
+        }
+
+        try {
+            // Build the request
+            HttpRequest request = requestBuilder.build();
+
+            // Send the request
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            log.info("Response status: {}", response.statusCode());
+            if (response.statusCode() == 200) {
+                String responseStr = response.body();
+                log.info("AKB service response: {}", responseStr);
+                result = objectMapper.readTree(responseStr);
+                log.info("AKB Service result: {}", result);
+            } else {
+                throw new IOException("Error response: " + response.body());
+            }
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            throw e;
+        }
+
+        return result;
+    }
+
+    public JsonNode sendPostRequestWithFile(String url, Path filePath) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+
+        // Boundary for multipart form-data
+        String boundary = "----Boundary" + System.currentTimeMillis();
+
+        // Read file content
+        byte[] fileBytes = Files.readAllBytes(filePath);
+
+        // Build the multipart body
+        StringBuilder bodyBuilder = new StringBuilder();
+        bodyBuilder.append("--").append(boundary).append("\r\n")
+                .append("Content-Disposition: form-data; name=\"file\"; filename=\"")
+                .append(filePath.getFileName().toString()).append("\"\r\n")
+                .append("Content-Type: application/octet-stream\r\n\r\n")
+                .append(new String(fileBytes)).append("\r\n")
+                .append("--").append(boundary).append("--\r\n");
+
+        String multipartBody = bodyBuilder.toString();
+
+        // Build the request
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "multipart/form-data; boundary=" + boundary)
+                .header("Authorization", "Basic TUFNTUFET1YgQUxJMjpCQWhraks0SA==")
+                .POST(HttpRequest.BodyPublishers.ofString(multipartBody))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Check response and parse JSON
+        if (response.statusCode() == 200) {
+            return objectMapper.readTree(response.body());
+        } else {
+            throw new IOException("Error response from server: " + response.statusCode() + " - " + response.body());
+        }
     }
 }

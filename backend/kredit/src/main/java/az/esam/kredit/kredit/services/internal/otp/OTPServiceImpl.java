@@ -75,16 +75,15 @@ public class OTPServiceImpl implements OTPService {
                 if (smsService.getSMSBalance() <= 0) {
                     throw new BadRequestException("SMS balance is empty");
                 }
-                if (!request.getContact().substring(0, 3).equals("994")) {
-                    request.setContact("994" + request.getContact());
-                }
-
                 request.setContact(request.getContact()
                         .replace("(", "")
                         .replace(")", "")
                         .replace(" ", "")
                         .replace("-", "")
                         .replace("+", ""));
+                if (!request.getContact().substring(0, 3).equals("994")) {
+                    request.setContact("994" + request.getContact());
+                }
                 boolean result = smsService.sendSMS(request.getContact(), otpCode);
                 if (result) {
                     otpRepository.insert(otpRecord);
@@ -151,10 +150,10 @@ public class OTPServiceImpl implements OTPService {
             }
         }
         try {
-            User user = platform.equals(EPlatform.PHONE.name()) ?
-                    userRepository.findByPhoneNumber(request.getContact())
-                            .orElseThrow(() -> new UsernameNotFoundException("User not found")) :
-                    userRepository.findByEmail(request.getContact())
+            User user = platform.equals(EPlatform.PHONE.name())
+                    ? userRepository.findByPhoneNumber(request.getContact())
+                            .orElseThrow(() -> new UsernameNotFoundException("User not found"))
+                    : userRepository.findByEmail(request.getContact())
                             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (request.getNewPassword().equals(request.getPassword())) {
@@ -252,7 +251,7 @@ public class OTPServiceImpl implements OTPService {
 
     private String createOtpCode() {
         Random random = new Random();
-        int fourDigit = 1000 + random.nextInt(9000);
+        int fourDigit = 100000 + random.nextInt(900000);
         return String.valueOf(fourDigit);
     }
 }

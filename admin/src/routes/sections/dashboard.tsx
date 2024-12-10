@@ -7,12 +7,15 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { AuthGuard } from 'src/auth/guard';
+import WebCamTestView from 'src/pages/dashboard/webcamtest/view';
 
 // ----------------------------------------------------------------------
 
 // Overview
 const IndexPage = lazy(() => import('src/pages/dashboard'));
+
 const VideoCallPage = lazy(() => import('src/pages/dashboard/videocall/videocall'));
+const WebCamTestPage = lazy(() => import('src/pages/dashboard/webcamtest/webcamtest'));
 // User
 const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
 const UserCardsPage = lazy(() => import('src/pages/dashboard/user/cards'));
@@ -50,6 +53,7 @@ export const dashboardRoutes = [
     element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     children: [
       { element: <VideoCallPage />, path: 'videocall' },
+      { element: <WebCamTestPage />, path: 'webcamtest' },
       { element: <IndexPage />, index: true },
       {
         path: 'user',

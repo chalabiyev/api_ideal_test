@@ -35,7 +35,7 @@ public class ControllerException {
             RequestRejectedException.class,
             SignatureException.class
     })
-    public ResponseEntity<?> UnathorizedException(Exception e) {
+    public ResponseEntity<?> UnauthorizedException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new MessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage()));

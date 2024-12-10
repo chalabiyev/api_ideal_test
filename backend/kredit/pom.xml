@@ -50,6 +50,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.javadev</groupId>
+            <artifactId>underscore</artifactId>
+            <version>1.70</version>
+            <type>jar</type>
+        </dependency>
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -130,6 +138,19 @@
             <groupId>com.itextpdf</groupId>
             <artifactId>html2pdf</artifactId>
             <version>4.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.cryptacular</groupId>
+            <artifactId>cryptacular</artifactId>
+            <version>1.2.4</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
