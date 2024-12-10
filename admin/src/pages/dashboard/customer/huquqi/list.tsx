@@ -6,7 +6,7 @@ import { HuquqiCustomerListView } from 'src/sections/customer/huquqi/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `User list | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `İstifadəçi siyahısı | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (

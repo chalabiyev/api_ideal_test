@@ -24,8 +24,7 @@ export const signInWithPassword = async ({ username, password }: SignInParams): 
   try {
     const params = { username, password };
 
-    const res = await axios.post(endpoints.auth.signIn, 
-   params, {
+    const res = await axios.post(endpoints.auth.signIn, params, {
       headers: {
         'x-api-key': import.meta.env.VITE_APP_X_API_KEY,
       },
@@ -33,17 +32,20 @@ export const signInWithPassword = async ({ username, password }: SignInParams): 
 
     const { accessToken } = res.data;
 
-
     if (!accessToken) {
       throw new Error('Access token not found in response');
     }
 
     setSession(accessToken);
+    console.log('accessToken', res);
+
   } catch (error) {
     console.error('Error during sign in:', error);
+
     throw error;
   }
 };
+
 
 /** **************************************
  * Sign up

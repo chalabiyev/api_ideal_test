@@ -15,8 +15,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { AddressItem, AddressNewForm } from '../address';
-
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -64,26 +62,6 @@ export function AccountBillingAddress({ addressBook }: Props) {
           }
         />
 
-        <Stack spacing={2.5} sx={{ p: 3 }}>
-          {addressBook.map((address) => (
-            <AddressItem
-              variant="outlined"
-              key={address.id}
-              address={address}
-              action={
-                <IconButton
-                  onClick={(event: React.MouseEvent<HTMLElement>) => {
-                    handleSelectedId(event, `${address.id}`);
-                  }}
-                  sx={{ position: 'absolute', top: 8, right: 8 }}
-                >
-                  <Iconify icon="eva:more-vertical-fill" />
-                </IconButton>
-              }
-              sx={{ p: 2.5, borderRadius: 1 }}
-            />
-          ))}
-        </Stack>
       </Card>
 
       <CustomPopover open={popover.open} anchorEl={popover.anchorEl} onClose={handleClose}>
@@ -120,12 +98,6 @@ export function AccountBillingAddress({ addressBook }: Props) {
           </MenuItem>
         </MenuList>
       </CustomPopover>
-
-      <AddressNewForm
-        open={addressForm.value}
-        onClose={addressForm.onFalse}
-        onCreate={handleAddNewAddress}
-      />
     </>
   );
 }
