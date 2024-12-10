@@ -22,8 +22,14 @@ public class SimaController {
     @Autowired
     SimaService simaService;
 
-    @GetMapping("/getAuthQR/{finCode}")
+    @GetMapping("/getAuthQR")
     public ResponseEntity<SimaQRResponse> getAuthQR(
+            HttpServletRequest httpRequest) {
+        return ResponseEntity.ok(simaService.getAuthQR(null));
+    }
+
+    @GetMapping("/getAuthQRWithPin/{finCode}")
+    public ResponseEntity<SimaQRResponse> getAuthQRWithPin(
             HttpServletRequest httpRequest,
             @PathVariable("finCode") String finCode) {
         return ResponseEntity.ok(simaService.getAuthQR(finCode));

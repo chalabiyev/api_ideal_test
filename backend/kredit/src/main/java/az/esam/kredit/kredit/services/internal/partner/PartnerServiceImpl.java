@@ -11,7 +11,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PartnerServiceImpl implements PartnerService {
 
     @Autowired

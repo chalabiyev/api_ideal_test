@@ -40,6 +40,7 @@ import java.security.Signature;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
@@ -182,7 +183,7 @@ public class SimaServiceImpl implements SimaService {
                 .OperationId(operationId)
                 .NbfUTC(dateToUtcTimestamp(truncateDate(now)))
                 .ExpUTC(dateToUtcTimestamp(truncateDate(end)))
-                .Assignee(Arrays.asList(finCode))
+                .Assignee(finCode == null ? new ArrayList() : Arrays.asList(finCode))
                 .build();
         ClientInfo clientInfo = ClientInfo.builder()
                 .ClientId(clientId)

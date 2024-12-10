@@ -48,7 +48,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (!request.getRequestURI().contains("/api/sima") && !checkApiKey(request)) {
+        if (!request.getRequestURI().contains("/api/sima") && !request.getRequestURI().contains("/signal") && !checkApiKey(request)) {
             if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Wrong API key or secret");
             }
