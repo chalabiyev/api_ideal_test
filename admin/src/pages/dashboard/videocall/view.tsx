@@ -16,6 +16,7 @@ import MobileViewMessage from './MobileViewMessage';
 import VideoCameraIcon from '../../../../public/assets/icons/files/VideoCameraIcon';
 import { SignalType, WebsocketContext } from 'src/services/WebsocketProvider';
 import { AuthContext } from 'src/auth/context/auth-context';
+import { WebCam } from 'src/components/webcam/WebCam';
 
 const staticData = [
   {
@@ -160,7 +161,9 @@ var peerConnection: RTCPeerConnection;
 var localVideoStream: MediaStream;
 var localAudioStream: MediaStream;
 var webCamAndAudioStreamToSend: MediaStream;
+var remoteStreams: string[];
 var inCall = false;
+var clientVideoStream: MediaStream;
 var streamSendedClient = false;
 
 const VideoCallView = () => {
@@ -173,12 +176,14 @@ const VideoCallView = () => {
   const turnPass = import.meta.env.VITE_TURN_PASSWORD;
   const wsContext = useContext(WebsocketContext);
   const userContext = useContext(AuthContext);
-  const clientUUID = localStorage.getItem("ClientIP");
-  const operatorUUID = localStorage.getItem("operatorUUID");
-  const meetingID = localStorage.getItem("meetingID");
+  const clientUUID = localStorage.getItem('ClientIP');
+  const operatorUUID = localStorage.getItem('operatorUUID');
+  const meetingID = localStorage.getItem('meetingID');
   const [operatorReady, setOperatorReady] = useState<boolean>(false);
   const [clientConnected, setClientConnected] = useState<boolean>(false);
-
+  const [remoteVideoStreamAdded, setRemoteVideoStreamAdded] = useState<boolean>(false);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const localVideoRef = useRef<HTMLVideoElement>(null);
 
   const sendSignal = async (signal: SignalType, receiver?: string) => {
     if (wsContext.ready) {
@@ -213,6 +218,48 @@ const VideoCallView = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  const sendCamAndMicStreams = async () => {
+    try {
+      localAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      localVideoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = localVideoStream;
+      }
+
+      webCamAndAudioStreamToSend = new MediaStream();
+      localVideoStream.getTracks().forEach((track) => webCamAndAudioStreamToSend.addTrack(track));
+      localAudioStream.getTracks().forEach((track) => webCamAndAudioStreamToSend.addTrack(track));
+      webCamAndAudioStreamToSend.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, webCamAndAudioStreamToSend);
+      });
+    } catch (error) {
+      console.error('Error accessing webcam or microphone:', error);
+      alert('Could not access webcam or microphone.');
+    }
+  };
+
+  const displayRemoteStream = (e: RTCTrackEvent) => {
+    try {
+      console.log('displayRemoteStream', e);
+      let strm = e.streams[0];
+      if (strm) {
+        if (remoteStreams.indexOf(strm.id) == -1) {
+          remoteStreams.push(strm.id);
+        } else {
+          if (remoteStreams.length == 1 && !remoteVideoStreamAdded) {
+            clientVideoStream = strm;
+            remoteVideoRef.current!.srcObject = strm;
+            setRemoteVideoStreamAdded(true);
+            console.log('ops', clientVideoStream.id);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const preparePeerConnection = () => {
     inCall = true;
@@ -267,7 +314,7 @@ const VideoCallView = () => {
         }
       }
 
-      sendSignal({ type: "acceptcall", operator: userContext!.user["fullName"] });
+      sendSignal({ type: "acceptcall", operator: userContext?.user && userContext.user["fullName"] });
       setTimeout(() => {
         sendSignal({ type: "operatorReady", date: new Date() });
       }, 1000);
@@ -336,23 +383,31 @@ const VideoCallView = () => {
         {/* right bottom (video call)  */}
         <Box className="w-full relative h-[83%] bg-yellow-400/0 overflow-hidden border-[2px] border-[#9EB3C7] rounded-[18px]">
           <video
-            src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            ref={remoteVideoRef}
             playsInline
             muted
             autoPlay
             className="h-full w-full object-cover"
             loop
-          />
+          ></video>
           {/* user camera  */}
           <Box className="absolute -translate-y-[95%] bottom-0 right-5 w-[30%] border-[2px] border-[#9EB3C7] rounded-[18px] overflow-hidden  aspect-video bg-black/0">
             {/*  */}
-            <video
-              src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-              playsInline
-              muted
-              autoPlay
+            <WebCam
               className="h-full w-full object-cover"
-              loop
+              width={200}
+              height={250}
+              backgroundOption={0}
+              left={0}
+              top={0}
+              showOriginal={false}
+              webCamDeviceId={undefined}
+              onStreamChanged={(strm: any) => {
+                localVideoStream = strm;
+              }}
+              cropWidth={0}
+              cropHeight={0}
+              mirrorEnabled={false}
             />
           </Box>
 

@@ -10,7 +10,8 @@ export interface WebsocketContextType {
 export interface SignalType {
     sender?: string;
     receiver?: string;
-    type: 'newcall' | 'cancel' | 'answer' | 'offer' | 'pranswer' | 'rollback' | 'icecandidate' | 'acceptcall';
+    type: 'newcall' | 'cancel' | 'answer' | 'offer' | 'pranswer' | 'rollback' | 'icecandidate' | 'acceptcall' | 'operatorReady';
+    date?: Date;
     clientName?: string | null;
     clientPin?: string | null;
     meetingID?: string | null;
