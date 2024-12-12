@@ -24,7 +24,7 @@ public class SendRequest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public JsonNode executeRequest(String url, String authName, String authKey, String host) {
+    public JsonNode executeRequest(String url, String authName, String authKey, String host) throws IOException {
         JsonNode result = null;
         Response response = null;
         log.info("authKey : {} ", authKey);
@@ -57,9 +57,11 @@ public class SendRequest {
                     log.info("Service result : {} ", result);
                 } else {
                     log.error("Request failed with status code: {}", response.code());
+                    throw new IOException("Request failed with status code: " + response.code());
                 }
             } catch (IOException e) {
                 log.error(e.getMessage());
+                throw e;
             } finally {
                 // Close the response to avoid connection leaks
                 if (response != null) {
@@ -68,6 +70,7 @@ public class SendRequest {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw e;
         } finally {
             if (response != null) {
                 response.close();

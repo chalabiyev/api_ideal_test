@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     ObjectMapper objectMapper;
 
     @Override
-    public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) {
+    public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) throws IOException {
         try {
             String url = "iamas/document/getIdCardInfo?Pin=" + pin + "&DocumentNumber=" + documentNumber;
             log.info("Request URL: {}", url);
@@ -50,12 +51,14 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                     }
                 } catch (Exception e) {
                     log.error("Error parsing JSON response: {}", e.getMessage(), e);
+
                 }
             } else {
                 log.error("Response is null or empty");
             }
         } catch (Exception ex) {
             log.error("Error during getIdCardInfo execution: {}", ex.getMessage(), ex);
+            throw ex;
         }
         return null;
     }
@@ -129,7 +132,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     }
 
     @Override
-    public DocumentInfoByMobileNumberResponse getDocumentInfoByPhone(String phoneNumber) {
+    public DocumentInfoByMobileNumberResponse getDocumentInfoByPhone(String phoneNumber) throws IOException {
         try {
             String url = "mobile/numbers/getDocumentInfoByPhone?phone=" + phoneNumber;
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
@@ -149,13 +152,13 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             }
         } catch (Exception ex) {
             log.error(null, ex);
-            return null;
+            throw ex;
         }
         return null;
     }
 
     @Override
-    public VehicleInfoResponse getVehicleInfoByPin(String pin) {
+    public List<VehicleInfoResponse> getVehicleInfoByPin(String pin) throws IOException {
         try {
             String url = "general/vehicle/getVehicleInfoByPin?Pin=" + pin;
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
@@ -165,7 +168,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                             parserService.parseResponse(jsonNode, VehicleInfoResponse.class);
 
                     if (vehicleInfoResponseList != null && !vehicleInfoResponseList.isEmpty()) {
-                        return vehicleInfoResponseList.get(0);
+                        return vehicleInfoResponseList;
                     }
                 } catch (Exception e) {
                     log.error("Error parsing JSON response: {}", e.getMessage(), e);
@@ -175,7 +178,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             }
         } catch (Exception ex) {
             log.error(null, ex);
-            return null;
+            throw ex;
         }
         return null;
     }
@@ -261,3 +264,4 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     }
 
 }
+

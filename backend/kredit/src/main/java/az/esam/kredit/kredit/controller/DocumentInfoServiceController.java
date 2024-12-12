@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class DocumentInfoServiceController {
     DocumentInfoService documentInfoService;
 
     @GetMapping("/getIdCardInfo")
-    public ResponseEntity<FullIDCardInfoResponse> getIdCardInfo(@RequestParam String documentNumber, @RequestParam String pin, HttpServletRequest request) {
+    public ResponseEntity<FullIDCardInfoResponse> getIdCardInfo(@RequestParam String documentNumber, @RequestParam String pin, HttpServletRequest request) throws IOException {
         return ResponseEntity.ok(documentInfoService.getIdCardInfo(documentNumber, pin));
     }
 
@@ -30,17 +31,17 @@ public class DocumentInfoServiceController {
     }
 
     @GetMapping("/getCheckNumberWithPin")
-    public ResponseEntity<?> getCheckNumberWithPin(@RequestParam String pin, @RequestParam String number) {
+    public ResponseEntity<CheckNumberWithPinResponse> getCheckNumberWithPin(@RequestParam String pin, @RequestParam String number) {
         return ResponseEntity.ok(documentInfoService.getCheckNumberWithPin(pin, number));
     }
 
     @GetMapping("/getDocumentInfoByPhone")
-    public ResponseEntity<DocumentInfoByMobileNumberResponse> getDocumentInfoByPhone(@RequestParam String phoneNumber) {
+    public ResponseEntity<DocumentInfoByMobileNumberResponse> getDocumentInfoByPhone(@RequestParam String phoneNumber) throws IOException {
         return ResponseEntity.ok(documentInfoService.getDocumentInfoByPhone(phoneNumber));
     }
 
     @GetMapping("/getVehicleInfoByPin")
-    public ResponseEntity<VehicleInfoResponse> getVehicleInfoByPin(@RequestParam String pin) {
+    public ResponseEntity<List<VehicleInfoResponse>> getVehicleInfoByPin(@RequestParam String pin) throws IOException {
         return ResponseEntity.ok(documentInfoService.getVehicleInfoByPin(pin));
     }
 
