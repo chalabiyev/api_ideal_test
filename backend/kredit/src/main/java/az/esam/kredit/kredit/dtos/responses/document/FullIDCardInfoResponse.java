@@ -46,5 +46,7 @@ public class FullIDCardInfoResponse {
     private Date activationDate;
 
     private String image;
+
+    private BlackListStatus blackListStatus;
 }
 

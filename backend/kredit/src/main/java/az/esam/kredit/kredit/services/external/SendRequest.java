@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,6 +22,13 @@ import java.util.Base64;
 @Slf4j
 @Service
 public class SendRequest {
+
+
+    @Value("${akb.id}")
+    private String id;
+
+    @Value("${akb.password}")
+    private String password;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -83,7 +91,7 @@ public class SendRequest {
     public JsonNode sendRequest(String url, String data) throws IOException, InterruptedException {
         JsonNode result = null;
         // Encode credentials to Base64
-        String credentials = "IdealKreditBoktWs:L7!dPrA>";
+        String credentials = id + ":" + password;
         String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
         HttpClient client = HttpClient.newHttpClient();

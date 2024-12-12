@@ -18,9 +18,6 @@ import java.nio.file.Path;
 @Service
 public class AKBServiceImpl implements AKBService {
 
-    @Value("${akb.authorization}")
-    private String authKey;
-
     @Value("${akb.host}")
     private String host;
 

@@ -6,8 +6,13 @@ import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -35,6 +40,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    MongoTemplate mongoTemplate;
+
     @Override
     public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) throws IOException {
         try {
@@ -47,6 +55,36 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                             parserService.parseResponse(jsonResponse, FullIDCardInfoResponse.class);
 
                     if (idCardInfoList != null && !idCardInfoList.isEmpty()) {
+                        // check if person is on the blacklistedIndividuals
+                        Aggregation aggregation = Aggregation.newAggregation(
+                                Aggregation.match(Criteria.where("nameAz").is(idCardInfoList.get(0).getPersonAz().getName())),
+                                Aggregation.project()
+                                        .andExpression("nameAz == @nameAz ? 1 : 0").as("nameMatch")
+                                        .andExpression("surnameAz == @surnameAz ? 1 : 0").as("surnameMatch")
+                                        .andExpression("patronymicAz == @patronymicAz ? 1 : 0").as("patronymicMatch")
+                                        .andExpression("dateOfBirth == @dateOfBirth ? 1 : 0").as("birthDateMatch")
+                                        .andExpression("nameMatch + surnameMatch + patronymicMatch + birthDateMatch").as("totalMatches")
+                        );
+                        AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, "blacklisted_individuals", Document.class);
+
+                        for (Document doc : result) {
+                            int total = doc.getInteger("totalMatches");
+                            if (total == 4) {
+                                idCardInfoList.get(0).setBlackListStatus(BlackListStatus.builder()
+                                        .matchCount(doc.getInteger("totalMatches"))
+                                        .message("Şəxs siyahıda tapıldı")
+                                        .build());
+                                break;
+                            }
+                            if (total == 3) {
+                                idCardInfoList.get(0).setBlackListStatus(BlackListStatus.builder()
+                                        .matchCount(doc.getInteger("totalMatches"))
+                                        .message("Şəxs məlumatları 75% siyahıda tapıldı")
+                                        .build());
+                                break;
+                            }
+                        }
+
                         return idCardInfoList.get(0);
                     }
                 } catch (Exception e) {
