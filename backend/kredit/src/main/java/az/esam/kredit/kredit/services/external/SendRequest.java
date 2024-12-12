@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -81,12 +82,16 @@ public class SendRequest {
 
     public JsonNode sendRequest(String url, String data) throws IOException, InterruptedException {
         JsonNode result = null;
+        // Encode credentials to Base64
+        String credentials = "IdealKreditBoktWs:L7!dPrA>";
+        String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+
         HttpClient client = HttpClient.newHttpClient();
 
         // Prepare the builder
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Authorization", "Basic TUFNTUFET1YgQUxJMjpCQWhraks0SA==")
+                .header("Authorization", "Basic " + encodedCredentials)
                 .header("Content-Type", "application/json")
                 .header("Connection", "keep-alive")
                 .header("Referer", "http://app.acb.az:8002/")
