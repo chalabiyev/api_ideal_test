@@ -99,7 +99,7 @@ export default function Page() {
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="3">
               {/* zamin  */}
-              <TabGuarantor />
+              <TabGuarantor setValue={setValue} />
             </TabPanel>
             {/* <TabPanel sx={{ p: 0 }} value="4">
               {/* zamin  */}
@@ -107,11 +107,11 @@ export default function Page() {
             {/* </TabPanel> */}
             <TabPanel sx={{ p: 0 }} value="5">
               {/* neqliyyat  */}
-              <TabVehicleInformation />
+              <TabVehicleInformation setValue={setValue} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="6">
               {/* neqliyyat  */}
-              <TabCreditDataPage />
+              <TabCreditDataPage setValue={setValue} />
             </TabPanel>
           </TabContext>
         </Box>

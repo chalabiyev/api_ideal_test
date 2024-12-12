@@ -19,7 +19,7 @@ interface Zamin {
   motherName: string;
 }
 
-const TabGuarantor = () => {
+const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAction<string>> }) => {
   const [zaminList, setZaminList] = useState<Zamin[]>([]);
 
   // Yeni Zamin Ekleme Fonksiyonu
@@ -191,6 +191,34 @@ const TabGuarantor = () => {
       <Box textAlign="center" sx={{ mt: 4 }}>
         <Button variant="contained" color="primary" onClick={handleAddZamin}>
           Yeni Zamin Əlavə Et
+        </Button>
+      </Box>
+
+      <Box textAlign="center" sx={{ mt: 4 }}>
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0);
+            setValue('2');
+          }}
+          variant="contained"
+          color="error"
+          sx={{ mr: 2 }}
+        >
+          Geri
+        </Button>
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0);
+            setValue('5');
+          }}
+          variant="contained"
+          color="primary"
+          sx={{ mr: 2 }}
+        >
+          İrəli
+        </Button>
+        <Button variant="contained" color="secondary">
+          Təstiqlə
         </Button>
       </Box>
     </Box>

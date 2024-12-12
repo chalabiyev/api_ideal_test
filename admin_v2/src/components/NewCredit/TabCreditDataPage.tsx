@@ -10,13 +10,12 @@ import {
   Button,
 } from '@mui/material';
 
-const TabCreditDataPage = () => {
+const TabCreditDataPage = ({ setValue }: { setValue: React.Dispatch<React.SetStateAction<string>> }) => {
   const [creditAmount, setCreditAmount] = useState<string>('');
   const [annualInterestRate, setAnnualInterestRate] = useState<string>('');
   const [creditDuration, setCreditDuration] = useState<number>(6);
   const [isDecisionQueryEnabled, setIsDecisionQueryEnabled] = useState<boolean>(false);
 
-  // Aylık ödeme hesaplama
   const calculateMonthlyPayment = (): string => {
     if (!creditAmount || !annualInterestRate || !creditDuration) return '0.00';
 
@@ -24,12 +23,10 @@ const TabCreditDataPage = () => {
     const monthlyRate = parseFloat(annualInterestRate) / 100 / 12;
     const durationInMonths = parseInt(creditDuration.toString(), 10);
 
-    // Eğer faiz oranı 0 ise basit ödeme hesapla
     if (monthlyRate === 0) {
       return (principal / durationInMonths).toFixed(2);
     }
 
-    // Aylık ödemeyi hesapla (kredi formülü)
     const monthlyPayment =
       // eslint-disable-next-line
       (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -durationInMonths));
@@ -42,7 +39,6 @@ const TabCreditDataPage = () => {
     return (parseFloat(calculateMonthlyPayment()) * creditDuration).toFixed(2);
   };
 
-  // Cəmi faiz hesabı
   // eslint-disable-next-line
   const calculateTotalInterest = (): string => {
     return (parseFloat(calculateTotalPayment()) - parseFloat(creditAmount)).toFixed(2);
@@ -78,7 +74,6 @@ const TabCreditDataPage = () => {
           />
         </Grid>
 
-        {/* Kredit Müddəti */}
         <Grid item xs={12}>
           <Typography gutterBottom>Kreditin Müddəti: {creditDuration} ay</Typography>
           <Slider
@@ -90,7 +85,6 @@ const TabCreditDataPage = () => {
           />
         </Grid>
 
-        {/* Hesaplanan Veriler */}
         <Grid item xs={12} sm={6}>
           <TextField
             label="Aylıq Ödəniş (AZN)"
@@ -111,7 +105,6 @@ const TabCreditDataPage = () => {
           <TextField label="Cəmi Faiz (AZN)" value={calculateTotalInterest()} fullWidth disabled />
         </Grid>
 
-        {/* Karar İçin Sorgu Gönder Switch */}
         <Grid item xs={12}>
           <FormControlLabel
             control={
@@ -124,13 +117,25 @@ const TabCreditDataPage = () => {
           />
         </Grid>
 
-        {/* Gönder Butonu */}
         <Grid item xs={12}>
           <Button variant="contained" color="primary" fullWidth>
             Kredit Təsdiqlə
           </Button>
         </Grid>
       </Grid>
+      <Box textAlign="center" sx={{ mt: 4 }}>
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0);
+            setValue('5');
+          }}
+          variant="contained"
+          color="error"
+          sx={{ mr: 2 }}
+        >
+          Geri
+        </Button>
+      </Box>
     </Box>
   );
 };

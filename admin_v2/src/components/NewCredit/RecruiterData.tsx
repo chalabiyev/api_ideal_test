@@ -137,7 +137,15 @@ const RecruiterData = ({
         >
           Geri
         </Button>
-        <Button variant="contained" color="primary" sx={{ mr: 2 }}>
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0);
+            setValue('3');
+          }}
+          variant="contained"
+          color="primary"
+          sx={{ mr: 2 }}
+        >
           İrəli
         </Button>
         <Button variant="contained" color="secondary">

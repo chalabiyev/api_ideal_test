@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, CardContent, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Grid, TextField, Typography } from '@mui/material';
 
 const mockVehicles = [
   {
@@ -32,9 +32,12 @@ const mockVehicles = [
   },
 ];
 
-
 // eslint-disable-next-line
-const TabVehicleInformation = () => {
+const TabVehicleInformation = ({
+  setValue,
+}: {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   return (
     <Box sx={{ py: 4 }}>
       {/* Başlık */}
@@ -76,6 +79,34 @@ const TabVehicleInformation = () => {
           </CardContent>
         </Card>
       ))}
+
+      <Box textAlign="center" sx={{ mt: 4 }}>
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0);
+            setValue('3');
+          }}
+          variant="contained"
+          color="error"
+          sx={{ mr: 2 }}
+        >
+          Geri
+        </Button>
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0);
+            setValue('6');
+          }}
+          variant="contained"
+          color="primary"
+          sx={{ mr: 2 }}
+        >
+          İrəli
+        </Button>
+        <Button variant="contained" color="secondary">
+          Təstiqlə
+        </Button>
+      </Box>
     </Box>
   );
 };
