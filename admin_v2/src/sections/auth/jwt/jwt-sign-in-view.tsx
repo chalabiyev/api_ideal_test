@@ -47,7 +47,7 @@ export function JwtSignInView() {
   const password = useBoolean();
 
   const defaultValues = {
-    email: 'admin@admin.com',
+    email: 'admin',
     password: '123456',
   };
 
@@ -64,7 +64,7 @@ export function JwtSignInView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await signInWithPassword({
-        email: data.email,
+        username: data.email,
         password: data.password,
       });
 
