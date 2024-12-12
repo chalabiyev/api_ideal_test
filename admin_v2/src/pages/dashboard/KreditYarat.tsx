@@ -8,6 +8,7 @@ import TabIdentification from 'src/components/NewCredit/TabIdentification';
 import { DashboardContent } from 'src/layouts/dashboard';
 import TabGuarantor from 'src/components/NewCredit/TabGuarantor';
 import TabVehicleInformation from 'src/components/NewCredit/TabVehicleInformation';
+import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import RecruiterData from '../../components/NewCredit/RecruiterData';
 // import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 
@@ -107,6 +108,10 @@ export default function Page() {
             <TabPanel sx={{ p: 0 }} value="5">
               {/* neqliyyat  */}
               <TabVehicleInformation />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="6">
+              {/* neqliyyat  */}
+              <TabCreditDataPage />
             </TabPanel>
           </TabContext>
         </Box>
