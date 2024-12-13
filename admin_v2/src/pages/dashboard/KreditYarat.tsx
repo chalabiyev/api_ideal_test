@@ -23,15 +23,28 @@ export default function Page() {
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
+  const [guarantorInfo, setGuarantorInfo] = React.useState<any>(null);
+  const [guarantorPin, setGuarantorPin] = React.useState<string>('');
+  const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
 
   const endpoint = `/document/getIdCardInfo?pin=${pin}&documentNumber=${seriaNo}`;
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
 
+  const guarantorEndpoint = `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`;
+  const { data: guarantorData, error: guarantorError, hasData: hasGuarantorData, loading: guarantorLoading, refetch: guarantorRefetch } = useApi(guarantorEndpoint);
+
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
     if (hasData) {
-      console.log(data);
+      console.log("userInfo : ", data);
       setUserInfo(data);
+    }
+  };
+
+  const getGuarantorInfo = () => {
+    if (hasGuarantorData) {
+      console.log("guarantorData : ", guarantorData);
+      setGuarantorInfo(guarantorData);
     }
   };
 
@@ -39,8 +52,9 @@ export default function Page() {
     // Trigger user info update whenever new data is fetched
     getUserInfo();
 
+    getGuarantorInfo();
     // eslint-disable-next-line
-  }, [data]);
+  }, [data, guarantorData]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -102,7 +116,15 @@ export default function Page() {
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="3">
               {/* zamin  */}
-              <TabGuarantor setValue={setValue} />
+              <TabGuarantor
+                setValue={setValue}
+                loading={guarantorLoading}
+                guarantorInfo={guarantorInfo}
+                getGuarantorInfo={getGuarantorInfo}
+                setPin={setGuarantorPin}
+                setSeriaNo={setGuarantorSeriaNo}
+                hasData={hasGuarantorData}
+              />
             </TabPanel>
             {/* <TabPanel sx={{ p: 0 }} value="4">
               {/* zamin  */}
