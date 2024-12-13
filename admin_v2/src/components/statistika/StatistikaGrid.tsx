@@ -183,7 +183,7 @@ const StatistikaGrid = () => {
           percent={3.6}
           sx={cardStyle}
           total={234}
-          color="error"
+          color="success"
           icon={
             <img alt="icon" src={`${CONFIG.site.basePath}/assets/icons/glass/ic-warning.svg`} />
           }

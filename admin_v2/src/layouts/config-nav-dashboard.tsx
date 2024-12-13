@@ -5,8 +5,9 @@ import { CONFIG } from 'src/config-global';
 import { SvgColor } from 'src/components/svg-color';
 
 import { USER_ROLE } from 'src/auth/context/jwt';
+import { info } from 'console';
 
-export const user_role = sessionStorage.getItem(USER_ROLE);
+export const user_role = localStorage.getItem(USER_ROLE);
 
 console.log(user_role);
 // ----------------------------------------------------------------------
@@ -74,7 +75,19 @@ export const navData = [
         title: 'Kreditlər',
         path: paths.kredit.root,
         icon: ICONS.chat,
-        children: [{ title: 'Yarat', path: paths.kredit.yarat }],
+        children: [{ title: 'Yeni kredit müraciəti', path: paths.kredit.yarat }],
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Video Zəng',
+        path: paths.videocall.root,
+        icon: ICONS.kanban,
+        children: [
+          { title: 'Video zəng ekranı', path: paths.videocall.videocall, openInNewTab: true },
+        ],
       },
     ],
   },

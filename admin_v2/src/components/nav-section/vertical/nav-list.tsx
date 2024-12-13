@@ -48,6 +48,7 @@ export function NavList({ data, render, depth, slotProps, enabledRootRedirect }:
       // state
       depth={depth}
       active={active}
+      openInNewTab={data.openInNewTab}
       disabled={data.disabled}
       hasChild={!!data.children}
       open={data.children && openMenu}
