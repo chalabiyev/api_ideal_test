@@ -17,9 +17,9 @@ const RecruiterData = ({
       {/* Təhsil və Hüquqi Adı */}
       <Card sx={{ mb: 3, p: 2 }}>
         <CardContent>
-          <Typography variant="subtitle1" gutterBottom>
+          {/* <Typography variant="subtitle1" gutterBottom>
             fdsfsd
-          </Typography>
+          </Typography> */}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField label="Təhsili" fullWidth />

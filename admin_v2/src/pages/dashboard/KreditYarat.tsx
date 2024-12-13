@@ -23,27 +23,35 @@ export default function Page() {
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
+
+  // guarantor
   const [guarantorInfo, setGuarantorInfo] = React.useState<any>(null);
   const [guarantorPin, setGuarantorPin] = React.useState<string>('');
   const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
 
+  const guarantorEndpoint = `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`;
+  const {
+    data: guarantorData,
+    error: guarantorError,
+    hasData: hasGuarantorData,
+    loading: guarantorLoading,
+    refetch: guarantorRefetch,
+  } = useApi(guarantorEndpoint);
+
   const endpoint = `/document/getIdCardInfo?pin=${pin}&documentNumber=${seriaNo}`;
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
-
-  const guarantorEndpoint = `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`;
-  const { data: guarantorData, error: guarantorError, hasData: hasGuarantorData, loading: guarantorLoading, refetch: guarantorRefetch } = useApi(guarantorEndpoint);
 
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
     if (hasData) {
-      console.log("userInfo : ", data);
+      console.log(data);
       setUserInfo(data);
     }
   };
 
   const getGuarantorInfo = () => {
     if (hasGuarantorData) {
-      console.log("guarantorData : ", guarantorData);
+      console.log('guarantorData : ', guarantorData);
       setGuarantorInfo(guarantorData);
     }
   };
@@ -51,8 +59,8 @@ export default function Page() {
   useEffect(() => {
     // Trigger user info update whenever new data is fetched
     getUserInfo();
-
     getGuarantorInfo();
+
     // eslint-disable-next-line
   }, [data, guarantorData]);
 

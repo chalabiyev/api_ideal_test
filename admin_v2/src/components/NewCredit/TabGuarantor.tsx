@@ -5,15 +5,13 @@ interface Zamin {
   personAz: {
     name: string;
     surname: string;
-    patrynomic: string;
+    patronymic: string;
   };
   id: number;
   pin: string;
   documentNumber: string;
   image: string;
-  addressDetail: {
-    address: string;
-  };
+  addressDetail: { address: string };
   birthDate: string;
   birthAddress: string;
   maritalStatus: string;
@@ -47,7 +45,10 @@ const TabGuarantor = ({
     if (targetZamin?.pin && targetZamin.documentNumber) {
       setPin(targetZamin.pin);
       setSeriaNo(targetZamin.documentNumber);
+
       getGuarantorInfo();
+    } else {
+      console.log('PIN veya Serial Number eksik');
     }
   };
 
@@ -55,8 +56,18 @@ const TabGuarantor = ({
     if (guarantorInfo) {
       setZaminList((prev) =>
         prev.map((zamin) =>
-          zamin.pin === guarantorInfo.fin
-            ? { ...zamin, ...guarantorInfo, detailsFetched: true }
+          zamin.pin === guarantorInfo.pin
+            ? {
+                ...zamin,
+                personAz: guarantorInfo.personAz,
+                birthAddress: guarantorInfo.birthAddress,
+                birthDate: guarantorInfo.birthDate,
+                maritalStatus: guarantorInfo.maritalStatus,
+                gender: guarantorInfo.gender,
+                addressDetail: guarantorInfo.addressDetail,
+                image: `data:image/jpeg;base64,${guarantorInfo.image}`,
+                isActive: guarantorInfo.isActive,
+              }
             : zamin
         )
       );
@@ -65,23 +76,16 @@ const TabGuarantor = ({
 
   console.log('zaminList : ', zaminList);
 
-  // Yeni Zamin Ekleme Fonksiyonu
   const handleAddZamin = () => {
-    setZaminList((prev: any) => [
+    setZaminList((prev: Zamin[]) => [
       ...prev,
       {
-        personAz: {
-          name: '',
-          surname: '',
-          patrynomic: '',
-        },
-        id: prev.length,
+        personAz: { name: '', surname: '', patronymic: '' },
+        id: prev.length + 1,
         pin: '',
         documentNumber: '',
         image: '',
-        addressDetail: {
-          address: '',
-        },
+        addressDetail: { address: '' },
         birthDate: '',
         birthAddress: '',
         maritalStatus: '',
@@ -120,7 +124,6 @@ const TabGuarantor = ({
     );
   };
 
-  // Zamin Silme Fonksiyonu
   const handleDeleteZamin = (id: number) => {
     setZaminList((prev) => prev.filter((zamin) => zamin.id !== id));
   };
@@ -206,7 +209,7 @@ const TabGuarantor = ({
                     <Grid item xs={12} sm={6}>
                       <TextField
                         label="Ata Adı"
-                        value={zamin.personAz.patrynomic}
+                        value={zamin.personAz.patronymic}
                         fullWidth
                         disabled
                       />

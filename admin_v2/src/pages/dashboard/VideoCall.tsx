@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { LazyMotion, domAnimation, m } from 'framer-motion'; // LazyMotion ve m import
+
 import {
   Box,
   Grid,
@@ -20,13 +22,15 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import CallEndIcon from '@mui/icons-material/CallEnd';
 import TimerIcon from '@mui/icons-material/Timer';
+import { primary } from 'src/theme/core';
 
 const VideoCall = () => {
-  const [isVideoOn, setIsVideoOn] = useState(true);
-  const [isAudioOn, setIsAudioOn] = useState(true);
+  const [isVideoOn, setIsVideoOn] = useState(false);
+  const [isAudioOn, setIsAudioOn] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [isCallActive, setIsCallActive] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [messages, setMessages] = useState([
     { text: 'Salam, necə kömək edə bilərəm?', sender: 'Operator', time: '09:30' },
     { text: 'Salam, bir problemim var.', sender: 'User', time: '09:31' },
@@ -36,8 +40,22 @@ const VideoCall = () => {
   const [incomingCall, setIncomingCall] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const theme = useTheme();
+
+  const handleDragEnd = (event: any, info: any) => {
+    setPosition({
+      x: info.point.x,
+      y: info.point.y,
+    });
+  };
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   // bu kisim ringtone ILKIN
   // useEffect(() => {
@@ -89,6 +107,8 @@ const VideoCall = () => {
         stream.getTracks().forEach((track) => track.stop());
       }
     };
+
+    // eslint-disable-next-line
   }, [isVideoOn]);
 
   const toggleVideo = () => {
@@ -134,9 +154,10 @@ const VideoCall = () => {
   const renderMessage = (msg: { text: string; sender: string; time: string }) => (
     <Grid
       container
+      alignItems="center"
       direction={msg.sender === 'User' ? 'row-reverse' : 'row'}
       spacing={2}
-      sx={{ marginBottom: 1, backgroundColor: 'khaki' }}
+      sx={{ marginBottom: 1 }}
     >
       <Grid item>
         <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
@@ -243,8 +264,17 @@ const VideoCall = () => {
         <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography variant="body2">Operator:</Typography> Əhməd
         </Typography>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto', marginTop: 2, backgroundColor: 'khaki' }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            overflowY: 'auto',
+            marginTop: 2,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           {messages.map((msg, index) => renderMessage(msg))}
+          <div ref={messagesEndRef} /> {/* Yeni ekleme */}
         </Box>
         <Grid container spacing={2} sx={{ marginTop: 0 }}>
           <Grid item xs={9}>
@@ -296,8 +326,14 @@ const VideoCall = () => {
             position: 'relative',
           }}
         >
+          {/* countdown  */}
+          <Button disabled variant="contained" sx={{ position: 'absolute', top: 0, left: 0 }}>
+            <TimerIcon sx={{ verticalAlign: 'middle', marginRight: 1, color: primary.main }} />
+            {Math.floor(callDuration / 60)}:
+            {callDuration % 60 < 10 ? `0${callDuration % 60}` : callDuration % 60}
+          </Button>
           {/* my camera  */}
-          <div className="w-[25%] flex items-center justify-center absolute right-5 top-5 h-[27%] rounded-md bg-gray-900">
+          {/* <div className="w-[25%] flex items-center justify-center absolute right-5 top-5 h-[27%] rounded-md bg-gray-900">
             {isVideoOn ? (
               <video
                 ref={videoRef}
@@ -313,16 +349,49 @@ const VideoCall = () => {
             ) : (
               <VideocamOffIcon fontSize="large" />
             )}
-          </div>
+          </div> */}
+
+          {/* my camera draggabl */}
+          <LazyMotion features={domAnimation}>
+            <m.div
+              drag
+              dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }} // Hareket sınırları (isteğe bağlı)
+              dragMomentum={false} // Ani hareketleri engeller
+              style={{
+                position: 'absolute',
+                top: '5%',
+                right: '5%',
+                width: '25%',
+                height: '27%',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                backgroundColor: '#000',
+                cursor: 'grab',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              whileDrag={{ cursor: 'grabbing' }}
+            >
+              {isVideoOn ? (
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  muted
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              ) : (
+                <VideocamOffIcon fontSize="large" style={{ color: '#fff' }} />
+              )}
+            </m.div>
+          </LazyMotion>
         </Box>
 
         <Box sx={{ width: '100%', marginTop: 2, textAlign: 'center' }}>
-          <Typography variant="body1">
-            <TimerIcon sx={{ verticalAlign: 'middle', marginRight: 1 }} />
-            {Math.floor(callDuration / 60)}:
-            {callDuration % 60 < 10 ? `0${callDuration % 60}` : callDuration % 60}
-          </Typography>
-
           <Box sx={{ marginTop: 2 }}>
             <IconButton onClick={toggleVideo} color="primary" sx={{ margin: 1 }}>
               {isVideoOn ? <VideocamIcon /> : <VideocamOffIcon />}
