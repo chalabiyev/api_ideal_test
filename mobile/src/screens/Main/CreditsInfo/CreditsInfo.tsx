@@ -1,17 +1,20 @@
-import React, {useState} from 'react';
-import {SafeAreaView, View, Dimensions, ScrollView} from 'react-native';
-import {makeStyles} from './style';
-import {BottomNavigationContainer, Container, Text} from '../../../components';
-import colors from '../../../constants/colors/colors';
-import {globalSpacingStyle} from '../../../constants/space/style';
-import {TabBar, TabView} from 'react-native-tab-view';
-import MainButton from '../../../components/Fit/Button/MainButton';
-import {useNavigation} from '@react-navigation/native';
-import Video from 'react-native-video';
+import React, { useState } from "react";
+import { SafeAreaView, View, Dimensions, ScrollView } from "react-native";
+import { makeStyles } from "./style";
+import {
+  BottomNavigationContainer,
+  Container,
+  Text,
+} from "../../../components";
+import colors from "../../../constants/colors/colors";
+import { globalSpacingStyle } from "../../../constants/space/style";
+import { TabBar, TabView } from "react-native-tab-view";
+import MainButton from "../../../components/Fit/Button/MainButton";
+import { useNavigation } from "@react-navigation/native";
+import Video from "react-native-video";
 const styles = makeStyles();
 const globalStyle = globalSpacingStyle();
-const {width} = Dimensions.get('window');
-
+const { width } = Dimensions.get("window");
 const FirstRoute = () => {
   const navigation = useNavigation();
   return (
@@ -97,7 +100,7 @@ const FirstRoute = () => {
           <View style={styles.button}>
             <MainButton
               text="Müraciət et"
-              onPress={() => navigation.navigate('Credits')}
+              onPress={() => navigation.navigate("Credits")}
             />
           </View>
         </View>
@@ -111,14 +114,14 @@ const FirstRoute = () => {
 const SecondRoute = () => {
   const navigation = useNavigation();
   return (
-    <View style={{flex: 1, backgroundColor: colors.greyBackground}}>
+    <View style={{ flex: 1, backgroundColor: colors.greyBackground }}>
       <View style={globalStyle.space20VT} />
       <Container>
-        <View style={{borderRadius: 8, overflow: 'hidden'}}>
+        <View style={{ borderRadius: 8, overflow: "hidden" }}>
           <Video
             paused={true}
-            source={require('../../../assets/video/idealKredit.mp4')}
-            style={{width: '100%', height: 200}}
+            source={require("../../../assets/video/idealKredit.mp4")}
+            style={{ width: "100%", height: 200 }}
             controls={true}
             resizeMode="cover"
           />
@@ -134,14 +137,15 @@ const SecondRoute = () => {
       <View
         style={{
           marginTop: 10,
-          width: '100%',
-          justifyContent: 'flex-end',
-          flexDirection: 'row',
-        }}>
-        <View style={{width: '50%'}}>
+          width: "100%",
+          justifyContent: "flex-end",
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ width: "50%" }}>
           <MainButton
             text="Müraciət et"
-            onPress={() => navigation.navigate('Credits')}
+            onPress={() => navigation.navigate("Credits")}
           />
         </View>
       </View>
@@ -153,14 +157,14 @@ const renderTabBar = (props: any) => {
   return (
     <TabBar
       {...props}
-      indicatorStyle={{backgroundColor: colors.tabBarColor}}
-      style={{backgroundColor: colors.greyBackground}}
-      renderLabel={({route, focused}) => (
+      indicatorStyle={{ backgroundColor: colors.tabBarColor }}
+      style={{ backgroundColor: colors.greyBackground }}
+      renderLabel={({ route, focused }) => (
         <Text
           text={route.title}
           size="14"
           type="semiBold"
-          color={focused ? colors.tabBarColor : 'gray'}
+          color={focused ? colors.tabBarColor : "gray"}
           textTransform="none"
         />
       )}
@@ -168,19 +172,19 @@ const renderTabBar = (props: any) => {
   );
 };
 
-export default function CreditsInfo({route}) {
-  const initialLayout = {width: Dimensions.get('window').width};
+export default function CreditsInfo({ route }) {
+  const initialLayout = { width: Dimensions.get("window").width };
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'first', title: 'Yazılı məlumat'},
-    {key: 'second', title: 'Video məlumat'},
+    { key: "first", title: "Yazılı məlumat" },
+    { key: "second", title: "Video məlumat" },
   ]);
 
-  const renderScene = ({route}: any) => {
+  const renderScene = ({ route }: any) => {
     switch (route.key) {
-      case 'first':
+      case "first":
         return <FirstRoute />;
-      case 'second':
+      case "second":
         return <SecondRoute />;
       default:
         return null;
@@ -189,7 +193,7 @@ export default function CreditsInfo({route}) {
 
   return (
     <>
-      <SafeAreaView style={{backgroundColor: colors.greyBackground}} />
+      <SafeAreaView style={{ backgroundColor: colors.greyBackground }} />
       <View style={styles.container}>
         <Text
           text={route.params.CreditsData.title}
@@ -198,13 +202,13 @@ export default function CreditsInfo({route}) {
           position="center"
         />
         <TabView
-          navigationState={{index, routes}}
+          navigationState={{ index, routes }}
           renderScene={renderScene}
           renderTabBar={renderTabBar}
           onIndexChange={setIndex}
           initialLayout={initialLayout}
         />
-        <View style={{width: '100%', alignItems: 'center'}}>
+        <View style={{ width: "100%", alignItems: "center" }}>
           <BottomNavigationContainer />
         </View>
       </View>

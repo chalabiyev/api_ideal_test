@@ -45,12 +45,12 @@ export default function Splash() {
         />
         <View style={globalStyle.space20VT} />
         <MainButton
-          text="İdeal Kredit müştəriyəm"
+          text="Daxil ol"
           onPress={() => navigation.navigate("Login")}
         />
         <View style={globalStyle.space10VT} />
         <MainButton
-          text="İdeal Kredit müştəri deyiləm"
+          text="Qeydiyyatdan keç"
           onPress={() => navigation.navigate("Register")}
           color={colors.defaultButtonSkyBlue}
         />
