@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,15 +17,23 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Base64;
 
 @Slf4j
 @Service
 public class SendRequest {
 
+
+    @Value("${akb.id}")
+    private String id;
+
+    @Value("${akb.password}")
+    private String password;
+
     @Autowired
     private ObjectMapper objectMapper;
 
-    public JsonNode executeRequest(String url, String authName, String authKey, String host) {
+    public JsonNode executeRequest(String url, String authName, String authKey, String host) throws IOException {
         JsonNode result = null;
         Response response = null;
         log.info("authKey : {} ", authKey);
@@ -57,9 +66,11 @@ public class SendRequest {
                     log.info("Service result : {} ", result);
                 } else {
                     log.error("Request failed with status code: {}", response.code());
+                    throw new IOException("Request failed with status code: " + response.code());
                 }
             } catch (IOException e) {
                 log.error(e.getMessage());
+                throw e;
             } finally {
                 // Close the response to avoid connection leaks
                 if (response != null) {
@@ -68,6 +79,7 @@ public class SendRequest {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw e;
         } finally {
             if (response != null) {
                 response.close();
@@ -78,12 +90,16 @@ public class SendRequest {
 
     public JsonNode sendRequest(String url, String data) throws IOException, InterruptedException {
         JsonNode result = null;
+        // Encode credentials to Base64
+        String credentials = id + ":" + password;
+        String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+
         HttpClient client = HttpClient.newHttpClient();
 
         // Prepare the builder
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Authorization", "Basic TUFNTUFET1YgQUxJMjpCQWhraks0SA==")
+                .header("Authorization", "Basic " + encodedCredentials)
                 .header("Content-Type", "application/json")
                 .header("Connection", "keep-alive")
                 .header("Referer", "http://app.acb.az:8002/")

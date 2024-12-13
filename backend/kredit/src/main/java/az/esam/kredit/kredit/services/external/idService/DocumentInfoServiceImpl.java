@@ -6,10 +6,16 @@ import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +40,11 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    MongoTemplate mongoTemplate;
+
     @Override
-    public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) {
+    public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) throws IOException {
         try {
             String url = "iamas/document/getIdCardInfo?Pin=" + pin + "&DocumentNumber=" + documentNumber;
             log.info("Request URL: {}", url);
@@ -46,16 +55,48 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                             parserService.parseResponse(jsonResponse, FullIDCardInfoResponse.class);
 
                     if (idCardInfoList != null && !idCardInfoList.isEmpty()) {
+                        // check if person is on the blacklistedIndividuals
+                        Aggregation aggregation = Aggregation.newAggregation(
+                                Aggregation.match(Criteria.where("nameAz").is(idCardInfoList.get(0).getPersonAz().getName())),
+                                Aggregation.project()
+                                        .andExpression("nameAz == @nameAz ? 1 : 0").as("nameMatch")
+                                        .andExpression("surnameAz == @surnameAz ? 1 : 0").as("surnameMatch")
+                                        .andExpression("patronymicAz == @patronymicAz ? 1 : 0").as("patronymicMatch")
+                                        .andExpression("dateOfBirth == @dateOfBirth ? 1 : 0").as("birthDateMatch")
+                                        .andExpression("nameMatch + surnameMatch + patronymicMatch + birthDateMatch").as("totalMatches")
+                        );
+                        AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, "blacklisted_individuals", Document.class);
+
+                        for (Document doc : result) {
+                            int total = doc.getInteger("totalMatches");
+                            if (total == 4) {
+                                idCardInfoList.get(0).setBlackListStatus(BlackListStatus.builder()
+                                        .matchCount(doc.getInteger("totalMatches"))
+                                        .message("Şəxs siyahıda tapıldı")
+                                        .build());
+                                break;
+                            }
+                            if (total == 3) {
+                                idCardInfoList.get(0).setBlackListStatus(BlackListStatus.builder()
+                                        .matchCount(doc.getInteger("totalMatches"))
+                                        .message("Şəxs məlumatları 75% siyahıda tapıldı")
+                                        .build());
+                                break;
+                            }
+                        }
+
                         return idCardInfoList.get(0);
                     }
                 } catch (Exception e) {
                     log.error("Error parsing JSON response: {}", e.getMessage(), e);
+
                 }
             } else {
                 log.error("Response is null or empty");
             }
         } catch (Exception ex) {
             log.error("Error during getIdCardInfo execution: {}", ex.getMessage(), ex);
+            throw ex;
         }
         return null;
     }
@@ -129,7 +170,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     }
 
     @Override
-    public DocumentInfoByMobileNumberResponse getDocumentInfoByPhone(String phoneNumber) {
+    public DocumentInfoByMobileNumberResponse getDocumentInfoByPhone(String phoneNumber) throws IOException {
         try {
             String url = "mobile/numbers/getDocumentInfoByPhone?phone=" + phoneNumber;
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
@@ -149,13 +190,13 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             }
         } catch (Exception ex) {
             log.error(null, ex);
-            return null;
+            throw ex;
         }
         return null;
     }
 
     @Override
-    public VehicleInfoResponse getVehicleInfoByPin(String pin) {
+    public List<VehicleInfoResponse> getVehicleInfoByPin(String pin) throws IOException {
         try {
             String url = "general/vehicle/getVehicleInfoByPin?Pin=" + pin;
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
@@ -165,7 +206,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                             parserService.parseResponse(jsonNode, VehicleInfoResponse.class);
 
                     if (vehicleInfoResponseList != null && !vehicleInfoResponseList.isEmpty()) {
-                        return vehicleInfoResponseList.get(0);
+                        return vehicleInfoResponseList;
                     }
                 } catch (Exception e) {
                     log.error("Error parsing JSON response: {}", e.getMessage(), e);
@@ -175,7 +216,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             }
         } catch (Exception ex) {
             log.error(null, ex);
-            return null;
+            throw ex;
         }
         return null;
     }
@@ -261,3 +302,4 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     }
 
 }
+
