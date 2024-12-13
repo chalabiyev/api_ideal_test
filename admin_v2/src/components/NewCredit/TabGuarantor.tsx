@@ -1,41 +1,101 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Card, CardContent, Grid, TextField, Typography, Avatar } from '@mui/material';
 
 interface Zamin {
-  surname: unknown;
-  name: unknown;
+  personAz: {
+    name: string;
+    surname: string;
+    patrynomic: string;
+  };
   id: number;
-  fin: string;
-  serial: string;
-  detailsFetched: boolean;
-  photo: string;
-  address: string;
+  pin: string;
+  documentNumber: string;
+  image: string;
+  addressDetail: {
+    address: string;
+  };
   birthDate: string;
-  birthPlace: string;
+  birthAddress: string;
   maritalStatus: string;
+  militaryStatus: string;
   gender: string;
-  status: string;
-  fatherName: string;
-  motherName: string;
+  isActive: boolean;
 }
 
-const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAction<string>> }) => {
+const TabGuarantor = ({
+  setValue,
+  loading,
+  guarantorInfo,
+  getGuarantorInfo,
+  hasData,
+  setPin,
+  setSeriaNo,
+}: {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  loading: boolean;
+  guarantorInfo: any;
+  getGuarantorInfo: () => void;
+  hasData: boolean;
+  setPin: React.Dispatch<React.SetStateAction<string>>;
+  setSeriaNo: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [zaminList, setZaminList] = useState<Zamin[]>([]);
+
+  const handleSearch = (id: number) => {
+    const targetZamin = zaminList.find((zamin) => zamin.id === id);
+
+    if (targetZamin?.pin && targetZamin.documentNumber) {
+      setPin(targetZamin.pin);
+      setSeriaNo(targetZamin.documentNumber);
+      getGuarantorInfo();
+    }
+  };
+
+  useEffect(() => {
+    if (guarantorInfo) {
+      setZaminList((prev) =>
+        prev.map((zamin) =>
+          zamin.pin === guarantorInfo.fin
+            ? { ...zamin, ...guarantorInfo, detailsFetched: true }
+            : zamin
+        )
+      );
+    }
+  }, [guarantorInfo]);
+
+  console.log('zaminList : ', zaminList);
 
   // Yeni Zamin Ekleme Fonksiyonu
   const handleAddZamin = () => {
     setZaminList((prev: any) => [
       ...prev,
-      { id: prev.length, fin: '', serial: '', detailsFetched: false },
+      {
+        personAz: {
+          name: '',
+          surname: '',
+          patrynomic: '',
+        },
+        id: prev.length,
+        pin: '',
+        documentNumber: '',
+        image: '',
+        addressDetail: {
+          address: '',
+        },
+        birthDate: '',
+        birthAddress: '',
+        maritalStatus: '',
+        militaryStatus: '',
+        gender: '',
+        isActive: false,
+      },
     ]);
   };
 
-  // Input Değişimi Takibi
+  // Input Değişimi Takibi d
   const handleInputChange = (id: number, field: string, value: string) => {
     setZaminList((prev) =>
-      prev.map((zamin) =>
-        zamin.id === id ? { ...zamin, [field]: value, detailsFetched: false } : zamin
-      )
+      prev.map((zamin) => (zamin.id === id ? { ...zamin, [field]: value } : zamin))
     );
   };
 
@@ -84,24 +144,24 @@ const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAct
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="FIN"
-                  value={zamin.fin}
-                  onChange={(e) => handleInputChange(zamin.id, 'fin', e.target.value)}
+                  value={zamin.pin}
+                  onChange={(e) => handleInputChange(zamin.id, 'pin', e.target.value)}
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="Serial Number"
-                  value={zamin.serial}
-                  onChange={(e) => handleInputChange(zamin.id, 'serial', e.target.value)}
+                  value={zamin.documentNumber}
+                  onChange={(e) => handleInputChange(zamin.id, 'documentNumber', e.target.value)}
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button
                   variant="outlined"
-                  onClick={() => fetchDetails(zamin.id)}
-                  disabled={!zamin.fin || !zamin.serial || zamin.detailsFetched}
+                  onClick={() => handleSearch(zamin.id)}
+                  disabled={!zamin.pin || !zamin.documentNumber || loading}
                   fullWidth
                 >
                   Axtarış et
@@ -120,7 +180,7 @@ const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAct
             </Grid>
 
             {/* Zaminin Diğer Bilgileri */}
-            {zamin.detailsFetched && (
+            {guarantorInfo && (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>
                   <Avatar
@@ -130,7 +190,7 @@ const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAct
                       margin: '0 auto',
                       backgroundColor: '#f0f0f0',
                     }}
-                    src="https://via.placeholder.com/120"
+                    src={zamin.image || 'https://via.placeholder.com/120'}
                   >
                     Foto
                   </Avatar>
@@ -138,18 +198,23 @@ const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAct
                 <Grid item xs={12} sm={8}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Ad" value={zamin?.name} fullWidth disabled />
+                      <TextField label="Ad" value={zamin?.personAz.name} fullWidth disabled />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Soyad" value={zamin.surname} fullWidth disabled />
+                      <TextField label="Soyad" value={zamin.personAz.surname} fullWidth disabled />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Ata Adı" value={zamin.fatherName} fullWidth disabled />
+                      <TextField
+                        label="Ata Adı"
+                        value={zamin.personAz.patrynomic}
+                        fullWidth
+                        disabled
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         label="Vəsiqənin Statusu"
-                        value={zamin.status}
+                        value={zamin.isActive ? 'Aktiv' : 'Aktiv deyil'}
                         fullWidth
                         disabled
                       />
@@ -158,23 +223,40 @@ const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAct
                       <TextField label="Doğum Tarixi" value={zamin.birthDate} fullWidth disabled />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Doğum Yeri" value={zamin.birthPlace} fullWidth disabled />
+                      <TextField label="Doğum Yeri" value={zamin.birthAddress} fullWidth disabled />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         label="Ailə Vəziyyəti"
-                        value={zamin.maritalStatus}
+                        value={
+                          zamin?.maritalStatus === 'SINGLE'
+                            ? 'Subay'
+                            : zamin?.maritalStatus === 'MARRIED'
+                              ? 'Evli'
+                              : ''
+                        }
                         fullWidth
                         disabled
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField label="Cinsi" value={zamin.gender} fullWidth disabled />
+                      <TextField
+                        label="Cinsi"
+                        value={
+                          zamin?.gender === 'MALE'
+                            ? 'KİŞİ'
+                            : zamin?.gender === 'FEMALE'
+                              ? 'QADIN'
+                              : ''
+                        }
+                        fullWidth
+                        disabled
+                      />
                     </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         label="Qeydiyyatda Olduğu Ünvan"
-                        value={zamin.address}
+                        value={zamin.addressDetail.address}
                         fullWidth
                         disabled
                       />
