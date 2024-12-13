@@ -48,4 +48,8 @@ export const paths = {
     root: `/kredit`,
     yarat: `/kredit/yarat`,
   },
+  videocall: {
+    root: `/videocall`,
+    videocall: `/videocall/videocall`,
+  },
 };

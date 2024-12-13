@@ -247,7 +247,7 @@ const TabIdentification = ({
             >
               İrəli
             </Button>
-            <Button variant="contained" color="secondary">
+            <Button variant="contained" color="success">
               Təstiqlə
             </Button>
           </Box>

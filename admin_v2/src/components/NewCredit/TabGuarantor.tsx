@@ -217,7 +217,7 @@ const TabGuarantor = ({ setValue }: { setValue: React.Dispatch<React.SetStateAct
         >
           İrəli
         </Button>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="success">
           Təstiqlə
         </Button>
       </Box>

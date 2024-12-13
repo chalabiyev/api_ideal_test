@@ -32,11 +32,11 @@ const mockVehicles = [
   },
 ];
 
-// eslint-disable-next-line
 const TabVehicleInformation = ({
   setValue,
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  // eslint-disable-next-line
 }) => {
   return (
     <Box sx={{ py: 4 }}>
@@ -103,7 +103,7 @@ const TabVehicleInformation = ({
         >
           İrəli
         </Button>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="success">
           Təstiqlə
         </Button>
       </Box>

@@ -15,6 +15,8 @@ const Statistika = lazy(() => import('src/pages/dashboard/Statistika'));
 
 // kredit
 const KreditYarat = lazy(() => import('src/pages/dashboard/KreditYarat'));
+// kredit
+const VideoCall = lazy(() => import('src/pages/dashboard/VideoCall'));
 
 // ----------------------------------------------------------------------
 
@@ -41,9 +43,16 @@ export const dashboardRoutes = [
     children: [
       {
         path: 'kredit',
-        children: [
-          { path: 'yarat', element: <KreditYarat /> },
-        ],
+        children: [{ path: 'yarat', element: <KreditYarat /> }],
+      },
+    ],
+  },
+  {
+    element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
+    children: [
+      {
+        path: 'videocall',
+        children: [{ path: 'videocall', element: <VideoCall />, openInNewTab: true }],
       },
     ],
   },

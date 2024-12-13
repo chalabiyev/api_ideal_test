@@ -85,11 +85,7 @@ export function NavOptions({ options, value, onClickOption, hideNavColor, hideNa
     </div>
   );
 
-  return (
-    <Block title="Navigasiya" sx={{ ...cssVars, gap: 2.5 }}>
-      {!hideNavLayout && renderLayout}
-    </Block>
-  );
+  return <></>;
 }
 
 // ----------------------------------------------------------------------

@@ -36,6 +36,7 @@ export type NavItemStateProps = {
 };
 
 export type NavItemBaseProps = {
+  openInNewTab?: boolean;
   path: string;
   title: string;
   children?: any;

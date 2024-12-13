@@ -9,6 +9,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import TabGuarantor from 'src/components/NewCredit/TabGuarantor';
 import TabVehicleInformation from 'src/components/NewCredit/TabVehicleInformation';
 import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
+import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from '../../components/NewCredit/RecruiterData';
 // import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 
@@ -78,6 +79,8 @@ export default function Page() {
                 {/* <Tab label="Ailə üzvləri" value="4" /> */}
                 <Tab label="Nəqliyyat vasitələri" value="5" />
                 <Tab label="Kredit ver" value="6" />
+                <Tab label="Video qeydiyyat" value="7" />
+                <Tab label="İmza" value="8" />
               </TabList>
             </Box>
             <TabPanel sx={{ p: 0 }} value="1">
@@ -112,6 +115,10 @@ export default function Page() {
             <TabPanel sx={{ p: 0 }} value="6">
               {/* neqliyyat  */}
               <TabCreditDataPage setValue={setValue} />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="7">
+              {/* neqliyyat  */}
+              <TabVideoRecord setValue={setValue} />
             </TabPanel>
           </TabContext>
         </Box>

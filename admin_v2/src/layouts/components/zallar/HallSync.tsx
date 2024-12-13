@@ -5,7 +5,7 @@ import axios from 'axios';
 import { API_KEY, BASE_URL } from 'src/api/request';
 import { STORAGE_KEY } from 'src/auth/context/jwt';
 
-const token = sessionStorage.getItem(STORAGE_KEY);
+const token = localStorage.getItem(STORAGE_KEY);
 
 const axiosInstance = axios.create({
   baseURL: `${BASE_URL}`,

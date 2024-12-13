@@ -10,7 +10,11 @@ import {
   Button,
 } from '@mui/material';
 
-const TabCreditDataPage = ({ setValue }: { setValue: React.Dispatch<React.SetStateAction<string>> }) => {
+const TabCreditDataPage = ({
+  setValue,
+}: {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [creditAmount, setCreditAmount] = useState<string>('');
   const [annualInterestRate, setAnnualInterestRate] = useState<string>('');
   const [creditDuration, setCreditDuration] = useState<number>(6);
@@ -134,6 +138,16 @@ const TabCreditDataPage = ({ setValue }: { setValue: React.Dispatch<React.SetSta
           sx={{ mr: 2 }}
         >
           Geri
+        </Button>
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0);
+            setValue('7');
+          }}
+          variant="contained"
+          color="primary"
+        >
+          İrəli
         </Button>
       </Box>
     </Box>

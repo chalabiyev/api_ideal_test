@@ -20,7 +20,7 @@ request.interceptors.request.use(
     config.headers['X-API-KEY'] = API_KEY;
     config.headers['Access-Control-Allow-Origin'] = '*';
     config.headers['Accept-Language'] = 'az';
-    const token = sessionStorage.getItem(STORAGE_KEY);
+    const token = localStorage.getItem(STORAGE_KEY);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

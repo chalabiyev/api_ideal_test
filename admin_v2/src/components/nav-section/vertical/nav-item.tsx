@@ -27,10 +27,12 @@ export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
       //
       open,
       depth,
+      openInNewTab,
       render,
       active,
       disabled,
       hasChild,
+
       slotProps,
       externalLink,
       enabledRootRedirect,
@@ -52,6 +54,7 @@ export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
     return (
       <StyledNavItem
         ref={ref}
+        {...(externalLink || openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         aria-label={title}
         depth={depth}
         active={active}
