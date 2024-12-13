@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
   Dimensions,
   ImageBackground,
   TouchableOpacity,
-} from 'react-native';
-import {makeStyles} from './style';
+} from "react-native";
+import { makeStyles } from "./style";
 import {
   Button,
   Container,
@@ -15,21 +15,22 @@ import {
   PhoneInput,
   PrivacyAndTermsOfUse,
   Text,
-} from '../../../components';
-import colors from '../../../constants/colors/colors';
-import {TabView, TabBar} from 'react-native-tab-view';
-import {globalSpacingStyle} from '../../../constants/space/style';
-import {useNavigation} from '@react-navigation/native';
+} from "../../../components";
+import colors from "../../../constants/colors/colors";
+import { TabView, TabBar } from "react-native-tab-view";
+import { globalSpacingStyle } from "../../../constants/space/style";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = makeStyles();
 const globalStyle = globalSpacingStyle();
 
-const FirstRoute = ({fin, setFin, navigation}: any) => (
+const FirstRoute = ({ fin, setFin, navigation }: any) => (
   <View style={styles.firstRoute}>
     <View style={globalStyle.space20VT} />
     <ImageBackground
       style={styles.imageBackground}
-      source={require('../../../assets/images/BackgroundImage/RegisterBackground.png')}>
+      source={require("../../../assets/images/BackgroundImage/RegisterBackground.png")}
+    >
       <View>
         <Text
           text="FİN nömrəsi ilə daxil ola bilərsiniz."
@@ -61,13 +62,13 @@ const FirstRoute = ({fin, setFin, navigation}: any) => (
       <View style={styles.footer}>
         <Button
           text="Davam et"
-          onPress={() => navigation.navigate('Birthday')}
+          onPress={() => navigation.navigate("TelephoneNumber")}
           disable={fin ? false : true}
         />
         <View style={globalStyle.space10VT} />
         <PrivacyAndTermsOfUse
-          onPressPrivacy={() => alert('Privacy')}
-          onPressTerms={() => alert('Terms')}
+          onPressPrivacy={() => alert("Privacy")}
+          onPressTerms={() => alert("Terms")}
         />
         <View style={globalStyle.space30VT} />
       </View>
@@ -90,7 +91,8 @@ const SecondRoute = ({
     <View style={globalStyle.space20VT} />
     <ImageBackground
       style={styles.imageBackground}
-      source={require('../../../assets/images/BackgroundImage/RegisterBackground.png')}>
+      source={require("../../../assets/images/BackgroundImage/RegisterBackground.png")}
+    >
       <View>
         <View style={globalStyle.space20VT} />
         <Container>
@@ -126,7 +128,7 @@ const SecondRoute = ({
       <View style={styles.footer}>
         <Button
           text="Davam et"
-          onPress={() => navigation.navigate('Otp')}
+          onPress={() => navigation.navigate("Otp")}
           disable={!company || !voen || !telephoneNumber || !email}
         />
         <View style={globalStyle.space30VT} />
@@ -138,14 +140,14 @@ const renderTabBar = (props: any) => {
   return (
     <TabBar
       {...props}
-      indicatorStyle={{backgroundColor: colors.tabBarColor}}
-      style={{backgroundColor: 'white'}}
-      renderLabel={({route, focused}) => (
+      indicatorStyle={{ backgroundColor: colors.tabBarColor }}
+      style={{ backgroundColor: "white" }}
+      renderLabel={({ route, focused }) => (
         <Text
           text={route.title}
           size="14"
           type="semiBold"
-          color={focused ? colors.tabBarColor : 'gray'}
+          color={focused ? colors.tabBarColor : "gray"}
           textTransform="none"
         />
       )}
@@ -154,25 +156,25 @@ const renderTabBar = (props: any) => {
 };
 
 export default function Register() {
-  const initialLayout = {width: Dimensions.get('window').width};
+  const initialLayout = { width: Dimensions.get("window").width };
   const [index, setIndex] = useState(0);
-  const [fin, setFin] = useState<string>('');
-  const [company, setCompany] = useState<string>('');
-  const [voen, setVoen] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [fin, setFin] = useState<string>("");
+  const [company, setCompany] = useState<string>("");
+  const [voen, setVoen] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [routes] = useState([
-    {key: 'first', title: 'Müştəri'},
-    {key: 'second', title: 'Tərəfdaş'},
+    { key: "first", title: "Müştəri" },
+    { key: "second", title: "Tərəfdaş" },
   ]);
 
   const navigation = useNavigation();
 
-  const renderScene = ({route}: any) => {
+  const renderScene = ({ route }: any) => {
     switch (route.key) {
-      case 'first':
+      case "first":
         return <FirstRoute fin={fin} setFin={setFin} navigation={navigation} />;
-      case 'second':
+      case "second":
         return (
           <SecondRoute
             voen={voen}
@@ -186,7 +188,7 @@ export default function Register() {
             setTelephoneNumber={setPhoneNumber}
           />
         );
-      case 'second':
+      case "second":
       default:
         return null;
     }
@@ -194,14 +196,14 @@ export default function Register() {
 
   return (
     <>
-      <SafeAreaView style={{backgroundColor: colors.backgroundColor}} />
+      <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
       <MainHeader />
       <View style={styles.container}>
         <View style={globalStyle.space30VT} />
         <Text text="Qeydiyyat" type="regular" size="20" position="center" />
         <View style={globalStyle.space20VT} />
         <TabView
-          navigationState={{index, routes}}
+          navigationState={{ index, routes }}
           renderScene={renderScene}
           renderTabBar={renderTabBar}
           onIndexChange={setIndex}

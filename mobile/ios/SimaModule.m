@@ -12,3 +12,4 @@ RCT_EXTERN_METHOD(register:(RCTPromiseResolveBlock)resolver
                   rejecter:(RCTPromiseRejectBlock)rejecter)
 
 @end
+
