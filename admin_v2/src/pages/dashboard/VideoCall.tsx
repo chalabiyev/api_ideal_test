@@ -460,8 +460,8 @@ const VideoCall = () => {
                   onStreamChanged={handleLocalStream}
                   setShowSettings={setShowWebCamSettings}
                   showSettings={showWebCamSettings}
-                  width={640}
-                  height={480}
+                  width={320}
+                  height={240}
                 />
               ) : (
                 <VideocamOffIcon fontSize="large" style={{ color: '#fff' }} />
@@ -493,7 +493,7 @@ const VideoCall = () => {
         </Box>
       </Card>
 
-      {localStream && (
+      {localStream && ws && (
         <EsamVideoCallOperator
           localName="cihan operator"
           localPin="1234567"
