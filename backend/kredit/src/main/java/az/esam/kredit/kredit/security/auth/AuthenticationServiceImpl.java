@@ -174,7 +174,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return AuthenticationResponse.builder()
                     .id(savedUser.getId())
-                    .fullName(savedUser.getFullName())
+                    .fullName(savedUser.getName().concat(" ").concat(savedUser.getSurname()))
                     .username(savedUser.getUsername())
                     .photo(savedUser.getPhoto())
                     .email(savedUser.getEmail())
@@ -437,7 +437,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             saveUserToken(savedUser, jwtToken);
             return AuthenticationResponse.builder()
                     .id(savedUser.getId())
-                    .fullName(savedUser.getFullName())
+                    .fullName(savedUser.getName().concat(" ").concat(savedUser.getSurname()))
                     .username(savedUser.getUsername())
                     .photo(savedUser.getPhoto())
                     .email(savedUser.getEmail())
