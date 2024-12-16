@@ -383,6 +383,7 @@ export const WebCam = ({
         height={height}
         muted={true}
         className={className + (webCamConfig.mirrorEnabled ? ' mirroredWebCamClass' : '')}
+        style={{objectFit:'cover'}}
       ></video>
     </div>
   );
