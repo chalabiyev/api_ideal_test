@@ -493,7 +493,7 @@ const VideoCall = () => {
         </Box>
       </Card>
 
-      {localStream && (
+      {localStream && ws && (
         <EsamVideoCallOperator
           localName="cihan operator"
           localPin="1234567"
