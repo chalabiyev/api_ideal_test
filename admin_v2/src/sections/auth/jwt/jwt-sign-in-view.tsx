@@ -82,7 +82,7 @@ export function JwtSignInView() {
   const renderForm = (
     <Stack spacing={3}>
       <div className="w-full flex items-center justify-center">
-        <img src="/ideallogo.png" alt="İdeal Kredit logo" className="w-[60%]" />
+        {/* <img src="/ideallogo.png" alt="İdeal Kredit logo" className="w-[60%]" /> */}
       </div>
       <Typography sx={{ textAlign: 'center' }} variant="h3">
         Daxil ol
@@ -166,11 +166,11 @@ export function JwtSignInView() {
           }}
         >
           <Typography variant="h3" sx={{ mb: 2 }}>
-            İdeal Kredit
+            <img src="/ideallogo.png" alt="İdeal Kredit logo" className="w-[40%]" />
           </Typography>
 
           <Typography sx={{ color: 'text.secondary', textAlign: 'center', mt: 2 }}>
-            İnternet BOKT-a boş gəlmişsiniz
+            İnternet BOKT-la işlərinizə sürət qatın!
           </Typography>
 
           <Box>
