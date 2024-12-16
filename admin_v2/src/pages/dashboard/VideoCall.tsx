@@ -51,7 +51,7 @@ const VideoCall = () => {
   const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
   const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
   const [clientUUID] = useState(uuidv4());
-  const [ws, setWs] = useState(new WebSocket(webSocketUri));
+  const [ws, setWs] = useState<WebSocket>();
   const [value, setValue] = useState<SignalType | null>(null);
   const [showWebCamSettings, setShowWebCamSettings] = useState(false);
   const [newCallStarted, setNewCallStarted] = useState<boolean>(false);
@@ -76,9 +76,11 @@ const VideoCall = () => {
   }, [messages]);
 
   const handleSocketOpen = () => {
-    ws.send(
-      JSON.stringify({ type: 'setClientUUID', clientUUID: clientUUID, socketKEY: webSocketKey })
-    );
+    if (ws) {
+      ws.send(
+        JSON.stringify({ type: 'setClientUUID', clientUUID: clientUUID, socketKEY: webSocketKey })
+      );
+    }
   };
 
   const handleMessage = (event: MessageEvent) => {
@@ -113,11 +115,6 @@ const VideoCall = () => {
     if (!v) return;
     setIncomingCall(true);
     setClientName(s.senderName);
-    // if (confirm(`${s.senderName} kişisinden gelen arama, cevaplansın mı?`)) {
-    //   setAccepCall(true);
-    // } else {
-    //   setAccepCall(false);
-    // }
   };
 
   // bu kisim ringtone ILKIN
@@ -144,6 +141,12 @@ const VideoCall = () => {
 
     return () => clearInterval(timer);
   }, [isCallActive]);
+
+  useEffect(() => {
+    if (!ws) {
+      setWs(new WebSocket(webSocketUri));
+    }
+  }, []);
 
   // useEffect(() => {
   //   if (isVideoOn) {
