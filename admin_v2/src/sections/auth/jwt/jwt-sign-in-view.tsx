@@ -20,7 +20,10 @@ import { Form, Field } from 'src/components/hook-form';
 
 import { useAuthContext } from 'src/auth/hooks';
 import { signInWithPassword } from 'src/auth/context/jwt';
-import { Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
+import { CONFIG } from 'src/config-global';
+import { bgGradient, varAlpha } from 'src/theme/styles';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
@@ -29,8 +32,8 @@ export type SignInSchemaType = zod.infer<typeof SignInSchema>;
 export const SignInSchema = zod.object({
   email: zod
     .string()
-    .min(1, { message: 'İstifadəçi adı vacibdir!' }) // Username is required
-    .min(3, { message: 'İstifadəçi adı minimum 3 simvol olmalıdır!' }), // Optional length validation
+    .min(1, { message: 'İstifadəçi adı vacibdir!' })
+    .min(3, { message: 'İstifadəçi adı minimum 3 simvoldan ibarət olmalıdır!' }),
   password: zod
     .string()
     .min(1, { message: 'Şifrə vacibdir!' }) // Password is required
@@ -81,14 +84,14 @@ export function JwtSignInView() {
       <div className="w-full flex items-center justify-center">
         <img src="/ideallogo.png" alt="İdeal Kredit logo" className="w-[60%]" />
       </div>
-      <Typography sx={{ textAlign: 'center' }} variant="h4">
+      <Typography sx={{ textAlign: 'center' }} variant="h3">
         Daxil ol
       </Typography>
       <Field.Text
         name="email"
-        label="Email"
-        InputLabelProps={{ shrink: true }}
-        placeholder="Email daxil edin"
+        label="Telefon nömrəsi"
+        // InputLabelProps={{ shrink: true }}
+        placeholder="Məs: 994123456789"
       />
 
       <Stack spacing={1.5}>
@@ -97,7 +100,7 @@ export function JwtSignInView() {
           label="Şifrə"
           placeholder="6+ simvol olmalıdır"
           type={password.value ? 'text' : 'password'}
-          InputLabelProps={{ shrink: true }}
+          // InputLabelProps={{ shrink: true }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -125,16 +128,85 @@ export function JwtSignInView() {
   );
 
   return (
-    <>
-      {!!errorMsg && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          İstifadəçi adı və ya şifrə səhvdir
-        </Alert>
-      )}
+    <DashboardContent
+      maxWidth="xl"
+      sx={{
+        width: '100%',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        mx: 'auto',
+        py: { xs: 3, md: 0 },
+        px: { xs: 2, md: 0 },
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          width: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 4,
+        }}
+      >
+        {/* Şəkil Bölməsi */}
+        <Box
+          sx={{
+            flex: 1,
+            display: { xs: 'none', md: 'flex' },
+            textAlign: 'center',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            maxWidth: { xs: '100%', md: '35%' },
+            backgroundColor: `${theme.palette.background.neutral}`,
+            height: { xs: '100%', md: '100vh' },
+          }}
+        >
+          <Typography variant="h3" sx={{ mb: 2 }}>
+            İdeal Kredit
+          </Typography>
 
-      <Form methods={methods} onSubmit={onSubmit}>
-        {renderForm}
-      </Form>
-    </>
+          <Typography sx={{ color: 'text.secondary', textAlign: 'center', mt: 2 }}>
+            İnternet BOKT-a boş gəlmişsiniz
+          </Typography>
+
+          <Box>
+            <Box
+              component="img"
+              alt="Dashboard illustration"
+              src={`${CONFIG.site.basePath}/assets/illustrations/illustration-dashboard.webp`}
+              sx={{
+                width: 1,
+                aspectRatio: '4/3',
+                objectFit: 'cover',
+              }}
+            />
+          </Box>
+        </Box>
+
+        {/* Form Bölməsi */}
+        <Box
+          sx={{
+            flex: 1,
+            maxWidth: { xs: '100%', md: '400px' }, // Formun eni ekran ölçüsünə görə dəyişir
+            mx: 'auto', // Kiçik ekranlarda mərkəzləşdirir
+            p: 3, // Daxili boşluq
+          }}
+        >
+          {!!errorMsg && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              İstifadəçi adı və ya şifrə səhvdir
+            </Alert>
+          )}
+
+          <Form methods={methods} onSubmit={onSubmit}>
+            {renderForm}
+          </Form>
+        </Box>
+      </Box>
+    </DashboardContent>
   );
 }
