@@ -13,7 +13,6 @@ import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/component
 
 import { AuthProvider } from 'src/auth/context/jwt';
 import { Toaster } from 'sonner';
-
 // ----------------------------------------------------------------------
 
 export default function App() {

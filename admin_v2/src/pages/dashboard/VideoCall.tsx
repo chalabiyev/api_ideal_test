@@ -23,9 +23,13 @@ import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import CallEndIcon from '@mui/icons-material/CallEnd';
 import TimerIcon from '@mui/icons-material/Timer';
 import { primary } from 'src/theme/core';
+import { v4 as uuidv4 } from 'uuid';
+import { SignalType } from 'src/components/video-call/WebsocketTypes';
+import { WebCam } from 'src/components/video-call/WebCam';
+import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOperator';
 
 const VideoCall = () => {
-  const [isVideoOn, setIsVideoOn] = useState(false);
+  const [isVideoOn, setIsVideoOn] = useState(true);
   const [isAudioOn, setIsAudioOn] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [isCallActive, setIsCallActive] = useState(true);
@@ -37,12 +41,28 @@ const VideoCall = () => {
   ]);
   const [message, setMessage] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
-  const [incomingCall, setIncomingCall] = useState(true);
+  const [incomingCall, setIncomingCall] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const theme = useTheme();
+
+
+  const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
+  const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
+  const [clientUUID] = useState(uuidv4());
+  const [ws, setWs] = useState(new WebSocket(webSocketUri));
+  const [value, setValue] = useState<SignalType | null>(null);
+  const [showWebCamSettings, setShowWebCamSettings] = useState(false);
+  const [newCallStarted, setNewCallStarted] = useState<boolean>(false);
+  const [localStream, setLocalStream] = useState<MediaStream>();
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const [clientName, setClientName] = useState('');
+  const [acceptCall, setAccepCall] = useState(false);
+  const [endMeeting, setEndMeeting] = useState(false);
+  const [newCallReceived, setNewCallReceived] = useState(false);
+
 
   const handleDragEnd = (event: any, info: any) => {
     setPosition({
@@ -56,6 +76,55 @@ const VideoCall = () => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+
+
+
+  const handleSocketOpen = () => {
+    ws.send(JSON.stringify({ "type": "setClientUUID", "clientUUID": clientUUID, "socketKEY": webSocketKey }));
+  }
+
+  const handleMessage = (event: MessageEvent) => {
+    if (event.data && event.data.trim().length > 0) {
+      try {
+        const msg = JSON.parse(event.data) as SignalType;
+        setValue({ ...msg, msgid: uuidv4() });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (ws && clientUUID) {
+      ws.onopen = handleSocketOpen;
+      ws.onmessage = handleMessage;
+      setInterval(() => {
+        if (ws.readyState === WebSocket.CLOSED) {
+          setWs(new WebSocket(webSocketUri));
+        }
+      }, 30000);
+    }
+  }, [ws, clientUUID]);
+
+  const handleLocalStream = (s: MediaStream) => {
+    setLocalStream(s);
+  }
+
+
+  const handleNewCall = (v: boolean, s: SignalType) => {
+    setNewCallReceived(v);
+    if (!v) return;
+    setIncomingCall(true);
+    setClientName(s.senderName);
+    // if (confirm(`${s.senderName} kişisinden gelen arama, cevaplansın mı?`)) {
+    //   setAccepCall(true);
+    // } else {
+    //   setAccepCall(false);
+    // }
+  }
+
+
 
   // bu kisim ringtone ILKIN
   // useEffect(() => {
@@ -82,34 +151,34 @@ const VideoCall = () => {
     return () => clearInterval(timer);
   }, [isCallActive]);
 
-  useEffect(() => {
-    if (isVideoOn) {
-      // Kamera erişimi ve videoya bağlama
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false })
-        .then((mediaStream) => {
-          setStream(mediaStream);
-          if (videoRef.current) {
-            videoRef.current.srcObject = mediaStream;
-          }
-        })
-        .catch((error) => {
-          console.error('Kamera erişim hatası:', error);
-        });
-    } else if (stream) {
-      // Kamera akışını durdur
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
-    }
+  // useEffect(() => {
+  //   if (isVideoOn) {
+  //     // Kamera erişimi ve videoya bağlama
+  //     navigator.mediaDevices
+  //       .getUserMedia({ video: true, audio: false })
+  //       .then((mediaStream) => {
+  //         setStream(mediaStream);
+  //         if (videoRef.current) {
+  //           videoRef.current.srcObject = mediaStream;
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error('Kamera erişim hatası:', error);
+  //       });
+  //   } else if (stream) {
+  //     // Kamera akışını durdur
+  //     stream.getTracks().forEach((track) => track.stop());
+  //     setStream(null);
+  //   }
 
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
+  //   return () => {
+  //     if (stream) {
+  //       stream.getTracks().forEach((track) => track.stop());
+  //     }
+  //   };
 
-    // eslint-disable-next-line
-  }, [isVideoOn]);
+  //   // eslint-disable-next-line
+  // }, [isVideoOn]);
 
   const toggleVideo = () => {
     setIsVideoOn((prev) => !prev);
@@ -122,6 +191,10 @@ const VideoCall = () => {
   const endCall = () => {
     setIsCallActive(false);
     setCallDuration(0);
+    setEndMeeting(true);
+    setTimeout(() => {
+      location.reload();
+    }, 2000);
   };
 
   const sendMessage = () => {
@@ -144,11 +217,13 @@ const VideoCall = () => {
   const handleAcceptCall = () => {
     setIncomingCall(false);
     setIsCallActive(true);
+    setAccepCall(true);
   };
 
   const handleRejectCall = () => {
     setIncomingCall(false);
     alert('Zəng rədd edildi.');
+    setAccepCall(false);
   };
 
   const renderMessage = (msg: { text: string; sender: string; time: string }) => (
@@ -183,7 +258,7 @@ const VideoCall = () => {
   return (
     <Box sx={{ p: 2, gap: 1, display: 'flex', height: 'calc(100vh - 69px)', overflow: 'hidden' }}>
       {/* ILKIN gelen arama bu dialog il gozukecek Cihan bey. */}
-      {/* <Dialog
+      <Dialog
         sx={{
           textAlign: 'center',
           padding: 4,
@@ -206,10 +281,10 @@ const VideoCall = () => {
             }}
           />
           <Typography variant="h6" sx={{ marginTop: 2 }}>
-            Əhməd Əliyev Əli oğlu
+            {clientName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Embawood mebel mağazası
+            {/* Embawood mebel mağazası */}
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', padding: 2, gap: 2, width: '100%' }}>
@@ -251,7 +326,7 @@ const VideoCall = () => {
           }
         `}
         </style>
-      </Dialog> */}
+      </Dialog>
 
       <Card
         sx={{
@@ -326,6 +401,9 @@ const VideoCall = () => {
             position: 'relative',
           }}
         >
+          <div className='bg-black w-full h-full'>
+            <video ref={remoteVideoRef} src="" autoPlay></video>
+          </div>
           {/* countdown  */}
           <Button disabled variant="contained" sx={{ position: 'absolute', top: 0, left: 0 }}>
             <TimerIcon sx={{ verticalAlign: 'middle', marginRight: 1, color: primary.main }} />
@@ -374,15 +452,12 @@ const VideoCall = () => {
               whileDrag={{ cursor: 'grabbing' }}
             >
               {isVideoOn ? (
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  muted
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                  }}
+                <WebCam
+                  onStreamChanged={handleLocalStream}
+                  setShowSettings={setShowWebCamSettings}
+                  showSettings={showWebCamSettings}
+                  width={640}
+                  height={480}
                 />
               ) : (
                 <VideocamOffIcon fontSize="large" style={{ color: '#fff' }} />
@@ -413,6 +488,27 @@ const VideoCall = () => {
           </Box>
         </Box>
       </Card>
+
+      {localStream &&
+        <EsamVideoCallOperator
+          localName='cihan operator'
+          localPin='1234567'
+          localStream={localStream}
+          onReceiverConnected={(s: SignalType) => { setClientName(s.senderName!) }}
+          onReceiverStream={(s: MediaStream) => {
+            if (remoteVideoRef.current == undefined) return;
+            remoteVideoRef.current.srcObject = s;
+          }}
+          ws={ws}
+          value={value}
+          clientUUID={clientUUID}
+          endMeeting={endMeeting}
+          acceptCall={acceptCall}
+          newCallReceived={newCallReceived}
+          setNewCallReceived={handleNewCall}
+        />
+      }
+
     </Box>
   );
 };

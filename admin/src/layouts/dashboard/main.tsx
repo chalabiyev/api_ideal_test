@@ -15,6 +15,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { forwardRef, ReactElement, Ref, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'src/routes/hooks';
 import { SignalType, WebsocketContext } from 'src/services/WebsocketProvider';
+import { AuthContext } from 'src/auth/context/auth-context';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ export function Main({ children, isNavHorizontal, sx, ...other }: MainProps) {
   const [showInCallDialog, setShowInCallDialog] = useState<boolean>(false);
   const [inCall, setInCall] = useState<boolean>(false);
   const wsContext = useContext(WebsocketContext);
+  const userContext = useContext(AuthContext);
 
   const acceptCall = () => {
     setShowInCallDialog(false);
