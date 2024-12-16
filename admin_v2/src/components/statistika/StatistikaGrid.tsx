@@ -184,9 +184,8 @@ const StatistikaGrid = () => {
           sx={cardStyle}
           total={234}
           color="success"
-          icon={
-            <img alt="icon" src={`${CONFIG.site.basePath}/assets/icons/glass/ic-warning.svg`} />
-          }
+          icon={<img alt="icon" src={`${CONFIG.site.basePath}/assets/icons/glass/ic-stats.svg`} />}
+
           chart={{
             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
             series: [56, 30, 23, 54, 47, 40, 62, 73],

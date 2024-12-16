@@ -1,5 +1,6 @@
 import type { ButtonBaseProps } from '@mui/material/ButtonBase';
 
+import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
@@ -22,21 +23,15 @@ type Props = ButtonBaseProps & {
 };
 
 export function BaseOption({ icon, label, tooltip, selected, ...other }: Props) {
+  const theme = useTheme();
   return (
     <ButtonBase
       disableRipple
       sx={{
-        px: 2,
-        py: 2.5,
-        borderRadius: 2,
+        px: 1,
         cursor: 'pointer',
         flexDirection: 'column',
         alignItems: 'flex-start',
-        border: (theme) => `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.12)}`,
-        '&:hover': { bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.08) },
-        ...(selected && {
-          bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
-        }),
       }}
       {...other}
     >
@@ -44,39 +39,16 @@ export function BaseOption({ icon, label, tooltip, selected, ...other }: Props) 
         display="flex"
         alignItems="center"
         justifyContent="space-between"
-        sx={{ width: 1, mb: 3 }}
+        sx={{
+          py: { sm: 0.9 },
+          px: { sm: 1 },
+          borderRadius: { sm: 1.5 },
+          cursor: { sm: 'pointer' },
+          bgcolor: { sm: varAlpha(theme.vars.palette.grey['500Channel'], 0.08) },
+        }}
       >
         <SvgColor src={`${CONFIG.site.basePath}/assets/icons/setting/ic-${icon}.svg`} />
         <Switch name={label} size="small" color="default" checked={selected} sx={{ mr: -0.75 }} />
-      </Box>
-
-      <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ width: 1 }}>
-        <Box
-          component="span"
-          sx={{
-            lineHeight: '18px',
-            fontWeight: 'fontWeightSemiBold',
-            fontSize: (theme) => theme.typography.pxToRem(13),
-          }}
-        >
-          {label}
-        </Box>
-
-        {tooltip && (
-          <Tooltip
-            arrow
-            title={tooltip}
-            slotProps={{
-              tooltip: { sx: { maxWidth: 240, mr: 0.5 } },
-            }}
-          >
-            <Iconify
-              width={16}
-              icon="eva:info-outline"
-              sx={{ cursor: 'pointer', color: 'text.disabled' }}
-            />
-          </Tooltip>
-        )}
       </Box>
     </ButtonBase>
   );

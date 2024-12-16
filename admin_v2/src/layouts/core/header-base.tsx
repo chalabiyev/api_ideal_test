@@ -5,24 +5,19 @@ import { signOut } from 'src/auth/context/jwt';
 import type { NavSectionProps } from 'src/components/nav-section';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useColorScheme, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
-import { Logo } from 'src/components/logo';
+import { BaseOption } from 'src/components/settings/drawer/base-option';
+
+import { useSettingsContext } from 'src/components/settings';
 
 import { HeaderSection } from './header-section';
 import { Searchbar } from '../components/searchbar';
 import { MenuButton } from '../components/menu-button';
 import { SignInButton } from '../components/sign-in-button';
-import { AccountDrawer } from '../components/account-drawer';
-import { SettingsButton } from '../components/settings-button';
-import { LanguagePopover } from '../components/language-popover';
-import { ContactsPopover } from '../components/contacts-popover';
-import { WorkspacesPopover } from '../components/workspaces-popover';
 
 import type { HeaderSectionProps } from './header-section';
 import type { AccountDrawerProps } from '../components/account-drawer';
@@ -100,7 +95,6 @@ export function HeaderBase({
     signIn = true,
     account = true,
     helpLink = true,
-    settings = true,
     purchase = true,
     contacts = true,
     searchbar = true,
@@ -114,8 +108,10 @@ export function HeaderBase({
   const theme = useTheme();
 
   const router = useRouter();
+  const { mode, setMode } = useColorScheme();
 
   const { checkUserSession } = useAuthContext();
+  const settings = useSettingsContext();
 
   const handleLogout = useCallback(async () => {
     try {
@@ -175,6 +171,15 @@ export function HeaderBase({
               {/* -- Help link -- */}
 
               {/* -- Searchbar -- */}
+              <BaseOption
+                label="Gecə"
+                icon="moon"
+                selected={settings.colorScheme === 'dark'}
+                onClick={() => {
+                  settings.onUpdateField('colorScheme', mode === 'light' ? 'dark' : 'light');
+                  setMode(mode === 'light' ? 'dark' : 'light');
+                }}
+              />
               {searchbar && <Searchbar data-slot="searchbar" data={data?.nav} />}
 
               {/* -- Language popover -- */}
@@ -191,7 +196,7 @@ export function HeaderBase({
               {/* {contacts && <ContactsPopover data-slot="contacts" data={data?.contacts} />} */}
 
               {/* -- Settings button -- */}
-              {settings && <SettingsButton data-slot="settings" />}
+              {/* {settings && <SettingsButton data-slot="settings" />} */}
 
               {/* -- Account drawer -- */}
               {/* {account && <AccountDrawer data-slot="account" data={data?.account} />} */}
@@ -200,14 +205,7 @@ export function HeaderBase({
               {signIn && <SignInButton />}
 
               {account && (
-                <Button
-                  fullWidth
-                  variant="soft"
-                  sx={{ ml: 1 }}
-                  size="medium"
-                  color="error"
-                  onClick={handleLogout}
-                >
+                <Button fullWidth variant="soft" size="medium" color="error" onClick={handleLogout}>
                   Çıxış et
                 </Button>
               )}
