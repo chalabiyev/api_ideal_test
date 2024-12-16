@@ -81,7 +81,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     };
 
     const sendSignal = (data: SignalType) => {
-        if (prop.ws && prop.ws.readyState == WebSocket.OPEN) {
+        if (prop.ws && prop.ws.readyState === WebSocket.OPEN) {
             let msg = { ...data, "clientUUID": prop.clientUUID, sender: prop.clientUUID };
             prop.ws.send(JSON.stringify(msg));
         }

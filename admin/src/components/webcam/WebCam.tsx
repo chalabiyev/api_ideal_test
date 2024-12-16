@@ -69,6 +69,7 @@ export const WebCam = (
     useEffect(() => {
         try {
             if ((webCamRef.current! as any).srcObject) {
+
                 (webCamRef.current! as any).srcObject.getTracks().forEach(function (track: any) {
                     track.stop();
                 });

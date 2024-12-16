@@ -48,7 +48,6 @@ const VideoCall = () => {
 
   const theme = useTheme();
 
-
   const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
   const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
   const [clientUUID] = useState(uuidv4());
@@ -58,11 +57,10 @@ const VideoCall = () => {
   const [newCallStarted, setNewCallStarted] = useState<boolean>(false);
   const [localStream, setLocalStream] = useState<MediaStream>();
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const [clientName, setClientName] = useState('');
+  const [clientName, setClientName] = useState<any>('');
   const [acceptCall, setAccepCall] = useState(false);
   const [endMeeting, setEndMeeting] = useState(false);
   const [newCallReceived, setNewCallReceived] = useState(false);
-
 
   const handleDragEnd = (event: any, info: any) => {
     setPosition({
@@ -77,12 +75,11 @@ const VideoCall = () => {
     }
   }, [messages]);
 
-
-
-
   const handleSocketOpen = () => {
-    ws.send(JSON.stringify({ "type": "setClientUUID", "clientUUID": clientUUID, "socketKEY": webSocketKey }));
-  }
+    ws.send(
+      JSON.stringify({ type: 'setClientUUID', clientUUID: clientUUID, socketKEY: webSocketKey })
+    );
+  };
 
   const handleMessage = (event: MessageEvent) => {
     if (event.data && event.data.trim().length > 0) {
@@ -93,7 +90,7 @@ const VideoCall = () => {
         console.error(e);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (ws && clientUUID) {
@@ -109,8 +106,7 @@ const VideoCall = () => {
 
   const handleLocalStream = (s: MediaStream) => {
     setLocalStream(s);
-  }
-
+  };
 
   const handleNewCall = (v: boolean, s: SignalType) => {
     setNewCallReceived(v);
@@ -122,9 +118,7 @@ const VideoCall = () => {
     // } else {
     //   setAccepCall(false);
     // }
-  }
-
-
+  };
 
   // bu kisim ringtone ILKIN
   // useEffect(() => {
@@ -193,6 +187,7 @@ const VideoCall = () => {
     setCallDuration(0);
     setEndMeeting(true);
     setTimeout(() => {
+      // eslint-disable-next-line
       location.reload();
     }, 2000);
   };
@@ -399,10 +394,15 @@ const VideoCall = () => {
             alignItems: 'center',
             borderRadius: 1.4,
             position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          <div className='bg-black w-full h-full'>
-            <video ref={remoteVideoRef} src="" autoPlay></video>
+          {/* // eslint-disable-next-line */}
+          <div className="bg-black overflow-hidden w-full h-full">
+            {/* // eslint-disable-next-line */}
+            <video ref={remoteVideoRef} src="" autoPlay>
+              <track kind="captions" srcLang="az" label="Azerbaycan" default />
+            </video>
           </div>
           {/* countdown  */}
           <Button disabled variant="contained" sx={{ position: 'absolute', top: 0, left: 0 }}>
@@ -441,6 +441,7 @@ const VideoCall = () => {
                 right: '5%',
                 width: '25%',
                 height: '27%',
+                border: '1px solid #fff',
                 borderRadius: '8px',
                 overflow: 'hidden',
                 backgroundColor: '#000',
@@ -489,12 +490,14 @@ const VideoCall = () => {
         </Box>
       </Card>
 
-      {localStream &&
+      {localStream && (
         <EsamVideoCallOperator
-          localName='cihan operator'
-          localPin='1234567'
+          localName="cihan operator"
+          localPin="1234567"
           localStream={localStream}
-          onReceiverConnected={(s: SignalType) => { setClientName(s.senderName!) }}
+          onReceiverConnected={(s: SignalType) => {
+            setClientName(s.senderName!);
+          }}
           onReceiverStream={(s: MediaStream) => {
             if (remoteVideoRef.current == undefined) return;
             remoteVideoRef.current.srcObject = s;
@@ -507,8 +510,7 @@ const VideoCall = () => {
           newCallReceived={newCallReceived}
           setNewCallReceived={handleNewCall}
         />
-      }
-
+      )}
     </Box>
   );
 };
