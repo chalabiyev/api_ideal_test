@@ -20,7 +20,7 @@ export interface EsamVideoCallOperatorProp {
 
 export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
-    const turnEnabled = false;// import.meta.env.VITE_TURN_ENABLED;
+    const turnEnabled = import.meta.env.VITE_TURN_ENABLED;
     const turnUser = import.meta.env.VITE_TURN_USER;
     const turnPass = import.meta.env.VITE_TURN_PASSWORD;
     const [meetingID, setMeetingID] = useState<string>("");
