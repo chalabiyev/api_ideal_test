@@ -23,10 +23,10 @@ import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import CallEndIcon from '@mui/icons-material/CallEnd';
 import TimerIcon from '@mui/icons-material/Timer';
 import { primary } from 'src/theme/core';
-import { v4 as uuidv4 } from 'uuid';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { WebCam } from 'src/components/video-call/WebCam';
 import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOperator';
+import { useAuthContext } from 'src/auth/hooks';
 
 const VideoCall = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
@@ -48,11 +48,6 @@ const VideoCall = () => {
 
   const theme = useTheme();
 
-  const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
-  const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
-  const [clientUUID] = useState(uuidv4());
-  const [ws, setWs] = useState<WebSocket>();
-  const [value, setValue] = useState<SignalType | null>(null);
   const [showWebCamSettings, setShowWebCamSettings] = useState(false);
   const [newCallStarted, setNewCallStarted] = useState<boolean>(false);
   const [localStream, setLocalStream] = useState<MediaStream>();
@@ -61,6 +56,7 @@ const VideoCall = () => {
   const [acceptCall, setAccepCall] = useState(false);
   const [endMeeting, setEndMeeting] = useState(false);
   const [newCallReceived, setNewCallReceived] = useState(false);
+  const { user } = useAuthContext();
 
   const handleDragEnd = (event: any, info: any) => {
     setPosition({
@@ -74,37 +70,6 @@ const VideoCall = () => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
-
-  const handleSocketOpen = () => {
-    if (ws) {
-      ws.send(
-        JSON.stringify({ type: 'setClientUUID', clientUUID: clientUUID, socketKEY: webSocketKey })
-      );
-    }
-  };
-
-  const handleMessage = (event: MessageEvent) => {
-    if (event.data && event.data.trim().length > 0) {
-      try {
-        const msg = JSON.parse(event.data) as SignalType;
-        setValue({ ...msg, msgid: uuidv4() });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (ws && clientUUID) {
-      ws.onopen = handleSocketOpen;
-      ws.onmessage = handleMessage;
-      setInterval(() => {
-        if (ws.readyState === WebSocket.CLOSED) {
-          setWs(new WebSocket(webSocketUri));
-        }
-      }, 30000);
-    }
-  }, [ws, clientUUID]);
 
   const handleLocalStream = (s: MediaStream) => {
     setLocalStream(s);
@@ -141,12 +106,6 @@ const VideoCall = () => {
 
     return () => clearInterval(timer);
   }, [isCallActive]);
-
-  useEffect(() => {
-    if (!ws) {
-      setWs(new WebSocket(webSocketUri));
-    }
-  }, []);
 
   // useEffect(() => {
   //   if (isVideoOn) {
@@ -335,7 +294,7 @@ const VideoCall = () => {
         }}
       >
         <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2">Operator:</Typography> Əhməd
+          <Typography variant="body2">Operator:</Typography> {user ? user.fullName : ''}
         </Typography>
         <Box
           sx={{
@@ -403,7 +362,7 @@ const VideoCall = () => {
           {/* // eslint-disable-next-line */}
           <div className="bg-black overflow-hidden w-full h-full">
             {/* // eslint-disable-next-line */}
-            <video ref={remoteVideoRef} src="" autoPlay>
+            <video ref={remoteVideoRef} src="" autoPlay style={{ objectFit: 'cover' }}>
               <track kind="captions" srcLang="az" label="Azerbaycan" default />
             </video>
           </div>
@@ -493,9 +452,9 @@ const VideoCall = () => {
         </Box>
       </Card>
 
-      {localStream && ws && (
+      {localStream && (
         <EsamVideoCallOperator
-          localName="cihan operator"
+          localName={user?.fullName}
           localPin="1234567"
           localStream={localStream}
           onReceiverConnected={(s: SignalType) => {
@@ -505,13 +464,11 @@ const VideoCall = () => {
             if (remoteVideoRef.current == undefined) return;
             remoteVideoRef.current.srcObject = s;
           }}
-          ws={ws}
-          value={value}
-          clientUUID={clientUUID}
           endMeeting={endMeeting}
           acceptCall={acceptCall}
           newCallReceived={newCallReceived}
           setNewCallReceived={handleNewCall}
+          onEndMeeting={(s: SignalType) => { }}
         />
       )}
     </Box>

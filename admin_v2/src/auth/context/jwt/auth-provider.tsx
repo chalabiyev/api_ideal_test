@@ -37,8 +37,7 @@ export function AuthProvider({ children }: Props) {
 
         const res = await axios.get(endpoints.auth.me);
 
-        const { user } = res.data;
-
+        const user = res.data;
         setState({ user: { ...user, accessToken }, loading: false });
         // setRole(user.role);
       } else {
@@ -65,9 +64,9 @@ export function AuthProvider({ children }: Props) {
     () => ({
       user: state.user
         ? {
-            ...state.user,
-            role: state.user?.role ?? 'admin',
-          }
+          ...state.user,
+          role: state.user?.role ?? 'admin',
+        }
         : null,
       checkUserSession,
       loading: status === 'loading',

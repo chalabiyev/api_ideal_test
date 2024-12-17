@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { SignalType } from "./WebsocketTypes";
 
 export interface EsamVideoCallOperatorProp {
-    ws: WebSocket;
-    value: SignalType | null;
-    clientUUID: string;
     localStream: MediaStream;
     localPin: string;
     localName: string;
@@ -14,23 +11,61 @@ export interface EsamVideoCallOperatorProp {
     onReceiverConnected: (signal: SignalType) => void;
     onReceiverStream: (stream: MediaStream) => void;
     endMeeting: boolean;
+    onEndMeeting: (signal: SignalType) => void;
     acceptCall: boolean;
 }
 
+const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
+const turnEnabled = import.meta.env.VITE_TURN_ENABLED;
+const turnUser = import.meta.env.VITE_TURN_USER;
+const turnPass = import.meta.env.VITE_TURN_PASSWORD;
+const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
+const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
+const clientUUID = uuidv4();
+
+let meetingID = "";
+let receiverName;
+let receiverPin;
+let receiver = "";
+let inCall = false;
+let calling = false;
+let peerConnection: RTCPeerConnection;
+let ws: WebSocket;
 
 export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
-    const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
-    const turnEnabled = import.meta.env.VITE_TURN_ENABLED;
-    const turnUser = import.meta.env.VITE_TURN_USER;
-    const turnPass = import.meta.env.VITE_TURN_PASSWORD;
-    const [meetingID, setMeetingID] = useState<string>("");
-    const [receiverName, setReceiverName] = useState<string>("");
-    const [receiverPin, setReceiverPin] = useState<string>("");
-    const [receiver, setReceiver] = useState<string>("");
-    const [inCall, setInCall] = useState<boolean>(false);
-    const [calling, setCalling] = useState<boolean>(false);
-    const [peerConnection, setPeerConnection] = useState<RTCPeerConnection>();
 
+    const handleSocketOpen = () => {
+        if (ws) {
+            ws.send(JSON.stringify({ "type": "setClientUUID", "clientUUID": clientUUID, "socketKEY": webSocketKey }));
+        }
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+        if (event.data && event.data.trim().length > 0) {
+            try {
+                let msg = JSON.parse(event.data) as SignalType;
+                listenSignals(msg);
+            } catch (error) {
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (!ws) {
+            ws = new WebSocket(webSocketUri);
+            ws.onopen = handleSocketOpen;
+            ws.onmessage = handleMessage;
+            setInterval(() => {
+                if (ws.readyState == WebSocket.CLOSED) {
+                    ws = new WebSocket(webSocketUri);
+                }
+            }, 30000);
+        }
+    }, []);
+
+    useEffect(() => {
+        sendSignal({ type: 'endmeeting', receiver: receiver, meetingID: meetingID });
+    }, [prop.endMeeting])
 
     const preparePeerConnection = () => {
         const configuration = {
@@ -49,45 +84,10 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
                 },
             ],
         };
-        setPeerConnection(new RTCPeerConnection(
+        peerConnection = new RTCPeerConnection(
             turnEnabled ? turnConfiguration : configuration
-        ));
-    }
+        );
 
-    const sendCamAndMicStreams = async () => {
-        console.log("sendCamAndMicStreams", peerConnection, prop);
-        if (!peerConnection) return;
-        if (!prop.localStream) {
-            alert("Webcam bağlantısı kurulamadı!");
-        }
-        prop.localStream.getTracks().forEach((track) => {
-            console.log("peerConnection.addTrack", track);
-            peerConnection.addTrack(track, prop.localStream);
-        });
-    };
-
-    const displayRemoteStream = (e: RTCTrackEvent) => {
-        try {
-            let strm = e.streams[0];
-            prop.onReceiverStream(strm);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const handleCandidate = async (s: SignalType) => {
-        if (!peerConnection || !s.candidate || !peerConnection.remoteDescription) return;
-        await peerConnection.addIceCandidate(s.candidate);
-    };
-
-    const sendSignal = (data: SignalType) => {
-        if (prop.ws && prop.ws.readyState === WebSocket.OPEN) {
-            let msg = { ...data, "clientUUID": prop.clientUUID, sender: prop.clientUUID };
-            prop.ws.send(JSON.stringify(msg));
-        }
-    }
-
-    useEffect(() => {
         if (!peerConnection) return;
 
         peerConnection.onicecandidate = (event) => {
@@ -102,7 +102,6 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
         };
 
         peerConnection.onconnectionstatechange = () => {
-            console.log("peerConnection.onconnectionstatechange", peerConnection.connectionState);
             if (peerConnection.connectionState == "connected") {
                 sendCamAndMicStreams();
             } else if (peerConnection.connectionState == "failed") {
@@ -110,51 +109,74 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
                 peerConnection.close();
                 preparePeerConnection();
             } else if (peerConnection.connectionState == 'disconnected') {
-                setCalling(false);
-                setInCall(false);
-                setReceiver("");
-                setReceiverName("");
-                setReceiverPin("");
+                calling = false;
+                inCall = false;
+                receiver = "";
+                receiverName = "";
+                receiverPin = "";
                 prop.setNewCallReceived(false, { type: 'cancel' });
             }
         };
         peerConnection.ontrack = displayRemoteStream;
 
-    }, [peerConnection]);
+    }
+
+    const sendCamAndMicStreams = async () => {
+        if (!peerConnection) return;
+        if (!prop.localStream) {
+            alert("Webcam bağlantısı kurulamadı!");
+        }
+        prop.localStream.getTracks().forEach((track) => {
+            peerConnection.addTrack(track, prop.localStream);
+        });
+    };
+
+    const displayRemoteStream = (e: RTCTrackEvent) => {
+        try {
+            let strm = e.streams[0];
+            prop.onReceiverStream(strm);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleCandidate = async (s: SignalType) => {
+        if (!peerConnection || !s.candidate || !peerConnection.remoteDescription) return;
+        await peerConnection.addIceCandidate(s.candidate);
+    };
+
+    const sendSignal = (data: SignalType) => {
+        if (ws && ws.readyState == WebSocket.OPEN) {
+            let msg = { ...data, "clientUUID": clientUUID, sender: clientUUID };
+            ws.send(JSON.stringify(msg));
+        }
+    }
+
 
     const handleNewCall = (s: SignalType) => {
         if (inCall || !prop.setNewCallReceived || !s.meetingID || !s.sender || !s.senderName) return;
-        setMeetingID(s.meetingID);
-        setReceiver(s.sender);
-        setReceiverName(s.senderName);
+        meetingID = s.meetingID;
+        receiver = s.sender;
+        receiverName = s.senderName;
         if (s.senderPin)
-            setReceiverPin(s.senderPin);
+            receiverPin = s.senderPin;
         prop.setNewCallReceived(true, s);
     }
 
     useEffect(() => {
         if (!prop.newCallReceived) return;
         if (prop.acceptCall) {
-            setInCall(true);
+            inCall = true;
             sendSignal({ type: 'acceptcall', receiver: receiver, meetingID: meetingID });
             preparePeerConnection();
         } else {
             sendSignal({ type: 'reject', receiver: receiver, meetingID: meetingID });
-            setInCall(false);
-            setReceiver("");
-            setReceiverName("");
-            setReceiverPin("");
+            inCall = false;
+            receiver = "";
+            receiverName = "";
+            receiverPin = "";
         }
     }, [prop.acceptCall]);
-
-    useEffect(() => {
-        if (!prop.newCallReceived || !prop.acceptCall) return;
-        sendSignal({ type: 'endmeeting', receiver: receiver, meetingID: meetingID });
-        setInCall(false);
-        setReceiver("");
-        setReceiverName("");
-        setReceiverPin("");
-    }, [prop.endMeeting]);
 
     const handleOffer = async (s: SignalType) => {
         if (!peerConnection) return;
@@ -167,16 +189,20 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
 
     const handleCancel = (s: SignalType) => {
         if (s.meetingID != meetingID || s.sender != receiver) return;
-        setInCall(false);
-        setReceiver("");
-        setReceiverName("");
-        setReceiverPin("");
+        inCall = false;
+        receiver = "";
+        receiverName = "";
+        receiverPin = "";
         prop.setNewCallReceived(false, s);
     }
 
+    const handleEndMeeting = (s: SignalType) => {
+        if (!prop.onEndMeeting) return;
+        prop.onEndMeeting(s);
+    }
 
     const listenSignals = (s: SignalType) => {
-        if (s.type == 'newcall' || s.type == 'cancel' || s.receiver == prop.clientUUID) {
+        if (s.type == 'newcall' || s.type == 'cancel' || s.receiver == clientUUID) {
             switch (s.type) {
                 case 'newcall':
                     handleNewCall(s);
@@ -190,14 +216,12 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
                 case "icecandidate":
                     handleCandidate(s);
                     break;
+                case 'endmeeting':
+                    handleEndMeeting(s);
+                    break;
             }
         }
     }
-
-    useEffect(() => {
-        if (prop.value)
-            listenSignals(prop.value);
-    }, [prop.value]);
 
     return (<></>);
 }
