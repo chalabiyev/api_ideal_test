@@ -29,6 +29,7 @@ import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOp
 import { useAuthContext } from 'src/auth/hooks';
 
 const VideoCall = () => {
+  const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isAudioOn, setIsAudioOn] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
@@ -39,6 +40,7 @@ const VideoCall = () => {
     { text: 'Salam, necə kömək edə bilərəm?', sender: 'Operator', time: '09:30' },
     { text: 'Salam, bir problemim var.', sender: 'User', time: '09:31' },
   ]);
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [message, setMessage] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [incomingCall, setIncomingCall] = useState(false);
@@ -58,12 +60,27 @@ const VideoCall = () => {
   const [newCallReceived, setNewCallReceived] = useState(false);
   const { user } = useAuthContext();
 
-  const handleDragEnd = (event: any, info: any) => {
-    setPosition({
-      x: info.point.x,
-      y: info.point.y,
-    });
-  };
+  useEffect(() => {
+    if (isAudioOn) {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          setAudioStream(stream);
+        })
+        .catch((error) => {
+          console.error('Mikrofon erişim hatası:', error);
+        });
+    } else if (audioStream) {
+      audioStream.getTracks().forEach((track) => track.stop());
+      setAudioStream(null);
+    }
+
+    return () => {
+      if (audioStream) {
+        audioStream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [isAudioOn, audioStream]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -145,6 +162,7 @@ const VideoCall = () => {
   };
 
   const endCall = () => {
+    stopTimer();
     setIsCallActive(false);
     setCallDuration(0);
     setEndMeeting(true);
@@ -182,6 +200,33 @@ const VideoCall = () => {
     alert('Zəng rədd edildi.');
     setAccepCall(false);
   };
+
+  // timer
+  const startTimer = () => {
+    if (timer) return; // Zaten çalışan bir timer varsa, yeni başlatma.
+    const newTimer = setInterval(() => {
+      setCallDuration((prev) => prev + 1);
+    }, 1000);
+    setTimer(newTimer);
+  };
+
+  const stopTimer = () => {
+    if (timer) {
+      clearInterval(timer);
+      setTimer(null);
+    }
+  };
+
+  // Örnek kullanım: onReceiverConnected tetiklendiğinde zamanlayıcı başlat
+  const handleReceiverConnected = () => {
+    setIsCallActive(true);
+    startTimer();
+  };
+
+  useEffect(() => {
+    // Bileşen temizliği sırasında zamanlayıcıyı durdur
+    return () => stopTimer();
+  }, []);
 
   const renderMessage = (msg: { text: string; sender: string; time: string }) => (
     <Grid
@@ -360,55 +405,56 @@ const VideoCall = () => {
           }}
         >
           {/* // eslint-disable-next-line */}
-          <div className="bg-black overflow-hidden w-full h-full">
+          <div className=" w-full h-full">
             {/* // eslint-disable-next-line */}
-            <video ref={remoteVideoRef} src="" autoPlay style={{ objectFit: 'cover' }}>
+            <video
+              ref={remoteVideoRef}
+              src=""
+              autoPlay
+              style={{ objectFit: 'cover' }}
+              className="w-full h-full object-cover"
+            >
               <track kind="captions" srcLang="az" label="Azerbaycan" default />
             </video>
           </div>
           {/* countdown  */}
-          <Button disabled variant="contained" sx={{ position: 'absolute', top: 0, left: 0 }}>
+
+          <Card
+            sx={{
+              display: 'flex',
+              padding: 2,
+              position: 'absolute',
+              top: '-3px',
+              left: '-3px',
+              p: 0.9,
+              borderTopLeftRadius: '0px',
+              borderBottomLeftRadius: '0px',
+              borderTopRightRadius: '0px',
+            }}
+          >
             <TimerIcon sx={{ verticalAlign: 'middle', marginRight: 1, color: primary.main }} />
             {Math.floor(callDuration / 60)}:
-            {callDuration % 60 < 10 ? `0${callDuration % 60}` : callDuration % 60}
-          </Button>
-          {/* my camera  */}
-          {/* <div className="w-[25%] flex items-center justify-center absolute right-5 top-5 h-[27%] rounded-md bg-gray-900">
-            {isVideoOn ? (
-              <video
-                ref={videoRef}
-                autoPlay
-                muted
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                }}
-              />
-            ) : (
-              <VideocamOffIcon fontSize="large" />
-            )}
-          </div> */}
+            {callDuration % 60 < 10 ? `0${callDuration % 60}` : callDuration % 60}{' '}
+          </Card>
 
           {/* my camera draggabl */}
           <LazyMotion features={domAnimation}>
             <m.div
               drag
-              dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }} // Hareket sınırları (isteğe bağlı)
-              dragMomentum={false} // Ani hareketleri engeller
+              dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              dragMomentum={false}
               style={{
                 position: 'absolute',
-                top: '5%',
-                right: '5%',
-                width: '25%',
+                top: '2%',
+                right: '2%',
+                width: '35%',
                 height: '27%',
-                border: '1px solid #fff',
+                border: '2px solid #fff',
                 borderRadius: '8px',
-                overflow: 'hidden',
                 backgroundColor: '#000',
                 cursor: 'grab',
                 display: 'flex',
+                overflow: 'hidden',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
@@ -420,7 +466,8 @@ const VideoCall = () => {
                   setShowSettings={setShowWebCamSettings}
                   showSettings={showWebCamSettings}
                   width={320}
-                  height={240}
+                  height={210}
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <VideocamOffIcon fontSize="large" style={{ color: '#fff' }} />
@@ -440,14 +487,6 @@ const VideoCall = () => {
             <IconButton onClick={endCall} color="secondary" sx={{ margin: 1 }}>
               <CallEndIcon />
             </IconButton>
-            <IconButton
-              onClick={isRecording ? stopRecording : startRecording}
-              color="error"
-              sx={{
-                margin: 1,
-                position: 'relative',
-              }}
-            />
           </Box>
         </Box>
       </Card>
@@ -468,7 +507,7 @@ const VideoCall = () => {
           acceptCall={acceptCall}
           newCallReceived={newCallReceived}
           setNewCallReceived={handleNewCall}
-          onEndMeeting={(s: SignalType) => { }}
+          onEndMeeting={(s: SignalType) => {}}
         />
       )}
     </Box>
