@@ -21,13 +21,35 @@ const styles = makeStyles();
 const globalStyle = globalSpacingStyle();
 const { width } = Dimensions.get("window");
 
-export default function Partners() {
+export default function SelectPartners() {
   const renderPartner = ({ item }) => (
-    <View style={styles.categoryBox}>
-      <View style={styles.top}>
+    <View
+      style={{
+        marginLeft: 12,
+        height: 100,
+        width: 200,
+        backgroundColor: colors.lightGrey,
+        borderRadius: 16,
+      }}
+    >
+      <View
+        style={{
+          height: "20%",
+          width: "100%",
+          marginLeft: 10,
+          justifyContent: "center",
+        }}
+      >
         <Text text={item.title} type="regular" size="14" />
       </View>
-      <View style={styles.partnerBox}>
+      <View
+        style={{
+          height: "80%",
+          width: "100%",
+          alignItems: "flex-end",
+          paddingRight: 20,
+        }}
+      >
         <Image
           style={{ height: 80, width: 80, resizeMode: "cover" }}
           source={item.image}
@@ -61,7 +83,7 @@ export default function Partners() {
     <>
       <SafeAreaView style={{ backgroundColor: colors.greyBackground }} />
       <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView>
           <Text
             text="Partnyorlar"
             type="semiBold"

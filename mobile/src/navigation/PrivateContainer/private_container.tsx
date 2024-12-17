@@ -13,6 +13,8 @@ import {
   InsuranceInfo,
   Partners,
   Profile,
+  SelectPartners,
+  Signature,
   Transaction,
   VideoCall,
 } from "../../screens";
@@ -39,6 +41,8 @@ export default function PrivateStack() {
       <Screen name="Profile" component={Profile} />
       <Screen name="AccountSettings" component={AccountSettings} />
       <Screen name="VideoCall" component={VideoCall} />
+      <Screen name="Signature" component={Signature} />
+      <Screen name="SelectPartners" component={SelectPartners} />
     </Navigator>
   );
 }

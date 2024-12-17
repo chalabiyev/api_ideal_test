@@ -6,6 +6,7 @@ import TelephoneNumber from "./Auth/TelephoneNumber";
 import Otp from "./Auth/Otp";
 import Agreements from "./Auth/Agreements";
 import Password from "./Auth/Password";
+import SecurityCode from "./Auth/SecurityCode";
 
 //Main
 import Home from "./Main/Home";
@@ -19,8 +20,12 @@ import Calculator from "./Main/Calculator";
 import Profile from "./Main/Profile";
 import AccountSettings from "./Main/AccountSettings";
 import VideoCall from "./Main/VideoCall";
-
+import Signature from "./Main/Signature";
+import SelectPartners from "./Main/SelectPartners";
 export {
+  SelectPartners,
+  Signature,
+  SecurityCode,
   VideoCall,
   AccountSettings,
   Profile,

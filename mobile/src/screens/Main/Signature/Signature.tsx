@@ -8,13 +8,13 @@ const styles = makeStyles();
 const globalStyle = globalSpacingStyle();
 const { width } = Dimensions.get("window");
 
-export default function VideoCall() {
+export default function Signature() {
   return (
     <>
-      <SafeAreaView style={{ backgroundColor: colors.greyBackground }} />
+      <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
       <MainHeader />
       <View style={styles.container}>
-        <Text text="Video" type="semiBold" size="20" position="center" />
+        <Text text="Signature" type="semiBold" size="20" position="center" />
       </View>
     </>
   );

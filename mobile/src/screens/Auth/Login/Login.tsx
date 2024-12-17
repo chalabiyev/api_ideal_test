@@ -1,34 +1,34 @@
-import React, {useState} from 'react';
-import {SafeAreaView, TouchableOpacity, View} from 'react-native';
-import {makeStyles} from './style';
+import React, { useState } from "react";
+import { SafeAreaView, TouchableOpacity, View } from "react-native";
+import { makeStyles } from "./style";
 import {
   Container,
   Input,
   MainHeader,
   PhoneInput,
   Text,
-} from '../../../components';
-import colors from '../../../constants/colors/colors';
-import {globalSpacingStyle} from '../../../constants/space/style';
-import MainButton from '../../../components/Fit/Button/MainButton';
-import {useNavigation} from '@react-navigation/native';
+} from "../../../components";
+import colors from "../../../constants/colors/colors";
+import { globalSpacingStyle } from "../../../constants/space/style";
+import MainButton from "../../../components/Fit/Button/MainButton";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = makeStyles();
 const globalStyle = globalSpacingStyle();
 export default function Login() {
   const navigation = useNavigation();
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
   const isButtonDisabled = !phoneNumber || !password;
 
   const handleButtonPress = () => {
     if (!isButtonDisabled) {
-      navigation.navigate('Private', {screen: 'Home'});
+      navigation.navigate("SecurityCode");
     }
   };
   return (
     <>
-      <SafeAreaView style={{backgroundColor: colors.backgroundColor}} />
+      <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
       <MainHeader />
       <View style={styles.container}>
         <Text text="Daxil olun" type="regular" size="20" position="center" />
@@ -67,7 +67,7 @@ export default function Login() {
           </TouchableOpacity>
           <View style={globalStyle.space30VT} />
         </Container>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: "center" }}>
           <MainButton
             text="Daxil ol"
             onPress={handleButtonPress}

@@ -11,6 +11,7 @@ import {
   Otp,
   Agreements,
   Password,
+  SecurityCode,
 } from "../../screens";
 import SimaSignature from "../../screens/Auth/SimaSignature";
 
@@ -33,6 +34,7 @@ export default function PublicStack() {
       <Screen name="Agreements" component={Agreements} />
       <Screen name="SimaSignature" component={SimaSignature} />
       <Screen name="Password" component={Password} />
+      <Screen name="SecurityCode" component={SecurityCode} />
     </Navigator>
   );
 }
