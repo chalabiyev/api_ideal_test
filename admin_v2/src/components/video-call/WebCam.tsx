@@ -261,7 +261,7 @@ export const WebCam = ({
   };
 
   return (
-    <div id="webcam">
+    <div className={className} id="webcam">
       <div className="modal" style={{ display: showSettings ? 'block' : 'none' }}>
         <div className="modal-content">
           <div className="modal-header">
@@ -383,7 +383,7 @@ export const WebCam = ({
         height={height}
         muted={true}
         className={className + (webCamConfig.mirrorEnabled ? ' mirroredWebCamClass' : '')}
-        style={{objectFit:'cover'}}
+        style={{ objectFit: 'cover' }}
       ></video>
     </div>
   );
