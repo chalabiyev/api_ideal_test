@@ -39,7 +39,17 @@ import { FacebookModalIcon } from "./icons/ConnectionModal/FacebookModalIcon";
 import { InstagramModalIcon } from "./icons/ConnectionModal/InstagramModalIcon";
 import { XModalIcon } from "./icons/ConnectionModal/XModalIcon";
 import { DeletePin } from "./icons/Auth/DeletePin";
+import { MessageIcon } from "./icons/VideoCall/MessageIcon";
+import { CameraIcon } from "./icons/VideoCall/CameraIcon";
+import { MicrofonIcon } from "./icons/VideoCall/MicrofonIcon";
+import { ShareIcon } from "./icons/VideoCall/ShareIcon";
+import { CloseTelephoneIcon } from "./icons/VideoCall/CloseTelephoneIcon";
 export {
+  CloseTelephoneIcon,
+  ShareIcon,
+  MicrofonIcon,
+  CameraIcon,
+  MessageIcon,
   DeletePin,
   XModalIcon,
   InstagramModalIcon,

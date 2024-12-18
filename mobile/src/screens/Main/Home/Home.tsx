@@ -50,7 +50,7 @@ export default function Home() {
     {
       id: "3",
       image: require("../../../assets/images/Cards/PartnerCard.png"),
-      onPress: () => navigation.navigate("Partners"),
+      onPress: () => navigation.navigate("SelectPartners"),
     },
   ];
 
