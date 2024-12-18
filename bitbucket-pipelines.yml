@@ -12,9 +12,9 @@ pipelines:
           after-script:              
             - pipe: atlassian/checkstyle-report:0.3.0              
   branches:
-    main:
+    main:    
       - step:
-          name: Backend Build And Deploy
+          name: Backend Build and Deploy
           image: maven:3.8.7
           script:
             - cd backend/kredit
@@ -32,3 +32,25 @@ pipelines:
                 SSH_KEY: $MY_SSH_KEY
                 SERVER: '46.202.143.42'
                 COMMAND: 'bash ~/restart_kredit_backend.sh'
+      - step:
+          name: Admin v2 Build and Deploy
+          image: node:18
+          caches:
+            - node
+          script:
+            - cd admin_v2
+            - yarn install
+            - yarn build
+            - pipe: atlassian/scp-deploy:1.5.1            
+              variables:
+                USER: 'esam'
+                SERVER: '46.202.143.42'
+                REMOTE_PATH: '/var/www/html/kreditadmin/'
+                LOCAL_PATH: 'dist/*'
+                SSH_KEY: $MY_SSH_KEY
+            - pipe: atlassian/ssh-run:0.4.3
+              variables:
+                SSH_USER: 'esam'
+                SSH_KEY: $MY_SSH_KEY
+                SERVER: '46.202.143.42'
+                COMMAND: 'chmod -R 755 /var/www/html/kreditadmin/'
