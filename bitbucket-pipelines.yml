@@ -23,6 +23,11 @@ pipelines:
             - node
           script:
             - cd admin_v2
-            - npm install            
-            - npm test
-            - npm run build
+            - npm install yarn
+            - yarn install
+            - yarn test
+            - yarn build
+      - step:
+            name: Admin v2 Security Scan
+            script:
+              - pipe: atlassian/git-secrets-scan:0.5.1      
