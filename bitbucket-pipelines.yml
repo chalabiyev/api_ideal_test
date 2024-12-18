@@ -40,7 +40,7 @@ pipelines:
           script:
             - cd admin_v2
             - yarn install
-            - yarn build
+            - yarn buildC
             - pipe: atlassian/scp-deploy:1.5.1            
               variables:
                 USER: 'esam'
