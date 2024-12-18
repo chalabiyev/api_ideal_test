@@ -1,11 +1,9 @@
-image: maven:3.8.7
-image: node:18
-
 pipelines:
   default:
     - parallel:
       - step:
           name: Backend Build and Test
+          image: maven:3.8.7
           caches:
             - maven
           script:
@@ -19,6 +17,7 @@ pipelines:
             - pipe: atlassian/git-secrets-scan:0.5.1
       - step:
           name: Admin v2 Build and Test
+          image: node:18
           caches:
             - node
           script:
