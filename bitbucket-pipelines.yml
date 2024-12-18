@@ -1,0 +1,25 @@
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: Backend Build and Test
+          image: maven:3.8.7
+          caches:
+            - maven
+          script:
+            - cd backend/kredit
+            - mvn clean install
+          after-script:              
+            - pipe: atlassian/checkstyle-report:0.3.0
+      - step:
+          name: Backend Deploy to Production
+          deployment: Production
+          trigger: manual
+          script:
+            - pipe: atlassian/scp-deploy:1.5.1
+              variables:
+                USER: 'esam'
+                SERVER: '46.202.143.42'
+                REMOTE_PATH: '~/'
+                LOCAL_PATH: 'backend/kredit/target/kredit-0.0.1-SNAPSHOT.jar'
+                SSH_KEY: $MY_SSH_KEY
