@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+          rel="stylesheet"/>
+
+    <title>Ödəniş Qrafiki</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            margin: 20px auto;
+            max-width: 1100px;
+            line-height: 1.6;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+        }
+
+        .header img {
+            max-width: 150px;
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+            flex: 1;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .table-container {
+            flex: 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 6px;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+
+        .red-triangle {
+            color: red;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .side-text {
+            flex: 1;
+            margin-left: 20px;
+            line-height: 1.8;
+            align-self: flex-start; /* Align to top */
+        }
+
+        .side-text h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .side-text img {
+            display: block;
+            margin-bottom: 10px;
+            max-width: 100px;
+        }
+
+        .box {
+            border: 1px solid black;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .footer-note {
+            font-size: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+         .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .signatures div {
+            text-align: center;
+            flex: 1;
+        }
+
+        .signature-line {
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header">
+    <img src="img.png" alt="İdeal Kredit Logo"/>
+    <h1>VÖEN: 1300480591<br/>ÖDƏNİŞ QRAFİKİ<br/>09/745-2023 saylı kredit xətti müqaviləsinə 1 saylı əlavə<br/>ƏLAVƏ №1
+    </h1>
+</div>
+<div>
+    <p><strong>Tarix:</strong> ${confirmDate}</p>
+    <p><strong>Məbləğ:</strong> ${creditAmount} AZN</p>
+    <p><strong>İllik faiz:</strong> ${annualPercent}%</p>
+    <p><strong>Müddət:</strong> ${creditTerm} ay</p>
+    <p><strong>Güzəşt müddəti:</strong> AZN</p>
+    <p><strong>Aylıq annuitet:</strong> ${monthlyPayment} AZN</p>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Table Section -->
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Tarix</th>
+                <th>Ayların sayı</th>
+                <th>Ödəniş</th>
+                <th>Əsas borc</th>
+                <th>Faiz</th>
+                <th>Qalıq</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="red-triangle">▲</td>
+                <td>001</td>
+                <td>233</td>
+                <td class="red-triangle">▲</td>
+                <td class="red-triangle">▲</td>
+                <td class="red-triangle">▲</td>
+            </tr>
+            <!-- Repeat rows as needed -->
+        </table>
+    </div>
+
+    <!-- Side Text Section -->
+    <div class="side-text">
+
+        <!-- Title Section -->
+        <h4>Ödəniş qaydası: Bank xidmətləri - İDEAL KREDİT</h4>
+
+        <!-- Payment Information -->
+        <div class="section">
+            <div class="box">
+                <table class="info-table">
+                    <tr>
+                        <th>FİN kod:</th>
+                        <td>${requestedUser.pin}</td>
+                    </tr>
+                    <tr>
+                        <th>Doğum tarixi:</th>
+                        <td>${requestedUser.birthDate}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="section">
+            <div class="box">
+                <strong>Ödəniş sistemləri ilə ödəmək üçün</strong>
+                <div style="display: flex; ">
+                    <img src="img_1.png" alt=""/>
+                    <img src="img_2.png" alt=""/>
+                </div>
+            </div>
+
+            <div class="box">
+                <strong>Beynəlxalq Bank ASC Nərimanov filialı</strong><br/>
+                <strong>H/h:</strong> AZ42IBAZ40090019442129326206<br/>
+                <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="box">
+                <strong>Bank Hesablarımıza ödəmək üçün</strong><br/>
+                Azərpoçt MMC PF 1<br/>
+                <strong>H/h:</strong> AZ05AZPO91015461400420200413<br/>
+                <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+            </div>
+
+            <div class="box">
+                <strong>Beynəlxalq Bank ASC Nərimanov filialı</strong><br/>
+                <strong>H/h:</strong> AZ42IBAZ40090019442129326206<br/>
+                <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+            </div>
+        </div>
+
+        <!-- Company Information -->
+        <div class="section">
+            <div class="box">
+                <strong>İDEAL KREDİT -in ünvanı:</strong><br/>
+                Bakı şəhəri, AK. Həsən Əliyev küç., 34<br/>
+                (1 Saylı ASAN kommunalın 1-ci mərtəbəsi)<br/>
+                <strong>Tel:</strong> 012-526-26-25<br/>
+                <strong>Email:</strong> office@idealkredit.az<br/>
+                <strong>İş vaxtı:</strong> 09:00 - 18:00
+            </div>
+        </div>
+
+        <!-- Notice Section -->
+        <div class="notice">
+            <p>DİQQƏT!</p>
+            <p>HÖRMƏTLİ MÜŞTƏRİ!</p>
+            <p>KREDİT ÖDƏNİŞİNİZİ ÖDƏNİŞ QRAFİKİNDƏ<br/>
+                NƏZƏRDƏ TUTULAN TARİXLƏRDƏ SAAT<br/>
+                <strong>16:30 -DƏK</strong> ÖDƏMƏLİSİNİZ. ƏKS HALDA<br/>
+                KREDİTİNİZ GECİKMƏDƏ QALACAQ.</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer Note -->
+<div class="footer-note">
+    <strong>Qeyd:</strong> * Ödənişlər yalnız göstərilmiş banklar və digər ödəmə vasitələri (kassa, ödəniş terminalı,
+    onlayn ödəniş) ilə edilməlidir.<br/>
+    * Ödənişlərin "İDEAL KREDİT" BOKT-nin hər hansı bir əməkdaşına və ya digər şəxslərə edildiyi təqdirdə müqavilənin
+    4.5-ci bəndinə əsasən ödənişiniz qəbul edilməyəcək və ödəniş müqavilədə göstərilən qaydada 3.1.4-cü bəndə uyğun
+    tələb ediləcək.
+</div>
+
+<!-- Signatures Section -->
+<div class="signatures">
+    <div>
+        <strong>BOKT</strong><br/>
+        Direktor<br/>
+        <span class="bold">Q.B.Qubadov</span>
+        <div class="signature-line">____________________</div>
+    </div>
+    <div>
+        <strong>BORCALAN</strong><br/>
+        Ş/V №: <span class="bold">${requestedUser.seriaNo}</span><br/>
+        <span class="bold">${requestedUser.fullName}</span>
+        <div class="signature-line">____________________</div>
+    </div>
+</div>
+
+</body>
+</html>
