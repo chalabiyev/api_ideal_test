@@ -11,7 +11,11 @@ pipelines:
             - mvn clean install
           after-script:              
             - pipe: atlassian/checkstyle-report:0.3.0
-          after-script:
+      - step:
+          name: Backend Deploy to Production
+          deployment: Production
+          trigger: manual            
+          script:
             - pipe: atlassian/scp-deploy:1.5.1
               variables:
                 USER: 'esam'
