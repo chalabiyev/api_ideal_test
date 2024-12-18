@@ -19,17 +19,10 @@ pipelines:
           script:
             - cd backend/kredit
             - mvn clean install -DskipTests
-          artifacts:
-            - target/kredit-0.0.1-SNAPSHOT.jar
-      - step:
-          name: Backend Deploy to Production
-          deployment: Production
-          trigger: manual
-          script:
-            - pipe: atlassian/scp-deploy:1.5.1
+            - pipe: atlassian/scp-deploy:1.5.1            
               variables:
                 USER: 'esam'
                 SERVER: '46.202.143.42'
                 REMOTE_PATH: '~/'
-                LOCAL_PATH: 'backend/kredit/target/kredit-0.0.1-SNAPSHOT.jar'
+                LOCAL_PATH: 'target/kredit-0.0.1-SNAPSHOT.jar'
                 SSH_KEY: $MY_SSH_KEY
