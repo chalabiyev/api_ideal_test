@@ -1,18 +1,6 @@
 pipelines:
-  default:
-    - parallel:
-      - step:
-          name: Backend Build and Test
-          image: maven:3.8.7
-          caches:
-            - maven
-          script:
-            - cd backend/kredit
-            - ./mvnw verify --file pom.xml
-          after-script:              
-            - pipe: atlassian/checkstyle-report:0.3.0              
   branches:
-    release:    
+    main:    
       - step:
           name: Backend Build and Deploy
           image: maven:3.8.7
@@ -31,7 +19,7 @@ pipelines:
                 SSH_USER: 'esam'
                 SSH_KEY: $MY_SSH_KEY
                 SERVER: '46.202.143.42'
-                COMMAND: 'bash ~/restart_kredit_backend.sh'
+                COMMAND: './restart_kredit_backend.sh'
       - step:
           name: Admin v2 Build and Deploy
           image: node:18
