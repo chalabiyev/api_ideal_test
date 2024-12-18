@@ -12,7 +12,7 @@ pipelines:
           after-script:              
             - pipe: atlassian/checkstyle-report:0.3.0              
   branches:
-    main:    
+    release:    
       - step:
           name: Backend Build and Deploy
           image: maven:3.8.7
