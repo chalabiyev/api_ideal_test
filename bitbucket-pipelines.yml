@@ -12,7 +12,7 @@ pipelines:
           after-script:              
             - pipe: atlassian/checkstyle-report:0.3.0              
   branches:
-    master:
+    main:
       - step:
           name: Build
           script:
