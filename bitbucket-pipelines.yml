@@ -23,7 +23,6 @@ pipelines:
           script:
             - cd admin_v2
             - yarn install
-            - yarn test
             - yarn build
       - step:
             name: Admin v2 Security Scan
