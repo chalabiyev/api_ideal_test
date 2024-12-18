@@ -9,6 +9,7 @@ yarn-error.log*
 node_modules
 .pnp
 .pnp.js
+.vite
 
 # testing
 coverage
