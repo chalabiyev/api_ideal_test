@@ -14,10 +14,10 @@ pipelines:
   branches:
     main:
       - step:
-          name: Build
+          name: Backend Build For Deploy
           script:
             - cd backend/kredit
-            - ./mvnw package -DskipTests            
+            - mvn clean install -DskipTests            
             - zip -j application.zip target/kredit-0.0.1-SNAPSHOT.jar
           artifacts:
             - application.zip
