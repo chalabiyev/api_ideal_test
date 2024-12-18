@@ -8,9 +8,19 @@ pipelines:
             - maven
           script:
             - cd backend/kredit
-            - mvn clean install
+            - ./mvnw verify --file pom.xml
           after-script:              
-            - pipe: atlassian/checkstyle-report:0.3.0
+            - pipe: atlassian/checkstyle-report:0.3.0              
+  branches:
+    master:
+      - step:
+          name: Build
+          script:
+            - cd backend/kredit
+            - ./mvnw package -DskipTests            
+            - zip -j application.zip target/kredit-0.0.1-SNAPSHOT.jar
+          artifacts:
+            - application.zip
       - step:
           name: Backend Deploy to Production
           deployment: Production
@@ -21,5 +31,5 @@ pipelines:
                 USER: 'esam'
                 SERVER: '46.202.143.42'
                 REMOTE_PATH: '~/'
-                LOCAL_PATH: 'backend/kredit/target/kredit-0.0.1-SNAPSHOT.jar'
+                LOCAL_PATH: 'application.zip'
                 SSH_KEY: $MY_SSH_KEY
