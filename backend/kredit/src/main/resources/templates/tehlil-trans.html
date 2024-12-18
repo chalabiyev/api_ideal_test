@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+          rel="stylesheet"/>
+
+    <title>Ərizə traş</title>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            font-size: 14px;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #000;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        .left-align {
+            text-align: left;
+        }
+
+        .section-title {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .signature div {
+        display: flex;
+            text-align: center;
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">"İDEAL KREDİT" BOKT MMC</div>
+<div class="header">ÜMUMİ MƏLUMAT</div>
+
+<!-- Borrower Information -->
+<div class="section-title">1. Borcalan:</div>
+<p class="bold">${requestedUser.fullName}</p>
+
+<div class="section-title">2. Ünvan:</div>
+<p class="italic"> ${requestedUser.address}</p>
+
+<div class="section-title">3. Telefon/faks N-si:</div>
+<div class="left-align">
+    <ul>
+        <!-- Iterate over the map -->
+        <li th:each="phoneNumber : ${otherPhoneNumbers}">
+            <span th:text="${phoneNumber.key}">Key</span>:
+            <span th:text="${phoneNumber.value}">Value</span>
+        </li>
+    </ul>
+</div>
+
+<div class="section-title">4. BOKT-a aidiyyatı olan şəxs:</div>
+<p class="bold">${isConnectedWithBOKT}</p>
+
+<div class="section-title">5. Müəssisənin mülkiyyət forması:</div>
+<p class="bold">${formOfOwnership}</p>
+
+<div class="section-title">6. Fəaliyyət növü:</div>
+<p class="italic">${requestedUser.workPlace}</p>
+
+<div class="section-title">7. Təminatçı barədə məlumat:</div>
+<p class="bold">${guarantee}</p>
+
+<!-- Credit Information Table -->
+<div class="section-title">8. Kredit barədə məlumat:</div>
+
+<table>
+    <tr>
+        <th>№</th>
+        <th>Kreditin növü</th>
+        <th>Kreditin / öhdəliyin <br/> (balansarxası) məbləği</th>
+    </tr>
+
+    <tr>
+        <th>
+            Yeni kreditlər
+        </th>
+    </tr>
+    <tr>
+        <td rowspan="2">1</td>
+        <th></th>
+        <th>Məbləğ</th>
+        <th>Verilmə tarixi</th>
+        <th>Müddət</th>
+        <th>Bitmə tarixi</th>
+        <th>Faizi</th>
+    </tr>
+    <tr>
+        <td class="bold italic">${creditType}</td>
+        <td class="highlight">${creditAmount} AZN</td>
+        <td class="highlight">${confirmDate}</td>
+        <td class="highlight">${creditTerm} <span class="italic">ay</span></td>
+        <td class="highlight">${endDate}</td>
+        <td class="highlight">${annualPercent} %</td>
+    </tr>
+    <!--   varsa gorunecek -->
+
+    <tr>
+        <td colspan="6" class="left-align bold">Mövcud kreditlər</td>
+    </tr>
+    <tr>
+        <td rowspan="2">1</td>
+        <th></th>
+        <th>Məbləğ</th>
+        <th>Verilmə tarixi</th>
+        <th>Müddət</th>
+        <th>Bitmə tarixi</th>
+        <th>Faizi</th>
+    </tr>
+    <tr>
+        <td class="bold italic"></td>
+        <td class="highlight"></td>
+        <td class="highlight"></td>
+        <td class="highlight"><span class="italic"></span></td>
+        <td class="highlight"></td>
+        <td class="highlight"></td>
+    </tr>
+    <!--    -->
+</table>
+
+<div class="section-title">9. Ödənişin şərtləri:</div>
+<p class="bold italic center">1 saylı qrafikə əsasən aylıq ödəniş</p>
+
+<div class="section-title">10. Kreditin məqsədi:</div>
+<p class="highlight">${creditPurpose}</p>
+
+<div class="section-title">11. Borcalanın gəlir mənbəyi:</div>
+<p class="bold">Əmək haqqı</p>
+
+<div class="section-title">12. Maliyyə təhlili:</div>
+<p class="bold">Qənaətbəxş</p>
+
+<div class="section-title">13. Digər şərtlər/cəhətlər:</div>
+<p>-</p>
+
+<!-- Approval Section -->
+<div class="section-title">14. Sifarişə baxanın rəyi:</div>
+<div class="signature">
+    <div>
+        <p>________________</p>
+        <p>Razılıq</p>
+    </div>
+    <div>
+        <p>________________</p>
+        <p>İmtina</p>
+    </div>
+</div>
+
+<div class="signature">
+    <div>
+        <p> Rəyin əsasları:</p>
+        <p>_________________________________________________________________________________________</p>
+    </div>
+</div>
+
+<div class="signature">
+    <p>Təhlil aparan şəxs:</p>
+
+    <div>
+        <p class="bold">A.A.S.</p>
+        <p>____________________</p>
+    </div>
+    <div>
+        <p>vəzifəsi</p>
+        <p>________________</p>
+    </div>
+    <div>
+        <p>Imzası</p>
+        <p>_____________________</p>
+    </div>
+</div>
+<div class="signature">
+    <div>
+        <p>________________</p>
+        <p>Razılıq</p>
+    </div>
+    <div>
+        <p>________________</p>
+        <p>Imtina</p>
+    </div>
+</div>
+<p>
+    <strong>
+        Qeyd
+    </strong>
+    ___________________________________________________________________________________</p>
+</body>
+</html>

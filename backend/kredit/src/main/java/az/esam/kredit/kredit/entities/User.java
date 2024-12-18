@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.entities;
 
+import az.esam.kredit.kredit.dtos.responses.document.AddressDetail;
 import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import jakarta.validation.constraints.Email;
@@ -47,11 +48,11 @@ public class User extends BaseEntity {
     @Size(max = 120)
     private String fatherName;
 
-//    @NotBlank
+    //    @NotBlank
     @Size(max = 50)
     private EGender gender;
 
-//    @NotBlank
+    //    @NotBlank
     @Size(max = 20)
     @Indexed(unique = true)
     private String phoneNumber;
@@ -59,6 +60,29 @@ public class User extends BaseEntity {
     @Indexed(unique = true)
     @Email
     private String email;
+
+    private String pin;
+    private String seriaNo;
+    private Date eventDate;
+    private Date expDate;
+    private String address;
+    private String organisationName;
+    private Date activationDate;
+    private String birthAddress;
+    private String nationality;
+    private String maritalStatus;
+
+    private String factAddress;
+    private int countOfChildren;
+    private String education;
+
+    private String workPlace;
+    private String workAddress;
+    private String position;
+    private String experience;
+    private String salary;
+    private String otherIncome;
+    private String voen;
 
     @NotBlank
     private String password;

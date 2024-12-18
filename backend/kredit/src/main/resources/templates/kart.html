@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+          rel="stylesheet"/>
+    <title>Kart Məlumatlarının Təhvil-Təslim Aktı</title>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .highlight {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="header">Kart Məlumatlarının Təhvil-Təslim Aktı</div>
+
+<table>
+    <thead>
+    <tr>
+        <th colspan="2">Borcalan Haqqında Məlumatlar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Borcalan</td>
+        <td>${requestedUser.fullName}</td>
+    </tr>
+    <tr>
+        <td>ŞV Seriya</td>
+        <td>{requestedUser.seriaNo}</td>
+    </tr>
+    <tr>
+        <td>Fin Kodu</td>
+        <td>${requestedUser.pin}</td>
+    </tr>
+    <tr>
+        <td>ŞV Verilmə Tarixi</td>
+        <td>${requestedUser.eventDate}</td>
+    </tr>
+    <tr>
+        <td>ŞV Bitmə Tarixi</td>
+        <td>${requestedUser.expDate}</td>
+    </tr>
+    <tr>
+        <td>Doğum Tarixi</td>
+        <td>${requestedUser.birthDate}</td>
+    </tr>
+    <tr>
+        <th colspan="2">Kredit Haqqında Məlumatlar</th>
+    </tr>
+    <tr>
+        <td>Kredit Məbləği</td>
+        <td>${creditAmount}</td>
+    </tr>
+    <tr>
+        <td>Xidmət Haqqı</td>
+        <td>${serviceRate}%</td>
+    </tr>
+    <tr>
+        <td>Kart Xərci</td>
+        <td>${cartCost}</td>
+    </tr>
+    <tr>
+        <td>Qiymətləndirmə Xərci</td>
+        <td>${valuationCost}</td>
+    </tr>
+    <tr>
+        <td>Sığorta Xərci</td>
+        <td>${insuranceCost}%</td>
+    </tr>
+    <tr>
+        <td>Karta Gedən Məbləğ</td>
+        <td class="highlight">9640,00</td>
+    </tr>
+    <tr>
+        <td>Kart Nömrəsi</td>
+        <td>${card.number}</td> <!--  will be generated randomly for user who will take credit 1234 5678 1234 5678 -->
+    </tr>
+    <tr>
+        <td>Kartın Bitmə Tarixi</td>
+        <td class="highlight">${card.expDate}</td>
+    </tr>
+    <tr>
+        <td>Kart Seriyası</td>
+        <td>${card.Seria}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+          rel="stylesheet"/>
+    <title>İstehlak Krediti Məlumatları</title>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .content-table th, .content-table td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            vertical-align: top;
+        }
+        .content-table th {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+        .number {
+            width: 4%;
+            text-align: center;
+            font-weight: bold;
+        }
+        .label {
+            width: 30%;
+            font-weight: bold;
+        }
+        .description {
+            width: 60%;
+        }
+    </style>
+</head>
+<body>
+<div class="header">İSTEHLAK KREDİTİ MÜQAVİLƏSİ ÜZRƏ STANDART MƏLUMATLANDIRMA FORMASI</div>
+
+<table class="content-table">
+    <tr>
+        <td class="number">1</td>
+        <td class="label">Borcverənin adı:</td>
+        <td class="description">Bank Olmayan Kredit Təşkilatı "İDEAL KREDİT" Məhdud Məsuliyyətli Cəmiyyəti</td>
+    </tr>
+    <tr>
+        <td class="number">2</td>
+        <td class="label">Borcverənin ünvanı:</td>
+        <td class="description">Bakı şəhəri, Həsən Əliyev küçəsi 34, (1 saylı ASAN Kommunal 1-ci mərtəbə)</td>
+    </tr>
+    <tr>
+        <td class="number">3</td>
+        <td class="label">Kreditin növü:</td>
+        <td class="description">${creditType}</td>
+    </tr>
+    <tr>
+        <td class="number">4</td>
+        <td class="label">Kreditin məbləği (kredit xəttinin limiti) və valyutası:</td>
+        <td class="description">${creditAmount} ₼</td>
+    </tr>
+    <tr>
+        <td class="number">5</td>
+        <td class="label">Kreditin qaytarılma müddəti:</td>
+        <td class="description">Siz krediti <em>il tarixindən gec olmayaraq</em> qaytarmalısınız.</td>
+    </tr>
+    <tr>
+        <td class="number">6</td>
+        <td class="label">Kreditin ödəniş şərtləri:</td>
+        <td class="description" colspan="6">
+            <div style="border-bottom: 1px solid  #ddd; padding: 5px 0;">Kredit ödənişlərini aşağıdakı üsullarla həyata
+                keçirə bilərsiniz:
+            </div>
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    <strong>"İDEAL KREDİT"</strong>-in Azərpoçt MMC PF1, Kapital Bank ASC Kob mərkəzi filialı və ya
+                    “Beynəlxalq Bank” ASC Nərimanov filialında olan bank hesablarından ödəməklə;
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong>E-Manat, MilliÖn</strong> ödəniş terminalları ilə ödəməklə;
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong>Nağd qaydada <span style="color: #0078D4;">BOKT</span>-nin kassasına ödəməklə;</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong><a href="https://hesab.az/"
+                               style="color: #0078D4; text-decoration: none;">https://hesab.az</a></strong>
+                    onlayn ödəniş sistemi vasitəsilə ödəməklə.
+                </li>
+            </ul>
+            <div style="margin-top: 10px;">
+                Qeyd edilən üsullardan hər hansı birinin istifadəsinin mümkün olmaması Sizi digər mümkün üsullardan
+                istifadə etməklə
+                ödənişləri vaxtında həyata keçirmək öhdəliyindən azad etmir.
+            </div>
+
+        </td>
+    </tr>
+    <tr>
+        <td class="number" rowspan="2">7</td>
+        <td class="label">Kreditlə alınacaq mal(lar)ın və ya xidmət(lər)in Adı:</td>
+        <td class="description">${creditPurpose}</td>
+    </tr>
+    <tr>
+        <td class="label"> Nağd qiyməti (malın və ya xidmətin alınması zamanı birdəfəlik ödəniş edildikdə):</td>
+        <td class="description"></td>
+    </tr>
+    <tr>
+        <td class="number">8</td>
+        <td class="label">Kredit üzrə tətbiq edilən faizlərin illik dərəcəsi və (və ya) digər ödənişlərin
+            məbləği və
+            onların tətbiq edilmə şərtləri:
+        </td>
+        <td class="description" colspan="3">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    <strong>Illik faiz dərəcəsi: {annualPercent}%</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong> Kreditinizi ödəyərkən Sizdən komisyon haqqı tutulmur.</strong>
+                </li>
+                <li style="padding: 5px 0;">
+                    <strong> Digər ödənişlər - yoxdur </strong>
+                </li>
+            </ul>
+        </td>
+
+    </tr>
+    <tr>
+        <td class="number" rowspan="2">9</td>
+        <td class="label">Faktiki illik faiz dərəcəsi (FİFD):</td>
+        <td class="description">
+            Faktiki illik faiz dərəcəsi:
+        </td>
+    </tr>
+    <tr>
+        <td class="label"> FİFD kreditin əldə edilməsinə çəkilən xərci göstərir. Bu göstərici vasitəsilə Siz digər
+            kredit təşkilatlarının təkliflərini müqayisə edərək qiymətləndirə bilərsiniz. FİFD Mərkəzi Bankın normativ
+            xarakterli aktında müəyyən edilmiş düstur əsasında hesablanmışdır.:
+        </td>
+        <td class="description"></td>
+    </tr>
+    <tr>
+        <td class="number">10</td>
+        <td class="label">Tətbiq edildikdə, kredit üzrə faizlərin tutulmadığı müddət barədə aydın və dəqiq məlumat:</td>
+        <td class="description">-</td>
+    </tr>
+    <tr>
+        <td class="number">11</td>
+        <td class="label">İstehlakçı tərəfindən edilməli olan ödənişlərin məbləği, sayı və dövriliyi</td>
+        <td class="description" colspan="5">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    <strong>Tərəfinizdən ödəniləcək ümumi məbləğ: </strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong>Əsas borc ${creditAmount} ₼</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong>Faiz borcu </strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong>Kreditlə əlaqəli digər ödənişlər: ${otherPayment} ₼</strong>
+                </li>
+
+                <li style="padding: 5px 0;">
+                    <strong> Ödənişlər aşağıdakı cədvəl üzrə həyata keçirilir: </strong>
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td class="number">12</td>
+        <td class="label">Yetərli miqdarda olmayan və ya artıq miqdarda edilən ödənişlərin öhdəliyin icrasından silinmə
+            ardıcıllığı:
+        </td>
+        <td class="description" colspan="2">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Yetərli miqdarda olmayan ödənişlərin öhdəliyin icrasından silinmə ardıcıllığı: <strong>1-Cərimə
+                    borcundan; 2-Faiz borcundan; 3-Əsas borcdan</strong>
+                </li>
+                <li style="padding: 5px 0;">
+                    Artıq miqdarda edilən ödənişlərin öhdəliyin icrasından silinmə ardıcıllığı: <strong>Əsas
+                    borcdan </strong>
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td class="number">13</td>
+        <td class="label">Yetərli miqdarda olmayan və ya artıq miqdarda edilən ödənişlərin öhdəliyin icrasından silinmə
+            ardıcıllığı:
+        </td>
+        <td class="description" colspan="8">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    hesabın saxlanma xərcləri - <strong>Yoxdur</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    konvertasiya haqqı - <strong>Yoxdur</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    nağdlaşdırma komissiyası - <strong> 0,5% </strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    ölkədaxili köçürmələr üzrə komissiyalar - <strong>Yoxdur</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    ölkəxarici köçürmələr üzrə komissiyalar - <strong>Yoxdur</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    kredit kartı üzrə xərclər - <strong>Yoxdur</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    kredit üzrə digər xərclərin adı və məbləği -- <strong>Yoxdur</strong>
+                </li>
+
+                <li style="padding: 5px 0;">
+                    <strong>xərclərin dəyişdirilmə şərtləri (yalnız azaldılma istiqamətində): </strong>
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td class="number">14</td>
+        <td class="label">Tətbiq edildikdə, kredit müqaviləsinin bağlanılması ilə bağlı istehlakçı tərəfindən ödənilməli
+            olan notarial xərclərin mövcudluğu:
+        </td>
+        <td class="description"><strong>${notarialCost}</strong></td>
+    </tr>
+    <tr>
+        <td class="number">15</td>
+        <td class="label">Kreditin alınması üçün əlavə xidmət müqaviləsinin, o cümlədən sığorta müqaviləsinin
+            bağlanılması məcburi olduğu hallarda belə müqavilənin növü və istehlakçının istehlak krediti müqaviləsi ilə
+            bağlı belə müqaviləni bağlamaq vəzifəsi:
+        </td>
+        <td class="description"><strong>%{insuranceType}</strong></td>
+    </tr>
+    <tr>
+        <td class="number">16</td>
+        <td class="label">İstehlakçının ödənişlərini vaxtında etməməsinin hüquqi nəticələri :
+        </td>
+        <td class="description"><strong>Ödənişlər gecikdirildiyi halda bu Formada nəzərdə tutulan gecikdirmə faizləri və
+            ya dəbbə pulu tətbiq edilə, təminata tutma yönəldilə, kreditin vaxtından əvvəl qaytarılması tələb edilə,
+            habelə qanunda və müqavilədə müəyyən edilmiş digər tədbirlər görülə bilər.</strong></td>
+    </tr>
+    <tr>
+        <td class="number" rowspan="4">17</td>
+        <td class="label">Tətbiq edildikdə, gecikdirilmiş ödənişlərlə bağlı gecikdirilmə faizləri :</td>
+        <td class="description">
+            <strong>Gecikən kreditə görə Cərimə (dəbbə) məbləği tutulduğu üçün gecikdirilmə faizi tətbiq
+                edilmir.</strong>
+        </td>
+    </tr>
+    <tr>
+        <td class="label"> Gecikdirilmə faizləri illik faiz dərəcəsinə 5 faiz bəndi əlavə edilməklə hesablanan
+            məbləğdən çox deyildir:
+        </td>
+        <td class="description"></td>
+    </tr>
+    <tr>
+        <td class="label"> Əlavə olaraq dəbbə pulu (cərimə, penya), komissiya və ya digər formada hər hansı ödəniş tələb
+            edilməyəcək :
+        </td>
+        <td class="description"></td>
+    </tr>
+    <tr>
+        <td class="label"> Gecikdirilmə faizlərinin hesablanması 180 gündən çox davam etməyəcək :
+        </td>
+        <td class="description"></td>
+    </tr>
+
+    <tr>
+        <td class="number">18</td>
+        <td class="label">Tətbiq edildikdə, gecikdirilmiş ödənişlərlə bağlı ödənilməli dəbbə pulu (gecikdirilmə
+            faizlərinin tətbiq edildiyi hallar istisna olmaqla) :
+        </td>
+        <td class="description"><strong>Sizdən hər gecikdirilən gün üçün gecikdirilmiş aylıq ödənilməli əsas borcun 1%
+            (bir) faizi miqdarında dəbbə (cərimə) pulu tələb ediləcək.</strong></td>
+    </tr>
+    <tr>
+        <td class="number">19</td>
+        <td class="label">Tətbiq edildikdə, kreditin verilməsi üçün tələb olunan təminatlar və onlar barədə məlumatlar:
+        </td>
+        <td class="description" colspan="3">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Təminatın növü - <strong>${guarantee}</strong>
+                </li>
+                <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
+                    <strong>Kreditin verilmə müddəti, prosesin əlaqədar təşkilat və ya şəxslərdən asılı olmadığı halda
+                        3 iş günü ərzində həyata keçirilir.</strong>
+                </li>
+                <li style="padding: 5px 0;">
+                    <strong>sair </strong>
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td class="number">20</td>
+        <td class="label">
+            İstehlakçının istehlak krediti müqaviləsindən imtina hüququnun həyata keçirildiyi müddət və şərtlər:
+        </td>
+        <td class="description" colspan="3">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Sizə kredit verildiyi gündən <strong>30 (otuz) gün </strong>ərzində heç bir səbəb göstərmədən
+                    istehlak krediti
+                    müqaviləsindən imtina edə bilərsiniz.
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Bu halda, Siz müqavilə üzrə verilmiş pul vəsaitini və vəsaitin verildiyi gündən qaytarıldığı günədək
+                    hesablanan faizləri ödəməlisiniz.
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Bu halda borcverən tərəfindən ödənilən dövlət rüsumu və xidmət haqlarından başqa Sizdən kompensasiya
+                    və hər hansı digər ödənişlər tələb edilə bilməz.
+                </li>
+                <li style="padding: 5px 0;">
+                    Əgər istehlak krediti müqaviləsi əlaqəli kredit müqaviləsidirsə, Siz Azərbaycan Respublikası Mülki
+                    Məcəlləsinin <strong>746-6-cı maddəsində</strong> nəzərdə tutulan hüquqlardan istifadə edə
+                    bilərsiniz.
+                </li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="number">21</td>
+        <td class="label">
+            İstehlakçının istehlak kreditini vaxtından əvvəl ödəmək hüququ
+        </td>
+        <td class="description" colspan="4">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Siz istənilən vaxt xəbərdarlıq etmədən istehlak kreditini vaxtından əvvəl tam və ya qismən geri
+                    qaytara bilərsiniz. Bu halda, kreditin qalıq müddətinə görə hesablanmış faizlər və (və ya) digər
+                    haqlar vaxtından əvvəl ödənilmiş məbləğə uyğun olaraq azaldılır.
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Kreditin qismən vaxtından əvvəl ödənilməsi halında, borcverənlə razılaşma əsasında və ödəniş
+                    cədvəlində müvafiq dəyişiklik edilməklə:
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    dövri ödənişlərin məbləği azaldıla;
+                </li>
+                <li style="padding: 5px 0;">
+                    dövri ödəniş məbləğləri saxlanılmaqla, kredit müddəti azaldıla bilər.
+                </li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="number">22</td>
+        <td class="label">
+            Tətbiq edildikdə, istehlak krediti müqaviləsinin vaxtından əvvəl icrası zamanı borcverənin kompensasiya
+            hüququ, kompensasiyanın məbləği və müəyyən edilməsi qaydası
+        </td>
+        <td class="description" colspan="6">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Bu halda borcverən Sizdən müqavilə ilə müəyyənləşdirilmiş kompensasiya məbləğini tələb edə bilər.
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Bu zaman kompensasiyanın məbləği müqavilə müddətinin bitməsinə:
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    1 ildən çox müddət qaldıqda - vaxtından əvvəl ödənilmiş məbləğin 1 faizdən;
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    1 il və daha az müddət qaldıqda isə - vaxtından əvvəl ödənilmiş məbləğin 0,5 faizindən çox
+                    olmayacaqdır.
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Əgər tərəfinizdən son 12 ay ərzində kredit üzrə vaxtından əvvəl ödənilmiş məbləğ ölkə üzrə müəyyən
+                    edilmiş minimum əməkhaqqı məbləğinin 40 mislindən (cari il üçün göstərici qeyd olunur – məs: 345 x
+                    40=13800) çox olarsa, borcverən ona dəymiş zərəri məhkəmə qaydasında və ya zərər baş verdikdən sonra
+                    Sizinlə ayrıca razılıq əldə etməklə sübut etmək şərtilə daha yüksək (dəymiş zərərə mütənasib)
+                    kompensasiya tələb edə bilər.
+                </li>
+                <li style="padding: 5px 0;">
+                    Kompensasiya məbləği hər bir halda vaxtından əvvəl ödənilmə anı ilə müqavilənin müddətinin başa
+                    çatması anı arasındakı müddətdə ödənilməli olan illik faiz dərəcəsi üzrə hesablanmış faiz
+                    məbləğlərindən çox ola bilməz.
+                </li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="number">23</td>
+        <td class="label">
+            Tətbiq edildikdə, borcverənin borcun vaxtından əvvəl qaytarılmasını tələb edə bildiyi hallar
+        </td>
+        <td class="description" colspan="4">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    borcalanın əmlak vəziyyətinin əhəmiyyətli dərəcədə pisləşməsi (o cümlədən müqavilə bağlanılmazdan
+                    əvvəl baş vermiş və müqavilə bağlanılan anadək aradan qaldırılmamış pisləşmə borcverənə sonradan
+                    məlum olduqda) və ya borcalanın borcverənə hər hansı yanlış məlumat verməsi səbəbindən borcun
+                    vaxtında qaytarılmayacağını güman etməyə əsaslar olduqda;
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    borcun hissə-hissə qaytarılmasını və (və ya) faizlərin və (və ya) haqların hissə-hissə
+                    ödənilməsini nəzərdə tutan borc müqaviləsi üzrə vaxtı çatmış borcun (faizlər və (və ya) haqlar daxil
+                    olmaqla) 90 (doxsan) gün və ya daha çox müddətə gecikdirilməsi yaxud borcun (faizlər və (və ya)
+                    haqlar daxil olmaqla) ödənilməsi müddətlərinin ardıcıl olaraq iki dəfə pozulması (90 (doxsan) gündən
+                    az olmamaqla);
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    borcalan borc öhdəliyinin icrasının təmin edilməsi üzrə vəzifəsini yerinə yetirmədikdə,
+                    borcverənin cavabdeh olmadığı hallarla əlaqədar təminat itirildikdə (məhv olduqda, xitam verildikdə
+                    və s.) və yaxud dəyəri azaldıqda (o cümlədən qarantın və ya zaminin əmlak vəziyyəti əhəmiyyətli
+                    dərəcədə pisləşdikdə) və bu hallarda borcun vaxtında qaytarılmayacağını güman etməyə əsaslar
+                    olduqda;
+                </li>
+                <li style="padding: 5px 0;">
+                    borcun təyinatı borc müqaviləsində göstərildiyi halda borcalan borcverənə borcun təyinatı üzrə
+                    istifadə edilməsinə müqavilədə nəzərdə tutulmuş qaydada nəzarət etməyə imkan vermədikdə və ya borc
+                    təyinatı üzrə istifadə olunmadıqda.
+                </li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="number">24</td>
+        <td class="label">Kredit bürolarından alınmış məlumatlar əsasında kredit verilməsindən imtina edildikdə, bu
+            barədə istehlakçının ödənişsiz olaraq məlumat almaq hüququ
+        </td>
+        <td class="description"><strong>Siz müraciət etdiyiniz halda, müvafiq məlumat növbəti iş günündən gec olmayaraq
+            Sizə yazılı şəkildə (kağız və ya digər davamlı daşıyıcıda) təqdim ediləcəkdir.</strong></td>
+    </tr>
+
+    <tr>
+        <td class="number">25</td>
+        <td class="label">İstehlakçının müraciəti əsasında müqavilə layihəsinin surətini borcverəndən ödənişsiz almaq
+            hüququ:
+        </td>
+        <td class="description"><strong>Hazırkı məlumatların qüvvədə olduğu müddətdə Siz bu hüquqdan istifadə etmək
+            istədikdə, borcverənə (təşkilatımızın 012-526-26-25 nömrəli telefon nömrəsinə əvvəlcədən zəng edib
+            bildirməklə Bakı şəhəri, Həsən Əliyev küçəsi 34, ünvanında 1 saylı ASAN Kommunal mərkəzinin 1-ci
+            mərtəbəsində yerləşən ofisimizdən yaxınlaşıb götürmək şərtilə) müraciət edə bilərsiniz.</strong></td>
+    </tr>
+
+    <tr>
+        <td class="number">26</td>
+        <td class="label">Bu Formada verilən məlumatların qüvvədə olduğu müddət
+        </td>
+        <td class="description"><strong>Məlumatlar {x} il tarixinədək qüvvədədir.</strong></td>
+    </tr>
+    <tr>
+        <td class="number">27</td>
+        <td class="label">
+            Bu Formada verilən məlumatların qanuna uyğun olmadığını müəyyən etdikdə istehlakçının öz hüquqlarının
+            müdafiəsi üçün ata biləcəyi addımlar
+        </td>
+        <td class="description" colspan="6">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Aşağıdakılara müraciət edə bilərsiniz:
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Təşkilatın 012-526-26-25 telefon nömrəsi və ya office@idealkredit.az elektron poçt ünvanı
+                    vasitəsilə;
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Təşkilatın Bakı şəhəri, Həsən Əliyev küçəsi 34, (1 saylı ASAN Kommunal mərkəzinin 1-ci mərtəbəsi)
+                    ünvanında yerləşən ofisinə müraciət etməklə.
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    Azərbaycan Respublikasının Mərkəzi Bankına;
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    mediatora (mediasiya təşkilatı) və ya Bank Ombudsmanına;
+                </li>
+                <li style="padding: 5px 0;">
+                    məhkəməyə.
+                </li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="number">28</td>
+        <td class="label">Azərbaycan Respublikası Mərkəzi Bankının qaynar xətti</td>
+        <td class="description" colspan="2">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    966
+                </li>
+                <li style="padding: 5px 0;">
+                    Qaynar xəttə daxil olan zənglər iş günlərində fasiləsiz olaraq saat 09:00-dan 18:00-dək qəbul
+                    edilir.
+                </li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="number">29</td>
+        <td class="label">İstehlakçının bu Formanı əldə etməsinin təsdiqi</td>
+        <td class="description" colspan="3">
+            <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    <strong>Ad, soyad: </strong>${requestedUser.fullName}
+                </li>
+                <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
+                    <strong>İmza: </strong> _________
+                </li>
+                <li style="padding: 5px 0;">
+                    <strong>Tarix: </strong> ${confirmDate}
+                </li>
+            </ul>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
