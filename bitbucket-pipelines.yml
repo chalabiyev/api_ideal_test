@@ -14,7 +14,7 @@ pipelines:
   branches:
     main:
       - step:
-          name: Backend Build For Deploy
+          name: Backend Build And Deploy
           image: maven:3.8.7
           script:
             - cd backend/kredit
@@ -26,3 +26,9 @@ pipelines:
                 REMOTE_PATH: '~/'
                 LOCAL_PATH: 'target/kredit-0.0.1-SNAPSHOT.jar'
                 SSH_KEY: $MY_SSH_KEY
+            - pipe: atlassian/ssh-run:0.4.3
+              variables:
+                SSH_USER: 'esam'
+                SSH_KEY: $MY_SSH_KEY
+                SERVER: '46.202.143.42'
+                COMMAND: 'bash ~/restart_kredit_backend.sh'
