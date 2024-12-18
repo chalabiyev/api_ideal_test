@@ -18,10 +18,9 @@ pipelines:
           image: maven:3.8.7
           script:
             - cd backend/kredit
-            - mvn clean install -DskipTests            
-            - zip -j application.zip target/kredit-0.0.1-SNAPSHOT.jar
+            - mvn clean install -DskipTests
           artifacts:
-            - application.zip
+            - target/kredit-0.0.1-SNAPSHOT.jar
       - step:
           name: Backend Deploy to Production
           deployment: Production
@@ -32,5 +31,5 @@ pipelines:
                 USER: 'esam'
                 SERVER: '46.202.143.42'
                 REMOTE_PATH: '~/'
-                LOCAL_PATH: 'application.zip'
+                LOCAL_PATH: 'backend/kredit/target/kredit-0.0.1-SNAPSHOT.jar'
                 SSH_KEY: $MY_SSH_KEY
