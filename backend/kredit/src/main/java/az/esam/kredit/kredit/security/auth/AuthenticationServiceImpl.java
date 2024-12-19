@@ -4,6 +4,7 @@ import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
 import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
 import az.esam.kredit.kredit.dtos.requests.LoginRequest;
 import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
+import az.esam.kredit.kredit.dtos.responses.document.FullIDCardInfoResponse;
 import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
@@ -416,7 +417,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person) {
+    public AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard) {
         Optional<User> findUser = userRepository.findByUsername(person.getFinCode());
         if (findUser.isEmpty()) {
             try {
@@ -425,12 +426,35 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .username(person.getFinCode())
                         .name(person.getName())
                         .surName(person.getSurName())
-                        .fatherName(person.getFatherName()).build();
+                        .fatherName(person.getFatherName())
+                        .fullName(person.getName().concat(" ").concat(person.getSurName()))
+                        .phoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""))
+                        .build();
+                if (idCard != null) {
+                    registerRequest.setAddress(idCard.getAddressDetail().getAddress());
+                    registerRequest.setBirthDate(idCard.getBirthDate());
+                    registerRequest.setCity(idCard.getAddressDetail().getRegionName());
+                    registerRequest.setCountry(idCard.getNationality());
+                    registerRequest.setGender(idCard.getGender());
+                    registerRequest.setFamilyRelationship(idCard.getMaritalStatus());
+                    registerRequest.setPhoto(idCard.getImage());
+                }
                 return register(registerRequest);
             } catch (BadRequestException ex) {
             }
         } else {
             User savedUser = findUser.get();
+            if (idCard != null) {
+                savedUser.setAddress(idCard.getAddressDetail().getAddress());
+                savedUser.setBirthDate(idCard.getBirthDate());
+                savedUser.setBirthAddress(idCard.getBirthAddress());
+                savedUser.setNationality(idCard.getNationality());
+                savedUser.setGender(idCard.getGender().equals("MALE") ? EGender.MALE : EGender.FEMALE);
+                savedUser.setMaritalStatus(idCard.getMaritalStatus());
+                savedUser.setPhoto(idCard.getImage());
+                savedUser.setPhoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""));
+                userRepository.save(savedUser);
+            }
             UserDetails userDetails = UserDetailsImpl.build(savedUser);
             var jwtToken = jwtService.generateJwtToken(userDetails);
             var refreshToken = jwtService.generateRefreshToken(userDetails);

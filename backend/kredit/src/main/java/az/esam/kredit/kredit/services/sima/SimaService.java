@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.services.sima;
 
+import az.esam.kredit.kredit.dtos.requests.SimaTokenRequest;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
 import az.esam.kredit.kredit.entities.sima.ContractStatusEnum;
 import az.esam.kredit.kredit.entities.sima.SimaCallBack;
@@ -45,5 +46,5 @@ public interface SimaService {
 
     public ContractStatusEnum getContractStatusByOperationId(String operationId);
 
-    public AuthenticationResponse getTokenByOperationId(HttpServletRequest request, String operationId);
+    public AuthenticationResponse getToken(HttpServletRequest request, SimaTokenRequest simaTokenRequest);
 }

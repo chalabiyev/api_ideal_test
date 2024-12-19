@@ -18,14 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.BadAttributeValueExpException;
 import java.util.*;
 
 @Service
@@ -107,26 +104,26 @@ public class OTPServiceImpl implements OTPService {
     @Override
     public boolean validateOTP(String contact, String otpCode, EPlatform platform) throws BadRequestException {
         try {
-            List<OTPRecord> otpRecord = new ArrayList<>();
+            Optional<OTPRecord> otpRecord = Optional.empty();
             if (platform.equals(EPlatform.PHONE)) {
-                otpRecord = otpRepository.findByPhone(contact);
+                otpRecord = otpRepository.findFirstByPhoneOrderByExpirationDateDesc(contact);
             } else if (platform.equals(EPlatform.EMAIL)) {
-                otpRecord = otpRepository.findByEmail(contact);
+                otpRecord = otpRepository.findFirstByEmailOrderByExpirationDateDesc(contact);
             }
 
             if (otpRecord.isEmpty()) {
                 throw new BadRequestException("OTP record not found");
             }
 
-            if (otpRecord.get(otpRecord.size() - 1).getExpirationDate().before(new Date())
-                    || otpRecord.get(otpRecord.size() - 1).getValidationDate() != null) {
+            if (otpRecord.get().getExpirationDate().before(new Date())
+                    || otpRecord.get().getValidationDate() != null) {
                 throw new BadRequestException("OTP code is expired");
             }
 
-            boolean result = passwordEncoder.matches(otpCode, otpRecord.get(otpRecord.size() - 1).getOtpCode());
+            boolean result = passwordEncoder.matches(otpCode, otpRecord.get().getOtpCode());
             if (result) {
-                otpRecord.get(0).setValidationDate(new Date());
-                otpRepository.save(otpRecord.get(0));
+                otpRecord.get().setValidationDate(new Date());
+                otpRepository.save(otpRecord.get());
             }
             return result;
         } catch (Exception e) {

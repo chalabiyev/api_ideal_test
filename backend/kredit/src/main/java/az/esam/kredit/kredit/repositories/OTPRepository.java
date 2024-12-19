@@ -3,11 +3,11 @@ package az.esam.kredit.kredit.repositories;
 import az.esam.kredit.kredit.entities.OTPRecord;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface OTPRepository extends MongoRepository<OTPRecord, String> {
 
-    List<OTPRecord> findByEmail(String email);
+    Optional<OTPRecord> findFirstByPhoneOrderByExpirationDateDesc(String phone);
 
-    List<OTPRecord> findByPhone(String phone);
+    Optional<OTPRecord> findFirstByEmailOrderByExpirationDateDesc(String email);
 }

@@ -1,6 +1,9 @@
 package az.esam.kredit.kredit.services.sima;
 
+import az.esam.kredit.kredit.dtos.requests.SimaTokenRequest;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
+import az.esam.kredit.kredit.dtos.responses.document.FullIDCardInfoResponse;
+import az.esam.kredit.kredit.entities.enums.EPlatform;
 import az.esam.kredit.kredit.entities.sima.ClientInfo;
 import az.esam.kredit.kredit.entities.sima.ContractStatusEnum;
 import az.esam.kredit.kredit.entities.sima.ContractTypeEnum;
@@ -19,6 +22,8 @@ import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
 import static az.esam.kredit.kredit.helper.Helper.getClientIpAddress;
 import az.esam.kredit.kredit.repositories.sima.SimaEncodedContractRepository;
 import az.esam.kredit.kredit.security.auth.AuthenticationService;
+import az.esam.kredit.kredit.services.external.idService.DocumentInfoService;
+import az.esam.kredit.kredit.services.internal.otp.OTPService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
@@ -53,6 +58,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 import javax.security.auth.x500.X500Principal;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -89,8 +95,15 @@ public class SimaServiceImpl implements SimaService {
 
     @Autowired
     SimaEncodedContractRepository simaEncodedContractRepository;
+
     @Autowired
     AuthenticationService authenticationService;
+
+    @Autowired
+    OTPService oTPService;
+
+    @Autowired
+    DocumentInfoService documentInfoService;
 
     final Charset charSet = Charset.forName("ISO-8859-9");
 
@@ -255,17 +268,7 @@ public class SimaServiceImpl implements SimaService {
                     contract.setSignerCert(tsCert);
                     contract.setSignerIP(getClientIpAddress(request));
                     contract.setStatus(ContractStatusEnum.succesed);
-                    if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {
-                        try {
-                            AuthenticationResponse auth = authenticationService.simaWeb2AppLogin(person);
-                            if (auth != null) {
-                                contract.setTokenData(auth);
-                            }
-                        } catch (Exception e) {
-                            result.setStatus("failed");
-                            contract.setStatus(ContractStatusEnum.failed);
-                        }
-                    }
+                    contract.setSignerFin(person.getFinCode());
                 } else {
                     contract.setStatus(ContractStatusEnum.failed);
                 }
@@ -495,15 +498,36 @@ public class SimaServiceImpl implements SimaService {
     }
 
     @Override
-    public AuthenticationResponse getTokenByOperationId(HttpServletRequest request, String operationId) {
+    public AuthenticationResponse getToken(HttpServletRequest request, SimaTokenRequest simaTokenRequest) {
         String ipAddr = getClientIpAddress(request);
-        Optional<SimaEncodedContract> findSimaContract = simaEncodedContractRepository.findByOperationId(operationId);
-        //&& ipAddr.equals(findSimaContract.get().getSignerIP())
-        if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed) {
-            return findSimaContract.get().getTokenData();
-        } else {
+        Optional<SimaEncodedContract> findSimaContract = simaEncodedContractRepository.findByOperationId(simaTokenRequest.getOperationId());
+        try {
+            //&& ipAddr.equals(findSimaContract.get().getSignerIP())
+            if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed && oTPService.validateOTP(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(), EPlatform.PHONE)) {
+                SimaEncodedContract contract = findSimaContract.get();
+                SimaCertPersonInfo person = getPersonFromCertificate(contract.getSignerCert());
+                if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {
+                    try {
+                        FullIDCardInfoResponse idCard = documentInfoService.getIdCardInfoByPin(person.getFinCode());
+                        person.setPhoneNumber(simaTokenRequest.getPhoneNumber());
+                        AuthenticationResponse auth = authenticationService.simaWeb2AppLogin(person, idCard);
+                        if (auth != null) {
+                            contract.setTokenData(auth);
+                            return auth;
+                        }
+                    } catch (Exception e) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } catch (BadRequestException ex) {
             return null;
         }
+        return null;
     }
 
 }

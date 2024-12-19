@@ -4,6 +4,7 @@ import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
 import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
 import az.esam.kredit.kredit.dtos.requests.LoginRequest;
 import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
+import az.esam.kredit.kredit.dtos.responses.document.FullIDCardInfoResponse;
 import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.entities.sima.SimaCertPersonInfo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public interface AuthenticationService {
 
     AuthenticationResponse authenticate(LoginRequest request);
 
-    AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person);
+    AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard);
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
