@@ -12,6 +12,7 @@ import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
+import TabContract from 'src/components/NewCredit/TabContract';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +20,7 @@ const metadata = { title: `Video müraciət | Nağd ` };
 
 export default function Page() {
   // tab changes
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState('8');
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
@@ -102,12 +103,11 @@ export default function Page() {
                 <Tab label="Nəqliyyat vasitələri" value="5" />
                 <Tab label="Kredit ver" value="6" />
                 <Tab label="Video qeydiyyat" value="7" />
-                <Tab label="İmza" value="8" />
+                <Tab label="Müqavilə" value="8" />
               </TabList>
             </Box>
-            <TabPanel sx={{ p: 0 }} value="1">
-              {/* Ş/V  */}
 
+            <TabPanel sx={{ p: 0 }} value="1">
               <TabIdentification
                 loading={loading}
                 userInfo={userInfo}
@@ -118,12 +118,12 @@ export default function Page() {
                 hasData={hasData}
               />
             </TabPanel>
+
             <TabPanel sx={{ p: 0 }} value="2">
-              {/* İşə götürən məlumatları  */}
               <RecruiterData setValue={setValue} />
             </TabPanel>
+
             <TabPanel sx={{ p: 0 }} value="3">
-              {/* zamin  */}
               <TabGuarantor
                 setValue={setValue}
                 loading={guarantorLoading}
@@ -134,21 +134,25 @@ export default function Page() {
                 hasData={hasGuarantorData}
               />
             </TabPanel>
+
             <TabPanel sx={{ p: 0 }} value="4">
-              {/* zamin  */}
               <TabFamilyInformation />
             </TabPanel>
+
             <TabPanel sx={{ p: 0 }} value="5">
-              {/* neqliyyat  */}
               <TabVehicleInformation setValue={setValue} />
             </TabPanel>
+
             <TabPanel sx={{ p: 0 }} value="6">
-              {/* neqliyyat  */}
               <TabCreditDataPage setValue={setValue} />
             </TabPanel>
+
             <TabPanel sx={{ p: 0 }} value="7">
-              {/* neqliyyat  */}
               <TabVideoRecord setValue={setValue} />
+            </TabPanel>
+
+            <TabPanel sx={{ p: 0 }} value="8">
+              <TabContract />
             </TabPanel>
           </TabContext>
         </Box>
