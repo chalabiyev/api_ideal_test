@@ -133,6 +133,36 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
+    public boolean validateOTPForSima(String contact, String otpCode, EPlatform platform) throws BadRequestException {
+        try {
+            Optional<OTPRecord> otpRecord = Optional.empty();
+            if (platform.equals(EPlatform.PHONE)) {
+                otpRecord = otpRepository.findFirstByPhoneOrderByExpirationDateDesc(contact);
+            } else if (platform.equals(EPlatform.EMAIL)) {
+                otpRecord = otpRepository.findFirstByEmailOrderByExpirationDateDesc(contact);
+            }
+
+            if (otpRecord.isEmpty()) {
+                throw new BadRequestException("OTP record not found");
+            }
+
+            if (otpRecord.get().getExpirationDate().before(new Date())) {
+                throw new BadRequestException("OTP code is expired");
+            }
+
+            boolean result = passwordEncoder.matches(otpCode, otpRecord.get().getOtpCode());
+            if (result) {
+                otpRecord.get().setValidationDate(new Date());
+                otpRepository.save(otpRecord.get());
+            }
+            return result;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
     public boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform) throws BadRequestException {
         if (platform.equals(EPlatform.PHONE.name())) {
             request.setContact(request.getContact()
