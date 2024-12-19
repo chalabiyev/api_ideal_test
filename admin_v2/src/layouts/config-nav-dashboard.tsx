@@ -72,13 +72,38 @@ export const navData = [
   {
     items: [
       {
-        title: 'Kreditlər',
-        path: paths.kredit.root,
-        icon: ICONS.chat,
-        children: [{ title: 'Yeni kredit müraciəti', path: paths.kredit.yarat }],
+        title: 'Video Müraciət',
+        path: paths.videomuraciet.root,
+        icon: ICONS.video,
+        children: [
+          { title: 'Nağd pul krediti', path: paths.videomuraciet.nagdpulkrediti },
+          { title: 'Partnyorluq krediti', path: paths.videomuraciet.partnyorlukkrediti },
+          { title: 'Biznes krediti', path: paths.videomuraciet.bizneskrediti },
+          { title: 'Məlumat', path: paths.videomuraciet.məlumat },
+        ],
       },
     ],
   },
+  {
+    items: [
+      {
+        title: 'Fiziki müraciət',
+        path: paths.fizikimuraciet.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'Nağd pul krediti', path: paths.fizikimuraciet.nagdpulkrediti },
+          { title: 'Partnyorluq krediti', path: paths.fizikimuraciet.partnyorlukkrediti },
+          { title: 'Lombard krediti', path: paths.fizikimuraciet.lombardkrediti },
+          { title: 'Avtolizinq', path: paths.fizikimuraciet.avtolizinqkrediti },
+          { title: 'İpoteka krediti', path: paths.fizikimuraciet.ipotekakrediti },
+          { title: 'Biznes krediti', path: paths.fizikimuraciet.bizneskrediti },
+          { title: 'Avtokredit', path: paths.fizikimuraciet.avtokredit },
+          { title: 'Məlumat', path: paths.fizikimuraciet.məlumat },
+        ],
+      },
+    ],
+  },
+
   {
     items: [
       {

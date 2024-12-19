@@ -44,10 +44,25 @@ export const paths = {
     root: `/esassehife`,
     statistika: `/esassehife/statistika`,
   },
-  kredit: {
-    root: `/kredit`,
-    yarat: `/kredit/yarat`,
+  videomuraciet: {
+    root: `/videomuraciet`,
+    nagdpulkrediti: `/videomuraciet/nagd-pul-krediti`,
+    partnyorlukkrediti: `/videomuraciet/partnyorluq-krediti`,
+    bizneskrediti: `/videomuraciet/biznes-krediti`,
+    məlumat: `/videomuraciet/melumat`,
   },
+  fizikimuraciet: {
+    root: `/fizikimuraciet`,
+    nagdpulkrediti: `/fizikimuraciet/nagd-pul-krediti`,
+    partnyorlukkrediti: `/fizikimuraciet/partnyorluq-krediti`,
+    lombardkrediti: `/fizikimuraciet/lombard-krediti`,
+    avtolizinqkrediti: `/fizikimuraciet/avtolizinq-krediti`,
+    ipotekakrediti: `/fizikimuraciet/ipoteka-krediti`,
+    bizneskrediti: `/fizikimuraciet/biznes-krediti`,
+    avtokredit: `/fizikimuraciet/avto-kredit`,
+    məlumat: `/fizikimuraciet/melumat`,
+  },
+
   videocall: {
     root: `/videocall`,
     videocall: `/videocall/videocall`,
