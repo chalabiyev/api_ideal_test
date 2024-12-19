@@ -26,6 +26,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,6 +53,7 @@ import java.util.logging.Logger;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
+@Validated
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -177,7 +180,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<Boolean> sendOtpCode(
             @Valid @RequestBody OTPRequest request,
-            @RequestParam String platform,
+            @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
             HttpServletRequest httpRequest) throws BadRequestException {
         request.setIpAddress(Helper.getClientIpAddress(httpRequest));
         if (otpService.sendOtp(request, platform.toUpperCase())) {
@@ -193,7 +196,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<Boolean> validateOtpCode(
             @Valid @RequestBody OTPValidateRequest request,
-            @RequestParam String platform,
+            @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
             HttpServletRequest httpRequest) throws BadRequestException {
         request.setIpAddress(Helper.getClientIpAddress(httpRequest));
         if (otpService.validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform.toUpperCase()))) {
@@ -279,7 +282,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<Boolean> resetPassword(
             @Valid @RequestBody PasswordResetRequest request,
-            @RequestParam String platform,
+            @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
             HttpServletRequest httpRequest
     ) throws BadRequestException {
         if (otpService.resetPassword(request, httpRequest, platform.toUpperCase())) {
