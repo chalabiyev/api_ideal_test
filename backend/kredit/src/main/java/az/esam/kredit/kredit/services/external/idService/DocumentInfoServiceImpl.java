@@ -62,21 +62,30 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                                 Aggregation.project()
                                         .and(ConditionalOperators.Cond
                                                 .when(Criteria.where("nameAz").is(idCardInfoList.get(0).getPersonAz().getName()))
-                                                .then(1).otherwise(0)
+                                                .then(1)
+                                                .otherwise(0)
                                         ).as("nameMatch")
                                         .and(ConditionalOperators.Cond
                                                 .when(Criteria.where("surnameAz").is(idCardInfoList.get(0).getPersonAz().getSurname()))
-                                                .then(1).otherwise(0)
+                                                .then(1)
+                                                .otherwise(0)
                                         ).as("surnameMatch")
                                         .and(ConditionalOperators.Cond
                                                 .when(Criteria.where("patronymicAz").is(idCardInfoList.get(0).getPersonAz().getPatronymic()))
-                                                .then(1).otherwise(0)
+                                                .then(1)
+                                                .otherwise(0)
                                         ).as("patronymicMatch")
                                         .and(ConditionalOperators.Cond
                                                 .when(Criteria.where("dateOfBirth").is(idCardInfoList.get(0).getBirthDate()))
-                                                .then(1).otherwise(0)
-                                        ).as("birthDateMatch")
-                                        .andExpression("nameMatch + surnameMatch + patronymicMatch + birthDateMatch").as("totalMatches")
+                                                .then(1)
+                                                .otherwise(0)
+                                        ).as("birthDateMatch"),
+                                Aggregation.addFields()
+                                        .addField("totalMatches")
+                                        .withValue(
+                                                new Document("$add", List.of("$nameMatch", "$surnameMatch", "$patronymicMatch", "$birthDateMatch"))
+                                        )
+                                        .build()
                         );
                         AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, "blacklisted_individuals", Document.class);
 
