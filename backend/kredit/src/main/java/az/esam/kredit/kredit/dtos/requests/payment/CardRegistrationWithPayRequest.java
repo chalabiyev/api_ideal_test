@@ -11,17 +11,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Data
 @ToString
-@Document(collection = "transferMoney_requests")
-public class TransferMoneyRequest {
+@Document(collection = "cardRegistrationWithPay_requests")
+public class CardRegistrationWithPayRequest {
 
     @Id
     private String id;
     private String public_key;
     private String language;
 
-    private String card_id;
     private String order_id;
     private double amount;
     private String currency;
     private String description;
+    private String success_redirect_url;
+    private String error_redirect_url;
 }

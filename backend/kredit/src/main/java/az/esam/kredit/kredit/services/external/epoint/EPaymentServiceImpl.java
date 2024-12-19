@@ -1,10 +1,7 @@
 package az.esam.kredit.kredit.services.external.epoint;
 
 import az.esam.kredit.kredit.dtos.requests.payment.*;
-import az.esam.kredit.kredit.dtos.responses.payment.CardRegistrationResponse;
-import az.esam.kredit.kredit.dtos.responses.payment.PaymentResponse;
-import az.esam.kredit.kredit.dtos.responses.payment.PaymentStatusResponse;
-import az.esam.kredit.kredit.dtos.responses.payment.TransferMoneyResponse;
+import az.esam.kredit.kredit.dtos.responses.payment.*;
 import az.esam.kredit.kredit.properties.EPointPaymentProperties;
 import az.esam.kredit.kredit.repositories.payment.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -50,6 +47,12 @@ public class EPaymentServiceImpl implements EPaymentService {
 
     @Autowired
     TransferMoneyResponseRepository transferMoneyResponseRepository;
+
+    @Autowired
+    CardRegistrationWithPayRequestRepository cardRegistrationWithPayRequestRepository;
+
+    @Autowired
+    CardRegistrationWithPayResponseRepository cardRegistrationWithPayResponseRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -192,6 +195,29 @@ public class EPaymentServiceImpl implements EPaymentService {
             CardRegistrationResponse registrationResponse = objectMapper.readValue(response, CardRegistrationResponse.class);
             cardRegistrationResponseRepository.insert(registrationResponse);
             return registrationResponse;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error", e);
+        }
+        return null;
+    }
+
+    @Override
+    public CardRegistrationWithPayResponse registerCardWithPay(CardRegistrationWithPayRequest cardRegistrationRequest) throws Exception {
+        cardRegistrationRequest.setPublic_key(ePaymentProperties.getPublicKey());
+        cardRegistrationRequest.setLanguage(ePaymentProperties.getLanguage());
+
+        String jsonString = objectMapper.writeValueAsString(cardRegistrationRequest);
+        String data = encodeBase64(jsonString.getBytes());
+        String sgn_string = ePaymentProperties.getPrivateKey() + data + ePaymentProperties.getPrivateKey();
+        String signature = encodeBase64(encodeSHA1(sgn_string));
+        try {
+            String response = sendRequest("/card-registration-with-pay", data, signature);
+            cardRegistrationWithPayRequestRepository.insert(cardRegistrationRequest);
+            logger.log(Level.SEVERE, "registerCardWithPay request : {0}", cardRegistrationRequest.toString());
+            logger.log(Level.SEVERE, "registerCardWithPay response : {0}", response);
+            CardRegistrationWithPayResponse cardRegistrationWithPayResponse = objectMapper.readValue(response, CardRegistrationWithPayResponse.class);
+            cardRegistrationWithPayResponseRepository.insert(cardRegistrationWithPayResponse);
+            return cardRegistrationWithPayResponse;
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error", e);
         }
