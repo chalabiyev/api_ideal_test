@@ -34,7 +34,7 @@ public class CreditRequestController {
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/create")
     public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {
-        var user = userRepository.findByEmail(authentication.getName())
+        var user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         request.setRequestDate(new Date());
         if (request.getCreditAmount() == null) {
