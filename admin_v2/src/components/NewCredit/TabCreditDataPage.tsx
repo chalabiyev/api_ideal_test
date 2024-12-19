@@ -16,8 +16,13 @@ const TabCreditDataPage = ({
   setValue: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [creditAmount, setCreditAmount] = useState<string>('');
+  const [serviceFee, setServiceFee] = useState<number>(1.5);
   const [annualInterestRate, setAnnualInterestRate] = useState<string>('');
-  const [creditDuration, setCreditDuration] = useState<number>(6);
+  const [creditDuration, setCreditDuration] = useState<number>(12);
+  const [cardCost, setCardCost] = useState<number>(10);
+  const [valuationFee, setValuationFee] = useState<number>(20);
+  const [insuranceFee, setInsuranceFee] = useState<number>(1);
+  const [purpose, setPurpose] = useState<string>('');
   const [isDecisionQueryEnabled, setIsDecisionQueryEnabled] = useState<boolean>(false);
 
   const calculateMonthlyPayment = (): string => {
@@ -38,19 +43,27 @@ const TabCreditDataPage = ({
     return monthlyPayment.toFixed(2);
   };
 
-  // eslint-disable-next-line
   const calculateTotalPayment = (): string => {
     return (parseFloat(calculateMonthlyPayment()) * creditDuration).toFixed(2);
   };
 
-  // eslint-disable-next-line
   const calculateTotalInterest = (): string => {
     return (parseFloat(calculateTotalPayment()) - parseFloat(creditAmount)).toFixed(2);
   };
 
+  const calculateCardAmount = (): string => {
+    const principal = parseFloat(creditAmount) || 0;
+    const serviceCost = (principal * serviceFee) / 100;
+    const insuranceCost = (principal * insuranceFee) / 100;
+
+    const cardAmount = principal - serviceCost - insuranceCost - cardCost - valuationFee;
+
+    return cardAmount.toFixed(2);
+  };
+
   return (
     <Box sx={{ py: 4 }}>
-      {/* Başlık */}
+      {/* Başlıq */}
       <Typography variant="h5" gutterBottom>
         Kredit Ver
       </Typography>
@@ -78,6 +91,7 @@ const TabCreditDataPage = ({
           />
         </Grid>
 
+        {/* Kreditin Müddəti */}
         <Grid item xs={12}>
           <Typography gutterBottom>Kreditin Müddəti: {creditDuration} ay</Typography>
           <Slider
@@ -85,10 +99,62 @@ const TabCreditDataPage = ({
             onChange={(e, newValue) => setCreditDuration(newValue as number)}
             valueLabelDisplay="auto"
             min={6}
+            defaultValue={12}
             max={84}
           />
         </Grid>
 
+        {/* Xidmət Haqqı */}
+        <Grid item xs={12}>
+          <Typography gutterBottom>Xidmət haqqı: {serviceFee} %</Typography>
+          <Slider
+            value={serviceFee}
+            onChange={(e, newValue) => setServiceFee(newValue as number)}
+            valueLabelDisplay="auto"
+            min={0.1}
+            max={50}
+            step={0.1}
+            defaultValue={1.5}
+          />
+        </Grid>
+
+        {/* Kart Xərci */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Kart Xərci (AZN)"
+            type="number"
+            value={cardCost}
+            onChange={(e) => setCardCost(Number(e.target.value))}
+            fullWidth
+          />
+        </Grid>
+
+        {/* Qiymətləndirmə Xərci */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Qiymətləndirmə Xərci (AZN)"
+            type="number"
+            value={valuationFee}
+            onChange={(e) => setValuationFee(Number(e.target.value))}
+            fullWidth
+          />
+        </Grid>
+
+        {/* Sığorta Xərci */}
+        <Grid item xs={12}>
+          <Typography gutterBottom>Sığorta xərci: {insuranceFee} %</Typography>
+          <Slider
+            value={insuranceFee}
+            onChange={(e, newValue) => setInsuranceFee(newValue as number)}
+            valueLabelDisplay="auto"
+            min={0.1}
+            max={10}
+            step={0.1}
+            defaultValue={1}
+          />
+        </Grid>
+
+        {/* Aylıq Ödəniş */}
         <Grid item xs={12} sm={6}>
           <TextField
             label="Aylıq Ödəniş (AZN)"
@@ -97,6 +163,8 @@ const TabCreditDataPage = ({
             disabled
           />
         </Grid>
+
+        {/* Cəmi Ödəniş */}
         <Grid item xs={12} sm={6}>
           <TextField
             label="Cəmi Ödəniləcək Məbləğ (AZN)"
@@ -105,10 +173,30 @@ const TabCreditDataPage = ({
             disabled
           />
         </Grid>
+
+        {/* Karta Gedən Məbləğ */}
         <Grid item xs={12} sm={6}>
-          <TextField label="Cəmi Faiz (AZN)" value={calculateTotalInterest()} fullWidth disabled />
+          <TextField
+            label="Karta Gedən Məbləğ (AZN)"
+            value={calculateCardAmount()}
+            fullWidth
+            disabled
+          />
         </Grid>
 
+        {/* Məqsəd */}
+        <Grid item xs={12}>
+          <TextField
+            label="Krediti almaq üçün məqsəd"
+            multiline
+            rows={4}
+            value={purpose}
+            onChange={(e) => setPurpose(e.target.value)}
+            fullWidth
+          />
+        </Grid>
+
+        {/* Qərar Sorğusu */}
         <Grid item xs={12}>
           <FormControlLabel
             control={
@@ -121,12 +209,14 @@ const TabCreditDataPage = ({
           />
         </Grid>
 
+        {/* Nəzarət Düymələri */}
         <Grid item xs={12}>
           <Button variant="contained" color="primary" fullWidth>
             Kredit Təsdiqlə
           </Button>
         </Grid>
       </Grid>
+
       <Box textAlign="center" sx={{ mt: 4 }}>
         <Button
           onClick={() => {
