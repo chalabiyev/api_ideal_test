@@ -73,4 +73,10 @@ public class DocumentInfoServiceController {
         return ResponseEntity.ok(documentInfoService.getInfoByVoen(voen));
     }
 
+    @GetMapping("/getIdCardInfoByPin")
+    public ResponseEntity<FullIDCardInfoResponse> getIdCardInfoByPin(
+            @RequestParam @NotBlank(message = "Fin kod boş ola bilməz") String pin, HttpServletRequest request) throws IOException {
+        return ResponseEntity.ok(documentInfoService.getIdCardInfoByPin(pin));
+    }
+
 }
