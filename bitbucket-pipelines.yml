@@ -9,7 +9,6 @@ pipelines:
             - mvn clean verify
       - step:
           name: Backend Build and Deploy
-          trigger: manual
           image: 'maven:3.8.7'
           script:
             - cd backend/kredit
@@ -29,7 +28,6 @@ pipelines:
                 COMMAND: ./restart_kredit_backend.sh
       - step:
           name: Admin v2 Build and Deploy
-          trigger: manual
           size: 2x
           image: 'node:18'
           caches:
