@@ -76,7 +76,11 @@ export const navData = [
         path: paths.videomuraciet.root,
         icon: ICONS.video,
         children: [
-          { title: 'Nağd pul krediti', path: paths.videomuraciet.nagdpulkrediti },
+          {
+            title: 'Nağd pul krediti',
+            path: paths.videomuraciet.nagdpulkrediti,
+            openInNewTab: true,
+          },
           { title: 'Partnyorluq krediti', path: paths.videomuraciet.partnyorlukkrediti },
           { title: 'Biznes krediti', path: paths.videomuraciet.bizneskrediti },
           { title: 'Məlumat', path: paths.videomuraciet.məlumat },

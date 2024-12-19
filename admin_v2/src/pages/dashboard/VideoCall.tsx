@@ -100,17 +100,20 @@ const VideoCall = () => {
   };
 
   // bu kisim ringtone ILKIN
-  // useEffect(() => {
-  //   const ringtone = new Audio('/ringtone.mp3');
-  //   ringtone.loop = true;
-  //   ringtone.volume = 1;
-  //   ringtone.play();
+  useEffect(() => {
+    const ringtone = new Audio('/ringtone.mp3');
+    ringtone.loop = true;
+    ringtone.volume = 1;
 
-  //   return () => {
-  //     ringtone.pause();
-  //     ringtone.currentTime = 0;
-  //   };
-  // }, []);
+    if (incomingCall) {
+      ringtone.play().catch((err) => console.error('Ringtone play error:', err));
+    }
+
+    return () => {
+      ringtone.pause();
+      ringtone.currentTime = 0;
+    };
+  }, [incomingCall]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -162,13 +165,12 @@ const VideoCall = () => {
   };
 
   const endCall = () => {
-    stopTimer();
+    resetTimer(); // Timer sıfırla
     setIsCallActive(false);
-    setCallDuration(0);
     setEndMeeting(true);
     setTimeout(() => {
       // eslint-disable-next-line
-      location.reload();
+      location.reload(); // Sayfayı yenile (gerekli değilse kaldırabilirsiniz)
     }, 2000);
   };
 
@@ -190,9 +192,10 @@ const VideoCall = () => {
   };
 
   const handleAcceptCall = () => {
-    setIncomingCall(false);
-    setIsCallActive(true);
-    setAccepCall(true);
+    setIncomingCall(false); // Gelen aramayı kapatıyoruz
+    setIsCallActive(true); // Çağrıyı aktif hale getiriyoruz
+    setAccepCall(true); // Aramanın kabul edildiğini belirtiyoruz
+    startTimer(); // Timer'ı başlatıyoruz
   };
 
   const handleRejectCall = () => {
@@ -217,11 +220,20 @@ const VideoCall = () => {
     }
   };
 
+  const resetTimer = () => {
+    stopTimer();
+    setCallDuration(0);
+  };
+
   // Örnek kullanım: onReceiverConnected tetiklendiğinde zamanlayıcı başlat
   const handleReceiverConnected = () => {
     setIsCallActive(true);
     startTimer();
   };
+  useEffect(() => {
+    // Bileşen temizliği sırasında zamanlayıcıyı durdur
+    return () => stopTimer();
+  }, []);
 
   useEffect(() => {
     // Bileşen temizliği sırasında zamanlayıcıyı durdur
