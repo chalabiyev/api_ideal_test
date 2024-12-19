@@ -503,7 +503,7 @@ public class SimaServiceImpl implements SimaService {
         Optional<SimaEncodedContract> findSimaContract = simaEncodedContractRepository.findByOperationId(simaTokenRequest.getOperationId());
         try {
             //&& ipAddr.equals(findSimaContract.get().getSignerIP())
-            if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed && oTPService.validateOTP(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(), EPlatform.PHONE)) {
+            if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed && oTPService.validateOTPForSima(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(), EPlatform.PHONE)) {
                 SimaEncodedContract contract = findSimaContract.get();
                 SimaCertPersonInfo person = getPersonFromCertificate(contract.getSignerCert());
                 if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {

@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.Authentication;
 
-import javax.management.BadAttributeValueExpException;
-
 public interface OTPService {
 
     boolean sendOtp(OTPRequest request, String platform) throws BadRequestException;
 
     boolean validateOTP(String contact, String otpCode, EPlatform platform) throws BadRequestException;
+
+    boolean validateOTPForSima(String contact, String otpCode, EPlatform platform) throws BadRequestException;
 
     boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform) throws BadRequestException;
 
