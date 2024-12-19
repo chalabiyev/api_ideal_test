@@ -19,7 +19,7 @@ pipelines:
                 SSH_USER: 'esam'
                 SSH_KEY: $MY_SSH_KEY
                 SERVER: '46.202.143.42'
-                COMMAND: 'restart_kredit_backend.sh'
+                COMMAND: './restart_kredit_backend.sh'
       - step:
           name: Admin v2 Build and Deploy
           image: node:18
