@@ -1,12 +1,12 @@
 package az.esam.kredit.kredit.services.external.epoint;
 
-import az.esam.kredit.kredit.dtos.requests.payment.InAppPaymentRequest;
-import az.esam.kredit.kredit.dtos.requests.payment.PaymentRequest;
-import az.esam.kredit.kredit.dtos.requests.payment.PaymentStatusRequest;
+import az.esam.kredit.kredit.dtos.requests.payment.*;
+import az.esam.kredit.kredit.dtos.responses.payment.CardRegistrationResponse;
 import az.esam.kredit.kredit.dtos.responses.payment.PaymentResponse;
 import az.esam.kredit.kredit.dtos.responses.payment.PaymentStatusResponse;
+import az.esam.kredit.kredit.dtos.responses.payment.TransferMoneyResponse;
 import az.esam.kredit.kredit.properties.EPointPaymentProperties;
-import az.esam.kredit.kredit.repositories.PaymentRequestRepository;
+import az.esam.kredit.kredit.repositories.payment.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.underscore.lodash.U;
@@ -38,6 +38,18 @@ public class EPaymentServiceImpl implements EPaymentService {
 
     @Autowired
     PaymentRequestRepository paymentRequestRepository;
+
+    @Autowired
+    CardRegistrationRequestRepository cardRegistrationRequestRepository;
+
+    @Autowired
+    CardRegistrationResponseRepository cardRegistrationResponseRepository;
+
+    @Autowired
+    TransferMoneyRequestRepository transferMoneyRequestRepository;
+
+    @Autowired
+    TransferMoneyResponseRepository transferMoneyResponseRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -159,6 +171,52 @@ public class EPaymentServiceImpl implements EPaymentService {
             return objectMapper.readValue(response, PaymentStatusResponse.class);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CardRegistrationResponse registerCard(CardRegistrationRequest cardRegistrationRequest) throws Exception {
+        cardRegistrationRequest.setPublic_key(ePaymentProperties.getPublicKey());
+        cardRegistrationRequest.setLanguage(ePaymentProperties.getLanguage());
+
+        String jsonString = objectMapper.writeValueAsString(cardRegistrationRequest);
+        String data = encodeBase64(jsonString.getBytes());
+        String sgn_string = ePaymentProperties.getPrivateKey() + data + ePaymentProperties.getPrivateKey();
+        String signature = encodeBase64(encodeSHA1(sgn_string));
+        try {
+            String response = sendRequest("/card-registration", data, signature);
+            cardRegistrationRequestRepository.insert(cardRegistrationRequest);
+            logger.log(Level.SEVERE, "registerCard request : {0}", cardRegistrationRequest.toString());
+            logger.log(Level.SEVERE, "registerCard response : {0}", response);
+            CardRegistrationResponse registrationResponse = objectMapper.readValue(response, CardRegistrationResponse.class);
+            cardRegistrationResponseRepository.insert(registrationResponse);
+            return registrationResponse;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error", e);
+        }
+        return null;
+    }
+
+    @Override
+    public TransferMoneyResponse transferAmount(TransferMoneyRequest transferAmountRequest) throws Exception {
+        transferAmountRequest.setPublic_key(ePaymentProperties.getPublicKey());
+        transferAmountRequest.setLanguage(ePaymentProperties.getLanguage());
+
+        String jsonString = objectMapper.writeValueAsString(transferAmountRequest);
+        String data = encodeBase64(jsonString.getBytes());
+        String sgn_string = ePaymentProperties.getPrivateKey() + data + ePaymentProperties.getPrivateKey();
+        String signature = encodeBase64(encodeSHA1(sgn_string));
+        try {
+            String response = sendRequest("/transfer", data, signature);
+            transferMoneyRequestRepository.insert(transferAmountRequest);
+            logger.log(Level.SEVERE, "transferAmount request : {0}", transferAmountRequest.toString());
+            logger.log(Level.SEVERE, "transferAmount response : {0}", response);
+            TransferMoneyResponse transferMoneyResponse = objectMapper.readValue(response, TransferMoneyResponse.class);
+            transferMoneyResponseRepository.insert(transferMoneyResponse);
+            return transferMoneyResponse;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error", e);
         }
         return null;
     }

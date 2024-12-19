@@ -1,4 +1,4 @@
-package az.esam.kredit.kredit.repositories;
+package az.esam.kredit.kredit.repositories.payment;
 
 import az.esam.kredit.kredit.dtos.requests.payment.PaymentRequest;
 import org.jetbrains.annotations.NotNull;
