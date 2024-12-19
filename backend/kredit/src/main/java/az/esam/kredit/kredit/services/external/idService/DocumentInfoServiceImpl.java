@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
@@ -59,10 +60,22 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                         Aggregation aggregation = Aggregation.newAggregation(
                                 Aggregation.match(Criteria.where("nameAz").is(idCardInfoList.get(0).getPersonAz().getName())),
                                 Aggregation.project()
-                                        .andExpression("nameAz == @nameAz ? 1 : 0").as("nameMatch")
-                                        .andExpression("surnameAz == @surnameAz ? 1 : 0").as("surnameMatch")
-                                        .andExpression("patronymicAz == @patronymicAz ? 1 : 0").as("patronymicMatch")
-                                        .andExpression("dateOfBirth == @dateOfBirth ? 1 : 0").as("birthDateMatch")
+                                        .and(ConditionalOperators.Cond
+                                                .when(Criteria.where("nameAz").is(idCardInfoList.get(0).getPersonAz().getName()))
+                                                .then(1).otherwise(0)
+                                        ).as("nameMatch")
+                                        .and(ConditionalOperators.Cond
+                                                .when(Criteria.where("surnameAz").is(idCardInfoList.get(0).getPersonAz().getSurname()))
+                                                .then(1).otherwise(0)
+                                        ).as("surnameMatch")
+                                        .and(ConditionalOperators.Cond
+                                                .when(Criteria.where("patronymicAz").is(idCardInfoList.get(0).getPersonAz().getPatronymic()))
+                                                .then(1).otherwise(0)
+                                        ).as("patronymicMatch")
+                                        .and(ConditionalOperators.Cond
+                                                .when(Criteria.where("dateOfBirth").is(idCardInfoList.get(0).getBirthDate()))
+                                                .then(1).otherwise(0)
+                                        ).as("birthDateMatch")
                                         .andExpression("nameMatch + surnameMatch + patronymicMatch + birthDateMatch").as("totalMatches")
                         );
                         AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, "blacklisted_individuals", Document.class);
