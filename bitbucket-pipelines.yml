@@ -2,12 +2,6 @@ pipelines:
   branches:
     release:
       - step:
-          name: Backend Build and Verify
-          image: 'maven:3.8.7'
-          script:
-            - cd backend/kredit
-            - mvn clean verify
-      - step:
           name: Backend Build and Deploy
           image: 'maven:3.8.7'
           script:
