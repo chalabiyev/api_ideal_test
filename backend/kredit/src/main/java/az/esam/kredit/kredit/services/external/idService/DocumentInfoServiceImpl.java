@@ -52,8 +52,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonResponse = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonResponse != null) {
                 try {
-                    List<FullIDCardInfoResponse> idCardInfoList =
-                            parserService.parseResponse(jsonResponse, FullIDCardInfoResponse.class);
+                    List<FullIDCardInfoResponse> idCardInfoList
+                            = parserService.parseResponse(jsonResponse, FullIDCardInfoResponse.class);
 
                     if (idCardInfoList != null && !idCardInfoList.isEmpty()) {
                         // check if person is on the blacklistedIndividuals
@@ -131,8 +131,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonResponse = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonResponse != null) {
                 try {
-                    List<MobileNumberResponse> mobileNumberResponseList =
-                            parserService.parseResponse(jsonResponse, MobileNumberResponse.class);
+                    List<MobileNumberResponse> mobileNumberResponseList
+                            = parserService.parseResponse(jsonResponse, MobileNumberResponse.class);
 
                     if (mobileNumberResponseList != null && !mobileNumberResponseList.isEmpty()) {
                         return mobileNumberResponseList;
@@ -198,8 +198,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonNode != null) {
                 try {
-                    List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList =
-                            parserService.parseResponse(jsonNode, DocumentInfoByMobileNumberResponse.class);
+                    List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList
+                            = parserService.parseResponse(jsonNode, DocumentInfoByMobileNumberResponse.class);
 
                     if (documentInfoByMobileNumberResponseList != null && !documentInfoByMobileNumberResponseList.isEmpty()) {
                         return documentInfoByMobileNumberResponseList.get(0);
@@ -224,8 +224,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonNode != null) {
                 try {
-                    List<VehicleInfoResponse> vehicleInfoResponseList =
-                            parserService.parseResponse(jsonNode, VehicleInfoResponse.class);
+                    List<VehicleInfoResponse> vehicleInfoResponseList
+                            = parserService.parseResponse(jsonNode, VehicleInfoResponse.class);
 
                     if (vehicleInfoResponseList != null && !vehicleInfoResponseList.isEmpty()) {
                         return vehicleInfoResponseList;
@@ -251,8 +251,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonNode != null) {
                 try {
-                    List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList =
-                            parserService.parseResponse(jsonNode, MigrationDocumentInfoResponse.class);
+                    List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList
+                            = parserService.parseResponse(jsonNode, MigrationDocumentInfoResponse.class);
 
                     if (migrationDocumentInfoResponseList != null && !migrationDocumentInfoResponseList.isEmpty()) {
                         return migrationDocumentInfoResponseList.get(0);
@@ -278,8 +278,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonNode != null) {
                 try {
-                    List<PassportDocumentInfoResponse> passportDocumentInfoResponseList =
-                            parserService.parseResponse(jsonNode, PassportDocumentInfoResponse.class);
+                    List<PassportDocumentInfoResponse> passportDocumentInfoResponseList
+                            = parserService.parseResponse(jsonNode, PassportDocumentInfoResponse.class);
 
                     if (passportDocumentInfoResponseList != null && !passportDocumentInfoResponseList.isEmpty()) {
                         return passportDocumentInfoResponseList.get(0);
@@ -304,8 +304,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonNode != null) {
                 try {
-                    List<VoenInfoResponse> voenInfoResponseList =
-                            parserService.parseResponse(jsonNode, VoenInfoResponse.class);
+                    List<VoenInfoResponse> voenInfoResponseList
+                            = parserService.parseResponse(jsonNode, VoenInfoResponse.class);
 
                     if (voenInfoResponseList != null && !voenInfoResponseList.isEmpty()) {
                         return voenInfoResponseList.get(0);
@@ -323,5 +323,21 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         return null;
     }
 
-}
+    @Override
+    public FullIDCardInfoResponse getIdCardInfoByPin(String pin) throws IOException {
+        try {
+            List<MobileNumberResponse> numbers = getMobileNumbersWithPin(pin);
+            if (numbers == null || numbers.isEmpty()) {
+                return null;
+            }
+            DocumentInfoByMobileNumberResponse result = getDocumentInfoByPhone(numbers.get(numbers.size() - 1).getPhone());
+            if (result == null) {
+                return null;
+            }
+            return getIdCardInfo(result.getPasportNumber(), pin);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
+}

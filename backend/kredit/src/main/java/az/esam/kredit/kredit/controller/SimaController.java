@@ -1,5 +1,6 @@
-package az.esam.kredit.kredit.controller.sima;
+package az.esam.kredit.kredit.controller;
 
+import az.esam.kredit.kredit.dtos.requests.SimaTokenRequest;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
 import az.esam.kredit.kredit.entities.sima.ContractStatusEnum;
 import az.esam.kredit.kredit.entities.sima.SimaCallBack;
@@ -8,6 +9,8 @@ import az.esam.kredit.kredit.entities.sima.SimaGetFileResponse;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
 import az.esam.kredit.kredit.services.sima.SimaService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -57,15 +60,17 @@ public class SimaController {
     @GetMapping("/getStatus/{operationId}")
     public ResponseEntity<ContractStatusEnum> getContractStatusByOperationId(
             HttpServletRequest httpRequest,
-            @PathVariable("operationId") String operationId) {
+            @PathVariable(required = true, name = "operationId")
+            @NotBlank(message = "OperationId boş ola bilməz") String operationId) {
         return ResponseEntity.ok(simaService.getContractStatusByOperationId(operationId));
     }
 
-    @GetMapping("/getToken/{operationId}")
-    public ResponseEntity<AuthenticationResponse> getTokenByOperationId(
+    @PostMapping("/getToken")
+    public ResponseEntity<AuthenticationResponse> getToken(
             HttpServletRequest httpRequest,
-            @PathVariable("operationId") String operationId) {
-        return ResponseEntity.ok(simaService.getTokenByOperationId(httpRequest, operationId));
+            @Valid @RequestBody SimaTokenRequest request
+    ) {
+        return ResponseEntity.ok(simaService.getToken(httpRequest, request));
     }
 
 }

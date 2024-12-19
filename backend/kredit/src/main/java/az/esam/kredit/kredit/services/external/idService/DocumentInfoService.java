@@ -1,12 +1,13 @@
 package az.esam.kredit.kredit.services.external.idService;
 
 import az.esam.kredit.kredit.dtos.responses.document.*;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface DocumentInfoService {
+
+    FullIDCardInfoResponse getIdCardInfoByPin(String pin) throws IOException;
 
     FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) throws IOException;
 
@@ -24,4 +25,3 @@ public interface DocumentInfoService {
 
     VoenInfoResponse getInfoByVoen(String voen);
 }
-
