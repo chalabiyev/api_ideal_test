@@ -10,6 +10,9 @@ const PORT = 8081;
 const env = loadEnv('all', process.cwd());
 
 export default defineConfig({
+  build: {
+        chunkSizeWarningLimit: 1600
+    }
   // base: env.VITE_BASE_PATH,
   plugins: [
     react(),
