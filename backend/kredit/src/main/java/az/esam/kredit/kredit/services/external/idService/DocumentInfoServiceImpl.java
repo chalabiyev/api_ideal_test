@@ -330,11 +330,16 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (numbers == null || numbers.isEmpty()) {
                 return null;
             }
-            DocumentInfoByMobileNumberResponse result = getDocumentInfoByPhone(numbers.get(numbers.size() - 1).getPhone());
-            if (result == null) {
-                return null;
+            for (MobileNumberResponse number : numbers) {
+                try {
+                    DocumentInfoByMobileNumberResponse result = getDocumentInfoByPhone(number.getPhone());
+                    if (result != null) {
+                        return getIdCardInfo(result.getPasportNumber(), pin);
+                    }
+                } catch (Exception e) {
+                }
             }
-            return getIdCardInfo(result.getPasportNumber(), pin);
+            return null;
         } catch (Exception e) {
             return null;
         }
