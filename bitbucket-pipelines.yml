@@ -22,6 +22,7 @@ pipelines:
                 COMMAND: './restart_kredit_backend.sh'
       - step:
           name: Admin v2 Build and Deploy
+          size: 8x
           image: node:18
           caches:
             - node
