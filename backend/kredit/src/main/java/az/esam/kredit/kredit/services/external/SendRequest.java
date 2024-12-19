@@ -63,6 +63,20 @@ public class SendRequest {
                     log.info("Service resp : {} ", responseStr);
                     result = objectMapper.readTree(responseStr);
 
+                    // Check the status.code field
+                    if (result.has("status") && result.get("status").has("code")) {
+                        int statusCode = result.get("status").get("code").asInt();
+                        if (statusCode == 200) {
+                            log.info("Service result is successful: {}", result);
+                        } else {
+                            log.error("Service returned error status code: {}", statusCode);
+                            throw new IOException("Service returned error status code: " + statusCode);
+                        }
+                    } else {
+                        log.error("Response does not contain a valid status.code field");
+                        throw new IOException("Invalid response structure: missing status.code field");
+                    }
+
                     log.info("Service result : {} ", result);
                 } else {
                     log.error("Request failed with status code: {}", response.code());
