@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 interface Person {
   id: number;
   name: string;
+  note: string;
   phone: string;
   relation: string;
 }
@@ -23,7 +24,10 @@ const TabRelatedPersons: React.FC = () => {
       return;
     }
 
-    setPersons((prev) => [...prev, { id: prev.length, name: '', phone: '', relation: '' }]);
+    setPersons((prev) => [
+      ...prev,
+      { id: prev.length, name: '', phone: '', relation: '', note: '' },
+    ]);
   };
 
   // Mövcud şəxs məlumatlarını yeniləyir
@@ -47,7 +51,7 @@ const TabRelatedPersons: React.FC = () => {
       {persons.map((person, index) => (
         <Card key={person.id} sx={{ mb: 4, p: 2 }}>
           <CardContent>
-            <Typography variant="subtitle1" sx={{mb:2}}>
+            <Typography variant="subtitle1" sx={{ mb: 2 }}>
               {person.relation}
             </Typography>
             <Grid container spacing={2}>
@@ -71,7 +75,23 @@ const TabRelatedPersons: React.FC = () => {
                 <TextField
                   label="Telefon Nömrəsi"
                   value={person.phone}
-                  onChange={(e) => handlePersonChange(person.id, 'phone', e.target.value)}
+                  onChange={(e) =>
+                    handlePersonChange(person.id, 'phone', e.target.value.replace(/\D/g, ''))
+                  }
+                  onKeyPress={(e) => {
+                    if (!/[0-9]/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  multiline
+                  label="Əlavə qeyd"
+                  value={person.note}
+                  onChange={(e) => handlePersonChange(person.id, 'note', e.target.value)}
                   fullWidth
                 />
               </Grid>
