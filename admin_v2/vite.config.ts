@@ -11,8 +11,8 @@ const env = loadEnv('all', process.cwd());
 
 export default defineConfig({
   build: {
-        chunkSizeWarningLimit: 1600
-    }
+    chunkSizeWarningLimit: 3000
+  },
   // base: env.VITE_BASE_PATH,
   plugins: [
     react(),
