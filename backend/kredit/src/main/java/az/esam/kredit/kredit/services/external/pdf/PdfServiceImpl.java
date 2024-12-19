@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.services.external.pdf;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -56,6 +57,31 @@ public class PdfServiceImpl implements PdfService {
         return outputStream.toByteArray();
     }
 
+    public byte[] mergePdfs(List<String> htmlContents, Path outputPath) throws IOException {
+        PDFMergerUtility mergerUtility = new PDFMergerUtility();
+
+        // Temporary files for each PDF
+        List<Path> tempPdfFiles = new java.util.ArrayList<>();
+        for (String htmlContent : htmlContents) {
+            Path tempPdfFile = Files.createTempFile("tempPdf", ".pdf");
+            Files.write(tempPdfFile, generatePdf(htmlContent));
+            tempPdfFiles.add(tempPdfFile);
+            mergerUtility.addSource(tempPdfFile.toFile());
+        }
+
+        // Output PDF
+        ByteArrayOutputStream mergedOutputStream = new ByteArrayOutputStream();
+        mergerUtility.setDestinationStream(mergedOutputStream);
+        mergerUtility.mergeDocuments(null);
+
+        // Clean up temporary files
+        for (Path tempFile : tempPdfFiles) {
+            Files.deleteIfExists(tempFile);
+        }
+
+        return mergedOutputStream.toByteArray();
+    }
+
 //    String templateName = "sifaris-xett"; // Template name without the ".html" extension
 //    Path outputFile = Path.of("/Users/aphar/Desktop/ideal-kredit/ideal_kredit/backend/kredit/uploads/output.pdf");
 //
@@ -82,4 +108,14 @@ public class PdfServiceImpl implements PdfService {
 //            "salary", 2000,
 //            "otherIncome", 500
 //    );
+
+//    List<String> htmlContents = List.of(
+//            loadHtmlContent("sifaris-xett", Map.of("key", "value1")),
+//            loadHtmlContent("xett", Map.of("key", "value2"))
+//    );
+//
+//    byte[] mergedPdf = mergePdfs(htmlContents);
+//
+//    // Save to file or return as a response
+//        Files.write(outputFile, mergedPdf);
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import az.esam.kredit.kredit.entities.enums.EGuarantyType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -51,7 +52,7 @@ public class CreditRequest extends BaseEntity {
     private double otherPayment;
     private String notarialCost;
     private String insuranceType;
-    private String guarantee;
+    private EGuarantyType guarantee;
 
     private List<Spouse> spouses;
 

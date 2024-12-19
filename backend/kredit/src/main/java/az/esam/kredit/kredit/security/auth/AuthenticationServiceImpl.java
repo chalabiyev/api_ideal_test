@@ -218,7 +218,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .map(item -> item.getName().name())
                     .toList();
 
-            revokeAllUserTokens(user);
+//            revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
 
             userRepository.save(user);
