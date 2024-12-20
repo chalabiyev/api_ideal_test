@@ -50,6 +50,7 @@ const ICONS = {
   dashboard: icon('ic-dashboard'),
   parameter: icon('ic-parameter'),
   abouticon: icon('ic-about-icon'),
+  partner: icon('ic-partner'),
 };
 
 // ----------------------------------------------------------------------
@@ -116,6 +117,26 @@ export const navData = [
         icon: ICONS.kanban,
         children: [
           { title: 'Video zəng ekranı', path: paths.videocall.videocall, openInNewTab: true },
+        ],
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Partynor',
+        path: paths.partners.root,
+        icon: ICONS.partner,
+        children: [
+          {
+            title: 'Yeni partnyor',
+            path: paths.partners.yenipartnyor.root,
+            children: [
+              { title: 'Fiziki şəxs', path: paths.partners.yenipartnyor.fiziki },
+              { title: 'Hüquqi şəxs', path: paths.partners.yenipartnyor.huquqi },
+            ],
+          },
+          { title: 'Bütün partynorlar', path: paths.partners.partnyorlarlist },
         ],
       },
     ],
