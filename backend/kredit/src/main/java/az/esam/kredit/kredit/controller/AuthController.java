@@ -97,6 +97,8 @@ public class AuthController {
                         .username(ADMIN_USER_NAME)
                         .email("admin@admin.com")
                         .fullName(ADMIN_USER_NAME)
+                        .name(ADMIN_USER_NAME)
+                        .surName(ADMIN_USER_NAME)
                         .gender("MALE")
                         .roles(new HashSet<>(List.of(ADMIN_USER_NAME)))
                         .phoneNumber("994504809988")
