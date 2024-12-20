@@ -19,7 +19,9 @@ import az.esam.kredit.kredit.entities.sima.SimaContract;
 import az.esam.kredit.kredit.entities.sima.SimaEncodedContract;
 import az.esam.kredit.kredit.entities.sima.SimaGetFileResponse;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
+
 import static az.esam.kredit.kredit.helper.Helper.getClientIpAddress;
+
 import az.esam.kredit.kredit.repositories.sima.SimaEncodedContractRepository;
 import az.esam.kredit.kredit.security.auth.AuthenticationService;
 import az.esam.kredit.kredit.services.external.idService.DocumentInfoService;
@@ -31,6 +33,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
@@ -57,6 +60,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 import javax.security.auth.x500.X500Principal;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +68,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * @author cihan
  */
 @Service
@@ -130,7 +133,7 @@ public class SimaServiceImpl implements SimaService {
     }
 
     @Override
-    public SimaQRResponse getAuthQR(String finCode) {
+    public SimaQRResponse getAuthQR(String finCode, ContractTypeEnum contractType) {
 
 //        try {
 //            String hmactest = hmacSHA256(masterKey, "{\"ProtoInfo\":{\"Name\":\"web2app\",\"Version\":\"1.3\"},\"OperationInfo\":{\"Type\":\"Auth\",\"OperationId\":\"7b173770-57bb-4405-9ded-038fc9fc1f36\",\"NbfUTC\":1733356800,\"ExpUTC\":1733443200,\"Assignee\":[]},\"DataInfo\":{\"DataURI\":\"https://api.studentall.az:9899/api/sima/getData?operationId=7b173770-57bb-4405-9ded-038fc9fc1f36\",\"AlgName\":null,\"FingerPrint\":null},\"ClientInfo\":{\"ClientId\":3144201,\"IconURI\":\"https://ideal-kredit-copy.vercel.app/HeaderLogo.png\",\"Callback\":\"https://api.studentall.az:9899/api/sima/callBack\",\"ClientName\":\"Ideal Kredit\",\"RedirectURI\":\"https://localhost:8080/simalogin\",\"HostName\":null}}");
@@ -192,7 +195,7 @@ public class SimaServiceImpl implements SimaService {
         ProtoInfo protoInfo = ProtoInfo.builder().Name("web2app").Version("1.3").build();
         String operationId = UUID.randomUUID().toString();
         OperationInfo operationInfo = OperationInfo.builder()
-                .Type(ContractTypeEnum.Auth)
+                .Type(contractType) // send type with request
                 .OperationId(operationId)
                 .NbfUTC(dateToUtcTimestamp(truncateDate(now)))
                 .ExpUTC(dateToUtcTimestamp(truncateDate(end)))
@@ -519,6 +522,7 @@ public class SimaServiceImpl implements SimaService {
                         return null;
                     }
                 } else {
+                    // handle signable contract type
                     return null;
                 }
             } else {

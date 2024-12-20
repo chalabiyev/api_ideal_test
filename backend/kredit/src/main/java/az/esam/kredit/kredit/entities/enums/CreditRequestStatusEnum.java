@@ -1,4 +1,4 @@
-package az.esam.kredit.kredit.entities;
+package az.esam.kredit.kredit.entities.enums;
 
 /**
  *
