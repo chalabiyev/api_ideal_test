@@ -27,31 +27,28 @@ import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { WebCam } from 'src/components/video-call/WebCam';
 import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOperator';
 import { useAuthContext } from 'src/auth/hooks';
+import { toast } from 'sonner';
 
 const VideoCall = () => {
-  const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
   const [isVideoOn, setIsVideoOn] = useState(true);
-  const [isAudioOn, setIsAudioOn] = useState(false);
+  const [isAudioOn, setIsAudioOn] = useState(true);
   const [callDuration, setCallDuration] = useState(0);
   const [isCallActive, setIsCallActive] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [messages, setMessages] = useState([
-    { text: 'Salam, necə kömək edə bilərəm?', sender: 'Operator', time: '09:30' },
-    { text: 'Salam, bir problemim var.', sender: 'User', time: '09:31' },
-  ]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [message, setMessage] = useState('');
+  const [messageToSend, setMessageToSend] = useState('');
+  const [receivedMessage, setReceivedMessage] = useState<any>();
   const [openDialog, setOpenDialog] = useState(false);
   const [incomingCall, setIncomingCall] = useState(false);
-  const [stream, setStream] = useState<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const theme = useTheme();
 
   const [showWebCamSettings, setShowWebCamSettings] = useState(false);
-  const [newCallStarted, setNewCallStarted] = useState<boolean>(false);
   const [localStream, setLocalStream] = useState<MediaStream>();
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const [clientName, setClientName] = useState<any>('');
@@ -61,26 +58,10 @@ const VideoCall = () => {
   const { user } = useAuthContext();
 
   useEffect(() => {
-    if (isAudioOn) {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          setAudioStream(stream);
-        })
-        .catch((error) => {
-          console.error('Mikrofon erişim hatası:', error);
-        });
-    } else if (audioStream) {
-      audioStream.getTracks().forEach((track) => track.stop());
-      setAudioStream(null);
-    }
-
-    return () => {
-      if (audioStream) {
-        audioStream.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [isAudioOn, audioStream]);
+      localStream?.getAudioTracks().forEach((track) => {
+        track.enabled = isAudioOn;
+      })
+  }, [isAudioOn]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -127,34 +108,12 @@ const VideoCall = () => {
     return () => clearInterval(timer);
   }, [isCallActive]);
 
-  // useEffect(() => {
-  //   if (isVideoOn) {
-  //     // Kamera erişimi ve videoya bağlama
-  //     navigator.mediaDevices
-  //       .getUserMedia({ video: true, audio: false })
-  //       .then((mediaStream) => {
-  //         setStream(mediaStream);
-  //         if (videoRef.current) {
-  //           videoRef.current.srcObject = mediaStream;
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error('Kamera erişim hatası:', error);
-  //       });
-  //   } else if (stream) {
-  //     // Kamera akışını durdur
-  //     stream.getTracks().forEach((track) => track.stop());
-  //     setStream(null);
-  //   }
-
-  //   return () => {
-  //     if (stream) {
-  //       stream.getTracks().forEach((track) => track.stop());
-  //     }
-  //   };
-
-  //   // eslint-disable-next-line
-  // }, [isVideoOn]);
+  useEffect(() => {    
+      localStream?.getVideoTracks().forEach((track) => {
+        track.enabled = isVideoOn;
+      });    
+    // eslint-disable-next-line
+  }, [isVideoOn]);
 
   const toggleVideo = () => {
     setIsVideoOn((prev) => !prev);
@@ -168,16 +127,17 @@ const VideoCall = () => {
     resetTimer(); // Timer sıfırla
     setIsCallActive(false);
     setEndMeeting(true);
+    setAccepCall(false);
     setTimeout(() => {
-      // eslint-disable-next-line
-      location.reload(); // Sayfayı yenile (gerekli değilse kaldırabilirsiniz)
-    }, 2000);
+      window.location.reload();
+    }, 1000);
   };
 
   const sendMessage = () => {
     if (message) {
       const currentTime = new Date().toLocaleTimeString().slice(0, 5);
-      setMessages((prev) => [...prev, { text: message, sender: 'User', time: currentTime }]);
+      setMessages([...messages, { text: message, sender: user?.fullName, time: currentTime }]);
+      setMessageToSend(message);
       setMessage('');
     }
   };
@@ -200,7 +160,7 @@ const VideoCall = () => {
 
   const handleRejectCall = () => {
     setIncomingCall(false);
-    alert('Zəng rədd edildi.');
+    toast.error('Zəng rədd edildi.');
     setAccepCall(false);
   };
 
@@ -240,11 +200,17 @@ const VideoCall = () => {
     return () => stopTimer();
   }, []);
 
+  useEffect(() => {
+    if (receivedMessage) {
+      setMessages([...messages, receivedMessage]);
+    }
+  }, [receivedMessage]);
+
   const renderMessage = (msg: { text: string; sender: string; time: string }) => (
     <Grid
       container
       alignItems="center"
-      direction={msg.sender === 'User' ? 'row-reverse' : 'row'}
+      direction={msg.sender === clientName ? 'row-reverse' : 'row'}
       spacing={2}
       sx={{ marginBottom: 1 }}
     >
@@ -258,12 +224,12 @@ const VideoCall = () => {
           sx={{
             padding: 1,
             backgroundColor:
-              msg.sender === 'User'
+              msg.sender === clientName
                 ? theme.palette.primary.light
                 : theme.palette.background.neutral,
           }}
         >
-          <Typography variant="body2">{msg.text}</Typography>
+          <Typography variant="body2">{msg.text} {msg.sender}</Typography>
         </Paper>
       </Grid>
     </Grid>
@@ -496,7 +462,7 @@ const VideoCall = () => {
             <IconButton onClick={toggleAudio} color="primary" sx={{ margin: 1 }}>
               {isAudioOn ? <MicIcon /> : <MicOffIcon />}
             </IconButton>
-            <IconButton onClick={endCall} color="secondary" sx={{ margin: 1 }}>
+            <IconButton disabled={!acceptCall} onClick={endCall} color="secondary" sx={{ margin: 1 }}>
               <CallEndIcon />
             </IconButton>
           </Box>
@@ -519,7 +485,11 @@ const VideoCall = () => {
           acceptCall={acceptCall}
           newCallReceived={newCallReceived}
           setNewCallReceived={handleNewCall}
-          onEndMeeting={(s: SignalType) => {}}
+          onEndMeeting={(s: SignalType) => { }}
+          incomingChatMessage={receivedMessage}
+          setIncomingChatMessage={setReceivedMessage}
+          outgoingChatMessage={messageToSend}
+          setOutgoingChatMessage={setMessageToSend}
         />
       )}
     </Box>
