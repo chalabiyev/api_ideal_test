@@ -44,7 +44,21 @@ import { CameraIcon } from "./icons/VideoCall/CameraIcon";
 import { MicrofonIcon } from "./icons/VideoCall/MicrofonIcon";
 import { ShareIcon } from "./icons/VideoCall/ShareIcon";
 import { CloseTelephoneIcon } from "./icons/VideoCall/CloseTelephoneIcon";
+import { AddUserIcon } from "./icons/VideoCall/AddUserIcon";
+import { ShareScreenIcon } from "./icons/VideoCall/ShareScreenIcon";
+import { CancelCameraIcon } from "./icons/VideoCall/CancelCameraIcon";
+import { CancelMicrofonIcon } from "./icons/VideoCall/CancelMicrofonIcon";
+import { AttachIcon } from "./icons/VideoCall/AttachIcon";
+import { SendButtonIcon } from "./icons/VideoCall/SendButonIcon";
+import { StarIcon } from "./icons/VideoCall/StarIcon";
 export {
+  StarIcon,
+  SendButtonIcon,
+  AttachIcon,
+  CancelMicrofonIcon,
+  CancelCameraIcon,
+  ShareScreenIcon,
+  AddUserIcon,
   CloseTelephoneIcon,
   ShareIcon,
   MicrofonIcon,

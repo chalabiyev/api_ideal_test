@@ -9,8 +9,8 @@ export const ShareIcon = ({ width, height, color }: any) => (
     viewBox="0 0 26 6"
     fill="none"
   >
-    <Circle cx={3} cy={3} r={2.5} fill="#BFDBFF" />
-    <Circle cx={13} cy={3} r={2.5} fill="#BFDBFF" />
-    <Circle cx={23} cy={3} r={2.5} fill="#BFDBFF" />
+    <Circle cx={3} cy={3} r={2.5} fill="#fff" />
+    <Circle cx={13} cy={3} r={2.5} fill="#fff" />
+    <Circle cx={23} cy={3} r={2.5} fill="#fff" />
   </Svg>
 );

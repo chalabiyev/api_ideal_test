@@ -22,7 +22,11 @@ import AccountSettings from "./Main/AccountSettings";
 import VideoCall from "./Main/VideoCall";
 import Signature from "./Main/Signature";
 import SelectPartners from "./Main/SelectPartners";
+import Scoring from "./Main/Scoring";
+import Activation from "./Main/Activation";
 export {
+  Activation,
+  Scoring,
   SelectPartners,
   Signature,
   SecurityCode,

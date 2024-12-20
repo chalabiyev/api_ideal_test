@@ -1,0 +1,92 @@
+import { ScaledSheet } from "react-native-size-matters";
+import colors from "../../../constants/colors/colors";
+
+export const makeStyles = () =>
+  ScaledSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.backgroundColor,
+    },
+    container: {
+      flex: 1,
+      position: "relative",
+      padding: 20,
+    },
+    content: {
+      flex: 1,
+      justifyContent: "flex-start",
+      alignItems: "stretch",
+    },
+    draggableBox: {
+      width: "140@s",
+      height: "220@s",
+      borderRadius: 16,
+      borderColor: colors.lightGrey,
+      borderWidth: 1,
+      position: "absolute",
+      left: 20,
+      bottom: 100,
+      backgroundColor: colors.whiteText,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    myMessage: {
+      backgroundColor: colors.defaultdButton,
+      alignSelf: "flex-end",
+      borderTopLeftRadius: 15,
+      borderTopRightRadius: 15,
+      borderBottomLeftRadius: 15,
+      padding: 10,
+      marginVertical: 5,
+      maxWidth: "80%",
+    },
+    otherMessage: {
+      backgroundColor: colors.defaultButtonSkyBlue,
+      alignSelf: "flex-start",
+      borderTopLeftRadius: 15,
+      borderTopRightRadius: 15,
+      borderBottomRightRadius: 15,
+      padding: 10,
+      marginVertical: 5,
+      maxWidth: "80%",
+    },
+    messageContainer: {
+      borderTopLeftRadius: 15,
+      padding: 10,
+      marginVertical: 5,
+      maxWidth: "80%",
+    },
+    messagesContainer: {
+      padding: 10,
+    },
+    inputBox: {
+      width: "100%",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 25,
+    },
+    textInput: {
+      borderRadius: 8,
+      backgroundColor: "#F2F1F6",
+      width: "80%",
+      borderWidth: 0.3,
+      borderColor: "#8A8B8B",
+      maxHeight: "100@s",
+      minHeight: "40@s",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 15,
+      marginRight: 20,
+      paddingVertical: 15,
+      color: "black",
+    },
+    button: {
+      width: "45@s",
+      height: "45@s",
+      backgroundColor: colors.defaultdButton,
+      borderRadius: "45@s",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });

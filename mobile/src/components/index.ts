@@ -21,8 +21,10 @@ import DeleteAccontModal from "./Modals/DeleteAccontModal";
 import ExitModal from "./Modals/ExitModal";
 import ConnectionModal from "./Modals/ConnectionModal";
 import FastCreditModal from "./Modals/FastCreditModal";
+import ContractModal from "./Modals/ContractModal";
 
 export {
+  ContractModal,
   FastCreditModal,
   ConnectionModal,
   ExitModal,

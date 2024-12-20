@@ -42,4 +42,15 @@ export const makeStyles = () =>
       alignItems: "center",
       justifyContent: "center",
     },
+    settingsBox: {
+      width: "150@s",
+      borderRadius: 16,
+      backgroundColor: "#3C4865",
+      position: "absolute",
+      top: -85,
+      right: 45,
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+    },
   });

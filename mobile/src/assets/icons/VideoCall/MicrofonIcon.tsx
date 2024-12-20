@@ -10,15 +10,15 @@ export const MicrofonIcon = ({ width, height, color }: any) => (
     fill="none"
   >
     <Path
-      fill="#BFDBFF"
-      stroke="#BFDBFF"
+      fill="#fff"
+      stroke="#fff"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
       d="M19 15.616a6.136 6.136 0 0 1-1.757 4.306A5.955 5.955 0 0 1 13 21.706a5.955 5.955 0 0 1-4.243-1.784A6.137 6.137 0 0 1 7 15.616V7.09c0-1.615.632-3.164 1.757-4.306A5.955 5.955 0 0 1 13 1c1.591 0 3.117.642 4.243 1.784A6.136 6.136 0 0 1 19 7.09v8.526Z"
     />
     <Path
-      stroke="#BFDBFF"
+      stroke="#fff"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
