@@ -1,12 +1,14 @@
 package az.esam.kredit.kredit.services.internal.partner;
 
 import az.esam.kredit.kredit.dtos.requests.PartnerFormRequest;
+import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.entities.Partner;
 import az.esam.kredit.kredit.entities.enums.EFinalStatus;
 import az.esam.kredit.kredit.repositories.PartnerRepository;
 import az.esam.kredit.kredit.security.auth.AuthenticationService;
 import az.esam.kredit.kredit.services.internal.storage.StorageService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -47,6 +50,7 @@ public class PartnerServiceImpl implements PartnerService {
                 .companyImages(request.getCompanyImages())
                 .city(request.getCity())
                 .address(request.getAddress())
+                .phoneNumber(request.getPhoneNumber())
                 .status(EFinalStatus.PENDING)
                 .build();
         return partnerRepository.save(partner);
@@ -106,14 +110,19 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
-    public Partner changeStatus(String id, String status, Authentication authentication) {
+    public Partner changeStatus(String id, String status, Authentication authentication) throws BadRequestException {
         Partner partner = partnerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Partner tapılmadı"));
         partner.setStatus(EFinalStatus.valueOf(status));
 
         if (EFinalStatus.ACCEPTED.equals(EFinalStatus.valueOf(status))) {
-            // create user on partner role
-//            authenticationService.register(partner, authentication);
+            // TODO: create user on partner role
+            authenticationService.register(RegisterRequest.builder()
+                    .username(partner.getPhoneNumber())
+                    .password("123456")
+                    .phoneNumber(partner.getPhoneNumber())
+                    .roles(Set.of("partner"))
+                    .build(), authentication);
         }
 
         return partnerRepository.save(partner);

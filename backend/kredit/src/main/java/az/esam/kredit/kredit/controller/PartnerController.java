@@ -8,6 +8,7 @@ import az.esam.kredit.kredit.services.internal.partner.PartnerService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -78,7 +79,7 @@ public class PartnerController {
             @RequestParam @NotBlank(message = "Id null ola bilməz") String id,
             @RequestParam @NotBlank(message = "Status null ola bilməz") String status,
             Authentication authentication
-    ) {
+    ) throws BadRequestException {
         Partner partner = partnerService.changeStatus(id, status.toUpperCase(), authentication);
         return ResponseEntity.ok(partner);
     }

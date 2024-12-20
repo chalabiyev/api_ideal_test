@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @Data
 public class PartnerFormRequest {
+    private String phoneNumber;
     private String companyName;
     private String directorName;
     private String voen;

@@ -231,6 +231,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 roles.add(hr);
 
                                 break;
+                            case "partner", "ROLE_PARTNER":
+                                Role partner = roleRepository.findByName(ERole.ROLE_PARTNER)
+                                        .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
+                                roles.add(partner);
+
+                                break;
                             case "credit_manager", "ROLE_CREDIT_MANAGER":
                                 Role credit_manager = roleRepository.findByName(ERole.ROLE_CREDIT_MANAGER)
                                         .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));

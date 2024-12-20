@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.services.internal.partner;
 
 import az.esam.kredit.kredit.dtos.requests.PartnerFormRequest;
 import az.esam.kredit.kredit.entities.Partner;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
@@ -25,6 +26,6 @@ public interface PartnerService {
 
     Long count();
 
-    Partner changeStatus(String id, String status, Authentication authentication);
+    Partner changeStatus(String id, String status, Authentication authentication) throws BadRequestException;
 }
 

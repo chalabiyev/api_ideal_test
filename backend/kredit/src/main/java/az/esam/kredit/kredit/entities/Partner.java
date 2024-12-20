@@ -17,6 +17,7 @@ import java.util.List;
 public class Partner extends BaseEntity {
     @Id
     private String id;
+    private String phoneNumber;
     private String companyName;
     private String directorName;
     private String voen;
