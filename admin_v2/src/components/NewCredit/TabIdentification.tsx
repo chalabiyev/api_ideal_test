@@ -22,6 +22,8 @@ const TabIdentification = ({
   getUserInfo,
   setPin,
   setSeriaNo,
+  pinValue,
+  seriaNoValue
 }: {
   hasData: boolean;
   loading: boolean;
@@ -30,10 +32,12 @@ const TabIdentification = ({
   getUserInfo: () => void;
   setSeriaNo: React.Dispatch<React.SetStateAction<string>>;
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  pinValue: string;
+  seriaNoValue: string;
   // eslint-disable-next-line
 }) => {
-  const [pinValue, setPinValue] = React.useState('');
-  const [seriaNoValue, setSeriaNoValue] = React.useState('');
+  // const [pinValue, setPinValue] = React.useState('');
+  // const [seriaNoValue, setSeriaNoValue] = React.useState('');
 
   const handleSearch = () => {
     setPin(pinValue);
@@ -59,7 +63,7 @@ const TabIdentification = ({
                 label="Seriya nömrəsi"
                 fullWidth
                 value={seriaNoValue}
-                onChange={(e) => setSeriaNoValue(e.target.value)}
+                onChange={(e) => setSeriaNo(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -67,7 +71,7 @@ const TabIdentification = ({
                 label="FIN kod"
                 fullWidth
                 value={pinValue}
-                onChange={(e) => setPinValue(e.target.value)}
+                onChange={(e) => setPin(e.target.value)}
               />
             </Grid>
           </Grid>
@@ -231,7 +235,7 @@ const TabIdentification = ({
               </Grid>
             </CardContent>
 
-        
+
           </Card>
 
           {/* İrəli ve Təstiqlə Butonları */}

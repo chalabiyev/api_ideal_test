@@ -29,6 +29,7 @@ import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOp
 import { useAuthContext } from 'src/auth/hooks';
 import { toast } from 'sonner';
 
+
 const VideoCall = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isAudioOn, setIsAudioOn] = useState(true);
@@ -51,16 +52,19 @@ const VideoCall = () => {
   const [showWebCamSettings, setShowWebCamSettings] = useState(false);
   const [localStream, setLocalStream] = useState<MediaStream>();
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const [clientName, setClientName] = useState<any>('');
+  const [clientPin, setClientPin] = useState<string>('');
+  const [clientName, setClientName] = useState<string>('');
+  const [clientPhoto, setClientPhoto] = useState<string>('');
+  const [newCallType, setNewCallType] = useState<string>('');
   const [acceptCall, setAccepCall] = useState(false);
   const [endMeeting, setEndMeeting] = useState(false);
   const [newCallReceived, setNewCallReceived] = useState(false);
   const { user } = useAuthContext();
 
   useEffect(() => {
-      localStream?.getAudioTracks().forEach((track) => {
-        track.enabled = isAudioOn;
-      })
+    localStream?.getAudioTracks().forEach((track) => {
+      track.enabled = isAudioOn;
+    })
   }, [isAudioOn]);
 
   useEffect(() => {
@@ -77,7 +81,14 @@ const VideoCall = () => {
     setNewCallReceived(v);
     if (!v) return;
     setIncomingCall(true);
-    setClientName(s.senderName);
+    if (s.senderName)
+      setClientName(s.senderName);
+    if (s.senderPin)
+      setClientPin(s.senderPin);
+    if (s.senderPhoto)
+      setClientPhoto(s.senderPhoto);
+    if (s.newCallType)
+      setNewCallType(s.newCallType);
   };
 
   // bu kisim ringtone ILKIN
@@ -108,10 +119,10 @@ const VideoCall = () => {
     return () => clearInterval(timer);
   }, [isCallActive]);
 
-  useEffect(() => {    
-      localStream?.getVideoTracks().forEach((track) => {
-        track.enabled = isVideoOn;
-      });    
+  useEffect(() => {
+    localStream?.getVideoTracks().forEach((track) => {
+      track.enabled = isVideoOn;
+    });
     // eslint-disable-next-line
   }, [isVideoOn]);
 
@@ -156,6 +167,11 @@ const VideoCall = () => {
     setIsCallActive(true); // Çağrıyı aktif hale getiriyoruz
     setAccepCall(true); // Aramanın kabul edildiğini belirtiyoruz
     startTimer(); // Timer'ı başlatıyoruz
+    if (newCallType == 'above') {
+      let newTab = window.open(`/videomuraciet/nagd-pul-krediti?pin=${clientPin}`, '_blank');
+      if (newTab)
+        newTab.focus();
+    }
   };
 
   const handleRejectCall = () => {
@@ -252,7 +268,7 @@ const VideoCall = () => {
           }}
         >
           <Avatar
-            src="https://www.pngkey.com/png/full/229-2294342_demo-person-dr-ak-sharma-nephrologist.png"
+            src={clientPhoto ? `data:image/jpeg;base64, ${clientPhoto}` : "https://www.pngkey.com/png/full/229-2294342_demo-person-dr-ak-sharma-nephrologist.png"}
             sx={{
               width: 100,
               height: 100,
