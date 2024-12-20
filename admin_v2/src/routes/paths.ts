@@ -67,4 +67,13 @@ export const paths = {
     root: `/videocall`,
     videocall: `/videocall/videocall`,
   },
+  partners: {
+    root: `/partynorlar`,
+    yenipartnyor: {
+      root: `/partynorlar/yeni-partnyor`,
+      fiziki: `/partynorlar/yeni-partnyor/fiziki`,
+      huquqi: `/partynorlar/yeni-partnyor/huquqi`,
+    },
+    partnyorlarlist: `/partynorlar/list`,
+  },
 };

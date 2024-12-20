@@ -36,8 +36,8 @@ export default function Page() {
           Bilet satışı
         </Typography>
 
-        <DownloadStatistics />
-
+        <DownloadStatistics />   
+ 
         <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-6 mb-4">
           <CreditDurationStatistics />
           <PartnerSourceStatistics />

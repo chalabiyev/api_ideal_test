@@ -7,6 +7,7 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { AuthGuard } from 'src/auth/guard';
+import AllPartners from 'src/pages/dashboard/Partnyorlar/AllPartners';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,11 @@ const IpotekaKrediti = lazy(() => import('src/pages/dashboard/FizikiMuraciet/Ipo
 const FizikiBiznesKrediti = lazy(() => import('src/pages/dashboard/FizikiMuraciet/BiznesKrediti'));
 const FizikiAvtokredit = lazy(() => import('src/pages/dashboard/FizikiMuraciet/Avtokredit'));
 const FizikiMelumat = lazy(() => import('src/pages/dashboard/FizikiMuraciet/Melumat'));
+
+// parners
+const PartnyorlarList = lazy(() => import('src/pages/dashboard/Partnyorlar/AllPartners'));
+const Fiziki = lazy(() => import('src/pages/dashboard/Partnyorlar/Fiziki'));
+const Huquqi = lazy(() => import('src/pages/dashboard/Partnyorlar/Huquqi'));
 
 // ----------------------------------------------------------------------
 
@@ -80,6 +86,19 @@ export const dashboardRoutes = [
       {
         path: 'videocall',
         children: [{ path: 'videocall', element: <VideoCall />, openInNewTab: true }],
+      },
+      {
+        path: 'partynorlar',
+        children: [
+          { path: 'list', element: <PartnyorlarList /> },
+          {
+            path: 'yeni-partnyor',
+            children: [
+              { path: 'fiziki', element: <Fiziki /> },
+              { path: 'huquqi', element: <Huquqi /> },
+            ],
+          },
+        ],
       },
     ],
   },

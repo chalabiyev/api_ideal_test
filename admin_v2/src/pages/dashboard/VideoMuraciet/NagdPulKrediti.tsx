@@ -20,7 +20,7 @@ const metadata = { title: `Video müraciət | Nağd ` };
 
 export default function Page() {
   // tab changes
-  const [value, setValue] = React.useState('8');
+  const [value, setValue] = React.useState('1');
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
