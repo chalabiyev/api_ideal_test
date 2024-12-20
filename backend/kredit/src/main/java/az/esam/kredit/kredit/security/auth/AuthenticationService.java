@@ -17,7 +17,9 @@ import java.util.List;
 
 public interface AuthenticationService {
 
-    AuthenticationResponse register(RegisterRequest request) throws BadRequestException;
+    AuthenticationResponse registerAdmin(RegisterRequest registerRequest) throws BadRequestException;
+
+    AuthenticationResponse register(RegisterRequest request, Authentication authentication) throws BadRequestException;
 
     AuthenticationResponse authenticate(LoginRequest request);
 

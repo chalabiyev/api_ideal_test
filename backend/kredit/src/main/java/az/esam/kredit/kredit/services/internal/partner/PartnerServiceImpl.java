@@ -1,7 +1,10 @@
 package az.esam.kredit.kredit.services.internal.partner;
 
+import az.esam.kredit.kredit.dtos.requests.PartnerFormRequest;
 import az.esam.kredit.kredit.entities.Partner;
+import az.esam.kredit.kredit.entities.enums.EFinalStatus;
 import az.esam.kredit.kredit.repositories.PartnerRepository;
+import az.esam.kredit.kredit.security.auth.AuthenticationService;
 import az.esam.kredit.kredit.services.internal.storage.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +30,27 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Autowired
+    AuthenticationService authenticationService;
+
+    @Override
+    public Partner submitForm(PartnerFormRequest request) {
+        Partner partner = Partner.builder()
+                .companyName(request.getCompanyName())
+                .directorName(request.getDirectorName())
+                .voen(request.getVoen())
+                .image(request.getImage())
+                .url(request.getUrl())
+                .monthlySales(request.getMonthlySales())
+                .activityType(request.getActivityType())
+                .companyImages(request.getCompanyImages())
+                .city(request.getCity())
+                .address(request.getAddress())
+                .status(EFinalStatus.PENDING)
+                .build();
+        return partnerRepository.save(partner);
+    }
 
     @Override
     public Partner add(Partner partner) {
@@ -78,5 +103,19 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public Long count() {
         return partnerRepository.count();
+    }
+
+    @Override
+    public Partner changeStatus(String id, String status, Authentication authentication) {
+        Partner partner = partnerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Partner tapılmadı"));
+        partner.setStatus(EFinalStatus.valueOf(status));
+
+        if (EFinalStatus.ACCEPTED.equals(EFinalStatus.valueOf(status))) {
+            // create user on partner role
+//            authenticationService.register(partner, authentication);
+        }
+
+        return partnerRepository.save(partner);
     }
 }

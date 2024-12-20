@@ -1,22 +1,18 @@
-package az.esam.kredit.kredit.entities;
+package az.esam.kredit.kredit.dtos.requests;
 
 import az.esam.kredit.kredit.entities.enums.EActivityType;
-import az.esam.kredit.kredit.entities.enums.EFinalStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Data
-@Document(collection = "partners")
-public class Partner extends BaseEntity {
-    @Id
-    private String id;
+public class PartnerFormRequest {
     private String companyName;
     private String directorName;
     private String voen;
@@ -27,5 +23,4 @@ public class Partner extends BaseEntity {
     private List<String> companyImages;
     private String city;
     private String address;
-    private EFinalStatus status;
 }

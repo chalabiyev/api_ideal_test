@@ -1,15 +1,19 @@
 package az.esam.kredit.kredit.controller;
 
+import az.esam.kredit.kredit.dtos.requests.PartnerFormRequest;
 import az.esam.kredit.kredit.entities.Partner;
 import az.esam.kredit.kredit.patch.Patcher;
 import az.esam.kredit.kredit.repositories.PartnerRepository;
 import az.esam.kredit.kredit.services.internal.partner.PartnerService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +22,7 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
+@Validated
 @RequestMapping("/api/partner")
 public class PartnerController {
 
@@ -29,6 +34,13 @@ public class PartnerController {
 
     @Autowired
     Patcher patcher;
+
+    @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/sendForm")
+    public ResponseEntity<Partner> sendForm(@RequestBody PartnerFormRequest request) {
+        Partner partner = partnerService.submitForm(request);
+        return ResponseEntity.ok(partner);
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
@@ -56,6 +68,19 @@ public class PartnerController {
                 .orElseThrow(() -> new RuntimeException("Acoustic with this id does not exist"));
         patcher.patcher(partner, patch);
         return ResponseEntity.ok(partnerService.update(partner));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/changeStatus")
+    public ResponseEntity<Partner> changeStatus(
+            @RequestParam @NotBlank(message = "Id null ola bilməz") String id,
+            @RequestParam @NotBlank(message = "Status null ola bilməz") String status,
+            Authentication authentication
+    ) {
+        Partner partner = partnerService.changeStatus(id, status.toUpperCase(), authentication);
+        return ResponseEntity.ok(partner);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

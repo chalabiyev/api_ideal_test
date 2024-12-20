@@ -68,8 +68,95 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private static final String ERROR_USERNAME_IS_ALREADY_TAKEN = "Error: USERNAME is already taken!";
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) throws BadRequestException {
+    public AuthenticationResponse registerAdmin(RegisterRequest request) throws BadRequestException {
         try {
+            var existingUser = userRepository.findByUsername(request.getUsername())
+                    .orElse(null);
+
+            request.setPhoneNumber(request.getPhoneNumber()
+                    .replace("(", "")
+                    .replace(")", "")
+                    .replace(" ", "")
+                    .replace("-", "")
+                    .replace("+", "")
+            );
+            if (!request.getPhoneNumber().startsWith("994")) {
+                request.setPhoneNumber("994" + request.getPhoneNumber());
+            }
+
+            if (existingUser == null) {
+                if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+                    throw new BadRequestException("Error: Phone number is already taken!");
+                }
+                if (userRepository.existsByEmail(request.getEmail())) {
+                    throw new BadRequestException("Error: Email is already taken!");
+                }
+            } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)) {
+                throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
+            }
+
+            var user = User.builder()
+                    .username(request.getUsername())
+                    .name(request.getName())
+                    .surname(request.getSurName())
+                    .fullName(request.getName().concat(" ").concat(request.getSurName()))
+                    .fatherName(request.getFatherName())
+                    .gender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null)
+                    .phoneNumber(request.getPhoneNumber())
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .status(EUserStatus.ACTIVE)
+                    .signUpDate(new Date())
+                    .birthDate(request.getBirthDate())
+                    .photo(request.getPhoto())
+                    .departmentId(request.getDepartmentId())
+                    .fullName(request.getFullName())
+                    .build();
+
+            if (existingUser != null) {
+                user.setId(existingUser.getId());
+            }
+
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleRepository.findByName(ERole.ROLE_ADMIN)
+                    .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND)));
+
+            user.setRoles(roles);
+            user.setLoggedIn(true);
+            var savedUser = userRepository.save(user);
+
+            UserDetails userDetails = UserDetailsImpl.build(savedUser);
+
+            var jwtToken = jwtService.generateJwtToken(userDetails);
+            var refreshToken = jwtService.generateRefreshToken(userDetails);
+            saveUserToken(savedUser, jwtToken);
+
+            return AuthenticationResponse.builder()
+                    .id(savedUser.getId())
+                    .fullName(savedUser.getName().concat(" ").concat(savedUser.getSurname()))
+                    .username(savedUser.getUsername())
+                    .photo(savedUser.getPhoto())
+                    .email(savedUser.getEmail())
+                    .phoneNumber(savedUser.getPhoneNumber())
+                    .birthDate(savedUser.getBirthDate())
+                    .roles(roles.stream().map(role -> role.getName().name()).toList())
+                    .tokenType(TokenType.BEARER)
+                    .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public AuthenticationResponse register(RegisterRequest request, Authentication authentication) throws BadRequestException {
+        try {
+            var admin = authentication != null ? userRepository.findByUsername(authentication.getName())
+                    .orElse(null) : null;
+
             var existingUser = userRepository.findByUsername(request.getUsername())
                     .orElse(null);
 
@@ -129,38 +216,44 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 roles.add(studentRole);
                 strRoles.add(studentRole.getName().name());
             } else {
-                strRoles.forEach(role -> {
-                    switch (role) {
-                        case "admin", ROLE_ADMIN_STR:
-                            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                    .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
-                            roles.add(adminRole);
+                if (admin != null && admin.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN))) {
+                    strRoles.forEach(role -> {
+                        switch (role) {
+                            case "admin", ROLE_ADMIN_STR:
+                                Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                        .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
+                                roles.add(adminRole);
 
-                            break;
-                        case "hr", "ROLE_HR":
-                            Role hr = roleRepository.findByName(ERole.ROLE_HR)
-                                    .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
-                            roles.add(hr);
+                                break;
+                            case "hr", "ROLE_HR":
+                                Role hr = roleRepository.findByName(ERole.ROLE_HR)
+                                        .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
+                                roles.add(hr);
 
-                            break;
-                        case "credit_manager", "ROLE_CREDIT_MANAGER":
-                            Role credit_manager = roleRepository.findByName(ERole.ROLE_CREDIT_MANAGER)
-                                    .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
-                            roles.add(credit_manager);
+                                break;
+                            case "credit_manager", "ROLE_CREDIT_MANAGER":
+                                Role credit_manager = roleRepository.findByName(ERole.ROLE_CREDIT_MANAGER)
+                                        .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
+                                roles.add(credit_manager);
 
-                            break;
-                        case "accountant", "ROLE_ACCOUNTANT":
-                            Role accountant = roleRepository.findByName(ERole.ROLE_ACCOUNTANT)
-                                    .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
-                            roles.add(accountant);
+                                break;
+                            case "accountant", "ROLE_ACCOUNTANT":
+                                Role accountant = roleRepository.findByName(ERole.ROLE_ACCOUNTANT)
+                                        .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
+                                roles.add(accountant);
 
-                            break;
-                        default:
-                            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                    .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
-                            roles.add(userRole);
-                    }
-                });
+                                break;
+                            default:
+                                Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                        .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
+                                roles.add(userRole);
+                        }
+                    });
+                } else {
+                    Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                            .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
+                    roles.add(userRole);
+                }
             }
 
             user.setRoles(roles);
@@ -439,7 +532,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     registerRequest.setFamilyRelationship(idCard.getMaritalStatus());
                     registerRequest.setPhoto(idCard.getImage());
                 }
-                return register(registerRequest);
+                return register(registerRequest, null);
             } catch (BadRequestException ex) {
             }
         } else {

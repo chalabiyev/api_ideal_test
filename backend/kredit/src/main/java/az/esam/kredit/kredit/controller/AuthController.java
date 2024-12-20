@@ -92,7 +92,7 @@ public class AuthController {
 
         if (userRepository.findAll().isEmpty()) {
             try {
-                authenticationService.register(RegisterRequest.builder()
+                authenticationService.registerAdmin(RegisterRequest.builder()
                         .password("123456")
                         .username(ADMIN_USER_NAME)
                         .email("admin@admin.com")
@@ -113,8 +113,10 @@ public class AuthController {
     @PostMapping("/create")
     public ResponseEntity<AuthenticationResponse> create(
             @Valid @RequestBody RegisterRequest registerRequest,
-            HttpServletRequest httpRequest) throws BadRequestException {
-        AuthenticationResponse response = authenticationService.register(registerRequest);
+            HttpServletRequest httpRequest,
+            Authentication authentication
+    ) throws BadRequestException {
+        AuthenticationResponse response = authenticationService.register(registerRequest, authentication);
         return ResponseEntity.ok(response);
     }
 
