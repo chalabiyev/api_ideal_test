@@ -19,4 +19,4 @@ pipelines:
                 SSH_USER: esam
                 SSH_KEY: $MY_SSH_KEY
                 SERVER: 46.202.143.42
-                COMMAND: bash restart_kredit_backend.sh
+                COMMAND: echo "sleep 5 ; bash restart_kredit_backend.sh" | at now
