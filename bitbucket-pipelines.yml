@@ -19,4 +19,4 @@ pipelines:
                 SSH_USER: esam
                 SSH_KEY: $MY_SSH_KEY
                 SERVER: 46.202.143.42
-                COMMAND: java -jar kredit-0.0.1-SNAPSHOT.jar
+                COMMAND: pkill -9 -f kredit-0.0.1-SNAPSHOT.jar && java -jar kredit-0.0.1-SNAPSHOT.jar
