@@ -13,13 +13,14 @@ import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
+import { useLocation } from 'react-router';
 
 // ----------------------------------------------------------------------
 
 const metadata = { title: `Video müraciət | Nağd ` };
 
 export default function Page() {
-
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const clientPin: string = queryParams.get("pin") ?? '';
 
