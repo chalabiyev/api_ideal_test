@@ -2,12 +2,7 @@ package az.esam.kredit.kredit.services.sima;
 
 import az.esam.kredit.kredit.dtos.requests.SimaTokenRequest;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
-import az.esam.kredit.kredit.entities.sima.ContractStatusEnum;
-import az.esam.kredit.kredit.entities.sima.SimaCallBack;
-import az.esam.kredit.kredit.entities.sima.SimaCallBackResponse;
-import az.esam.kredit.kredit.entities.sima.SimaCertPersonInfo;
-import az.esam.kredit.kredit.entities.sima.SimaGetFileResponse;
-import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
+import az.esam.kredit.kredit.entities.sima.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.cert.X509Certificate;
 import java.util.Date;
@@ -28,7 +23,7 @@ public interface SimaService {
 
     public String sha256(String str);
 
-    public SimaQRResponse getAuthQR(String finCode);
+    public SimaQRResponse getAuthQR(String finCode, ContractTypeEnum contractType);
 
     public SimaCallBackResponse callBack(HttpServletRequest request, SimaCallBack callBack);
 

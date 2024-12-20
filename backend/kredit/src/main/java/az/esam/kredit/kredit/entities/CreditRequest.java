@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import az.esam.kredit.kredit.entities.enums.EGuarantyType;
+import az.esam.kredit.kredit.entities.enums.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,29 +27,30 @@ public class CreditRequest extends BaseEntity {
     private String creditAmountWithText;
     private Date requestDate;
     private CreditRequestStatusEnum confirmStatus;
+    private EActivateStatus activateStatus;
+    private EFinalStatus finalStatus;
 
     @DocumentReference
     private User requestedUser;
     private boolean isConnectedWithBOKT;
-    private String formOfOwnership;
 
     @DocumentReference
     private User confirmerUser;
     private Date confirmDate;
     private String confirmerComment;
-    private String creditType;
-    private double serviceRate;
-    private double cartCost;
-    private double insuranceCost;
-    private double valuationCost;
-    private double monthlyPayment;
+    private ECreditType creditType;
+    private Double serviceRate;
+    private Double cartCost;
+    private Double insuranceCost;
+    private Double valuationCost;
+    private Double monthlyPayment;
 
     //creditAmount - (creditAmount * serviceRate) - (creditAmount * insuranceCost) - cartCost - valuationCost
-    private double amountToBePaid;
+    private Double amountToBePaid;
 
     private String creditPurpose;
-    private double annualPercent;
-    private double otherPayment;
+    private Double annualPercent;
+    private Double otherPayment;
     private String notarialCost;
     private String insuranceType;
     private EGuarantyType guarantee;

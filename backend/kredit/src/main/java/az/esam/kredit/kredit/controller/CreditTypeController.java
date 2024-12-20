@@ -1,9 +1,9 @@
 package az.esam.kredit.kredit.controller;
 
-import az.esam.kredit.kredit.entities.Credit;
+import az.esam.kredit.kredit.entities.CreditType;
 import az.esam.kredit.kredit.patch.Patcher;
-import az.esam.kredit.kredit.repositories.CreditRepository;
-import az.esam.kredit.kredit.services.internal.credit.CreditService;
+import az.esam.kredit.kredit.repositories.CreditTypeRepository;
+import az.esam.kredit.kredit.services.internal.creditType.CreditTypeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,14 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
-@RequestMapping("/api/credit")
-public class CreditController {
+@RequestMapping("/api/credit-type")
+public class CreditTypeController {
 
     @Autowired
-    CreditRepository creditRepository;
+    CreditTypeRepository creditTypeRepository;
 
     @Autowired
-    CreditService creditService;
+    CreditTypeService creditTypeService;
 
     @Autowired
     Patcher patcher;
@@ -33,28 +33,28 @@ public class CreditController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/create")
-    public ResponseEntity<Credit> create(@RequestBody Credit request) {
-        Credit credit = creditService.add(request);
-        return ResponseEntity.ok(credit);
+    public ResponseEntity<CreditType> create(@RequestBody CreditType request) {
+        CreditType creditType = creditTypeService.add(request);
+        return ResponseEntity.ok(creditType);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/update")
-    public ResponseEntity<Credit> update(@RequestBody Credit request) {
-        Credit credit = creditService.update(request);
-        return ResponseEntity.ok(credit);
+    public ResponseEntity<CreditType> update(@RequestBody CreditType request) {
+        CreditType creditType = creditTypeService.update(request);
+        return ResponseEntity.ok(creditType);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
-    public ResponseEntity<Credit> patch(@PathVariable String id, @RequestBody Map<String, Object> patch) throws IllegalAccessException {
-        Credit credit = creditRepository.findById(id)
+    public ResponseEntity<CreditType> patch(@PathVariable String id, @RequestBody Map<String, Object> patch) throws IllegalAccessException {
+        CreditType creditType = creditTypeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Acoustic with this id does not exist"));
-        patcher.patcher(credit, patch);
-        return ResponseEntity.ok(creditService.update(credit));
+        patcher.patcher(creditType, patch);
+        return ResponseEntity.ok(creditTypeService.update(creditType));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -62,17 +62,17 @@ public class CreditController {
     @SecurityRequirement(name = "X-API-KEY")
     @DeleteMapping("/delete")
     public ResponseEntity<Boolean> delete(@RequestParam String id) {
-        return ResponseEntity.ok(creditService.delete(id));
+        return ResponseEntity.ok(creditTypeService.delete(id));
     }
 
     @GetMapping("/get")
-    public ResponseEntity<Credit> getById(@RequestParam String id) {
-        return ResponseEntity.ok(creditService.get(id));
+    public ResponseEntity<CreditType> getById(@RequestParam String id) {
+        return ResponseEntity.ok(creditTypeService.get(id));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Credit>> list() {
-        return ResponseEntity.ok(creditService.list());
+    public ResponseEntity<List<CreditType>> list() {
+        return ResponseEntity.ok(creditTypeService.list());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -80,7 +80,7 @@ public class CreditController {
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(creditService.count());
+        return ResponseEntity.ok(creditTypeService.count());
     }
 
 }

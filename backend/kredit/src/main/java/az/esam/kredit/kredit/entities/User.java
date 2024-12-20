@@ -79,10 +79,11 @@ public class User extends BaseEntity {
     private String workPlace;
     private String workAddress;
     private String position;
-    private String experience;
-    private String salary;
-    private String otherIncome;
+    private int experience;
+    private double salary;
+    private double otherIncome;
     private String voen;
+    private String formOfOwnership; // fiziki, hüquqi şəxs
 
     @NotBlank
     private String password;

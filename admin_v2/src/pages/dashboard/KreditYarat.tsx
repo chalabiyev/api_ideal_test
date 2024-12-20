@@ -116,6 +116,8 @@ export default function Page() {
                 setPin={setPin}
                 setSeriaNo={setSeriaNo}
                 hasData={hasData}
+                pinValue={pin}
+                seriaNoValue={seriaNo}
               />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="2">

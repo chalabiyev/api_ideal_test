@@ -13,12 +13,17 @@ import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
+import { useLocation } from 'react-router';
 
 // ----------------------------------------------------------------------
 
 const metadata = { title: `Video müraciət | Nağd ` };
 
 export default function Page() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const clientPin: string = queryParams.get("pin") ?? '';
+
   // tab changes
   const [value, setValue] = React.useState('1');
   const [userInfo, setUserInfo] = React.useState<any>(null);
@@ -39,7 +44,7 @@ export default function Page() {
     refetch: guarantorRefetch,
   } = useApi(guarantorEndpoint);
 
-  const endpoint = `/document/getIdCardInfo?pin=${pin}&documentNumber=${seriaNo}`;
+  const endpoint = `/document/getIdCardInfoByPin?pin=${pin}`;
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
 
   // Call this function only to set the userInfo after data is fetched
@@ -56,6 +61,12 @@ export default function Page() {
       setGuarantorInfo(guarantorData);
     }
   };
+
+  useEffect(() => {
+    if (clientPin) {
+      setPin(clientPin);
+    }
+  }, [clientPin]);
 
   useEffect(() => {
     // Trigger user info update whenever new data is fetched
@@ -116,6 +127,8 @@ export default function Page() {
                 setPin={setPin}
                 setSeriaNo={setSeriaNo}
                 hasData={hasData}
+                pinValue={pin}
+                seriaNoValue={seriaNo}
               />
             </TabPanel>
 

@@ -2,11 +2,7 @@ package az.esam.kredit.kredit.controller;
 
 import az.esam.kredit.kredit.dtos.requests.SimaTokenRequest;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
-import az.esam.kredit.kredit.entities.sima.ContractStatusEnum;
-import az.esam.kredit.kredit.entities.sima.SimaCallBack;
-import az.esam.kredit.kredit.entities.sima.SimaCallBackResponse;
-import az.esam.kredit.kredit.entities.sima.SimaGetFileResponse;
-import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
+import az.esam.kredit.kredit.entities.sima.*;
 import az.esam.kredit.kredit.services.sima.SimaService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -28,14 +24,14 @@ public class SimaController {
     @GetMapping("/getAuthQR")
     public ResponseEntity<SimaQRResponse> getAuthQR(
             HttpServletRequest httpRequest) {
-        return ResponseEntity.ok(simaService.getAuthQR(null));
+        return ResponseEntity.ok(simaService.getAuthQR(null, ContractTypeEnum.Auth));
     }
 
     @GetMapping("/getAuthQRWithPin/{finCode}")
     public ResponseEntity<SimaQRResponse> getAuthQRWithPin(
             HttpServletRequest httpRequest,
             @PathVariable("finCode") String finCode) {
-        return ResponseEntity.ok(simaService.getAuthQR(finCode));
+        return ResponseEntity.ok(simaService.getAuthQR(finCode, ContractTypeEnum.Auth));
     }
 
     @GetMapping("/getFile")
