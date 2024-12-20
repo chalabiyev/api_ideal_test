@@ -23,7 +23,7 @@ pipelines:
       - step:
           name: Admin v2 Build and Deploy
           size: 2x
-          image: 'node:18'
+          image: 'node:20'
           caches:
             - node
           script:
