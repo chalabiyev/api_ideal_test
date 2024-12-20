@@ -13,6 +13,10 @@ export interface EsamVideoCallOperatorProp {
   endMeeting: boolean;
   onEndMeeting: (signal: SignalType) => void;
   acceptCall: boolean;
+  incomingChatMessage?: any[];
+  setIncomingChatMessage?: any
+  outgoingChatMessage?: any;
+  setOutgoingChatMessage?: any;
 }
 
 const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
@@ -24,7 +28,7 @@ const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
 const clientUUID = uuidv4();
 
 let meetingID = '';
-let receiverName;
+let receiverName = '';
 let receiverPin;
 let receiver = '';
 let inCall = false;
@@ -46,7 +50,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
       try {
         let msg = JSON.parse(event.data) as SignalType;
         listenSignals(msg);
-      } catch (error) {}
+      } catch (error) { }
     }
   };
 
@@ -198,6 +202,13 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     prop.onEndMeeting(s);
   };
 
+  useEffect(() => {
+    if (prop.outgoingChatMessage && prop.setOutgoingChatMessage) {
+      sendSignal({ type: 'chatincome', receiver: receiver, msg: prop.outgoingChatMessage });
+      prop.setOutgoingChatMessage('');
+    }
+  }, [prop.outgoingChatMessage]);
+
   const listenSignals = (s: SignalType) => {
     if (s.type == 'newcall' || s.type == 'cancel' || s.receiver == clientUUID) {
       switch (s.type) {
@@ -215,6 +226,12 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
           break;
         case 'endmeeting':
           handleEndMeeting(s);
+          break;
+        case 'chatincome':
+          if (prop.setIncomingChatMessage && s.msg) {
+            const currentTime = new Date().toLocaleTimeString().slice(0, 5);
+            prop.setIncomingChatMessage({ text: s.msg, sender: receiverName, time: currentTime });
+          }
           break;
       }
     }
