@@ -19,4 +19,27 @@ pipelines:
                 SSH_USER: esam
                 SSH_KEY: $MY_SSH_KEY
                 SERVER: 46.202.143.42
-                COMMAND: nohup java -jar kredit-0.0.1-SNAPSHOT.jar &
+                COMMAND: echo "sleep 5 ; bash restart_kredit_backend.sh" | at now
+      - step:
+          name: Admin v2 Build and Deploy
+          size: 2x
+          image: 'node:20'
+          caches:
+            - node
+          script:
+            - cd admin_v2
+            - yarn install
+            - yarn buildC
+            - pipe: 'atlassian/scp-deploy:1.5.1'
+              variables:
+                USER: esam
+                SERVER: 46.202.143.42
+                REMOTE_PATH: /var/www/html/kreditadmin/
+                LOCAL_PATH: dist/*
+                SSH_KEY: $MY_SSH_KEY
+            - pipe: 'atlassian/ssh-run:0.4.3'
+              variables:
+                SSH_USER: esam
+                SSH_KEY: $MY_SSH_KEY
+                SERVER: 46.202.143.42
+                COMMAND: chmod -R 755 /var/www/html/kreditadmin/
