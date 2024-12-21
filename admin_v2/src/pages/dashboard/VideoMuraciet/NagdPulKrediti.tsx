@@ -20,7 +20,8 @@ import { useLocation } from 'react-router';
 const metadata = { title: `Video müraciət | Nağd ` };
 
 export default function Page() {
-  const location = useLocation();
+  // eslint-disable-next-line
+  const location = window.location;
   const queryParams = new URLSearchParams(location.search);
   const clientPin: string = queryParams.get("pin") ?? '';
 

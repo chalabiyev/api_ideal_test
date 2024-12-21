@@ -19,11 +19,11 @@ pipelines:
                 SSH_USER: esam
                 SSH_KEY: $MY_SSH_KEY
                 SERVER: 46.202.143.42
-                COMMAND: ./restart_kredit_backend.sh
+                COMMAND: echo "sleep 5 ; bash restart_kredit_backend.sh" | at now
       - step:
           name: Admin v2 Build and Deploy
           size: 2x
-          image: 'node:18'
+          image: 'node:20'
           caches:
             - node
           script:
