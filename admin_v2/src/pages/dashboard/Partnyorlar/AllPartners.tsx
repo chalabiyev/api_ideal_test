@@ -1,3 +1,4 @@
+import { BusinessCenter, Person2, PersonPinCircleOutlined } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import {
   Box,
@@ -29,6 +30,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useRouter } from 'src/routes/hooks';
 
 // Table Data
 const MOCK_DATA = [
@@ -39,6 +41,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Ticarət',
     status: 'Aktiv',
+    formOfOwnership: 'HUQUQI',
   },
   {
     id: 2,
@@ -47,6 +50,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Qida',
     status: 'Aktiv',
+    formOfOwnership: 'FIZIKI',
   },
   {
     id: 3,
@@ -55,6 +59,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Xidmət',
     status: 'Gözlənilir',
+    formOfOwnership: 'HUQUQI',
   },
   {
     id: 4,
@@ -63,6 +68,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'İstehsal',
     status: 'Gözlənilir',
+    formOfOwnership: 'FIZIKI',
   },
   {
     id: 5,
@@ -71,6 +77,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Ticarət',
     status: 'Gözlənilir',
+    formOfOwnership: 'FIZIKI',
   },
   {
     id: 6,
@@ -79,6 +86,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Xidmət',
     status: 'Deaktiv',
+    formOfOwnership: 'HUQUQI',
   },
   {
     id: 7,
@@ -87,6 +95,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Ticarət',
     status: 'Deaktiv',
+    formOfOwnership: 'FIZIKI',
   },
   {
     id: 8,
@@ -95,6 +104,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Istehsal',
     status: 'Deaktiv',
+    formOfOwnership: 'FIZIKI',
   },
   {
     id: 9,
@@ -103,6 +113,7 @@ const MOCK_DATA = [
     voen: '1234567890',
     activity: 'Ticarət',
     status: 'Deaktiv',
+    formOfOwnership: 'HUQUQI',
   },
 ];
 
@@ -114,6 +125,7 @@ const getTabCounts = (data: typeof MOCK_DATA) => ({
 });
 
 export default function Kredit() {
+  const router = useRouter();
   const [tabValue, setTabValue] = useState('all');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
@@ -281,6 +293,7 @@ export default function Kredit() {
                       <TableCell sx={{ minWidth: '200px' }}>Direktor/Sahib</TableCell>
                       <TableCell sx={{ minWidth: '100px' }}>VÖEN</TableCell>
                       <TableCell sx={{ minWidth: '210px' }}>Şirkətin fəaliyyət sahəsi</TableCell>
+                      <TableCell sx={{ minWidth: '210px' }}>Sahibkarlıq forması</TableCell>
                       <TableCell>Status</TableCell>
                       <TableCell sx={{ minWidth: '150px' }}> </TableCell>
                     </TableRow>
@@ -293,6 +306,17 @@ export default function Kredit() {
                         <TableCell>{row.director}</TableCell>
                         <TableCell>{row.voen}</TableCell>
                         <TableCell>{row.activity}</TableCell>
+                        <TableCell>
+                          <Label
+                            endIcon={
+                              row.formOfOwnership === 'FIZIKI' ? <Person2 /> : <BusinessCenter />
+                            }
+                            variant="filled"
+                          >
+                            {' '}
+                            {row.formOfOwnership === 'FIZIKI' ? 'Fiziki' : 'Hüquqi'}
+                          </Label>
+                        </TableCell>
                         <TableCell>
                           <Label
                             color={
@@ -316,13 +340,22 @@ export default function Kredit() {
                         >
                           {/* Status Değiştir ve Düzenle Butonu */}
                           <Button
-                            variant="text"
+                            endIcon={<Iconify icon="eva:edit-fill" />}
+                            variant="outlined"
                             size="small"
+                            sx={{ textWrap: 'nowrap' }}
                             onClick={(event) => handleEditClick(event, row)}
                           >
                             Status Dəyiş
                           </Button>
-                          <Button sx={{ borderRadius: 100 }} variant="text" size="small">
+                          <Button
+                            onClick={() => {
+                              router.push(`/partynorlar/duzeliset/${row.id}`);
+                            }}
+                            sx={{ borderRadius: 100 }}
+                            variant="text"
+                            size="small"
+                          >
                             <Iconify icon="mdi:pencil" />
                           </Button>
                         </TableCell>
@@ -351,7 +384,9 @@ export default function Kredit() {
                         fullWidth
                         size="small"
                       >
-                        <MenuItem value="Aktiv" color='success' sx={{text: 'green'}}>Aktiv</MenuItem>
+                        <MenuItem value="Aktiv" color="success" sx={{ text: 'green' }}>
+                          Aktiv
+                        </MenuItem>
                         <MenuItem value="Deaktiv">Deaktiv</MenuItem>
                         <MenuItem value="Gözlənilir">Gözlənilir</MenuItem>
                       </Select>
