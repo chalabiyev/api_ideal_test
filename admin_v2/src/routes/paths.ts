@@ -75,5 +75,6 @@ export const paths = {
       huquqi: `/partynorlar/yeni-partnyor/huquqi`,
     },
     partnyorlarlist: `/partynorlar/list`,
+    duzeliset: (id: string) => `/partynorlar/duzeliset/${id}`,
   },
 };
