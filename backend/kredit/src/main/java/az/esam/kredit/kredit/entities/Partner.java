@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.entities;
 
 import az.esam.kredit.kredit.entities.enums.EActivityType;
 import az.esam.kredit.kredit.entities.enums.EFinalStatus;
+import az.esam.kredit.kredit.entities.enums.EOwnerType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,10 +22,12 @@ public class Partner extends BaseEntity {
     private String companyName;
     private String directorName;
     private String voen;
+    private String pin;
     private String image;
     private String url;
     private double monthlySales;
     private EActivityType activityType;
+    private EOwnerType formOfOwnership;
     private List<String> companyImages;
     private String city;
     private String address;

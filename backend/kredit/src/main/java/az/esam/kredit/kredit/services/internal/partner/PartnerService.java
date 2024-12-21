@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PartnerService {
 
-    Partner submitForm(PartnerFormRequest request);
+    Partner submitForm(PartnerFormRequest request) throws BadRequestException;
 
     Partner add(Partner partner);
 

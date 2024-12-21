@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.security.auth;
 
+import az.esam.kredit.kredit.dtos.requests.SetPasswordRequest;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
 import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
 import az.esam.kredit.kredit.dtos.requests.LoginRequest;
@@ -17,6 +18,7 @@ import az.esam.kredit.kredit.repositories.RoleRepository;
 import az.esam.kredit.kredit.repositories.TokenRepository;
 import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.security.jwt.JwtService;
+import az.esam.kredit.kredit.services.external.sms.SMSService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,6 +65,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     JwtService jwtService;
 
+    @Autowired
+    SMSService smsService;
+
     private static final String ERROR_ROLE_IS_NOT_FOUND = "Error: Role is not found.";
     private static final String ROLE_ADMIN_STR = "ROLE_ADMIN";
     private static final String ERROR_USERNAME_IS_ALREADY_TAKEN = "Error: USERNAME is already taken!";
@@ -99,12 +104,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .username(request.getUsername())
                     .name(request.getName())
                     .surname(request.getSurName())
-                    .fullName(request.getName().concat(" ").concat(request.getSurName()))
                     .fatherName(request.getFatherName())
                     .gender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null)
                     .phoneNumber(request.getPhoneNumber())
                     .email(request.getEmail())
-                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .password(passwordEncoder.encode(request.getPassword()))
                     .status(EUserStatus.ACTIVE)
                     .signUpDate(new Date())
                     .birthDate(request.getBirthDate())
@@ -133,7 +137,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return AuthenticationResponse.builder()
                     .id(savedUser.getId())
-                    .fullName(savedUser.getName().concat(" ").concat(savedUser.getSurname()))
                     .username(savedUser.getUsername())
                     .photo(savedUser.getPhoto())
                     .email(savedUser.getEmail())
@@ -181,6 +184,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     throw new BadRequestException("Error: Email is already taken!");
                 }
             } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)) {
+                // TODO: check role
                 throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
             }
 
@@ -489,6 +493,58 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+    @Override
+    public AuthenticationResponse setPassword(SetPasswordRequest request, HttpServletRequest httpRequest, Authentication a) throws BadRequestException {
+        try {
+            var user = userRepository.findByUsername(a.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            if (request.getNewPassword().equals(request.getPassword())) {
+                user.setPassword(passwordEncoder.encode(request.getPassword()));
+                userRepository.save(user);
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                user.getUsername(),
+                                request.getPassword())
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                var userDetails = (UserDetails) authentication.getPrincipal();
+
+                String jwtToken = jwtService.generateJwtToken(authentication);
+                String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+                List<String> rolesStr = (user).getRoles()
+                        .stream()
+                        .map(item -> item.getName().name())
+                        .toList();
+
+                saveUserToken(user, jwtToken);
+
+                userRepository.save(user);
+
+                return AuthenticationResponse.builder()
+                        .id(user.getId())
+                        .fullName(user.getFullName())
+                        .username(user.getUsername())
+                        .roles(rolesStr)
+                        .photo(user.getPhoto())
+                        .email(user.getEmail())
+                        .phoneNumber(user.getPhoneNumber())
+                        .birthDate(user.getBirthDate())
+                        .tokenType(TokenType.BEARER)
+                        .accessToken(jwtToken)
+                        .refreshToken(refreshToken)
+                        .build();
+            } else {
+                throw new BadRequestException("Passwords do not match");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .token(jwtToken)
@@ -520,25 +576,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Optional<User> findUser = userRepository.findByUsername(person.getFinCode());
         if (findUser.isEmpty()) {
             try {
-                RegisterRequest registerRequest = RegisterRequest.builder()
-                        .fin(person.getFinCode())
-                        .username(person.getFinCode())
-                        .name(person.getName())
-                        .surName(person.getSurName())
-                        .fatherName(person.getFatherName())
-                        .fullName(person.getName().concat(" ").concat(person.getSurName()))
-                        .phoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""))
-                        .build();
-                if (idCard != null) {
-                    registerRequest.setAddress(idCard.getAddressDetail().getAddress());
-                    registerRequest.setBirthDate(idCard.getBirthDate());
-                    registerRequest.setCity(idCard.getAddressDetail().getRegionName());
-                    registerRequest.setCountry(idCard.getNationality());
-                    registerRequest.setGender(idCard.getGender());
-                    registerRequest.setFamilyRelationship(idCard.getMaritalStatus());
-                    registerRequest.setPhoto(idCard.getImage());
+                // TODO: check if user exists with partner pin, then add partner role to user
+                User existingUser = userRepository.findByUsername(person.getFinCode()).orElse(null);
+                if (existingUser != null) {
+                    addRole(existingUser.getUsername(), ERole.ROLE_USER);
+                    return authenticate(LoginRequest.builder().username(existingUser.getUsername()).password(existingUser.getPassword()).build());
+                } else {
+                    RegisterRequest registerRequest = RegisterRequest.builder()
+                            .fin(person.getFinCode())
+                            .username(person.getFinCode())
+                            .name(person.getName())
+                            .surName(person.getSurName())
+                            .fatherName(person.getFatherName())
+                            .fullName(person.getName().concat(" ").concat(person.getSurName()))
+                            .phoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""))
+                            .build();
+                    if (idCard != null) {
+                        registerRequest.setAddress(idCard.getAddressDetail().getAddress());
+                        registerRequest.setBirthDate(idCard.getBirthDate());
+                        registerRequest.setCity(idCard.getAddressDetail().getRegionName());
+                        registerRequest.setCountry(idCard.getNationality());
+                        registerRequest.setGender(idCard.getGender());
+                        registerRequest.setFamilyRelationship(idCard.getMaritalStatus());
+                        registerRequest.setPhoto(idCard.getImage());
+                    }
+                    AuthenticationResponse response = register(registerRequest, null);
+                    // TODO: sms gonder url?token=accessToken
+                    smsService.sendSMS(person.getPhoneNumber(), "Sizin hesabınız uğurla yaradıldı. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
+                            + "http://localhost:8081/setpassword??token=" + response.getAccessToken()
+                            + " Link 24 saat ərzində aktivdir.");
+                    return response;
                 }
-                return register(registerRequest, null);
             } catch (BadRequestException ex) {
             }
         } else {
@@ -574,5 +642,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         return null;
+    }
+
+    @Override
+    public User addRole(String username, ERole role) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        Role roleToAdd = roleRepository.findByName(role)
+                .orElseThrow(() -> new UsernameNotFoundException("Role not found!"));
+        // if user already has the role, return user
+        if (user.getRoles().stream().anyMatch(r -> r.getName().equals(role))) {
+            return user;
+        }
+        user.getRoles().add(roleToAdd);
+        return userRepository.save(user);
     }
 }

@@ -1,6 +1,7 @@
 package az.esam.kredit.kredit.dtos.requests;
 
 import az.esam.kredit.kredit.entities.enums.EActivityType;
+import az.esam.kredit.kredit.entities.enums.EOwnerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,8 @@ public class PartnerFormRequest {
     private String phoneNumber;
     private String companyName;
     private String directorName;
+    private String pin;
+    private EOwnerType formOfOwnership;
     private String voen;
     private String image;
     private String url;

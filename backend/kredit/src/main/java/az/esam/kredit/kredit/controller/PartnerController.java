@@ -38,7 +38,7 @@ public class PartnerController {
 
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/sendForm")
-    public ResponseEntity<Partner> sendForm(@RequestBody PartnerFormRequest request) {
+    public ResponseEntity<Partner> sendForm(@RequestBody PartnerFormRequest request) throws BadRequestException {
         Partner partner = partnerService.submitForm(request);
         return ResponseEntity.ok(partner);
     }
