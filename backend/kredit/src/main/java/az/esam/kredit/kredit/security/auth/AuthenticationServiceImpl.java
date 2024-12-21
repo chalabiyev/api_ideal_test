@@ -183,7 +183,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail())) {
                     throw new BadRequestException("Error: Email is already taken!");
                 }
-            } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)) {
+            } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)
+                    // existingUser role==partner and request role==partner
+                    && ((existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_PARTNER)) && request.getRoles().contains("partner"))
+                    || (existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_USER)) && request.getRoles() == null)
+            )) {
                 // TODO: check role
                 throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
             }
@@ -206,12 +210,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .fullName(request.getFullName())
                     .build();
 
-            if (existingUser != null) {
-                user.setId(existingUser.getId());
-            }
 
             Set<String> strRoles = request.getRoles() == null ? new HashSet<>() : request.getRoles();
-            Set<Role> roles = new HashSet<>();
+            Set<Role> roles;
+
+            if (existingUser != null) {
+                user.setId(existingUser.getId());
+                user.setPartners(existingUser.getPartners());
+                roles = existingUser.getRoles();
+            } else {
+                roles = new HashSet<>();
+            }
 
             if (strRoles.isEmpty()) {
                 Role studentRole = roleRepository.findByName(ERole.ROLE_USER)

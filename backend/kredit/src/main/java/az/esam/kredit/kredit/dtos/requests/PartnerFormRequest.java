@@ -20,8 +20,6 @@ public class PartnerFormRequest {
     private String pin;
     private EOwnerType formOfOwnership;
     private String voen;
-    private String image;
-    private String url;
     private double monthlySales;
     private EActivityType activityType;
     private List<String> companyImages;

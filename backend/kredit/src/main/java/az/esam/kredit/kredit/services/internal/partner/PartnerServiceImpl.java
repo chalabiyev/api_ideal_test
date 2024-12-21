@@ -61,8 +61,6 @@ public class PartnerServiceImpl implements PartnerService {
                 .pin(request.getPin())
                 .formOfOwnership(request.getFormOfOwnership())
                 .voen(request.getVoen())
-                .image(request.getImage())
-                .url(request.getUrl())
                 .monthlySales(request.getMonthlySales())
                 .activityType(request.getActivityType())
                 .companyImages(request.getCompanyImages())
