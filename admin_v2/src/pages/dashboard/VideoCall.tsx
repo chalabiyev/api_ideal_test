@@ -167,7 +167,9 @@ const VideoCall = () => {
   };
 
   const handleAcceptCall = () => {
+    // eslint-disable-next-line
     console.log("clientId : " + clientId);
+    // eslint-disable-next-line
     console.log("operatorId : " + operatorId);
     setIncomingCall(false); // Gelen aramayı kapatıyoruz
     setIsCallActive(true); // Çağrıyı aktif hale getiriyoruz
