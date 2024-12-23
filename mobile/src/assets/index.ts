@@ -51,7 +51,9 @@ import { CancelMicrofonIcon } from "./icons/VideoCall/CancelMicrofonIcon";
 import { AttachIcon } from "./icons/VideoCall/AttachIcon";
 import { SendButtonIcon } from "./icons/VideoCall/SendButonIcon";
 import { StarIcon } from "./icons/VideoCall/StarIcon";
+import { InputArrowIcon } from "./icons/ActivationCredit/InputArrowIcon";
 export {
+  InputArrowIcon,
   StarIcon,
   SendButtonIcon,
   AttachIcon,

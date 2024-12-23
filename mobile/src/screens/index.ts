@@ -23,9 +23,13 @@ import VideoCall from "./Main/VideoCall";
 import Signature from "./Main/Signature";
 import SelectPartners from "./Main/SelectPartners";
 import Scoring from "./Main/Scoring";
-import Activation from "./Main/Activation";
+import ActivationAbove from "./Main/ActivationAbove";
+import ActivationBelow from "./Main/ActivationBelow";
+import ActivationBelowStep2 from "./Main/ActivationBelowStep2";
 export {
-  Activation,
+  ActivationBelowStep2,
+  ActivationBelow,
+  ActivationAbove,
   Scoring,
   SelectPartners,
   Signature,

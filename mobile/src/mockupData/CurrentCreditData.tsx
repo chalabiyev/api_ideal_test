@@ -1,23 +1,25 @@
 export default [
   {
     id: "1",
-    title: "Partnyor kreditləri",
+    title: "Sürətli pul krediti",
     price: "2500",
     date: "15.09.2024",
     status: "Təsdiqlənib",
     mounth: "24",
     percent: "24%",
     activeCredit: "true",
+    type: "above",
   },
   {
     id: "2",
-    title: "Avtolizinq",
-    price: "2500",
+    title: "Sürətli pul krediti",
+    price: "/",
     date: "15.09.2024",
-    status: "İmtina olunub",
+    status: "Təsdiqlənib",
     mounth: "24",
     percent: "20%",
-    activeCredit: "false",
+    activeCredit: "true",
+    type: "belove",
   },
   {
     id: "3",
@@ -28,6 +30,7 @@ export default [
     mounth: "24",
     percent: "20%",
     activeCredit: "false",
+    type: "partners",
   },
   {
     id: "4",
@@ -38,6 +41,7 @@ export default [
     mounth: "24",
     percent: "20%",
     activeCredit: "false",
+    type: "partners",
   },
   {
     id: "5",
@@ -48,6 +52,7 @@ export default [
     mounth: "24",
     percent: "20%",
     activeCredit: "false",
+    type: "partners",
   },
   {
     id: "6",
@@ -58,5 +63,6 @@ export default [
     mounth: "24",
     percent: "20%",
     activeCredit: "false",
+    type: "partners",
   },
 ];

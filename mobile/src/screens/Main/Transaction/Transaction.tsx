@@ -11,6 +11,7 @@ import {
 import {makeStyles} from './style';
 import {
   BottomNavigationContainer,
+  CreditFilterModal,
   LastOperation,
   MonthModal,
   Text,
@@ -24,6 +25,7 @@ const globalStyle = globalSpacingStyle();
 
 export default function Transaction() {
   const [isMonthModal, setIsMonthModal] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const toggleMonthModal = () => {
     setIsMonthModal(!isMonthModal);
@@ -83,6 +85,11 @@ export default function Transaction() {
       <SafeAreaView style={{backgroundColor: colors.splashBackground}} />
       <View style={styles.container}>
         <MonthModal state={isMonthModal} setState={setIsMonthModal} />
+        <CreditFilterModal
+          state={isFilterModalOpen}
+          setState={() => setIsFilterModalOpen(false)}
+        />
+
         <ScrollView>
           <View style={styles.topContainer}>
             <View style={globalStyle.space20VT} />

@@ -158,7 +158,11 @@ const SecondRoute = () => {
         </View>
         {item.activeCredit === "true" && (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
+            onPress={() =>
+              navigation.navigate(
+                item.type === "above" ? "ActivationAbove" : "ActivationBelow"
+              )
+            }
             style={styles.activeButton}
           >
             <Text

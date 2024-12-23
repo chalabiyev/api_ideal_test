@@ -4,17 +4,12 @@ import colors from "../../../constants/colors/colors";
 export const makeStyles = () =>
   ScaledSheet.create({
     container: {
-      flex: 1,
+      width: "96%",
+      height: "50@s",
+      borderRadius: "16@s",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: colors.whiteText,
-    },
-    scoringTable: {
-      height: "250@s",
-      width: "90%",
-      borderRadius: 16,
+      flexDirection: "row",
       borderWidth: 1,
-      borderColor: colors.lightGrey,
-      alignItems: "center",
     },
   });

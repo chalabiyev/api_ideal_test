@@ -22,8 +22,13 @@ import ExitModal from "./Modals/ExitModal";
 import ConnectionModal from "./Modals/ConnectionModal";
 import FastCreditModal from "./Modals/FastCreditModal";
 import ContractModal from "./Modals/ContractModal";
-
+import BorderedButton from "./Fit/BorderedButton";
+import CancelCreditModal from "./Modals/CancelCreditModal";
+import CreditFilterModal from "./Modals/CreditFilterModal";
 export {
+  CreditFilterModal,
+  CancelCreditModal,
+  BorderedButton,
   ContractModal,
   FastCreditModal,
   ConnectionModal,

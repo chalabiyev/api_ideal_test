@@ -6,6 +6,9 @@ import {
 import {
   AccountSettings,
   Activation,
+  ActivationAbove,
+  ActivationBelow,
+  ActivationBelowStep2,
   Calculator,
   Credits,
   CreditsInfo,
@@ -48,7 +51,9 @@ export default function PrivateStack() {
       <Screen name="SelectPartners" component={SelectPartners} />
       <Screen name="Scoring" component={Scoring} />
       <Screen name="Chat" component={Chat} />
-      <Screen name="Activation" component={Activation} />
+      <Screen name="ActivationAbove" component={ActivationAbove} />
+      <Screen name="ActivationBelow" component={ActivationBelow} />
+      <Screen name="ActivationBelowStep2" component={ActivationBelowStep2} />
     </Navigator>
   );
 }

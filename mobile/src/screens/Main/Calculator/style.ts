@@ -1,7 +1,7 @@
-import {ScaledSheet} from 'react-native-size-matters';
-import colors from '../../../constants/colors/colors';
-import {Dimensions} from 'react-native';
-const {width} = Dimensions.get('window');
+import { ScaledSheet } from "react-native-size-matters";
+import colors from "../../../constants/colors/colors";
+import { Dimensions } from "react-native";
+const { width } = Dimensions.get("window");
 export const makeStyles = () =>
   ScaledSheet.create({
     container: {
@@ -10,16 +10,16 @@ export const makeStyles = () =>
     },
     imageBackground: {
       width: width,
-      height: '220@s',
-      alignItems: 'center',
-      justifyContent: 'center',
+      height: "220@s",
+      alignItems: "center",
+      justifyContent: "center",
     },
     button: {
-      position: 'absolute',
+      position: "absolute",
       bottom: -20,
     },
     calculatorContainer: {
-      width: '100%',
+      width: "100%",
       backgroundColor: colors.backgroundColor,
       padding: 15,
       borderRadius: 16,
