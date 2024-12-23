@@ -82,10 +82,10 @@
 
 <!-- Borrower Information -->
 <div class="section-title">1. Borcalan:</div>
-<p class="bold">${requestedUser.fullName}</p>
+<p class="bold" th:text="${requestedUser.fullName}"></p>
 
 <div class="section-title">2. Ünvan:</div>
-<p class="italic"> ${requestedUser.address}</p>
+<p class="italic" th:text="${requestedUser.address}"></p>
 
 <div class="section-title">3. Telefon/faks N-si:</div>
 <div class="left-align">
@@ -99,16 +99,16 @@
 </div>
 
 <div class="section-title">4. BOKT-a aidiyyatı olan şəxs:</div>
-<p class="bold">${isConnectedWithBOKT}</p>
+<p class="bold" th:text="${isConnectedWithBOKT}"></p>
 
 <div class="section-title">5. Müəssisənin mülkiyyət forması:</div>
-<p class="bold">${formOfOwnership}</p>
+<p class="bold" th:text="${formOfOwnership}"></p>
 
 <div class="section-title">6. Fəaliyyət növü:</div>
-<p class="italic">${requestedUser.workPlace}</p>
+<p class="italic" th:text="${requestedUser.workPlace}"></p>
 
 <div class="section-title">7. Təminatçı barədə məlumat:</div>
-<p class="bold">${guarantee}</p>
+<p class="bold" th:text="${guarantee}"></p>
 
 <!-- Credit Information Table -->
 <div class="section-title">8. Kredit barədə məlumat:</div>
@@ -135,12 +135,14 @@
         <th>Faizi</th>
     </tr>
     <tr>
-        <td class="bold italic">${creditType}</td>
-        <td class="highlight">${creditAmount} AZN</td>
-        <td class="highlight">${confirmDate}</td>
-        <td class="highlight">${creditTerm} <span class="italic">ay</span></td>
-        <td class="highlight">${endDate}</td>
-        <td class="highlight">${annualPercent} %</td>
+        <td class="bold italic" th:text="${creditType}"></td>
+        <td class="highlight" th:text="${creditAmount} + ' AZN'"></td>
+        <td class="highlight" th:text="${confirmDate}"></td>
+        <td class="highlight">
+            <span th:text="${creditTerm}"></span> <span class="italic">ay</span>
+        </td>
+        <td class="highlight" th:text="${endDate}"></td>
+        <td class="highlight" th:text="${annualPercent} + ' %'"></td>
     </tr>
     <!--   varsa gorunecek -->
 
@@ -171,7 +173,7 @@
 <p class="bold italic center">1 saylı qrafikə əsasən aylıq ödəniş</p>
 
 <div class="section-title">10. Kreditin məqsədi:</div>
-<p class="highlight">${creditPurpose}</p>
+<p class="highlight" th:text="${creditPurpose}"></p>
 
 <div class="section-title">11. Borcalanın gəlir mənbəyi:</div>
 <p class="bold">Əmək haqqı</p>

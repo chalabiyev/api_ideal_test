@@ -57,6 +57,7 @@ public class PdfServiceImpl implements PdfService {
         return outputStream.toByteArray();
     }
 
+    @Override
     public byte[] mergePdfs(List<String> htmlContents, Path outputPath) throws IOException {
         PDFMergerUtility mergerUtility = new PDFMergerUtility();
 

@@ -81,35 +81,35 @@
 <div class="content">
     <div class="content-item">
         <span class="label">1. Adı, S.A., A.A.:</span>
-        <span class="value">${requestedUser.fullName}</span>
+        <span class="value" th:text="${requestedUser.fullName}"></span>
     </div>
     <div class="content-item">
         <span class="label">2. Şəxsiyyət vəsiqəsinin seriyası:</span>
-        <span class="value">${requestedUser.seriaNo}</span>
+        <span class="value" th:text="${requestedUser.seriaNo}"></span>
     </div>
     <div class="content-item">
         <span class="label">3. Şəxsiyyət vəsiqəsinin verilmə tarixi:</span>
-        <span class="value">${requestedUser.eventDate}</span>
+        <span class="value" th:text="${requestedUser.eventDate}"></span>
     </div>
     <div class="content-item">
         <span class="label">4. Kim tərəfindən verilib:</span>
-        <span class="value">${requestedUser.organisationName}</span>
+        <span class="value" th:text="${requestedUser.organisationName}"></span>
     </div>
     <div class="content-item">
         <span class="label">5. Doğum yeri:</span>
-        <span class="value">${requestedUser.birthAddress}, ${requestedUser.birthDate}</span>
+        <span class="value" th:text="${requestedUser.birthAddress} + ', ' + ${requestedUser.birthDate}"></span>
     </div>
     <div class="content-item">
         <span class="label">6. Vətəndaşlığı:</span>
-        <span class="value">${requestedUser.nationality}</span>
+        <span class="value" th:text="${requestedUser.nationality}"></span>
     </div>
     <div class="content-item">
         <span class="label">7. Daimi qeydiyyat ünvanı:</span>
-        <span class="value">${requestedUser.address}</span>
+        <span class="value" th:text="${requestedUser.address}"></span>
     </div>
     <div class="content-item">
         <span class="label">8. Faktiki yaşadığı ünvan:</span>
-        <span class="value">${requestedUser.factAddress}</span>
+        <span class="value" th:text="${requestedUser.factAddress}"></span>
     </div>
     <div class="content-item">
         <span class="label">9. Əlaqə telefonları:</span>
@@ -125,35 +125,35 @@
     </div>
     <div class="content-item">
         <span class="label">10. Ailə vəziyyəti:</span>
-        <span class="value">${requestedUser.maritalStatus}</span>
+        <span class="value" th:text="${requestedUser.maritalStatus}"></span>
     </div>
     <div class="content-item">
         <span class="label">11. Uşaqlarının sayı və təvəllüdü:</span>
-        <span class="value">${requestedUser.countOfChildren}</span>
+        <span class="value" th:text="${requestedUser.countOfChildren}"></span>
     </div>
     <div class="content-item">
         <span class="label">12. Təhsili:</span>
-        <span class="value">${requestedUser.education}</span>
+        <span class="value" th:text="${requestedUser.education}"></span>
     </div>
     <div class="content-item">
         <span class="label">13. İşlədiyi yerin adı:</span>
-        <span class="value">${requestedUser.workPlace}</span>
+        <span class="value" th:text="${requestedUser.workPlace}"></span>
     </div>
     <div class="content-item">
         <span class="label">14. İşlədiyi yerin ünvanı:</span>
-        <span class="value">${requestedUser.workAddress}</span>
+        <span class="value" th:text="${requestedUser.workAddress}"></span>
     </div>
     <div class="content-item">
         <span class="label">15. Vəzifəsi və iş stajı:</span>
-        <span class="value">${requestedUser.position}</span>
+        <span class="value" th:text="${requestedUser.position}"></span>
     </div>
     <div class="content-item">
         <span class="label">16. Aylıq əmək haqqı məbləği:</span>
-        <span class="value">${requestedUser.salary} man</span>
+        <span class="value" th:text="${requestedUser.salary}"> man</span>
     </div>
     <div class="content-item">
         <span class="label">17. Digər gəlirlərin cəmi:</span>
-        <span class="value">${requestedUser.otherIncome} man</span>
+        <span class="value" th:text="${requestedUser.otherIncome}"> man</span>
     </div>
 </div>
 
