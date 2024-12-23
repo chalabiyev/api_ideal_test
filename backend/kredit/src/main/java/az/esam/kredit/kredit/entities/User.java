@@ -1,7 +1,7 @@
 package az.esam.kredit.kredit.entities;
 
-import az.esam.kredit.kredit.dtos.responses.document.AddressDetail;
 import az.esam.kredit.kredit.entities.enums.EGender;
+import az.esam.kredit.kredit.entities.enums.EOwnerType;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -83,12 +83,15 @@ public class User extends BaseEntity {
     private double salary;
     private double otherIncome;
     private String voen;
-    private String formOfOwnership; // fiziki, hüquqi şəxs
+    private EOwnerType formOfOwnership; // fiziki, hüquqi şəxs
 
     @NotBlank
     private String password;
     private Date lastLoginDate;
     private boolean loggedIn;
+
+    @DBRef
+    private Set<Partner> partners;
 
     @DBRef
     private Set<Role> roles;
