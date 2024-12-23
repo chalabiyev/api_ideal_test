@@ -1,6 +1,11 @@
 package az.esam.kredit.kredit.controller;
 
 import az.esam.kredit.kredit.dtos.responses.MessageResponse;
+import az.esam.kredit.kredit.entities.UploadedFile;
+import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.enums.ERole;
+import az.esam.kredit.kredit.repositories.UploadedFileRepository;
+import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.services.internal.storage.StorageService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.Normalizer;
+import java.util.Date;
 import java.util.logging.Logger;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
@@ -29,21 +36,37 @@ public class FileController {
     @Autowired
     StorageService storageService;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UploadedFileRepository uploadedFileRepository;
+
     private static final String ATTACHMENT_FILENAME = "attachment; filename=\"";
     private static final String COULD_NOT_DETERMINE_FILE_TYPE = "Could not determine file type.";
 
     @PostMapping("/uploadFile")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") MultipartFile file,
+            @RequestParam("fileName") String fileName,
             Authentication authentication
     ) {
         try {
-            String fileName = System.currentTimeMillis() + "_" + normalizeFileName(file.getOriginalFilename());
+            var user = userRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            //String fileName = System.currentTimeMillis() + "_" + normalizeFileName(file.getOriginalFilename());
             logger.info(fileName);
             logger.info(file.toString());
             storageService.store(file, fileName);
+
+            uploadedFileRepository.save(UploadedFile.builder()
+                    .fileName(fileName)
+                    .owner(user)
+                    .upladedDate(new Date())
+                    .build());
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new MessageResponse(HttpStatus.OK, fileName));
@@ -69,34 +92,56 @@ public class FileController {
         return latinFileName;
     }
 
+    boolean isAdmin(User u) {
+        return u.getRoles().stream().filter(f -> f.getName() == ERole.ROLE_ADMIN).count() > 0;
+    }
+
     @GetMapping("/getFile/{fileName}")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
     @ResponseBody
     public ResponseEntity<?> getFile(@PathVariable("fileName") String fileName, Authentication authentication, HttpServletRequest request) {
         try {
-            Resource file = storageService.loadAsResource(fileName);
-            if (file == null) {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .build();
-            }
-            // Try to determine file's content type
-            String contentType = null;
-            try {
-                contentType = request.getServletContext().getMimeType(file.getFile().getAbsolutePath());
-            } catch (IOException ex) {
-                Logger.getLogger(AuthController.class.getName()).info("Could not determine file type.");
-                throw new RuntimeException(ex.getMessage());
+            logger.info("getFile");
+            logger.info(fileName);
+            var user = userRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            logger.info(user.getUsername());
+            UploadedFile uploadedFile = uploadedFileRepository.findByFileName(fileName)
+                    .orElseThrow(() -> new Exception("File not found"));
+            logger.info(uploadedFile.getId());
+            logger.info("is admin : " + isAdmin(user));
+
+            if (isAdmin(user) || uploadedFile.getOwner().getUsername().equals(user.getUsername())) {
+                Resource file = storageService.loadAsResource(fileName);
+                if (file == null) {
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .build();
+                }
+                // Try to determine file's content type
+                String contentType = null;
+                try {
+                    contentType = request.getServletContext().getMimeType(file.getFile().getAbsolutePath());
+                } catch (IOException ex) {
+                    Logger.getLogger(AuthController.class.getName()).info("Could not determine file type.");
+                    throw new RuntimeException(ex.getMessage());
+                }
+
+                // Fallback to the default content type if type could not be determined
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                        .body(file);
+            } else {
+                throw new Exception("Unauthorized file");
             }
 
-            // Fallback to the default content type if type could not be determined
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                    .body(file);
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

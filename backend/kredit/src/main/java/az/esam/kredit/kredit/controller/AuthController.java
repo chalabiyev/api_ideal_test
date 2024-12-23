@@ -368,4 +368,12 @@ public class AuthController {
     public ResponseEntity<User> me(HttpServletRequest request) {
         return ResponseEntity.ok(authenticationService.me(request));
     }
+
+    @GetMapping("/getUserByUserName/{userName}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    public ResponseEntity<User> getUserByUserName(@PathVariable("userName") String userName) {
+        return ResponseEntity.ok(authenticationService.getUserByUsername(userName));
+    }
 }
