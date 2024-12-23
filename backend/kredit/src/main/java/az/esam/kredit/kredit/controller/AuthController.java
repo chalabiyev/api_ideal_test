@@ -1,16 +1,8 @@
 package az.esam.kredit.kredit.controller;
 
+import az.esam.kredit.kredit.dtos.requests.*;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
-import az.esam.kredit.kredit.dtos.requests.ChangeEmailRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePasswordRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePhoneRequest;
-import az.esam.kredit.kredit.dtos.requests.LoginRequest;
 import az.esam.kredit.kredit.dtos.responses.MessageResponse;
-import az.esam.kredit.kredit.dtos.requests.OTPRequest;
-import az.esam.kredit.kredit.dtos.requests.OTPValidateRequest;
-import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
-import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.Role;
@@ -88,11 +80,12 @@ public class AuthController {
             roleRepository.insert(new Role(ERole.ROLE_HR));
             roleRepository.insert(new Role(ERole.ROLE_CREDIT_MANAGER));
             roleRepository.insert(new Role(ERole.ROLE_ACCOUNTANT));
+            roleRepository.insert(new Role(ERole.ROLE_PARTNER));
         }
 
         if (userRepository.findAll().isEmpty()) {
             try {
-                authenticationService.register(RegisterRequest.builder()
+                authenticationService.registerAdmin(RegisterRequest.builder()
                         .password("123456")
                         .username(ADMIN_USER_NAME)
                         .email("admin@admin.com")
@@ -115,8 +108,10 @@ public class AuthController {
     @PostMapping("/create")
     public ResponseEntity<AuthenticationResponse> create(
             @Valid @RequestBody RegisterRequest registerRequest,
-            HttpServletRequest httpRequest) throws BadRequestException {
-        AuthenticationResponse response = authenticationService.register(registerRequest);
+            HttpServletRequest httpRequest,
+            Authentication authentication
+    ) throws BadRequestException {
+        AuthenticationResponse response = authenticationService.register(registerRequest, authentication);
         return ResponseEntity.ok(response);
     }
 
@@ -226,6 +221,18 @@ public class AuthController {
         } else {
             throw new BadRequestException("Password not changed");
         }
+    }
+
+    @PostMapping("/set-password")
+    @SecurityRequirement(name = "authentication")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "X-API-KEY")
+    public ResponseEntity<AuthenticationResponse> setPassword(
+            @Valid @RequestBody SetPasswordRequest request,
+            Authentication authentication,
+            HttpServletRequest httpRequest
+    ) throws BadRequestException {
+        return ResponseEntity.ok(authenticationService.setPassword(request, httpRequest, authentication));
     }
 
     @PostMapping("/change-email")
