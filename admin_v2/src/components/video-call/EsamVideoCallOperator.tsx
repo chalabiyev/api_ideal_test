@@ -17,6 +17,7 @@ export interface EsamVideoCallOperatorProp {
   setIncomingChatMessage?: any
   outgoingChatMessage?: any;
   setOutgoingChatMessage?: any;
+  setClientUUID: any;
 }
 
 const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
@@ -42,6 +43,8 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
       ws.send(
         JSON.stringify({ type: 'setClientUUID', clientUUID: clientUUID, socketKEY: webSocketKey })
       );
+      if (prop.setClientUUID)
+        prop.setClientUUID(clientUUID);
     }
   };
 
@@ -147,6 +150,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
   };
 
   const sendSignal = (data: SignalType) => {
+    console.log("sendSignal", data);
     if (ws && ws.readyState == WebSocket.OPEN) {
       let msg = { ...data, clientUUID: clientUUID, sender: clientUUID };
       ws.send(JSON.stringify(msg));
@@ -210,6 +214,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
   }, [prop.outgoingChatMessage]);
 
   const listenSignals = (s: SignalType) => {
+    console.log("listenSignals", s);
     if (s.type == 'newcall' || s.type == 'cancel' || s.receiver == clientUUID) {
       switch (s.type) {
         case 'newcall':

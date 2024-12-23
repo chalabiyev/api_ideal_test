@@ -1,6 +1,6 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Tab } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import useApi from 'src/api/useApi';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -40,6 +40,10 @@ export default function Page() {
 
   const endpoint = `/document/getIdCardInfo?pin=${pin}&documentNumber=${seriaNo}`;
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
+  const [creditAmount, setCreditAmount] = useState<number>(0);
+  const [creditDuration, setCreditDuration] = useState<number>(12);
+  const [clientId, setClientId] = useState('');
+  const [operatorId, setOperatorId] = useState('');
 
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
@@ -118,6 +122,7 @@ export default function Page() {
                 hasData={hasData}
                 pinValue={pin}
                 seriaNoValue={seriaNo}
+                setUserInfo={setUserInfo}
               />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="2">
@@ -146,11 +151,11 @@ export default function Page() {
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="6">
               {/* neqliyyat  */}
-              <TabCreditDataPage setValue={setValue} />
+              <TabCreditDataPage setValue={setValue}  creditAmount={creditAmount} creditDuration={creditDuration} setCreditAmount={setCreditAmount} setCreditDuration={setCreditDuration} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="7">
               {/* neqliyyat  */}
-              <TabVideoRecord setValue={setValue} />
+              <TabVideoRecord setValue={setValue} clientId={clientId} creditAmount={creditAmount} creditDuration={creditDuration} userInfo={userInfo} operatorId={operatorId}/>
             </TabPanel>
           </TabContext>
         </Box>

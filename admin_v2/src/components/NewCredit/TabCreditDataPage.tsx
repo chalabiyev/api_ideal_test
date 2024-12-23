@@ -12,13 +12,21 @@ import {
 
 const TabCreditDataPage = ({
   setValue,
+  creditAmount,
+  creditDuration,
+  setCreditAmount,
+  setCreditDuration
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  creditAmount: number;
+  creditDuration: number;
+  setCreditAmount: React.Dispatch<React.SetStateAction<number>>;
+  setCreditDuration: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const [creditAmount, setCreditAmount] = useState<string>('');
+  // const [creditAmount, setCreditAmount] = useState<string>('');
   const [serviceFee, setServiceFee] = useState<number>(1.5);
   const [annualInterestRate, setAnnualInterestRate] = useState<string>('');
-  const [creditDuration, setCreditDuration] = useState<number>(12);
+  // const [creditDuration, setCreditDuration] = useState<number>(12);
   const [cardCost, setCardCost] = useState<number>(10);
   const [valuationFee, setValuationFee] = useState<number>(20);
   const [insuranceFee, setInsuranceFee] = useState<number>(1);
@@ -28,17 +36,17 @@ const TabCreditDataPage = ({
   const calculateMonthlyPayment = (): string => {
     if (!creditAmount || !annualInterestRate || !creditDuration) return '0.00';
 
-    const principal = parseFloat(creditAmount);
+    // const principal = parseFloat(creditAmount);
     const monthlyRate = parseFloat(annualInterestRate) / 100 / 12;
     const durationInMonths = parseInt(creditDuration.toString(), 10);
 
     if (monthlyRate === 0) {
-      return (principal / durationInMonths).toFixed(2);
+      return (creditAmount / durationInMonths).toFixed(2);
     }
 
     const monthlyPayment =
       // eslint-disable-next-line
-      (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -durationInMonths));
+      (creditAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -durationInMonths));
 
     return monthlyPayment.toFixed(2);
   };
@@ -48,11 +56,11 @@ const TabCreditDataPage = ({
   };
 
   const calculateTotalInterest = (): string => {
-    return (parseFloat(calculateTotalPayment()) - parseFloat(creditAmount)).toFixed(2);
+    return (parseFloat(calculateTotalPayment()) - creditAmount).toFixed(2);
   };
 
   const calculateCardAmount = (): string => {
-    const principal = parseFloat(creditAmount) || 0;
+    const principal = creditAmount || 0;
     const serviceCost = (principal * serviceFee) / 100;
     const insuranceCost = (principal * insuranceFee) / 100;
 
@@ -75,7 +83,7 @@ const TabCreditDataPage = ({
             label="Kredit Miqdarı (AZN)"
             type="number"
             value={creditAmount}
-            onChange={(e) => setCreditAmount(e.target.value)}
+            onChange={(e) => setCreditAmount(parseFloat(e.target.value))}
             fullWidth
           />
         </Grid>
