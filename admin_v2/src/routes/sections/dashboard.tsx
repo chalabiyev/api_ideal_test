@@ -7,7 +7,6 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { AuthGuard } from 'src/auth/guard';
-import AllPartners from 'src/pages/dashboard/Partnyorlar/AllPartners';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +43,8 @@ const EditPartnyor = lazy(() => import('src/pages/dashboard/Partnyorlar/EditPart
 const Fiziki = lazy(() => import('src/pages/dashboard/Partnyorlar/Fiziki'));
 const Huquqi = lazy(() => import('src/pages/dashboard/Partnyorlar/Huquqi'));
 
+// muraciet
+const Muraciet = lazy(() => import('src/pages/dashboard/Muracietler/Muraciet'));
 // ----------------------------------------------------------------------
 
 const layoutContent = (
@@ -87,6 +88,10 @@ export const dashboardRoutes = [
       {
         path: 'videocall',
         children: [{ path: 'videocall', element: <VideoCall />, openInNewTab: true }],
+      },
+      {
+        path: 'muracietler',
+        children: [{ path: 'muraciet', element: <Muraciet /> }],
       },
       {
         path: 'partynorlar',
