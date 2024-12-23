@@ -21,7 +21,7 @@ export default function Register() {
   return (
     <>
       <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
-      <MainHeader />
+      <MainHeader text="" />
       <View style={styles.container}>
         <View style={globalStyle.space30VT} />
         <Text text="Qeydiyyat" type="regular" size="20" position="center" />

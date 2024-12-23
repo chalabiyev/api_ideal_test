@@ -90,7 +90,7 @@ export default function SecurityCode() {
   return (
     <>
       <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
-      <MainHeader />
+      <MainHeader text="" />
       <View style={styles.container}>
         <Text
           text="Giriş kodu daxil edin"

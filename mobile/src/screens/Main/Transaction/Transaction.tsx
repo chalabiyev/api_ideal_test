@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -7,19 +7,19 @@ import {
   FlatList,
   ScrollView,
   Animated,
-} from 'react-native';
-import {makeStyles} from './style';
+} from "react-native";
+import { makeStyles } from "./style";
 import {
   BottomNavigationContainer,
   CreditFilterModal,
   LastOperation,
   MonthModal,
   Text,
-} from '../../../components';
-import colors from '../../../constants/colors/colors';
-import {globalSpacingStyle} from '../../../constants/space/style';
-import {Calendar, FilterIcon, SearchIcon} from '../../../assets';
-import OperationsData from '../../../mockupData/OperationsData';
+} from "../../../components";
+import colors from "../../../constants/colors/colors";
+import { globalSpacingStyle } from "../../../constants/space/style";
+import { Calendar, FilterIcon, SearchIcon } from "../../../assets";
+import OperationsData from "../../../mockupData/OperationsData";
 const styles = makeStyles();
 const globalStyle = globalSpacingStyle();
 
@@ -82,7 +82,7 @@ export default function Transaction() {
 
   return (
     <>
-      <SafeAreaView style={{backgroundColor: colors.splashBackground}} />
+      <SafeAreaView style={{ backgroundColor: colors.splashBackground }} />
       <View style={styles.container}>
         <MonthModal state={isMonthModal} setState={setIsMonthModal} />
         <CreditFilterModal
@@ -93,7 +93,7 @@ export default function Transaction() {
         <ScrollView>
           <View style={styles.topContainer}>
             <View style={globalStyle.space20VT} />
-            <View style={{paddingLeft: 10}}>
+            <View style={{ paddingLeft: 10 }}>
               <Text
                 text="Ödənişlər"
                 type="bold"
@@ -109,7 +109,7 @@ export default function Transaction() {
                 position="left"
               />
               <Text
-                text={'2534.12' + ' ₼'}
+                text={"2534.12" + " ₼"}
                 type="bold"
                 size="20"
                 isWhite
@@ -128,8 +128,9 @@ export default function Transaction() {
             <Animated.View
               style={[
                 styles.fastCreditContainer,
-                {height: fastCreditHeight, opacity: fastCreditOpacity},
-              ]}>
+                { height: fastCreditHeight, opacity: fastCreditOpacity },
+              ]}
+            >
               <Text
                 text="Sürətli pul krediti"
                 type="regular"
@@ -137,7 +138,7 @@ export default function Transaction() {
                 position="left"
               />
               <Text
-                text={'814.53' + ' ₼'}
+                text={"814.53" + " ₼"}
                 type="semiBold"
                 size="20"
                 position="left"
@@ -147,8 +148,9 @@ export default function Transaction() {
             <Animated.View
               style={[
                 styles.partnersContainer,
-                {height: partnersHeight, opacity: partnersOpacity},
-              ]}>
+                { height: partnersHeight, opacity: partnersOpacity },
+              ]}
+            >
               <Text
                 text="Partnyorluq krediti"
                 type="regular"
@@ -156,7 +158,7 @@ export default function Transaction() {
                 position="left"
               />
               <Text
-                text={'333.13' + ' ₼'}
+                text={"333.13" + " ₼"}
                 type="semiBold"
                 size="20"
                 position="left"
@@ -165,8 +167,9 @@ export default function Transaction() {
             <Animated.View
               style={[
                 styles.autoContainer,
-                {height: autoHeight, opacity: autoOpacity},
-              ]}>
+                { height: autoHeight, opacity: autoOpacity },
+              ]}
+            >
               <Text
                 text="Avtolizinq"
                 type="regular"
@@ -174,7 +177,7 @@ export default function Transaction() {
                 position="left"
               />
               <Text
-                text={'20.04' + ' ₼'}
+                text={"20.04" + " ₼"}
                 type="semiBold"
                 size="20"
                 position="left"
@@ -190,7 +193,10 @@ export default function Transaction() {
           />
           <View style={globalStyle.space10VT} />
           <View style={styles.bottomContainer}>
-            <TouchableOpacity style={styles.left}>
+            <TouchableOpacity
+              onPress={() => setIsFilterModalOpen(true)}
+              style={styles.left}
+            >
               <FilterIcon />
             </TouchableOpacity>
             <TouchableOpacity style={styles.mid} onPress={toggleMonthModal}>
@@ -206,8 +212,8 @@ export default function Transaction() {
           <View style={globalStyle.space10VT} />
           <FlatList
             data={OperationsData}
-            renderItem={({item}) => <LastOperation item={item} />}
-            keyExtractor={item => item.id}
+            renderItem={({ item }) => <LastOperation item={item} />}
+            keyExtractor={(item) => item.id}
           />
           <View style={globalStyle.space50VT} />
           <View style={globalStyle.space50VT} />

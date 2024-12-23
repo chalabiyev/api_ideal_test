@@ -8,7 +8,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import SimaModule from "../../../components/Sima/SimaModule";
 import { PERMISSIONS, check, RESULTS, request } from "react-native-permissions";
 
-// Ваш clientId и язык
 const clientId = 3144201;
 const language = "az";
 
@@ -56,10 +55,8 @@ export default function SimaSignature() {
         language
       );
       console.log(initResult); // "SDK initialized successfully"
-
-      // После успешной инициализации вызываем метод регистрации
       const registerResult = await SimaModule.register();
-      console.log(registerResult); // "Регистрация успешна"
+      console.log(registerResult);
     } catch (error) {
       console.error("Ошибка инициализации или регистрации:", error);
     }
@@ -67,7 +64,7 @@ export default function SimaSignature() {
   return (
     <>
       <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
-      <MainHeader />
+      <MainHeader text="" />
       <View style={styles.container}>
         <Text text="SimaSignature" type="semiBold" size="12" />
         <MainButton text="SimaSignature" onPress={initializeAndRegisterSima} />

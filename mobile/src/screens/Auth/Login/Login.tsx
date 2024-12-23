@@ -29,7 +29,7 @@ export default function Login() {
   return (
     <>
       <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
-      <MainHeader />
+      <MainHeader text="" />
       <View style={styles.container}>
         <Text text="Daxil olun" type="regular" size="20" position="center" />
         <View style={globalStyle.space20VT} />
