@@ -67,6 +67,10 @@ export const paths = {
     root: `/videocall`,
     videocall: `/videocall/videocall`,
   },
+  muracietler: {
+    root: `/muracietler`,
+    videocall: `/muracietler/muraciet`,
+  },
   partners: {
     root: `/partynorlar`,
     yenipartnyor: {
