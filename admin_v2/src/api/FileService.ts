@@ -28,11 +28,11 @@ export const uploadFile = async (file: Blob, fileName: string) => {
   let fdata = new FormData();
   fdata.append('file', file);
   fdata.append('fileName', fileName);
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/file/uploadFile`, {
+  const response = await fetch(`${BASE_URL}/file/uploadFile`, {
     headers: {
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${token}`,
-      'X-API-KEY': import.meta.env.VITE_API_KEY,
+      'X-API-KEY': API_KEY,
     },
     body: fdata,
     method: 'POST',

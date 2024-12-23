@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -9,19 +9,24 @@ import {
   FormControlLabel,
   Button,
 } from '@mui/material';
+import { CreditRequest } from 'src/types/CreditRequest';
 
 const TabCreditDataPage = ({
   setValue,
   creditAmount,
   creditDuration,
   setCreditAmount,
-  setCreditDuration
+  setCreditDuration,
+  creditRequest,
+  setCreditRequest
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   creditAmount: number;
   creditDuration: number;
   setCreditAmount: React.Dispatch<React.SetStateAction<number>>;
   setCreditDuration: React.Dispatch<React.SetStateAction<number>>;
+  creditRequest: CreditRequest;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
 }) => {
   // const [creditAmount, setCreditAmount] = useState<string>('');
   const [serviceFee, setServiceFee] = useState<number>(1.5);
@@ -68,6 +73,22 @@ const TabCreditDataPage = ({
 
     return cardAmount.toFixed(2);
   };
+
+  useEffect(() => {
+    setCreditRequest({
+      ...creditRequest,
+      creditAmount: creditAmount,
+      creditTerm: creditDuration,
+      annualPercent: parseFloat(annualInterestRate),
+      serviceRate: serviceFee,
+      cartCost: cardCost,
+      valuationCost: valuationFee,
+      insuranceCost: insuranceFee,
+      monthlyPayment: parseFloat(calculateMonthlyPayment()),
+      amountToBePaid: parseFloat(calculateTotalPayment()),
+      creditPurpose: purpose
+    });
+  }, [creditAmount, creditDuration, serviceFee, cardCost, purpose, valuationFee, insuranceFee]);
 
   return (
     <Box sx={{ py: 4 }}>

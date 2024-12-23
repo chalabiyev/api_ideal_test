@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -8,14 +8,18 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   CircularProgress,
 } from '@mui/material';
 import { toast } from 'sonner';
+import { CreditRequest } from 'src/types/CreditRequest';
+import { generateContract } from 'src/api/ContractService';
+import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
+import { callGetFile } from 'src/api/FileService';
 
-const TabContract = () => {
+const TabContract = ({ creditRequest }: { creditRequest: CreditRequest }) => {
   const [isSigning, setIsSigning] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [pdfFile, setPdfFile] = useState("");
 
   const handleSign = () => {
     setOpenDialog(true);
@@ -34,6 +38,25 @@ const TabContract = () => {
     }, 3000); // Show gif for 2 seconds
   };
 
+  useEffect(() => {
+    if (creditRequest) {
+      generateContract(creditRequest).then((res: ContractGenerateResponse | null) => {
+        if (res?.status == 'success') {
+          callGetFile(res.pdfName).then((file) => {
+            if (file)
+              setPdfFile(file);
+            else
+              toast.error("Kontrakt oluşturulamadı!");
+          }).catch((err) => {
+            toast.error("Kontrakt oluşturulamadı!");
+          });
+        }
+      }).catch((err) => {
+        toast.error("Kontrakt oluşturulamadı!");
+      })
+    }
+  }, [creditRequest]);
+
   return (
     <Box sx={{ py: 4 }}>
       <Typography variant="h5" gutterBottom>
@@ -49,54 +72,9 @@ const TabContract = () => {
             overflow: 'auto',
           }}
         >
-          <Typography variant="body2">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sed illo sequi harum magni.
-            Ipsum, ab. Magni, blanditiis dicta aspernatur impedit ad beatae explicabo officiis a
-            minus dolores veniam molestias quis. Doloremque provident amet quas? Itaque
-            reprehenderit fugit minus quam, ducimus rerum iusto tenetur. In eos sapiente numquam
-            fugit doloremque! Excepturi possimus qui nam saepe quo dolorem voluptates, sunt natus
-            unde expedita, quidem reiciendis adipisci commodi eveniet ex dignissimos, et impedit
-            voluptate cumque cum at dolores officiis incidunt dolore! Sint qui totam animi quam est
-            deserunt voluptas, eius a nesciunt. Incidunt eum praesentium quo? Molestiae voluptate
-            ullam enim modi assumenda dolores maiores. Delectus corporis illum quis quam officia.
-            Est, provident ipsum! Accusamus aliquam quos dignissimos debitis possimus autem!
-            Voluptatum voluptate at cumque obcaecati perferendis molestias aliquid, nobis unde. Modi
-            dolor asperiores inventore. Ullam, suscipit reprehenderit illo amet voluptas dolores
-            saepe deserunt corporis exercitationem aperiam? Laudantium, placeat natus. Nam, deleniti
-            ipsa consectetur aperiam, molestiae maxime accusamus minima, maiores eveniet corporis
-            odit quia repellat aspernatur eum facilis. Corrupti nihil possimus iusto! Cupiditate
-            magnam, adipisci a vel ad eaque architecto soluta nostrum esse libero quis praesentium
-            facere quidem quae laboriosam, exercitationem accusantium vitae asperiores! Aspernatur
-            minus necessitatibus veniam, accusantium neque, aperiam exercitationem itaque numquam
-            voluptatibus magni quasi aliquid. Delectus tenetur doloremque, quae quisquam quod, iusto
-            numquam possimus soluta odio voluptates recusandae! Placeat cupiditate consequatur omnis
-            sed consectetur similique cum amet! Repellat quis cumque aliquid nesciunt nulla quia
-            officia provident ducimus necessitatibus atque aperiam ipsa alias, iusto tempore quas
-            error debitis rem at nostrum cupiditate facilis odit! Debitis, doloremque voluptatem
-            odio magnam, ut perspiciatis cum accusantium ipsam rerum accusamus ipsa! Aliquam
-            quisquam, autem ducimus, perferendis totam dolorum ratione pariatur tenetur ipsam
-            nesciunt vel enim aut id minus culpa distinctio placeat quia qui quidem temporibus
-            aspernatur, vero modi dolorem? Rerum ipsam tempore tenetur tempora quidem architecto
-            iste expedita amet deleniti doloremque, laboriosam rem soluta a, vitae quae excepturi
-            iure omnis facilis. Voluptatum accusamus rem non id placeat dignissimos debitis corrupti
-            praesentium minus necessitatibus inventore, nisi at numquam ex accusantium tempora
-            facere enim sint. Laudantium sapiente vitae sed, magnam quidem, tempora laborum, non
-            enim quia atque omnis dignissimos corporis officia illum. Deleniti laborum velit non
-            debitis fugiat nemo incidunt reiciendis, praesentium, eius distinctio assumenda, quod
-            nobis! Ut delectus laborum voluptate, eligendi magnam sint accusamus, labore doloribus
-            omnis rerum, perferendis sit. Neque nobis illum consectetur, necessitatibus, vel vero
-            odio assumenda quae molestias laboriosam doloremque itaque, maxime similique modi! Sit
-            temporibus sint commodi consequuntur necessitatibus, eum ex! Quae corporis cumque
-            excepturi sit nostrum facilis veniam? Labore, in doloribus dolore deleniti velit alias
-            officia maxime ea amet commodi molestiae quia eaque. Dignissimos excepturi adipisci
-            tempora molestias quas corrupti earum. Vitae, iusto debitis amet quae necessitatibus
-            veritatis perferendis incidunt et nihil, similique eos ex accusamus maiores, labore
-            assumenda impedit qui mollitia pariatur! Voluptatem tempora, porro animi aperiam
-            doloribus soluta laboriosam placeat voluptas deserunt dolore explicabo corporis
-            voluptates odit cupiditate nisi totam, accusantium aspernatur? Ad nihil fuga corporis
-            possimus a at vero dolore quis accusamus distinctio deserunt cum pariatur, eveniet
-            inventore? Impedit.
-          </Typography>
+          {/* <Typography variant="body2"> */}
+            <embed src={pdfFile} width="100%" height="400px" />
+          {/* </Typography> */}
         </CardContent>
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button

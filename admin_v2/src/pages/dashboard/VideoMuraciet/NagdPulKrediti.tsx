@@ -13,6 +13,7 @@ import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
+import { CreditRequest } from 'src/types/CreditRequest';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +53,7 @@ export default function Page() {
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
   const endpointUserByUserName = `/auth/getUserByUserName/${pin}`;
   const { data: userData } = useApi(endpointUserByUserName);
+  const [creditRequest, setCreditRequest] = useState<CreditRequest>({});
 
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
@@ -59,6 +61,7 @@ export default function Page() {
       if (userData)
         data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
+      setCreditRequest({ ...creditRequest, requestedUserPin: userData.username, phoneNumber: userData.phoneNumber, requestDate: new Date(), spouses: [] });
     }
   };
 
@@ -165,7 +168,7 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="6">
-              <TabCreditDataPage setValue={setValue} creditAmount={creditAmount} creditDuration={creditDuration} setCreditAmount={setCreditAmount} setCreditDuration={setCreditDuration} />
+              <TabCreditDataPage setValue={setValue} creditAmount={creditAmount} creditDuration={creditDuration} setCreditAmount={setCreditAmount} setCreditDuration={setCreditDuration} creditRequest={creditRequest} setCreditRequest={setCreditRequest} />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="7">
@@ -173,7 +176,7 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="8">
-              <TabContract />
+              <TabContract creditRequest={creditRequest} />
             </TabPanel>
           </TabContext>
         </Box>
