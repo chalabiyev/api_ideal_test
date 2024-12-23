@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -74,11 +74,11 @@
         BOKT "IDEAL KREDIT" MMC-nin<br/>
         direktoru Qubad Qubadova<br/><br/>
 
-        ${requestedUser.address}<br/>
+        <span th:text="${requestedUser.address}"></span><br/>
         ünvanda qeydiyyatda olan fiziki şəxs<br/>
-        <strong>${requestedUser.fullName}</strong><br/>
-        (şəxsiyyət vəsiqəsi № ${requestedUser.seriaNo}<br/>
-        ${organisationName} ${requestedUser.eventDate}) tərəfindən
+        <strong th:text="${requestedUser.fullName}"></strong><br/>
+        (şəxsiyyət vəsiqəsi № <span th:text="${requestedUser.seriaNo}"></span><br/>
+        <span th:text="${organisationName}"></span> <span th:text="${requestedUser.eventDate}"></span>) tərəfindən
     </p>
 </div>
 
@@ -88,18 +88,16 @@
 
 <div class="content">
     <p>
-        Yazıb sizdən xahiş edirəm ki, <span class="highlight">${creditPurpose}</span>
-        üçün mənə <span class="amount">${creditTerm}</span> ay müddətinə
-        <span class="amount">${creditAmount} ₼</span> ${creditAmountWithText} məbləğində kredit xətti açasınız.
+        Yazıb sizdən xahiş edirəm ki, <span class="highlight" th:text="${creditPurpose}"></span>
+        üçün mənə <span class="amount" th:text="${creditTerm}"></span> ay müddətinə
+        <span class="amount" th:text="${creditAmount}"> ₼</span> <span th:text="${creditAmountWithText}"></span> məbləğində kredit xətti açasınız.
     </p>
 </div>
 
 <!-- Signature Section -->
 <div class="signature">
-    <p>
-        ${requestedUser.fullName}
-    </p>
-    <p> ${requestDate}</p>
+    <p th:text="${requestedUser.fullName}"></p>
+    <p th:text="${requestDate}"></p>
 </div>
 
 </body>

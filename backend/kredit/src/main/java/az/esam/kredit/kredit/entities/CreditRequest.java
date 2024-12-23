@@ -1,8 +1,10 @@
 package az.esam.kredit.kredit.entities;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import az.esam.kredit.kredit.entities.enums.*;
 import lombok.Builder;
@@ -61,134 +63,60 @@ public class CreditRequest extends BaseEntity {
 
     private String simaContractOperationId;
 
-}
 
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("phoneNumber", phoneNumber);
+        map.put("otherPhoneNumbers", otherPhoneNumbers);
+        map.put("creditAmount", creditAmount);
+        map.put("creditTerm", creditTerm);
+        map.put("creditAmountWithText", creditAmountWithText);
+        map.put("requestDate", requestDate);
+        map.put("confirmStatus", confirmStatus != null ? confirmStatus.name() : null);
+        map.put("activateStatus", activateStatus != null ? activateStatus.name() : null);
+        map.put("finalStatus", finalStatus != null ? finalStatus.name() : null);
+        map.put("requestedUser", requestedUser != null ? requestedUser.toMap() : null);
+        map.put("isConnectedWithBOKT", isConnectedWithBOKT);
+        map.put("confirmerUser", confirmerUser != null ? confirmerUser.toMap() : null);
+        map.put("confirmDate", confirmDate);
+        map.put("confirmerComment", confirmerComment);
+        map.put("creditType", creditType != null ? creditType.name() : null);
+        map.put("serviceRate", serviceRate);
+        map.put("cartCost", cartCost);
+        map.put("insuranceCost", insuranceCost);
+        map.put("valuationCost", valuationCost);
+        map.put("monthlyPayment", monthlyPayment);
+        map.put("amountToBePaid", amountToBePaid);
+        map.put("creditPurpose", creditPurpose);
+        map.put("annualPercent", annualPercent);
+        map.put("otherPayment", otherPayment);
+        map.put("notarialCost", notarialCost);
+        map.put("insuranceType", insuranceType);
+        map.put("guarantee", guarantee != null ? guarantee.name() : null);
+        map.put("spouses", spouses != null
+                ? spouses.stream().map(spouse -> {
+            Map<String, Object> spouseMap = new HashMap<>();
+            spouseMap.put("fullName", spouse.getFullName());
+            spouseMap.put("serialNumber", spouse.getSerialNumber());
+            spouseMap.put("eventDate", spouse.getEventDate());
+            spouseMap.put("organisationName", spouse.getOrganisationName());
+            spouseMap.put("birthAddress", spouse.getBirthAddress());
+            spouseMap.put("nationality", spouse.getNationality());
+            spouseMap.put("address", spouse.getAddress());
+            spouseMap.put("factAddress", spouse.getFactAddress());
+            spouseMap.put("phoneNumbers", spouse.getPhoneNumbers());
+            spouseMap.put("workPlace", spouse.getWorkPlace());
+            spouseMap.put("workAddress", spouse.getWorkAddress());
+            spouseMap.put("position", spouse.getPosition());
+            return spouseMap;
+        }).collect(Collectors.toList())
+                : null);
+        map.put("fine", fine);
+        map.put("simaContractOperationId", simaContractOperationId);
 
-class Spouse {
-    private String fullName;
-    private String serialNumber;
-    private String eventDate;
-    private String organisationName;
-    private String birthAddress;
-    private String nationality;
-    private String address;
-    private String factAddress;
-    private String phoneNumbers;
-    private String workPlace;
-    private String workAddress;
-    private String position;
-
-    // All-args constructor
-    public Spouse(String fullName, String serialNumber, String eventDate, String organisationName,
-                  String birthAddress, String nationality, String address, String factAddress,
-                  String phoneNumbers, String workPlace, String workAddress, String position) {
-        this.fullName = fullName;
-        this.serialNumber = serialNumber;
-        this.eventDate = eventDate;
-        this.organisationName = organisationName;
-        this.birthAddress = birthAddress;
-        this.nationality = nationality;
-        this.address = address;
-        this.factAddress = factAddress;
-        this.phoneNumbers = phoneNumbers;
-        this.workPlace = workPlace;
-        this.workAddress = workAddress;
-        this.position = position;
+        return map;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public String getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(String eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public String getOrganisationName() {
-        return organisationName;
-    }
-
-    public void setOrganisationName(String organisationName) {
-        this.organisationName = organisationName;
-    }
-
-    public String getBirthAddress() {
-        return birthAddress;
-    }
-
-    public void setBirthAddress(String birthAddress) {
-        this.birthAddress = birthAddress;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getFactAddress() {
-        return factAddress;
-    }
-
-    public void setFactAddress(String factAddress) {
-        this.factAddress = factAddress;
-    }
-
-    public String getPhoneNumbers() {
-        return phoneNumbers;
-    }
-
-    public void setPhoneNumbers(String phoneNumbers) {
-        this.phoneNumbers = phoneNumbers;
-    }
-
-    public String getWorkPlace() {
-        return workPlace;
-    }
-
-    public void setWorkPlace(String workPlace) {
-        this.workPlace = workPlace;
-    }
-
-    public String getWorkAddress() {
-        return workAddress;
-    }
-
-    public void setWorkAddress(String workAddress) {
-        this.workAddress = workAddress;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
 }

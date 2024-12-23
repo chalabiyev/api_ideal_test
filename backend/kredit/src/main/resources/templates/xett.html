@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -169,7 +169,7 @@
     <img src="img.png" alt="Ideal Kredit Logo"/> <!-- Replace with your logo path -->
     <div class="header-title">
         <h1>"İDEAL KREDİT" BOKT MMC</h1>
-        <h2>Kredit Xətti Müqaviləsi № 09/745-2023</h2>
+        <h2 th:text="'Kredit Xətti Müqaviləsi № ' + ${contractNumber}"></h2>
     </div>
     <div></div>
 </div>
@@ -177,12 +177,12 @@
 
 <div style="display:flex; justify-content: space-between;">
     <p><strong>Bakı şəhəri</strong></p>
-    <p><strong>${requestDate}</strong></p>
+    <p><strong th:text="${requestDate}"></strong></p>
 </div>
 <p>
     Əsasnamə və Etibarnamə əsasında fəaliyyət göstərən (gələcəkdə "BOKT" adlanacaq) BOKT “İDEAL KREDİT” MMC-nin
     direktoru Qubadov Qubad Baxas oğlu şəxsində bir tərəfdən, gələcəkdə "Borcalan" adlanacaq fiziki şəxs
-    <strong>${requestedUser.fullName}</strong> şəxsində digər tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar
+    <strong th:text="${requestedUser.fullName}"></strong> şəxsində digər tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar
     barədə
     razılığa gələrək bu müqaviləni bağladılar.
 </p>
@@ -197,14 +197,16 @@
     <tr>
         <td class="title">Borcalan</td>
         <td>
-            Fiziki şəxs <span class="highlight">${requestedUser.fullName}</span> <span class="separator">|</span>
-            Ş/V № <span class="highlight">${requestedUser.seriaNo}</span> <span class="separator">|</span>
-            verilib: <span class="highlight">${requestedUser.eventDate}</span>
+            Fiziki şəxs <span class="highlight" th:text="${requestedUser.fullName}"></span>
+            <span class="separator">|</span> Ş/V №
+            <span class="highlight" th:text="${requestedUser.seriaNo}"></span>
+            <span class="separator">|</span> verilib:
+            <span class="highlight" th:text="${requestedUser.eventDate}"></span>
         </td>
     </tr>
     <tr>
         <td class="title">Kredit xəttinin məbləği</td>
-        <td>${creditAmount} (${creditAmountWithText})</td>
+        <td th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></td>
     </tr>
     <tr>
         <td class="title">İllik faiz dərəcəsi</td>
@@ -212,15 +214,15 @@
     </tr>
     <tr>
         <td class="title">Cərimə</td>
-        <td>${fine}%</td>
+        <td th:text="${fine} + '%'"></td>
     </tr>
     <tr>
         <td class="title">Kredit xəttinin müddəti</td>
-        <td>${creditTerm} ay</td>
+        <td th:text="${creditTerm} + ' ay'"></td>
     </tr>
     <tr>
         <td class="title">Kreditin növü</td>
-        <td>${creditType}</td>
+        <td th:text="${creditType}"></td>
     </tr>
     <tr>
         <td class="title">Ayrılacaq tranşın məbləği</td>
@@ -228,11 +230,7 @@
     </tr>
     <tr>
         <td class="title">Kredit xəttinin təminatı</td>
-        <td>${guarantee}</td>
-    </tr>
-    <tr>
-        <td class="title">Kreditin tipi</td>
-        <td>${creditType}</td>
+        <td th:text="${guarantee}"></td>
     </tr>
     <tr>
         <td class="title">Xidmət haqqı və xərclər</td>
@@ -244,16 +242,14 @@
 
 <div class="subsection">
     <span>2.1.</span> Bu müqavilə üzrə <span class="highlight">BOKT</span> Borcalara
-    <span class="highlight">${creditTerm} ay müddətinə qaytarmaq şərti ilə</span>
-    <span class="highlight">${creditAmount} (${creditAmountWithText})</span> məbləğində kredit xətti açır. Borcalan isə
-    bu Müqavilədə
-    və ya onun əlavə(lər)ində göstərilən kredit məbləğini qəbul edərək, müqavilədə göstərilən müddətdə və qaydada,
-    ödəniş qrafiki (Əlavə №1) əsasında krediti və həmin kreditə görə hesablanmış faizləri <span
-        class="highlight">BOKT-a</span> qaytarmağı öz öhdəsinə götürür.
-</div>
+    <span class="highlight" th:text="${creditTerm}"> ay müddətinə qaytarmaq şərti ilə</span>
+    <span class="highlight" th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></span> məbləğində kredit xətti açır.
+    Borcalan isə bu Müqavilədə və ya onun əlavə(lər)ində göstərilən kredit məbləğini qəbul edərək, müqavilədə göstərilən müddətdə və
+    qaydada, ödəniş qrafiki (Əlavə №1) əsasında krediti və həmin kreditə görə hesablanmış faizləri
+    <span class="highlight" th:text="'BOKT-a'"></span> qaytarmağı öz öhdəsinə götürür.
 
 <div class="subsection">
-    <span>2.2.</span> Bu müqavilə üzrə kredit <span class="italic">${creditPurpose}</span> üçün götürülür.
+    <span>2.2.</span> Bu müqavilə üzrə kredit <span class="italic" th:text="${creditPurpose}"></span> üçün götürülür.
 </div>
 
 <div class="subsection">
@@ -262,7 +258,7 @@
 </div>
 
 <div class="subsection">
-    <span>2.4.</span> Borcalan bu kreditdən istifadəyə görə illik <span class="highlight">${annualPercent}%</span>
+    <span>2.4.</span> Borcalan bu kreditdən istifadəyə görə illik <span class="highlight" th:text="${annualPercent}">%</span>
     məbləğində faiz
     ödəyir.
 </div>
@@ -595,8 +591,7 @@
         <p class="bold">"İDEAL KREDİT" BOKT</p>
         <p><span class="bold">Direktor:</span> Qubadov Qubad Baxas oğlu</p>
         <p><span class="bold underline">Hüquqi ünvan:</span> Bakı şəhəri, F.Xoyski küç., 111"A", m.26</p>
-        <p><span class="bold underline">Faktiki ünvan:</span> Bakı şəh, Həsən Əliyev küç., 34 <small>(1 saylı ASAN
-            Kommunal)</small></p>
+        <p><span class="bold underline">Faktiki ünvan:</span> Bakı şəh, Həsən Əliyev küç., 34 <small>(1 saylı ASAN Kommunal)</small></p>
         <p><span class="bold">Tel:</span> 012 526 26 25</p>
         <p><span class="bold">İndeks:</span> AZ 1078</p>
         <p><span class="bold">VÖEN:</span> 1300480591</p>
@@ -607,17 +602,15 @@
     <!-- Right Box -->
     <div class="right-box">
         <h3>Borcalan</h3>
-        <p><span class="bold">${requestedUser.fullName}</span></p>
-        <p><span class="bold underline">Ünvan:</span> ${requestedUser.address}</p>
-        <p><span class="bold underline">Ş/V №:</span> ${requestedUser.seriaNo}</p>
-        <p><span class="bold underline">Verilmə tarixi:</span> ${requestedUser.eventDate}</p>
-        <p>${requestedUser.address}</p>
-        <p class="bold">Borcalan:</p>
-        <div class="signature-line"></div>
+        <p><span class="bold" th:text="${requestedUser.fullName}"></span></p>
+        <p><span class="bold underline">Ünvan:</span> <span th:text="${requestedUser.address}"></span></p>
+        <p><span class="bold underline">Ş/V №:</span> <span th:text="${requestedUser.seriaNo}"></span></p>
+        <p><span class="bold underline">Verilmə tarixi:</span> <span th:text="${requestedUser.eventDate}"></span></p>
     </div>
 </div>
 
 
 <p class="footer">Bu müqavilə 2 (iki) nüsxədə tərtib edilmişdir.</p>
+</div>
 </body>
 </html>
