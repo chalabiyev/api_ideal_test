@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -150,13 +150,13 @@
 
 <div style="display: flex; justify-content: space-between;">
     <p><strong>Bakı şəhəri</strong></p>
-    <p><strong>${requestDate}</strong></p>
+    <p><strong th:text="${requestDate}"></strong></p>
 </div>
 
 <p>
     Əsasnamə və Etibarnamə əsasında fəaliyyət göstərən (gələcəkdə "BOKT" adlanacaq) BOKT “İDEAL KREDİT” MMC-nin
     direktoru Qubadov Qubad Baxas oğlu şəxsində bir tərəfdən, gələcəkdə "Borcalan" adlanacaq fiziki şəxs
-    <strong>${requestedUser.fullName}</strong> şəxsində digər tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar
+    <strong th:text="${requestedUser.fullName}"></strong> şəxsində digər tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar
     barədə
     razılığa gələrək bu müqaviləni bağladılar.
 </p>
@@ -170,54 +170,54 @@
     <tr>
         <td class="title">Borcalan</td>
         <td>
-            Fiziki şəxs <span class="highlight">${requestedUser.fullName}</span> <span class="separator">|</span>
-            Ş/V № <span class="highlight">${requestedUser.seriaNo}</span> <span class="separator">|</span>
-            verilib: <span class="highlight">${requestedUser.eventDate}</span>
+            Fiziki şəxs <span class="highlight" th:text="${requestedUser.fullName}"></span> <span class="separator">|</span>
+            Ş/V № <span class="highlight" th:text="${requestedUser.seriaNo}"></span> <span class="separator">|</span>
+            verilib: <span class="highlight" th:text="${requestedUser.eventDate}"></span>
         </td>
     </tr>
     <tr>
         <td class="title">Ayrılan kredit tranşının məbləği</td>
-        <td>${creditAmount} (${creditAmountWithText})</td>
+        <td th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></td>
     </tr>
     <tr>
         <td class="title">İllik faiz dərəcəsi</td>
-        <td>${annualPercent}%</td>
+        <td th:text="${annualPercent}">%</td>
     </tr>
     <tr>
         <td class="title">Cərimə</td>
-        <td>${fine}%</td>
+        <td th:text="${fine}">%</td>
     </tr>
     <tr>
         <td class="title">Kreditin müddəti</td>
-        <td>${creditTerm} ay</td>
+        <td th:text="${creditTerm}"> ay</td>
     </tr>
     <tr>
         <td class="title">Kreditin növü</td>
-        <td>${creditType}</td>
+        <td th:text="${creditType}"></td>
     </tr>
     <tr>
         <td class="title">Kreditin təminatı</td>
-        <td>${guarantee}</td>
+        <td th:text="${guarantee}"></td>
     </tr>
     <tr>
         <td class="title">Kreditin təyinatı</td>
-        <td>${creditPurpose}</td>
+        <td th:text="${creditPurpose}"></td>
     </tr>
     <tr>
         <td class="title">Aylıq ödəniş məbləği:</td>
-        <td>${monthlyPayment} AZN</td>
+        <td th:text="${monthlyPayment}"> AZN</td>
     </tr>
     <tr>
         <td class="title">Qiymətləndirmə xərci:</td>
-        <td>${valuationCost} AZN</td>
+        <td th:text="${valuationCost}"> AZN</td>
     </tr>
     <tr>
         <td class="title">Xidmət haqqı:</td>
-        <td>${serviceRate} %</td>
+        <td th:text="${serviceRate} ">%</td>
     </tr>
     <tr>
         <td class="title">Sığorta xərci:</td>
-        <td>${insuranceCost} %</td>
+        <td th:text="${insuranceCost}"> %</td>
     </tr>
 </table>
 
@@ -225,8 +225,8 @@
 
 <div class="subsection">
     <span>2.1.</span> Bu kredit xətti müqaviləsinə əlavə olaraq <span class="bold">BOKT</span> Borcalana
-    <span class="bold">${creditTerm} ay müddətinə qaytarmaq şərti ilə</span>
-    <span class="bold">${creditAmount} (${creditAmountWithText})</span> məbləğində kredit xətti (tranşı) ayırır,
+    <span class="bold" th:text="${creditTerm}"> ay müddətinə qaytarmaq şərti ilə</span>
+    <span class="bold" th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></span> məbləğində kredit xətti (tranşı) ayırır,
     Borcalan kredit xətti üzrə
     ayrılacaq tranş məbləğini qəbul edərək, bu Müqavilədə göstərilən müddətdə və qaydada, ödəniş qrafiki (Əlavə №1)
     əsasında krediti və həmin kreditə görə hesablanmış faizləri <span class="bold">BOKT-a</span> qaytarmağı öz öhdəsinə
@@ -234,7 +234,7 @@
 </div>
 
 <div class="subsection">
-    <span>2.2.</span> Bu müqavilə üzrə kredit <span class="bold">${creditPurpose}</span> üçün götürülür.
+    <span>2.2.</span> Bu müqavilə üzrə kredit <span class="bold" th:text="${creditPurpose}"></span> üçün götürülür.
 </div>
 
 <div class="subsection">
@@ -243,7 +243,7 @@
 </div>
 
 <div class="subsection">
-    <span>2.4.</span> Borcalan bu kreditdən istifadəyə görə illik <span class="bold">${annualPercent}%</span> olmaqla
+    <span>2.4.</span> Borcalan bu kreditdən istifadəyə görə illik <span class="bold" th:text="${annualPercent}">%</span> olmaqla
     faiz ödəyir.
 </div>
 
@@ -275,7 +275,7 @@
 <div class="list-item">
     <span>3.1.1.</span> BOKT müqavilə ilə nəzərdə tutulmuş kredit məbləğini Borcalanın bank hesabına və ya ona təqdim
     edilmiş kart hesab(lar)ına köçürür. Borcalan götürəcəyi kreditin məbləğindən <span
-        class="bold">${cartCost} manat</span>
+        class="bold" th:text="${cartCost}"> manat</span>
     məbləğində birdəfəlik kart xərci tutulmasına razılıq verir.
 </div>
 <div class="list-item">
@@ -589,11 +589,11 @@
     </div>
     <div class="right-box">
         <h3>Borcalan</h3>
-        <p><span class="bold">${requestedUser.fullName}</span></p>
-        <p><span class="bold underline">Ünvan:</span> ${requestedUser.address}</p>
-        <p><span class="bold underline">Ş/V №:</span> ${requestedUser.seriaNo}</p>
-        <p><span class="bold underline">Verilmə tarixi:</span> ${requestedUser.eventDate}</p>
-        <p>${requestedUser.address}</p>
+        <p><span class="bold">Ali Veliyev</span></p>
+        <p><span class="bold underline">Ünvan:</span> Baku, Nizami Street</p>
+        <p><span class="bold underline">Ş/V №:</span> AA1234567</p>
+        <p><span class="bold underline">Verilmə tarixi:</span> 2023-01-01</p>
+        <p>Baku, Nizami Street</p>
         <p class="bold">Borcalan:</p>
         <div class="signature-line"></div>
     </div>

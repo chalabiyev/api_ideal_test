@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet"/>
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+          rel="stylesheet"/>
     <title>Plastik Kartın Təhvil-Təslim Aktı</title>
     <style>
         body {
@@ -99,19 +99,19 @@
     <!-- Location and Date -->
     <div class="location-date">
         <p>Bakı şəhəri</p>
-        <p>${requestDate}</p>
+        <p th:text="${requestDate}"></p>
     </div>
 
     <!-- Content Section -->
     <p>Biz, aşağıda imza edənlər: <span class="bold">BOKT "İdeal Kredit" MMC</span>-nin adından Direktor Qubadov Qubad
         Baxas
-        oğlu bir tərəfdən və fiziki şəxs ("borcalan") <span class="bold">${requestedUser.fullName}</span> digər
+        oğlu bir tərəfdən və fiziki şəxs ("borcalan") <span class="bold" th:text="${requestedUser.fullName}"></span> digər
         tərəfdən
         bu AKT-ı tərtib etdik ondan ötəri ki,
-        <span class="bold">${confirmDate}</span> il tarixdə bağlanmış <span class="bold">09/745-2023</span>
+        <span class="bold" th:text="${confirmDate}"></span> il tarixdə bağlanmış <span class="bold">09/745-2023</span>
         saylı kredit
         xətti
-        müqaviləsi üzrə kredit məbləği köçürülmüş <span class="bold">${cardNumber}</span> №-li plastik kart(lar)
+        müqaviləsi üzrə kredit məbləği köçürülmüş <span class="bold" th:text="${cardNumber}"></span> №-li plastik kart(lar)
         Bakı
         şəhəri, Həsən Əliyev küçəsi 34, ünvanında borcalana təhvil verilmişdir. Borcalan bu AKT-ı imzalamaqla qeyd
         edilən
@@ -132,9 +132,9 @@
                 <span class="bold">VÖEN: 1300480591</span>
             </td>
             <td class="no-border">
-                <span class="bold">${requestedUser.fullName}</span><br/>
-                ${requestedUser.address}<br/>
-                <span class="bold">Ş/V: ${requestedUser.seriaNo}</span>
+                <span class="bold" th:text="${requestedUser.fullName}"></span><br/>
+                <span th:text="${requestedUser.address}"></span><br/>
+                Ş/V: <span class="bold" th:text="${requestedUser.seriaNo}"></span>
             </td>
             <td class="no-border">
                 <span class="bold">BOKT "İdeal Kredit" MMC</span><br/>

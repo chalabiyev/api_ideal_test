@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -66,12 +66,12 @@
     <tr>
         <td class="number">3</td>
         <td class="label">Kreditin növü:</td>
-        <td class="description">${creditType}</td>
+        <td class="description" th:text="${creditType}"></td>
     </tr>
     <tr>
         <td class="number">4</td>
         <td class="label">Kreditin məbləği (kredit xəttinin limiti) və valyutası:</td>
-        <td class="description">${creditAmount} ₼</td>
+        <td class="description" th:text="${creditAmount}"> ₼</td>
     </tr>
     <tr>
         <td class="number">5</td>
@@ -113,7 +113,7 @@
     <tr>
         <td class="number" rowspan="2">7</td>
         <td class="label">Kreditlə alınacaq mal(lar)ın və ya xidmət(lər)in Adı:</td>
-        <td class="description">${creditPurpose}</td>
+        <td class="description" th:text="${creditPurpose}"></td>
     </tr>
     <tr>
         <td class="label"> Nağd qiyməti (malın və ya xidmətin alınması zamanı birdəfəlik ödəniş edildikdə):</td>
@@ -168,13 +168,13 @@
                     <strong>Tərəfinizdən ödəniləcək ümumi məbləğ: </strong>
                 </li>
                 <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
-                    <strong>Əsas borc ${creditAmount} ₼</strong>
+                    Əsas borc <strong th:text="${creditAmount}"> ₼</strong>
                 </li>
                 <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
                     <strong>Faiz borcu </strong>
                 </li>
                 <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
-                    <strong>Kreditlə əlaqəli digər ödənişlər: ${otherPayment} ₼</strong>
+                    Kreditlə əlaqəli digər ödənişlər: <strong th:text="${otherPayment}"> ₼</strong>
                 </li>
 
                 <li style="padding: 5px 0;">
@@ -241,7 +241,7 @@
         <td class="label">Tətbiq edildikdə, kredit müqaviləsinin bağlanılması ilə bağlı istehlakçı tərəfindən ödənilməli
             olan notarial xərclərin mövcudluğu:
         </td>
-        <td class="description"><strong>${notarialCost}</strong></td>
+        <td class="description"><strong th:text="${notarialCost}"></strong></td>
     </tr>
     <tr>
         <td class="number">15</td>
@@ -300,7 +300,7 @@
         <td class="description" colspan="3">
             <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
                 <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
-                    Təminatın növü - <strong>${guarantee}</strong>
+                    Təminatın növü - <strong th:text="${guarantee}"></strong>
                 </li>
                 <li style="border-bottom: 1px solid  #ddd; padding: 5px 0;">
                     <strong>Kreditin verilmə müddəti, prosesin əlaqədar təşkilat və ya şəxslərdən asılı olmadığı halda
@@ -520,13 +520,13 @@
         <td class="description" colspan="3">
             <ul style="margin: 10px 0; padding: 0; list-style-type: none;">
                 <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
-                    <strong>Ad, soyad: </strong>${requestedUser.fullName}
+                    Ad, soyad: <strong th:text="${requestedUser.fullName}"></strong>
                 </li>
                 <li style="border-bottom: 1px solid #ddd; padding: 5px 0;">
                     <strong>İmza: </strong> _________
                 </li>
                 <li style="padding: 5px 0;">
-                    <strong>Tarix: </strong> ${confirmDate}
+                    Tarix: <strong th:text="${confirmDate}"> </strong>
                 </li>
             </ul>
         </td>

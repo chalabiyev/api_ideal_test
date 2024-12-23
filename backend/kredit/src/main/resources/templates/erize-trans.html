@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -71,14 +71,14 @@
 <!-- Header Section -->
 <div class="header">
     <p>
-        BOKT "IDEAL KREDIT" MMC-nin<br/>
-        direktoru Qubad Qubadova<br/><br/>
+        <span>BOKT "IDEAL KREDIT" MMC-nin</span><br/>
+        <span>direktoru Qubad Qubadova</span><br/><br/>
 
-        ${requestedUser.address}<br/>
-        ünvanda qeydiyyatda olan fiziki şəxs<br/>
-        <strong>${requestedUser.fullName}</strong><br/>
-        (şəxsiyyət vəsiqəsi № ${requestedUser.seriaNo}<br/>
-        ${organisationName} ${requestedUser.eventDate}) tərəfindən
+        <span th:text="${requestedUser.address}"></span><br/>
+        <span>ünvanda qeydiyyatda olan fiziki şəxs</span><br/>
+        <strong th:text="${requestedUser.fullName}"></strong><br/>
+        (<span>şəxsiyyət vəsiqəsi №</span> <span th:text="${requestedUser.seriaNo}"></span><br/>
+        <span th:text="${organisationName}"></span> <span th:text="${requestedUser.eventDate}"></span>) tərəfindən
     </p>
 </div>
 
@@ -89,18 +89,18 @@
 <div class="content">
     <p>
         Yazıb sizdən xahiş edirəm ki, mənə <span class="highlight">09.745-2023</span>
-        saylı kredit xətti müqaviləsinə əsasən <span class="amount">${creditPurpose}</span> üçün ${creditTerm} ay
+        saylı kredit xətti müqaviləsinə əsasən <span class="amount" th:text="${creditPurpose}"></span> üçün <span
+            class="amount" th:text="${creditTerm}"></span> ay
         müddətində
-        <span class="amount">${creditAmount} ₼ ${creditAmountWithText} </span> məbləğində kredit(traş) ayırasınız.
+        <span class="amount" th:text="${creditAmount}"> ₼</span> <span th:text="${creditAmountWithText}"></span>
+        məbləğində kredit(traş) ayırasınız.
     </p>
 </div>
 
 <!-- Signature Section -->
 <div class="signature">
-    <p>
-        ${requestedUser.fullName}
-    </p>
-    <p> ${requestDate}</p>
+    <p th:text="${requestedUser.fullName}"></p>
+    <p th:text="${requestDate}"></p>
 </div>
 
 </body>
