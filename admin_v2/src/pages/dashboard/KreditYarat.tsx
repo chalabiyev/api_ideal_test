@@ -11,6 +11,7 @@ import TabVehicleInformation from 'src/components/NewCredit/TabVehicleInformatio
 import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from '../../components/NewCredit/RecruiterData';
+import { CreditRequest } from 'src/types/CreditRequest';
 // import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 
 // ----------------------------------------------------------------------
@@ -44,6 +45,7 @@ export default function Page() {
   const [creditDuration, setCreditDuration] = useState<number>(12);
   const [clientId, setClientId] = useState('');
   const [operatorId, setOperatorId] = useState('');
+  const [creditRequest, setCreditRequest] = useState<CreditRequest>({});
 
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
@@ -151,7 +153,7 @@ export default function Page() {
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="6">
               {/* neqliyyat  */}
-              <TabCreditDataPage setValue={setValue}  creditAmount={creditAmount} creditDuration={creditDuration} setCreditAmount={setCreditAmount} setCreditDuration={setCreditDuration} />
+              <TabCreditDataPage setValue={setValue}  creditAmount={creditAmount} creditDuration={creditDuration} setCreditAmount={setCreditAmount} setCreditDuration={setCreditDuration} creditRequest={creditRequest} setCreditRequest={setCreditRequest} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="7">
               {/* neqliyyat  */}
