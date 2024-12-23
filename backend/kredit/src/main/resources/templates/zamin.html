@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -150,14 +150,14 @@
 
 <div style="display: flex; justify-content: space-between;">
     <p><strong>Bakı şəhəri</strong></p>
-    <p><strong>${requestDate}</strong></p>
+    <p><strong th:text="${requestDate}"></strong></p>
 </div>
 
 <p>
     Əsasnamə və Etibarnamə əsasında fəaliyyət göstərən (gələcəkdə "BOKT" adlanacaq) BOKT “İDEAL KREDİT” MMC-nin
     direktoru Qubadov Qubad Baxas oğlu şəxsində bir tərəfdən, gələcəkdə "Borcalan" adlanacaq fiziki şəxs
-    <strong>${requestedUser.fullName}<</strong> şəxsində digər tərəfdən və gələcəkdə Zamin adlanacaq fiziki şəxs
-    ${spouse.fullName} üçüncü tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar barədə
+    <strong th:text="${requestedUser.fullName}"></strong> şəxsində digər tərəfdən və gələcəkdə Zamin adlanacaq fiziki şəxs
+    <span th:text="${spouse.fullName}"></span> üçüncü tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar barədə
     razılığa gələrək bu müqaviləni bağladılar.
 </p>
 
@@ -174,39 +174,39 @@
     <tr>
         <td class="title">Borcalan</td>
         <td>
-            Fiziki şəxs <span class="highlight">${requestedUser.fullName}</span> <span class="separator">|</span>
-            Ş/V № <span class="highlight">${requestedUser.seriaNo}</span> <span class="separator">|</span>
-            verilib: <span class="highlight">${requestedUser.eventDate}</span>
+            Fiziki şəxs <span class="highlight" th:text="${requestedUser.fullName}"></span> <span class="separator">|</span>
+            Ş/V № <span class="highlight" th:text="${requestedUser.seriaNo}"></span> <span class="separator">|</span>
+            verilib: <span class="highlight" th:text="${requestedUser.eventDate}"></span>
         </td>
     </tr>
     <tr>
         <td class="title">Zamin</td>
         <td>
-            Fiziki şəxs <span class="highlight">${spouse.fullName}</span> <span class="separator">|</span>
-            Ş/V № <span class="highlight">${spouse.serialNumber}</span> <span class="separator">|</span>
-            verilib: <span class="highlight">${spouse.eventDate}</span>
+            Fiziki şəxs <span class="highlight" th:text="${spouse.fullName}"></span> <span class="separator">|</span>
+            Ş/V № <span class="highlight" th:text="${spouse.serialNumber}"></span> <span class="separator">|</span>
+            verilib: <span class="highlight" th:text="${spouse.eventDate}"></span>
         </td>
     </tr>
     <tr>
         <td class="title">Kreditin növü</td>
-        <td>${creditType}</td>
+        <td th:text="${creditType}"></td>
     </tr>
     <tr>
         <td class="title">Kredit xəttinin məbləği</td>
-        <td><span class="highlight">${creditAmount} AZN</span></td>
+        <td><span class="highlight" th:text="${creditAmount}"> AZN</span></td>
     </tr>
 </table>
 <div class="section-title">2. Müqavilənin Predmeti</div>
 
 <div class="subsection">
-    <span>2.1.</span> <span class="highlight">BOKT</span> ilə Borcalan
-    <span class="highlight">${requestedUser.fullName}</span> arasında Bakı şəhərində bağlanmış
-    <span class="highlight">${requestDate}</span> ci il tarixli,
-    <span class="highlight">09/745-2023</span> saylı kredit xətti müqaviləsinə əsasən
-    <span class="highlight">BOKT</span> Borcalana
-    <span class="highlight">${creditTerm} ay müddətində qaytarmaq şərti ilə</span>,
-    illik <span class="highlight">${annualPercent} %</span> olmaqla
-    <span class="highlight">${creditAmount} (${creditAmountWithText})</span> məbləğində kredit xətti (tranşı)
+    <span>2.1.</span> <span class="highlight" th:text="'BOKT'"></span> ilə Borcalan
+    <span class="highlight" th:text="${requestedUser.fullName}"></span> arasında Bakı şəhərində bağlanmış
+    <span class="highlight" th:text="${requestDate}"></span> ci il tarixli,
+    <span class="highlight" th:text="'09/745-2023'"></span> saylı kredit xətti müqaviləsinə əsasən
+    <span class="highlight" th:text="'BOKT'"></span> Borcalana
+    <span class="highlight" th:text="${creditTerm} + ' ay müddətində qaytarmaq şərti ilə'"></span>,
+    illik <span class="highlight" th:text="${annualPercent} + ' %'"></span> olmaqla
+    <span class="highlight" th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></span> məbləğində kredit xətti (tranşı)
     ayırmışdır.
 </div>
 
@@ -214,7 +214,7 @@
     <span>2.2.</span> Bu müqavilə üzrə Zamin özünə məxsus bütün daşınar və daşınmaz əmlakları ilə
     <span class="highlight">BOKT</span>-la Borcalan arasında bağlanmış
     <span class="highlight">29/09/2023</span> il tarixli,
-    <span class="highlight">09/745-2023</span> saylı kredit xətti müqaviləsi və onun əlavə(lər)si ${spouse.fullName}
+    <span class="highlight">09/745-2023</span> saylı kredit xətti müqaviləsi və onun əlavə(lər)si <span th:text="${spouse.fullName}"></span>
     Borcalanın BOKT qarşısında
     öhdəliklərini icra etməsi üçün məsuliyyəti öz üzərinə götürür.
 </div>
@@ -398,18 +398,19 @@
     </div>
     <div class="right-box">
         <h3 style="text-align: center">Borcalan</h3>
-        <p><span class="bold">${requestedUser.fullName}</span></p>
-        <p><span class="bold">Ünvan:</span> ${requestedUser.address}</p>
-        <p><span class="bold">Ş/V №:</span> ${requestedUser.seriaNo}</p>
-        <p><span class="bold">Verilmə tarixi:</span> ${requestedUser.eventDate}</p>
-        <p>${requestedUser.address}</p>
+        <p><span class="bold">Ali Veliyev</span></p>
+        <p><span class="bold">Ünvan:</span> Baku, Nizami Street</p>
+        <p><span class="bold">Ş/V №:</span> AA67890</p>
+        <p><span class="bold">Verilmə tarixi:</span> 2023-01-01</p>
+        <p>Baku, Nizami Street</p>
 
-
-        <h3 style="text-align: center">Borcalan</h3>
-        <p><span class="bold">${spouse.fullName}</span></p>
-        <p><span class="bold">Ünvan:</span> ${spouse.address}</p>
-        <p><span class="bold">Ş/V №:</span> ${spouse.serialNumber}</p>
-        <p><span class="bold">Verilmə tarixi:</span> ${spouse.eventDate}</p>
+        <div>
+            <h3 style="text-align: center">Zamin</h3>
+            <p><span class="bold">Veli Veliyev</span></p>
+            <p><span class="bold">Ünvan:</span> Baku, Street 1</p>
+            <p><span class="bold">Ş/V №:</span> AA12345</p>
+            <p><span class="bold">Verilmə tarixi:</span> 2023-01-01</p>
+        </div>
     </div>
 </div>
 
