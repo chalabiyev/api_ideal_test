@@ -29,7 +29,7 @@ export default function CreditFilterModal(
       position={"bottom"}
     >
       <View style={styles.container}>
-        <Text text="Filtre" type="bold" size="18" />
+        <Text text="Filtresad" type="bold" size="18" />
       </View>
     </Modal>
   );
