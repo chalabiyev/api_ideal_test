@@ -8,6 +8,7 @@ import { STORAGE_KEY } from 'src/auth/context/jwt';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 // eslint-disable-next-line
 import { CreditRequest } from 'src/types/CreditRequest';
+// eslint-disable-next-line
 import { SimaQRResponse } from 'src/types/SimaQRResponse';
 
 const token = localStorage.getItem(STORAGE_KEY);
