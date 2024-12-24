@@ -26,6 +26,7 @@ import az.esam.kredit.kredit.repositories.sima.SimaEncodedContractRepository;
 import az.esam.kredit.kredit.security.auth.AuthenticationService;
 import az.esam.kredit.kredit.services.external.idService.DocumentInfoService;
 import az.esam.kredit.kredit.services.internal.otp.OTPService;
+import az.esam.kredit.kredit.services.internal.storage.StorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
@@ -39,6 +40,7 @@ import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -63,8 +65,10 @@ import javax.security.auth.x500.X500Principal;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -107,6 +111,9 @@ public class SimaServiceImpl implements SimaService {
 
     @Autowired
     DocumentInfoService documentInfoService;
+
+    @Autowired
+    StorageService storageService;
 
     final Charset charSet = Charset.forName("ISO-8859-9");
 
@@ -256,6 +263,7 @@ public class SimaServiceImpl implements SimaService {
         String tsCert = request.getHeader("ts-cert");
         String tsSign = request.getHeader("ts-sign");
         log.info("sima callBack tsCert : {}", tsCert);
+        log.info("sima callBack dataSignature : {}", callBack.getDataSignature());
         SimaCertPersonInfo person = getPersonFromCertificate(tsCert);
         if (person != null) {
             log.info("sima callBack certificate person : {}", person);
@@ -464,6 +472,7 @@ public class SimaServiceImpl implements SimaService {
         }
         SimaGetFileResponse result = null;
         String operationId = request.getParameter("operationId");
+        String fileName = request.getParameter("fileName");
         if (operationId != null) {
             Optional<SimaEncodedContract> optSimaContract = simaEncodedContractRepository.findByOperationId(operationId);
             if (optSimaContract.isPresent()) {
@@ -476,6 +485,23 @@ public class SimaServiceImpl implements SimaService {
                                 .build();
                         simaEncodedContract.setStatus(ContractStatusEnum.signing);
                         simaEncodedContractRepository.save(simaEncodedContract);
+                    } else if (simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Sign) {
+                        SimaCertPersonInfo person = getPersonFromCertificate(tsCert);
+                        Resource file = storageService.loadAsResource(fileName);
+                        if (fileName == null || file == null || !person.getFinCode().equals(simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getAssignee().get(0))) {
+                            throw new Exception("file not found");
+                        }
+
+                        InputStream is = file.getInputStream();
+                        byte[] bytes = IOUtils.toByteArray(is);
+
+                        result = SimaGetFileResponse.builder()
+                                .filename(fileName)
+                                .data(Base64.getEncoder().encodeToString(bytes))
+                                .build();
+                        simaEncodedContract.setStatus(ContractStatusEnum.signing);
+                        simaEncodedContractRepository.save(simaEncodedContract);
+
                     }
                 } catch (Exception e) {
                     simaEncodedContract.setStatus(ContractStatusEnum.failed);
@@ -532,6 +558,74 @@ public class SimaServiceImpl implements SimaService {
             return null;
         }
         return null;
+    }
+
+    @Override
+    public SimaQRResponse getPdfQR(String fileName, String finCode) {
+        String result = "";
+        Calendar c = Calendar.getInstance();
+        Date now = new Date();
+        c.setTime(now);
+        c.add(Calendar.DATE, 1);
+        Date end = c.getTime();
+        ProtoInfo protoInfo = ProtoInfo.builder().Name("web2app").Version("1.3").build();
+        String operationId = UUID.randomUUID().toString();
+        OperationInfo operationInfo = OperationInfo.builder()
+                .Type(ContractTypeEnum.Sign) // send type with request
+                .OperationId(operationId)
+                .NbfUTC(dateToUtcTimestamp(truncateDate(now)))
+                .ExpUTC(dateToUtcTimestamp(truncateDate(end)))
+                .Assignee(Arrays.asList(finCode))
+                .build();
+        ClientInfo clientInfo = ClientInfo.builder()
+                .ClientId(clientId)
+                .ClientName(clientName)
+                .IconURI(iconUri)
+                .Callback(callBackUri)
+                .build();
+        SignableContainer signableContainer = SignableContainer.builder()
+                .ProtoInfo(protoInfo)
+                .OperationInfo(operationInfo)
+                .ClientInfo(clientInfo)
+                .DataInfo(DataInfo.builder()
+                        .DataURI(getDataUri
+                                .concat("?operationId=").concat(operationId)
+                                .concat("&fileName=").concat(fileName)
+                        ).build())
+                .build();
+        try {
+            String signableContainerStr = om.writeValueAsString(signableContainer).trim();
+            String s = hmacSHA256(masterKey, signableContainerStr);
+            Header header = Header.builder()
+                    .AlgName("HMACSHA256")
+                    .Signature(base64Encode(s))
+                    .build();
+            SimaContract simaContract = SimaContract.builder()
+                    .SignableContainer(signableContainer)
+                    .Header(header)
+                    .build();
+            String simaContractStr = om.writeValueAsString(simaContract).trim();
+            log.info("sima simaContractStr : {}", simaContractStr);
+            String encodedContract = base64Encode(simaContractStr);
+            String qrStr = getFileUri.concat(encodedContract);
+            BufferedImage qrImage = generateQRCodeImage(qrStr);
+            result = imgToBase64String(qrImage, "png");
+            SimaEncodedContract simaEncodedContract = SimaEncodedContract.builder()
+                    .encodedContract(encodedContract)
+                    .simaContract(simaContract)
+                    .operationId(operationId)
+                    .createDate(now)
+                    .expDate(end)
+                    .status(ContractStatusEnum.created)
+                    .signerFin(finCode)
+                    .build();
+            simaEncodedContractRepository.insert(simaEncodedContract);
+        } catch (JsonProcessingException ex) {
+            log.error("Error", ex);
+        } catch (Exception ex) {
+            log.error("Error", ex);
+        }
+        return SimaQRResponse.builder().image(result).operationId(operationId).build();
     }
 
 }
