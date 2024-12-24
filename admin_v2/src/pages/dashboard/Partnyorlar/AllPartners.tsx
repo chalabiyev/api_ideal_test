@@ -26,6 +26,7 @@ import {
 import { ArrowRightIcon } from '@mui/x-date-pickers';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { postChangePartnerStatus } from 'src/api/PartnerService';
 import useApi from 'src/api/useApi';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
@@ -81,6 +82,7 @@ export default function Kredit() {
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
     if (selectedRow) {
+      postChangePartnerStatus(selectedRow.id, event.target.value); // API'ye istek gönder
       selectedRow.status = event.target.value; // Durumu değiştir
     }
     setAnchorEl(null); // Popover'u kapat
