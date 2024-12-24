@@ -83,7 +83,7 @@ export default function Chat() {
   };
   return (
     <SafeAreaView style={styles.safeArea}>
-      <MainHeader />
+      <MainHeader text="" />
       <View style={styles.container}>
         <View style={styles.content}>
           <FlashList

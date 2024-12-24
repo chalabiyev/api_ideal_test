@@ -1,3 +1,4 @@
+// style.ts
 import { ScaledSheet } from "react-native-size-matters";
 import colors from "../../../constants/colors/colors";
 
@@ -19,13 +20,15 @@ export const makeStyles = () =>
       position: "absolute",
       top: 10,
       left: 20,
+      zIndex: 99,
     },
     videocallScreen: {
-      height: "100%",
+      flex: 1, // tüm alanı kaplasın
       width: "100%",
       borderWidth: 0.3,
       borderColor: colors.greyBackground,
       alignItems: "center",
+      // justifyContent: 'center', // isterseniz
     },
     callStick: {
       width: "90%",
@@ -33,6 +36,7 @@ export const makeStyles = () =>
       position: "absolute",
       bottom: 100,
       justifyContent: "space-between",
+      zIndex: 99,
     },
     stickBox: {
       height: "55@s",

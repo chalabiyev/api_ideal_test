@@ -55,6 +55,59 @@
         }
       }
     },
+    "@shopify/flash-list": {
+      "root": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/@shopify/flash-list",
+      "name": "@shopify/flash-list",
+      "platforms": {
+        "ios": {
+          "podspecPath": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/@shopify/flash-list/RNFlashList.podspec",
+          "version": "1.7.2",
+          "configurations": [],
+          "scriptPhases": []
+        },
+        "android": {
+          "sourceDir": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/@shopify/flash-list/android",
+          "packageImportPath": "import com.shopify.reactnative.flash_list.ReactNativeFlashListPackage;",
+          "packageInstance": "new ReactNativeFlashListPackage()",
+          "buildTypes": [],
+          "libraryName": "rnflashlist",
+          "componentDescriptors": [
+            "AutoLayoutViewComponentDescriptor",
+            "CellContainerComponentDescriptor"
+          ],
+          "cmakeListsPath": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/@shopify/flash-list/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
+    "react-native-document-picker": {
+      "root": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-document-picker",
+      "name": "react-native-document-picker",
+      "platforms": {
+        "ios": {
+          "podspecPath": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-document-picker/react-native-document-picker.podspec",
+          "version": "9.3.1",
+          "configurations": [],
+          "scriptPhases": []
+        },
+        "android": {
+          "sourceDir": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-document-picker/android",
+          "packageImportPath": "import com.reactnativedocumentpicker.RNDocumentPickerPackage;",
+          "packageInstance": "new RNDocumentPickerPackage()",
+          "buildTypes": [],
+          "libraryName": "rndocumentpicker",
+          "componentDescriptors": [],
+          "cmakeListsPath": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-document-picker/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
     "react-native-gesture-handler": {
       "root": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-gesture-handler",
       "name": "react-native-gesture-handler",
@@ -319,6 +372,30 @@
           "buildTypes": [],
           "componentDescriptors": [],
           "cmakeListsPath": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-video/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
+    "react-native-webrtc": {
+      "root": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-webrtc",
+      "name": "react-native-webrtc",
+      "platforms": {
+        "ios": {
+          "podspecPath": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-webrtc/react-native-webrtc.podspec",
+          "version": "124.0.4",
+          "configurations": [],
+          "scriptPhases": []
+        },
+        "android": {
+          "sourceDir": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-webrtc/android",
+          "packageImportPath": "import com.oney.WebRTCModule.WebRTCModulePackage;",
+          "packageInstance": "new WebRTCModulePackage()",
+          "buildTypes": [],
+          "componentDescriptors": [],
+          "cmakeListsPath": "/Users/behruzveliyev/Desktop/projects/work/ideal_kredit/mobile/node_modules/react-native-webrtc/android/build/generated/source/codegen/jni/CMakeLists.txt",
           "cxxModuleCMakeListsModuleName": null,
           "cxxModuleCMakeListsPath": null,
           "cxxModuleHeaderName": null,

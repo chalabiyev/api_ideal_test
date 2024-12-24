@@ -48,7 +48,6 @@ export default function SimaSignature() {
   const language = "az"; // или 'ru', 'az'
   const initializeAndRegisterSima = async () => {
     try {
-      // Инициализируем SDK
       const initResult = await SimaModule.initialize(
         username,
         password,
