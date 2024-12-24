@@ -17,6 +17,7 @@ import CreditDurationStatistics from 'src/components/statistika/CreditDurationSt
 import PartnerSourceStatistics from 'src/components/statistika/PartnerSourceStatistics';
 import TrafficStatistics from 'src/components/statistika/TrafficStatistics';
 import StatistikaGrid from 'src/components/statistika/StatistikaGrid';
+import Applications from 'src/components/Applications';
 
 // ----------------------------------------------------------------------
 
@@ -32,12 +33,14 @@ export default function Page() {
       <DashboardContent maxWidth="xl">
         <StatistikaGrid />
 
+        <Applications />
+
         <Typography variant="h4" sx={{ mt: 5, mb: 3 }}>
           Bilet satışı
         </Typography>
 
-        <DownloadStatistics />   
- 
+        <DownloadStatistics />
+
         <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-6 mb-4">
           <CreditDurationStatistics />
           <PartnerSourceStatistics />

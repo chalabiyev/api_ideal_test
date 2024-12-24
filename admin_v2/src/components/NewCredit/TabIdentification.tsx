@@ -23,7 +23,8 @@ const TabIdentification = ({
   setPin,
   setSeriaNo,
   pinValue,
-  seriaNoValue
+  seriaNoValue,
+  setUserInfo
 }: {
   hasData: boolean;
   loading: boolean;
@@ -34,10 +35,9 @@ const TabIdentification = ({
   setValue: React.Dispatch<React.SetStateAction<string>>;
   pinValue: string;
   seriaNoValue: string;
+  setUserInfo: React.Dispatch<React.SetStateAction<any>>;
   // eslint-disable-next-line
 }) => {
-  // const [pinValue, setPinValue] = React.useState('');
-  // const [seriaNoValue, setSeriaNoValue] = React.useState('');
 
   const handleSearch = () => {
     setPin(pinValue);
@@ -48,6 +48,8 @@ const TabIdentification = ({
   useEffect(() => {
     if (userInfo) {
       console.log('User info loaded:', userInfo);
+      if (!seriaNoValue)
+        setSeriaNo(userInfo.documentNumber);
     }
   }, [userInfo]);
   return (
@@ -230,7 +232,7 @@ const TabIdentification = ({
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Telefon Nömrəsi" fullWidth />
+                  <TextField label="Telefon Nömrəsi" fullWidth value={userInfo?.phoneNumber} onChange={(e) => setUserInfo({ ...userInfo, phoneNumber: e.target.value })} />
                 </Grid>
               </Grid>
             </CardContent>

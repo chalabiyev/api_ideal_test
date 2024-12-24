@@ -60,6 +60,8 @@ const VideoCall = () => {
   const [endMeeting, setEndMeeting] = useState(false);
   const [newCallReceived, setNewCallReceived] = useState(false);
   const { user } = useAuthContext();
+  const [clientId, setClientId] = useState('');
+  const [operatorId, setOperatorId] = useState('');
 
   useEffect(() => {
     localStream?.getAudioTracks().forEach((track) => {
@@ -81,6 +83,8 @@ const VideoCall = () => {
     setNewCallReceived(v);
     if (!v) return;
     setIncomingCall(true);
+    if (s.sender)
+      setClientId(s.sender);
     if (s.senderName)
       setClientName(s.senderName);
     if (s.senderPin)
@@ -163,12 +167,16 @@ const VideoCall = () => {
   };
 
   const handleAcceptCall = () => {
+    // eslint-disable-next-line
+    console.log("clientId : " + clientId);
+    // eslint-disable-next-line
+    console.log("operatorId : " + operatorId);
     setIncomingCall(false); // Gelen aramayı kapatıyoruz
     setIsCallActive(true); // Çağrıyı aktif hale getiriyoruz
     setAccepCall(true); // Aramanın kabul edildiğini belirtiyoruz
     startTimer(); // Timer'ı başlatıyoruz
     if (newCallType == 'above') {
-      let newTab = window.open(`/videomuraciet/nagd-pul-krediti?pin=${clientPin}`, '_blank');
+      let newTab = window.open(`/videomuraciet/nagd-pul-krediti?pin=${clientPin}&clientId=${clientId}&operatorId=${operatorId}`, '_blank');
       if (newTab)
         newTab.focus();
     }
@@ -506,6 +514,7 @@ const VideoCall = () => {
           setIncomingChatMessage={setReceivedMessage}
           outgoingChatMessage={messageToSend}
           setOutgoingChatMessage={setMessageToSend}
+          setClientUUID={(value: string) => setOperatorId(value)}
         />
       )}
     </Box>

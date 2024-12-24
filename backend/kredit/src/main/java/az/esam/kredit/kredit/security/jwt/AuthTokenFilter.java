@@ -117,8 +117,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private boolean isExcludedEndpoint(String requestURI) {
         return requestURI.startsWith("/swagger")
                 || requestURI.startsWith("/v3/api-docs")
-                || requestURI.startsWith("/swagger-ui.html")
-                || requestURI.startsWith("/api/file/getFile")
+                || requestURI.startsWith("/swagger-ui.html")                
                 || requestURI.startsWith("/api/auth/getUserPhoto");
     }
 

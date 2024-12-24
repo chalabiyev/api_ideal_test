@@ -1,6 +1,6 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Tab } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import useApi from 'src/api/useApi';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -13,7 +13,7 @@ import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
-import { useLocation } from 'react-router';
+import { CreditRequest } from 'src/types/CreditRequest';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +24,8 @@ export default function Page() {
   const location = window.location;
   const queryParams = new URLSearchParams(location.search);
   const clientPin: string = queryParams.get("pin") ?? '';
+  const clientId: string = queryParams.get("clientId") ?? '';
+  const operatorId: string = queryParams.get("operatorId") ?? '';
 
   // tab changes
   const [value, setValue] = React.useState('1');
@@ -35,6 +37,8 @@ export default function Page() {
   const [guarantorInfo, setGuarantorInfo] = React.useState<any>(null);
   const [guarantorPin, setGuarantorPin] = React.useState<string>('');
   const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
+  const [creditAmount, setCreditAmount] = useState<number>(0);
+  const [creditDuration, setCreditDuration] = useState<number>(12);
 
   const guarantorEndpoint = `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`;
   const {
@@ -47,12 +51,17 @@ export default function Page() {
 
   const endpoint = `/document/getIdCardInfoByPin?pin=${pin}`;
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
+  const endpointUserByUserName = `/auth/getUserByUserName/${pin}`;
+  const { data: userData } = useApi(endpointUserByUserName);
+  const [creditRequest, setCreditRequest] = useState<CreditRequest>({});
 
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
     if (hasData) {
-      console.log(data);
+      if (userData)
+        data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
+      setCreditRequest({ ...creditRequest, requestedUserPin: userData.username, phoneNumber: userData.phoneNumber, requestDate: new Date(), spouses: [] });
     }
   };
 
@@ -130,6 +139,7 @@ export default function Page() {
                 hasData={hasData}
                 pinValue={pin}
                 seriaNoValue={seriaNo}
+                setUserInfo={setUserInfo}
               />
             </TabPanel>
 
@@ -158,15 +168,15 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="6">
-              <TabCreditDataPage setValue={setValue} />
+              <TabCreditDataPage setValue={setValue} creditAmount={creditAmount} creditDuration={creditDuration} setCreditAmount={setCreditAmount} setCreditDuration={setCreditDuration} creditRequest={creditRequest} setCreditRequest={setCreditRequest} />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="7">
-              <TabVideoRecord setValue={setValue} />
+              <TabVideoRecord setValue={setValue} userInfo={userInfo} creditAmount={creditAmount} creditDuration={creditDuration} clientId={clientId} operatorId={operatorId} />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="8">
-              <TabContract />
+              <TabContract creditRequest={creditRequest} />
             </TabPanel>
           </TabContext>
         </Box>
