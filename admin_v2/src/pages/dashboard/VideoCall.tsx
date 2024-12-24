@@ -28,7 +28,9 @@ import { WebCam } from 'src/components/video-call/WebCam';
 import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOperator';
 import { useAuthContext } from 'src/auth/hooks';
 import { toast } from 'sonner';
+import { getPartnerById } from 'src/api/PartnerService';
 
+let partnerName = '';
 
 const VideoCall = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
@@ -65,11 +67,24 @@ const VideoCall = () => {
   const [clientId, setClientId] = useState('');
   const [operatorId, setOperatorId] = useState('');
 
+  console.log('partnerId:', partnerId);
   useEffect(() => {
     localStream?.getAudioTracks().forEach((track) => {
       track.enabled = isAudioOn;
     })
   }, [isAudioOn]);
+
+  const getPartner = async (id: string) => {
+    const partner = await getPartnerById(id);
+    partnerName = partner?.companyName || '';
+    return partnerName;
+  };
+
+  useEffect(() => {
+    if (partnerId) {
+      getPartner(partnerId);
+    }
+  }, [partnerId]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -287,10 +302,10 @@ const VideoCall = () => {
             }}
           />
           <Typography variant="h6" sx={{ marginTop: 2 }}>
-            {clientName} {partnerId}
+            {clientName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {/* Embawood mebel mağazası */}
+            {partnerName}
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', padding: 2, gap: 2, width: '100%' }}>
@@ -497,12 +512,13 @@ const VideoCall = () => {
 
       {localStream && (
         <EsamVideoCallOperator
+          setPartnerId={setPartnerId}
+          partnerId={partnerId}
           localName={user?.fullName}
           localPin="1234567"
           localStream={localStream}
           onReceiverConnected={(s: SignalType) => {
             setClientName(s.senderName!);
-            setPartnerId(s?.partnerId!);
           }}
           onReceiverStream={(s: MediaStream) => {
             if (remoteVideoRef.current == undefined) return;
