@@ -6,6 +6,7 @@ export interface WebsocketContextType {
 }
 
 export interface SignalType {
+    partnerId?: string;
     msgid?: string;
     sender?: string;
     senderName?: string;

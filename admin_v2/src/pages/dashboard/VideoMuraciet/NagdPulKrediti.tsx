@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
 // ----------------------------------------------------------------------
 
 const metadata = { title: `Video müraciət | Nağd ` };
-//FIXME : Cihan : sadece video imza tabında değil diğer tablarda da web socket lazım  olabilir o yüzden bu sayfaya taşıdım.
+// FIXME : Cihan : sadece video imza tabında değil diğer tablarda da web socket lazım  olabilir o yüzden bu sayfaya taşıdım.
 let wsNK: WebSocket;
 
 export default function Page() {
@@ -120,7 +120,7 @@ export default function Page() {
   }, [data, guarantorData]);
 
   useEffect(()=>{
-    //credit request değiştiyse contract ta değişmeli!.
+    // credit request değiştiyse contract ta değişmeli!.
     setContractPdf("");
   },[creditRequest]);
 

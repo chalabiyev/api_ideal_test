@@ -54,6 +54,8 @@ const VideoCall = () => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const [clientPin, setClientPin] = useState<string>('');
   const [clientName, setClientName] = useState<string>('');
+  const [partnerId, setPartnerId] = useState<string>('');
+
   const [clientPhoto, setClientPhoto] = useState<string>('');
   const [newCallType, setNewCallType] = useState<string>('');
   const [acceptCall, setAccepCall] = useState(false);
@@ -285,7 +287,7 @@ const VideoCall = () => {
             }}
           />
           <Typography variant="h6" sx={{ marginTop: 2 }}>
-            {clientName}
+            {clientName} {partnerId}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {/* Embawood mebel mağazası */}
@@ -500,6 +502,7 @@ const VideoCall = () => {
           localStream={localStream}
           onReceiverConnected={(s: SignalType) => {
             setClientName(s.senderName!);
+            setPartnerId(s?.partnerId!);
           }}
           onReceiverStream={(s: MediaStream) => {
             if (remoteVideoRef.current == undefined) return;
