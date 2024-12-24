@@ -54,7 +54,7 @@ public class FileController {
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam("fileName") String fileName,
-            @RequestParam("isPublic") boolean isPublic,
+            @RequestParam(value = "isPublic", required = false, defaultValue = "false") boolean isPublic,
             Authentication authentication
     ) {
         try {
@@ -84,7 +84,7 @@ public class FileController {
     @PostMapping("/uploadMultipleFile")
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") List<MultipartFile> file,
-            @RequestParam("isPublic") boolean isPublic,
+            @RequestParam(value = "isPublic", required = false, defaultValue = "false") boolean isPublic,
             Authentication authentication
     ) {
         try {
