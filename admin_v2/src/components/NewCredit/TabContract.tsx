@@ -12,48 +12,63 @@ import {
 } from '@mui/material';
 import { toast } from 'sonner';
 import { CreditRequest } from 'src/types/CreditRequest';
-import { generateContract } from 'src/api/ContractService';
+import { generateContract, getPdfQR } from 'src/api/ContractService';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 import { callGetFile } from 'src/api/FileService';
+import { SimaQRResponse } from 'src/types/SimaQRResponse';
 
-const TabContract = ({ creditRequest }: { creditRequest: CreditRequest }) => {
+const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileName, setContractFileName }:
+  { creditRequest: CreditRequest, contractPdf: string; setContractPdf: any; contractFileName: string; setContractFileName: any; }) => {
   const [isSigning, setIsSigning] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [pdfFile, setPdfFile] = useState("");
+  const [contractGenerating, setContractGenerating] = useState(false);
+  const [simaQR, setSimaQR] = useState<SimaQRResponse>();
 
-  const handleSign = () => {
-    setOpenDialog(true);
-    setIsSigning(true);
+  const handleSign = async () => {
+    let res = await getPdfQR(contractFileName, creditRequest.requestedUserPin!);
+    if (res) {
+      setSimaQR(res);
+      setOpenDialog(true);
+      setIsSigning(true);
+    }
 
     // Show the signing gif for 2-3 seconds, then display a random toast
-    setTimeout(() => {
-      const isSigned = Math.random() > 0.5; // Randomly determine if signed or not
-      setIsSigning(false);
-      setOpenDialog(false); // Close the dialog after signing
-      if (isSigned) {
-        toast.success('Müqavilə uğurla imzalandı!');
-      } else {
-        toast.error('Müqavilə imzalanmadı.');
-      }
-    }, 3000); // Show gif for 2 seconds
+    // setTimeout(() => {
+    //   const isSigned = Math.random() > 0.5; // Randomly determine if signed or not
+    //   setIsSigning(false);
+    //   setOpenDialog(false); // Close the dialog after signing
+    //   if (isSigned) {
+    //     toast.success('Müqavilə uğurla imzalandı!');
+    //   } else {
+    //     toast.error('Müqavilə imzalanmadı.');
+    //   }
+    // }, 3000); // Show gif for 2 seconds
   };
 
   useEffect(() => {
-    if (creditRequest) {
+    if (creditRequest && !contractPdf) {
+      setContractGenerating(true);
       generateContract(creditRequest).then((res: ContractGenerateResponse | null) => {
         if (res?.status == 'success') {
+          setContractFileName(res.pdfName);
           callGetFile(res.pdfName).then((file) => {
-            if (file)
-              setPdfFile(file);
-            else
+            if (file) {
+              setContractPdf(file);
+              setContractGenerating(false);
+            }
+            else {
               toast.error("Kontrakt oluşturulamadı!");
+              setContractGenerating(false);
+            }
           }).catch((err) => {
             toast.error("Kontrakt oluşturulamadı!");
+            setContractGenerating(false);
           });
         }
       }).catch((err) => {
         toast.error("Kontrakt oluşturulamadı!");
-      })
+        setContractGenerating(false);
+      });
     }
   }, [creditRequest]);
 
@@ -73,7 +88,9 @@ const TabContract = ({ creditRequest }: { creditRequest: CreditRequest }) => {
           }}
         >
           {/* <Typography variant="body2"> */}
-            <embed src={pdfFile} width="100%" height="400px" />
+          {/* FIXME : CİHAN : İLKİN BEY BURAYA GÜZEL BİR DİALOG YAZAR MISINIZ? */}
+          {contractGenerating && <Typography>Müqavilə oluşturuluyor...</Typography>}
+          {!contractGenerating && <embed src={contractPdf} width="100%" height="400px" />}
           {/* </Typography> */}
         </CardContent>
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
@@ -103,6 +120,12 @@ const TabContract = ({ creditRequest }: { creditRequest: CreditRequest }) => {
               }}
             >
               <Typography variant="h6"> İmzalanır </Typography>
+              <img
+                alt='simaqr'
+                src={`data:image/jpeg;base64, ${simaQR?.image}`}
+                width={350}
+                height={350}
+              />
               <CircularProgress color="success" size={20} />
             </Box>
           )}

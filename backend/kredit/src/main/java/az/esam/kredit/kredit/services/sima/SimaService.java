@@ -21,7 +21,7 @@ public interface SimaService {
 
     public String base64Decode(String str);
 
-    public String sha256(String str);
+    public String sha256(String str);    
 
     public SimaQRResponse getAuthQR(String finCode, ContractTypeEnum contractType);
 
@@ -42,4 +42,6 @@ public interface SimaService {
     public ContractStatusEnum getContractStatusByOperationId(String operationId);
 
     public AuthenticationResponse getToken(HttpServletRequest request, SimaTokenRequest simaTokenRequest);
+    
+    public SimaQRResponse getPdfQR(String fileName, String finCode);
 }

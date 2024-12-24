@@ -8,6 +8,7 @@ import { STORAGE_KEY } from 'src/auth/context/jwt';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 // eslint-disable-next-line
 import { CreditRequest } from 'src/types/CreditRequest';
+import { SimaQRResponse } from 'src/types/SimaQRResponse';
 
 const token = localStorage.getItem(STORAGE_KEY);
 
@@ -25,6 +26,23 @@ export const generateContract = async (creditRequest: CreditRequest) => {
     });
     if (response.ok) {
         const data = await response.json() as ContractGenerateResponse;
+        return data;
+        // eslint-disable-next-line
+    } else {
+        return null;
+    }
+}
+
+export const getPdfQR = async (fileName: string, finCode: string) => {
+    const response = await fetch(`${BASE_URL}/sima/getPdfQR/${fileName}/${finCode}`, {
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            'Content-Type': 'application/json;charset=UTF-8',
+        },
+        "method": "GET"
+    });
+    if (response.ok) {
+        const data = await response.json() as SimaQRResponse;
         return data;
         // eslint-disable-next-line
     } else {

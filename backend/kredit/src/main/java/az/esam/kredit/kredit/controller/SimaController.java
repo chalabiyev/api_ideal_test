@@ -69,4 +69,12 @@ public class SimaController {
         return ResponseEntity.ok(simaService.getToken(httpRequest, request));
     }
 
+    @GetMapping("/getPdfQR/{fileName}/{finCode}")
+    public ResponseEntity<SimaQRResponse> getPdfQR(
+            HttpServletRequest httpRequest,
+            @PathVariable("fileName") String fileName,
+            @PathVariable("finCode") String finCode) {
+        return ResponseEntity.ok(simaService.getPdfQR(fileName, finCode));
+    }
+
 }
