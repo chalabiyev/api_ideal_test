@@ -192,6 +192,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
             }
 
+            String password = request.getPassword();
+            if (password == null || password.isEmpty()) {
+                password = UUID.randomUUID().toString();
+            }
+
             var user = User.builder()
                     .username(request.getUsername())
                     .name(request.getName())
@@ -201,7 +206,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .gender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null)
                     .phoneNumber(request.getPhoneNumber())
                     .email(request.getEmail())
-                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .password(passwordEncoder.encode(password))
                     .status(EUserStatus.ACTIVE)
                     .signUpDate(new Date())
                     .birthDate(request.getBirthDate())
@@ -581,7 +586,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard) {
+    public AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard, String password) {
         Optional<User> findUser = userRepository.findByUsername(person.getFinCode());
         if (findUser.isEmpty()) {
             try {
@@ -596,6 +601,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .username(person.getFinCode())
                             .name(person.getName())
                             .surName(person.getSurName())
+                            .password(password)
                             .fatherName(person.getFatherName())
                             .fullName(person.getName().concat(" ").concat(person.getSurName()))
                             .phoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""))

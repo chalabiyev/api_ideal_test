@@ -15,28 +15,29 @@ import { format } from 'date-fns';
 import { SignalType } from '../video-call/WebsocketTypes';
 import { callGetFile } from 'src/api/FileService';
 
-let wsVideoRecord: WebSocket;
-
 const TabVideoRecord = ({
   userInfo,
   creditAmount,
   creditDuration,
   setValue,
-  clientId,
-  operatorId
+  newSignal,
+  sendSignal,
+  videoData,
+  setVideoData
 }: {
   userInfo: any;
   creditAmount: number;
   creditDuration: number;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  clientId: string;
-  operatorId: string;
+  newSignal: SignalType | undefined;
+  sendSignal: (s: SignalType) => void;
+  videoData: string;
+  setVideoData: (s: string) => void;
 }) => {
   const [recording, setRecording] = useState(false);
   const [dummyTextOpen, setDummyTextOpen] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [videoSignText, setVideoSignText] = useState('');
-  const [videoData, setVideoData] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -85,59 +86,15 @@ const TabVideoRecord = ({
   };
 
   const today = format(new Date(), 'dd/MM/yyyy');
-  const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
-  const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
-
-  const handleSocketOpen = () => {
-    if (wsVideoRecord) {
-      wsVideoRecord.send(
-        JSON.stringify({ type: 'setClientUUID', clientUUID: operatorId, socketKEY: webSocketKey })
-      );
-    }
-  };
-
-  const sendSignal = (data: SignalType) => {
-    if (wsVideoRecord && wsVideoRecord.readyState == WebSocket.OPEN) {
-      let msg = { ...data, clientUUID: operatorId, sender: operatorId, receiver: clientId };
-      console.log("sendSignal", msg);
-      wsVideoRecord.send(JSON.stringify(msg));
-    }
-  };
-
-  const listenSignals = (s: SignalType) => {
-    console.log("listenSignals", s);
-    if (s.receiver == operatorId) {
-      if (s.type == 'videoRecord' && s.msg) {
-        callGetFile(s.msg).then((res) => {
-          if (res)
-            setVideoData(res);
-        })
-      }
-    }
-  };
-
-  const handleMessage = (event: MessageEvent) => {
-    if (event.data && event.data.trim().length > 0) {
-      try {
-        let msg = JSON.parse(event.data) as SignalType;
-        listenSignals(msg);
-      } catch (error) { }
-    }
-  };
 
   useEffect(() => {
-    if (!wsVideoRecord) {
-      wsVideoRecord = new WebSocket(webSocketUri);
-      wsVideoRecord.onopen = handleSocketOpen;
-      wsVideoRecord.onmessage = handleMessage;
-      setInterval(() => {
-        if (wsVideoRecord.readyState == WebSocket.CLOSED) {
-          wsVideoRecord = new WebSocket(webSocketUri);
-        }
-      }, 30000);
+    if (newSignal && newSignal.type == 'videoRecord' && newSignal.msg) {
+      callGetFile(newSignal.msg).then((res) => {
+        if (res)
+          setVideoData(res);
+      })
     }
-  }, []);
-
+  }, [newSignal]);
 
   return (
     <Box sx={{ p: 2 }}>

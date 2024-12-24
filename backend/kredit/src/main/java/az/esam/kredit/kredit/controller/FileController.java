@@ -54,6 +54,7 @@ public class FileController {
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam("fileName") String fileName,
+            @RequestParam("isPublic") boolean isPublic,
             Authentication authentication
     ) {
         try {
@@ -67,6 +68,7 @@ public class FileController {
             uploadedFileRepository.save(UploadedFile.builder()
                     .fileName(fileName)
                     .owner(user)
+                    .isPublic(isPublic)
                     .upladedDate(new Date())
                     .build());
             return ResponseEntity
@@ -82,15 +84,25 @@ public class FileController {
     @PostMapping("/uploadMultipleFile")
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") List<MultipartFile> file,
+            @RequestParam("isPublic") boolean isPublic,
             Authentication authentication
     ) {
         try {
+
+            var user = authentication != null ? userRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found")) : null;
             List<String> fileNames = new ArrayList<>();
             for (MultipartFile f : file) {
                 String fileName = System.currentTimeMillis() + "_" + normalizeFileName(f.getOriginalFilename());
                 logger.info(fileName);
                 logger.info(f.toString());
                 storageService.store(f, fileName);
+                uploadedFileRepository.save(UploadedFile.builder()
+                        .fileName(fileName)
+                        .owner(user)
+                        .isPublic(isPublic)
+                        .upladedDate(new Date())
+                        .build());
                 fileNames.add(fileName);
             }
             return ResponseEntity
@@ -174,4 +186,47 @@ public class FileController {
                     .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
+
+    @GetMapping("/getPublicFile/{fileName}")
+    @ResponseBody
+    public ResponseEntity<?> getPublicFile(@PathVariable("fileName") String fileName, Authentication authentication, HttpServletRequest request) {
+        try {
+            UploadedFile uploadedFile = uploadedFileRepository.findByFileName(fileName)
+                    .orElseThrow(() -> new Exception("File not found"));
+
+            if (uploadedFile.isPublic()) {
+                Resource file = storageService.loadAsResource(fileName);
+                if (file == null) {
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .build();
+                }
+                // Try to determine file's content type
+                String contentType = null;
+                try {
+                    contentType = request.getServletContext().getMimeType(file.getFile().getAbsolutePath());
+                } catch (IOException ex) {
+                    Logger.getLogger(AuthController.class.getName()).info("Could not determine file type.");
+                    throw new RuntimeException(ex.getMessage());
+                }
+
+                // Fallback to the default content type if type could not be determined
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                        .body(file);
+            } else {
+                throw new Exception("Yetkiniz yoxdur");
+            }
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+        }
+    }
+
 }
