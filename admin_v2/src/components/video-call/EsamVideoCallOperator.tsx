@@ -32,6 +32,7 @@ let meetingID = '';
 let receiverName = '';
 let receiverPin;
 let receiver = '';
+let partnerId = '';
 let inCall = false;
 let calling = false;
 let peerConnection: RTCPeerConnection;
@@ -164,6 +165,8 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     meetingID = s.meetingID;
     receiver = s.sender;
     receiverName = s.senderName;
+    // eslint-disable-next-line
+    if(s.partnerId) partnerId = s.partnerId;
     if (s.senderPin) receiverPin = s.senderPin;
     prop.setNewCallReceived(true, s);
   };
