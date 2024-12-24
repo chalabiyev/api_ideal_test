@@ -1,6 +1,7 @@
 package az.esam.kredit.kredit.entities;
 
 import java.util.Date;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,7 @@ public class UploadedFile extends BaseEntity {
 
     private String fileName;
     private Date upladedDate;
+    private boolean isPublic;
 
     @DocumentReference
     private User owner;
