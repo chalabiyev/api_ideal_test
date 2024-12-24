@@ -12,38 +12,58 @@ import {
 } from '@mui/material';
 import { toast } from 'sonner';
 import { CreditRequest } from 'src/types/CreditRequest';
-import { generateContract, getPdfQR } from 'src/api/ContractService';
+import { generateContract, getPdfQR, getSimaStatus, SimaStatus } from 'src/api/ContractService';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 import { callGetFile } from 'src/api/FileService';
 import { SimaQRResponse } from 'src/types/SimaQRResponse';
+import { SignalType } from '../video-call/WebsocketTypes';
 
-const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileName, setContractFileName }:
-  { creditRequest: CreditRequest, contractPdf: string; setContractPdf: any; contractFileName: string; setContractFileName: any; }) => {
+const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileName, setContractFileName, newSignal, sendSignal }:
+  {
+    creditRequest: CreditRequest, contractPdf: string; setContractPdf: any; contractFileName: string; setContractFileName: any;
+    newSignal: SignalType | undefined;
+    sendSignal: (s: SignalType) => void;
+  }) => {
   const [isSigning, setIsSigning] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [contractGenerating, setContractGenerating] = useState(false);
-  const [simaQR, setSimaQR] = useState<SimaQRResponse>();
+  const [simaOperationId, setSimaOperationId] = useState<string>();
+  const [checkCounter, setCheckCounter] = useState(0);
 
   const handleSign = async () => {
-    let res = await getPdfQR(contractFileName, creditRequest.requestedUserPin!);
-    if (res) {
-      setSimaQR(res);
+    setCheckCounter(1);
+    sendSignal({ type: 'signPdf', msg: contractFileName });
+  };
+
+  const checkSignStatus = () => {
+    if (simaOperationId) {
+      getSimaStatus(simaOperationId).then((res: SimaStatus) => {
+        if (res == SimaStatus.Success) {
+          setIsSigning(false);
+          setOpenDialog(false);
+          toast.success('Müqavilə uğurla imzalandı!');
+        } else if (res == SimaStatus.Failed) {
+          toast.error('Müqavilə imzalanmadı.');
+          setIsSigning(false);
+          setOpenDialog(false);
+        } else if (res == SimaStatus.Signing && checkCounter < 5) {
+          setTimeout(() => {
+            setCheckCounter(checkCounter + 1);
+            checkSignStatus();
+          }, 5000);
+        }
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (newSignal?.type == 'signingPdf' && newSignal.msg) {
+      setSimaOperationId(newSignal.msg);
       setOpenDialog(true);
       setIsSigning(true);
+      checkSignStatus();
     }
-
-    // Show the signing gif for 2-3 seconds, then display a random toast
-    // setTimeout(() => {
-    //   const isSigned = Math.random() > 0.5; // Randomly determine if signed or not
-    //   setIsSigning(false);
-    //   setOpenDialog(false); // Close the dialog after signing
-    //   if (isSigned) {
-    //     toast.success('Müqavilə uğurla imzalandı!');
-    //   } else {
-    //     toast.error('Müqavilə imzalanmadı.');
-    //   }
-    // }, 3000); // Show gif for 2 seconds
-  };
+  }, [newSignal]);
 
   useEffect(() => {
     if (creditRequest && !contractPdf) {
@@ -120,12 +140,6 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
               }}
             >
               <Typography variant="h6"> İmzalanır </Typography>
-              <img
-                alt='simaqr'
-                src={`data:image/jpeg;base64, ${simaQR?.image}`}
-                width={350}
-                height={350}
-              />
               <CircularProgress color="success" size={20} />
             </Box>
           )}
