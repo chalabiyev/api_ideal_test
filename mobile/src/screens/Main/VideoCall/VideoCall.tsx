@@ -32,7 +32,7 @@ import {
   RTCIceCandidate,
   RTCSessionDescription,
 } from "react-native-webrtc";
-
+import uuid from 'react-native-uuid';
 const { width } = Dimensions.get("window");
 const globalStyle = globalSpacingStyle();
 const styles = makeStyles();
@@ -41,24 +41,38 @@ const TURN_ENABLED = true;
 const TURN_SERVER_URL = "turn:46.202.143.42:3478?transport=tcp";
 const TURN_USER = "testname";
 const TURN_PASS = "testpass";
+const webSocketKey = "0916d3d3-f102-4932-be77-cd0084e13c74";
+const clientUUID = uuid.v4();
+let receiver = "";
+let meetingID = "";
+let calling = false;
+let callAccepted = false;
+let socketReady = false;
+let callStarted = false;
+let localStream: MediaStream | null = null;
+let remoteStream: MediaStream | null = null;
 
 export interface SignalType {
   type:
-    | "newcall"
-    | "cancel"
-    | "answer"
-    | "offer"
-    | "icecandidate"
-    | "acceptcall"
-    | "reject"
-    | "sendOfferAgain"
-    | "endmeeting";
+  | "newcall"
+  | "cancel"
+  | "answer"
+  | "offer"
+  | "icecandidate"
+  | "acceptcall"
+  | "reject"
+  | "sendOfferAgain"
+  | "endmeeting"
+  | "setClientUUID";
+
   meetingID?: string;
   sdp?: string;
   candidate?: RTCIceCandidate | null;
   senderName?: string;
   sender?: string;
   receiver?: string;
+  clientUUID?: string;
+  socketKEY?: string;
 }
 
 export default function VideoCall() {
@@ -72,16 +86,13 @@ export default function VideoCall() {
   const animationValue = useRef(new Animated.Value(0)).current;
   const [isCameraOn, setCameraOn] = useState(true);
   const [isMicrophoneOn, setMicrophoneOn] = useState(true);
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+
+  const [localStreamForView, setLocalStreamForView] = useState<MediaStream>();
+  const [remoteStreamForView, setRemoteStreamForView] = useState<MediaStream>();
+
   const wsRef = useRef<WebSocket | null>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
 
-  const [meetingID, setMeetingID] = useState<string | null>(null);
-  const [calling, setCalling] = useState<boolean>(false);
-  const [callAccepted, setCallAccepted] = useState<boolean>(false);
-  const [socketReady, setSocketReady] = useState<boolean>(false);
-  const [callStarted, setCallStarted] = useState<boolean>(false);
   useEffect(() => {
     if (route.params?.showGif) {
       setShowGif(true);
@@ -105,14 +116,7 @@ export default function VideoCall() {
       if (pcRef.current) pcRef.current.close();
     };
   }, []);
-  useEffect(() => {
-    if (socketReady && !callStarted) {
-      console.log(
-        "[VideoCall] socketReady=true & callStarted=false => startNewCall"
-      );
-      startNewCall();
-    }
-  }, [socketReady, callStarted]);
+
   useEffect(() => {
     if (callStarted) {
       console.log("[VideoCall] callStarted => starting timer");
@@ -129,8 +133,15 @@ export default function VideoCall() {
 
     ws.onopen = () => {
       console.log("[WebSocket] onopen => connected!");
-      setSocketReady(true);
+      socketReady = true;
+      if (socketReady && !callStarted) {
+        console.log(
+          "[VideoCall] socketReady=true & callStarted=false => startNewCall"
+        );
+        startNewCall();
+      }
     };
+
 
     ws.onmessage = (event) => {
       if (event.data) {
@@ -141,7 +152,7 @@ export default function VideoCall() {
 
     ws.onclose = () => {
       console.log("[WebSocket] onclose => disconnected!");
-      setSocketReady(false);
+      socketReady = true;
     };
 
     ws.onerror = (err) => {
@@ -158,22 +169,34 @@ export default function VideoCall() {
 
       switch (msg.type) {
         case "acceptcall":
-          handleAcceptCall(msg);
+          if (msg.receiver == clientUUID) {
+            handleAcceptCall(msg);
+          }
           break;
         case "reject":
-          handleRejectCall(msg);
+          if (msg.receiver == clientUUID) {
+            handleRejectCall(msg);
+          }
           break;
         case "offer":
-          handleOffer(msg);
+          if (msg.receiver == clientUUID) {
+            handleOffer(msg);
+          }
           break;
         case "answer":
-          handleAnswer(msg);
+          if (msg.receiver == clientUUID) {
+            handleAnswer(msg);
+          }
           break;
         case "icecandidate":
-          handleCandidate(msg);
+          if (msg.receiver == clientUUID) {
+            handleCandidate(msg);
+          }
           break;
         case "endmeeting":
-          endMeeting();
+          if (msg.receiver == clientUUID) {
+            endMeeting();
+          }
           break;
       }
     } catch (error) {
@@ -182,6 +205,10 @@ export default function VideoCall() {
   };
 
   const sendSignal = (signal: SignalType) => {
+    signal.sender = clientUUID;
+    if (receiver) {
+      signal.receiver = receiver;
+    }
     if (wsRef.current && socketReady) {
       console.log(">>> Sending:", signal);
       wsRef.current.send(JSON.stringify(signal));
@@ -197,15 +224,22 @@ export default function VideoCall() {
         video: { facingMode: "user" },
       });
       console.log("[VideoCall] got localStream =>", stream);
-      setLocalStream(stream);
+      localStream = stream;
+      setLocalStreamForView(localStream);
     } catch (err) {
       console.log("[VideoCall] getUserMedia error =>", err);
     }
   };
   const startNewCall = () => {
-    const newMeetingID = "dummy-random-" + Date.now();
-    setMeetingID(newMeetingID);
-    setCalling(true);
+    receiver = "";
+    sendSignal({
+      type: "setClientUUID",
+      clientUUID: clientUUID,
+      socketKEY: webSocketKey,
+    });
+    const newMeetingID = uuid.v4();
+    meetingID = newMeetingID;
+    calling = true;
 
     console.log(
       "[VideoCall] startNewCall => newcall with meetingID=",
@@ -215,6 +249,7 @@ export default function VideoCall() {
       type: "newcall",
       meetingID: newMeetingID,
       senderName: "MobileUser",
+      sender: clientUUID
     });
     setTimeout(() => {
       if (!callAccepted && calling) {
@@ -224,7 +259,7 @@ export default function VideoCall() {
     }, 30000);
 
     setElapsedSeconds(0);
-    setCallStarted(true);
+    callStarted = true;
   };
 
   const cancelCall = () => {
@@ -232,26 +267,28 @@ export default function VideoCall() {
     if (meetingID) {
       sendSignal({ type: "cancel", meetingID });
     }
-    setCalling(false);
-    setMeetingID(null);
-    setCallStarted(false);
+    calling = false;
+    meetingID = "";
+    callStarted = false;
     setElapsedSeconds(0);
+    receiver = "";
   };
   const handleAcceptCall = (s: SignalType) => {
-    console.log("[VideoCall] handleAcceptCall =>", s);
+    console.log("[VideoCall] handleAcceptCall =>", s, s.meetingID, meetingID, callAccepted);
     if (callAccepted || s.meetingID !== meetingID) return;
-    setCallAccepted(true);
-    setCalling(false);
+    receiver = s.sender!;
+    callAccepted = true;
+    calling = false;
+    callStarted = true;
     preparePeerConnection();
-    setCallStarted(true);
   };
 
   const handleRejectCall = (s: SignalType) => {
     console.log("[VideoCall] handleRejectCall =>", s);
     if (!callAccepted && s.meetingID === meetingID) {
-      setCalling(false);
-      setMeetingID(null);
-      setCallStarted(false);
+      calling = false;
+      meetingID = "";
+      callStarted = false;
       setElapsedSeconds(0);
     }
   };
@@ -304,13 +341,14 @@ export default function VideoCall() {
 
     pc.ontrack = (event) => {
       console.log("[PeerConnection] ontrack => got remote stream");
-      setRemoteStream(event.streams[0]);
+      remoteStream = event.streams[0];
+      setRemoteStreamForView(remoteStream);
     };
 
     if (localStream) {
       console.log("[PeerConnection] adding localStream tracks =>", localStream);
       localStream.getTracks().forEach((track) => {
-        pc.addTrack(track, localStream);
+        pc.addTrack(track, localStream!);
       });
     }
     pcRef.current = pc;
@@ -321,6 +359,7 @@ export default function VideoCall() {
    * OFFER / ANSWER / ICE
    * -------------------------- */
   const sendOfferSignal = async () => {
+    console.log("sendOfferSignal", pcRef.current);
     if (!pcRef.current) return;
     try {
       console.log("[VideoCall] sendOfferSignal => createOffer");
@@ -383,11 +422,11 @@ export default function VideoCall() {
     console.log("[VideoCall] endMeeting => close PC & reset states");
     pcRef.current?.close();
     pcRef.current = null;
-    setRemoteStream(null);
-    setMeetingID(null);
-    setCalling(false);
-    setCallAccepted(false);
-    setCallStarted(false);
+    remoteStream = null;
+    meetingID = "";
+    calling = false;
+    callAccepted = false;
+    callStarted = false;
     setElapsedSeconds(0);
 
     navigation.navigate("Scoring");
@@ -505,25 +544,25 @@ export default function VideoCall() {
                 style={globalStyle.space20VT}
               />
               <View style={{ flex: 1, width: "100%" }}>
-                {localStream && (
+                {localStreamForView && (
                   <RTCView
                     style={{
                       width: "100%",
                       height: "50%",
                       backgroundColor: "#333",
                     }}
-                    streamURL={localStream.toURL()}
+                    streamURL={localStreamForView.toURL()}
                     objectFit="cover"
                   />
                 )}
-                {remoteStream && (
+                {remoteStreamForView && (
                   <RTCView
                     style={{
                       width: "100%",
                       height: "50%",
                       backgroundColor: "#666",
                     }}
-                    streamURL={remoteStream.toURL()}
+                    streamURL={remoteStreamForView.toURL()}
                     objectFit="cover"
                   />
                 )}
