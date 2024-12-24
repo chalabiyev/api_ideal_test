@@ -27,5 +27,7 @@ public interface PartnerService {
     Long count();
 
     Partner changeStatus(String id, String status, Authentication authentication) throws BadRequestException;
+
+    List<Partner> list();
 }
 

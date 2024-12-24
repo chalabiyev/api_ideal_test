@@ -107,6 +107,11 @@ public class PartnerController {
 
     @GetMapping("/list")
     public ResponseEntity<List<Partner>> list() {
+        return ResponseEntity.ok(partnerService.list());
+    }
+
+    @GetMapping("/listAll")
+    public ResponseEntity<List<Partner>> listAll() {
         return ResponseEntity.ok(partnerService.listAll());
     }
 
