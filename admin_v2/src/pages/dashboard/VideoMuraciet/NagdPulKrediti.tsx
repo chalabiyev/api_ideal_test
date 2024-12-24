@@ -275,9 +275,7 @@ export default function Page() {
                 setValue={setValue}
                 userInfo={userInfo}
                 creditAmount={creditAmount}
-                creditDuration={creditDuration}
-                clientId={clientId}
-                operatorId={operatorId}
+                creditDuration={creditDuration}                
                 newSignal={newSignal}
                 sendSignal={sendSignal}
                 videoData={videoData}
@@ -289,6 +287,7 @@ export default function Page() {
               <TabContract creditRequest={creditRequest} 
               contractPdf={contractPdf} setContractPdf={setContractPdf}
               contractFileName={contractFileName} setContractFileName={setContractFileName}
+              newSignal={newSignal} sendSignal={sendSignal}
                />
             </TabPanel>
           </TabContext>

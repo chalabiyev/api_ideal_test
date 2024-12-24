@@ -20,8 +20,6 @@ const TabVideoRecord = ({
   creditAmount,
   creditDuration,
   setValue,
-  clientId,
-  operatorId,
   newSignal,
   sendSignal,
   videoData,
@@ -31,8 +29,6 @@ const TabVideoRecord = ({
   creditAmount: number;
   creditDuration: number;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  clientId: string;
-  operatorId: string;
   newSignal: SignalType | undefined;
   sendSignal: (s: SignalType) => void;
   videoData: string;

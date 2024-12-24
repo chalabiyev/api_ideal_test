@@ -18,4 +18,5 @@ public class SimaTokenRequest {
     private String phoneNumber;
     @NotBlank
     private String otpCode;
+    private String password;
 }
