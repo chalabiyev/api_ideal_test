@@ -539,7 +539,7 @@ public class SimaServiceImpl implements SimaService {
                     try {
                         FullIDCardInfoResponse idCard = documentInfoService.getIdCardInfoByPin(person.getFinCode());
                         person.setPhoneNumber(simaTokenRequest.getPhoneNumber());
-                        AuthenticationResponse auth = authenticationService.simaWeb2AppLogin(person, idCard);
+                        AuthenticationResponse auth = authenticationService.simaWeb2AppLogin(person, idCard, simaTokenRequest.getPassword());
                         if (auth != null) {
                             contract.setTokenData(auth);
                             return auth;

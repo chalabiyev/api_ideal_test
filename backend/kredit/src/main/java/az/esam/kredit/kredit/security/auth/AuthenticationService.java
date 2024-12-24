@@ -26,7 +26,7 @@ public interface AuthenticationService {
 
     AuthenticationResponse authenticate(LoginRequest request);
 
-    AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard);
+    AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard, String password);
 
     User addRole(String username, ERole role);
 
