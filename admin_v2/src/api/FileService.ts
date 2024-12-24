@@ -28,6 +28,7 @@ export const uploadFile = async (file: Blob, fileName: string) => {
   let fdata = new FormData();
   fdata.append('file', file);
   fdata.append('fileName', fileName);
+  fdata.append('isPublic', "false");
   const response = await fetch(`${BASE_URL}/file/uploadFile`, {
     headers: {
       'Access-Control-Allow-Origin': '*',
