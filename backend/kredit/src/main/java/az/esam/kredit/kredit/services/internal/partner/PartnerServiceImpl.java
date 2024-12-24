@@ -178,4 +178,9 @@ public class PartnerServiceImpl implements PartnerService {
 
         return partnerRepository.save(partner);
     }
+
+    @Override
+    public List<Partner> list() {
+        return partnerRepository.findByStatus(EFinalStatus.ACCEPTED);
+    }
 }

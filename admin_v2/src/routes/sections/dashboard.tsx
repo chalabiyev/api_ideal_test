@@ -12,7 +12,6 @@ import { AuthGuard } from 'src/auth/guard';
 
 // Import pages dynamically
 const Statistika = lazy(() => import('src/pages/dashboard/Statistika'));
-const KreditYarat = lazy(() => import('src/pages/dashboard/KreditYarat'));
 const VideoCall = lazy(() => import('src/pages/dashboard/VideoCall'));
 
 // Video müraciət pages

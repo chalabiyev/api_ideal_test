@@ -22,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -70,6 +72,30 @@ public class FileController {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new MessageResponse(HttpStatus.OK, fileName));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/uploadMultipleFile")
+    public ResponseEntity<?> uploadFile(
+            @RequestParam("file") List<MultipartFile> file,
+            Authentication authentication
+    ) {
+        try {
+            List<String> fileNames = new ArrayList<>();
+            for (MultipartFile f : file) {
+                String fileName = System.currentTimeMillis() + "_" + normalizeFileName(f.getOriginalFilename());
+                logger.info(fileName);
+                logger.info(f.toString());
+                storageService.store(f, fileName);
+                fileNames.add(fileName);
+            }
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(fileNames);
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

@@ -83,26 +83,47 @@ export interface User {
     departmentId?: string;
 }
 
+export enum ActivityType {
+  IT = 'IT',
+  MARKETING = 'MARKETING',
+  FINANCE = 'FINANCE',
+  SALES = 'SALES',
+  HR = 'HR',
+  LOGISTICS = 'LOGISTICS',
+  OTHER = 'OTHER',
+}
+
+export enum EOwnerType {
+  HUQUQI = 'HUQUQI',
+  FIZIKI = 'FIZIKI',
+}
+
+export enum EStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+}
+
 export interface Partner {
-    createdBy?: string;
-    updatedBy?: string;
-    createdDate?: Date;
-    updatedDate?: Date;
-    id?: string;
-    phoneNumber?: string;
-    companyName?: string;
-    directorName?: string;
-    voen?: string;
-    pin?: string;
-    image?: string;
-    url?: string;
-    monthlySales?: number;
-    activityType?: string;
-    formOfOwnership?: string;
-    companyImages?: string[];
-    city?: string;
-    address?: string;
-    status?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  createdDate?: Date;
+  updatedDate?: Date;
+  id?: string;
+  phoneNumber?: string;
+  companyName?: string;
+  directorName?: string;
+  voen?: string;
+  pin?: string;
+  image?: string;
+  url?: string;
+  monthlySales?: number;
+  activityType?: ActivityType;
+  formOfOwnership?: EOwnerType;
+  companyImages?: string[];
+  city?: string;
+  address?: string;
+  status?: EStatus;
 }
 
 export interface Role {

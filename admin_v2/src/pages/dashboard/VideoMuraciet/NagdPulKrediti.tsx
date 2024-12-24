@@ -14,6 +14,7 @@ import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
 import { CreditRequest } from 'src/types/CreditRequest';
+import { RecruiterDataType } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -23,9 +24,9 @@ export default function Page() {
   // eslint-disable-next-line
   const location = window.location;
   const queryParams = new URLSearchParams(location.search);
-  const clientPin: string = queryParams.get("pin") ?? '';
-  const clientId: string = queryParams.get("clientId") ?? '';
-  const operatorId: string = queryParams.get("operatorId") ?? '';
+  const clientPin: string = queryParams.get('pin') ?? '';
+  const clientId: string = queryParams.get('clientId') ?? '';
+  const operatorId: string = queryParams.get('operatorId') ?? '';
 
   // tab changes
   const [value, setValue] = React.useState('1');
@@ -55,13 +56,37 @@ export default function Page() {
   const { data: userData } = useApi(endpointUserByUserName);
   const [creditRequest, setCreditRequest] = useState<CreditRequest>({});
 
+  // requriment data
+  const [recruiterData, setRecruiterData] = useState<RecruiterDataType>({
+    education: '',
+    companyName: '',
+    salary: '',
+    address: '',
+    position: '',
+    workExperience: '',
+    contractStartDate: '',
+    contractEndDate: '',
+    toplamodenis: '',
+    akbmelumatlari: '',
+    daxilirisk: '',
+    ayliqemekhaqqi: '',
+    ayliqcemigelir: '',
+    xerclerincemi: '',
+    xalisgelir: '',
+  });
+
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
     if (hasData) {
-      if (userData)
-        data.phoneNumber = userData.phoneNumber;
+      if (userData) data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
-      setCreditRequest({ ...creditRequest, requestedUserPin: userData.username, phoneNumber: userData.phoneNumber, requestDate: new Date(), spouses: [] });
+      setCreditRequest({
+        ...creditRequest,
+        requestedUserPin: userData.username,
+        phoneNumber: userData.phoneNumber,
+        requestDate: new Date(),
+        spouses: [],
+      });
     }
   };
 
@@ -144,7 +169,11 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="2">
-              <RecruiterData setValue={setValue} />
+              <RecruiterData
+                recruiterData={recruiterData}
+                setRecruiterData={setRecruiterData}
+                setValue={setValue}
+              />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="3">
@@ -168,11 +197,26 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="6">
-              <TabCreditDataPage setValue={setValue} creditAmount={creditAmount} creditDuration={creditDuration} setCreditAmount={setCreditAmount} setCreditDuration={setCreditDuration} creditRequest={creditRequest} setCreditRequest={setCreditRequest} />
+              <TabCreditDataPage
+                setValue={setValue}
+                creditAmount={creditAmount}
+                creditDuration={creditDuration}
+                setCreditAmount={setCreditAmount}
+                setCreditDuration={setCreditDuration}
+                creditRequest={creditRequest}
+                setCreditRequest={setCreditRequest}
+              />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="7">
-              <TabVideoRecord setValue={setValue} userInfo={userInfo} creditAmount={creditAmount} creditDuration={creditDuration} clientId={clientId} operatorId={operatorId} />
+              <TabVideoRecord
+                setValue={setValue}
+                userInfo={userInfo}
+                creditAmount={creditAmount}
+                creditDuration={creditDuration}
+                clientId={clientId}
+                operatorId={operatorId}
+              />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="8">

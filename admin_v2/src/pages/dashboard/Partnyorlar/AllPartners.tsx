@@ -26,103 +26,34 @@ import {
 import { ArrowRightIcon } from '@mui/x-date-pickers';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { postChangePartnerStatus } from 'src/api/PartnerService';
+import useApi from 'src/api/useApi';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
+import { EOwnerType, EStatus, Partner } from 'src/types/CreditRequest';
 
-// Table Data
-const MOCK_DATA = [
-  {
-    id: 1,
-    name: 'Embawood',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Ticarət',
-    status: 'Aktiv',
-    formOfOwnership: 'HUQUQI',
-  },
-  {
-    id: 2,
-    name: 'Embawood',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Qida',
-    status: 'Aktiv',
-    formOfOwnership: 'FIZIKI',
-  },
-  {
-    id: 3,
-    name: 'Music Gallery',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Xidmət',
-    status: 'Gözlənilir',
-    formOfOwnership: 'HUQUQI',
-  },
-  {
-    id: 4,
-    name: 'Music Gallery',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'İstehsal',
-    status: 'Gözlənilir',
-    formOfOwnership: 'FIZIKI',
-  },
-  {
-    id: 5,
-    name: 'Music Gallery',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Ticarət',
-    status: 'Gözlənilir',
-    formOfOwnership: 'FIZIKI',
-  },
-  {
-    id: 6,
-    name: 'Kontakt Home',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Xidmət',
-    status: 'Deaktiv',
-    formOfOwnership: 'HUQUQI',
-  },
-  {
-    id: 7,
-    name: 'Kontakt Home',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Ticarət',
-    status: 'Deaktiv',
-    formOfOwnership: 'FIZIKI',
-  },
-  {
-    id: 8,
-    name: 'Kontakt Home',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Istehsal',
-    status: 'Deaktiv',
-    formOfOwnership: 'FIZIKI',
-  },
-  {
-    id: 9,
-    name: 'Kontakt Home',
-    director: 'Məmmədov Məmməd',
-    voen: '1234567890',
-    activity: 'Ticarət',
-    status: 'Deaktiv',
-    formOfOwnership: 'HUQUQI',
-  },
-];
+// const getTabCounts = (data: Partner[]) => ({
+//   all: data?.length,
+//   active: data.filter((row) => row.status === EStatus.ACCEPTED).length,
+//   pending: data.filter((row) => row.status === EStatus.PENDING).length,
+//   deactive: data.filter((row) => row.status === EStatus.REJECTED).length,
+// });
 
-const getTabCounts = (data: typeof MOCK_DATA) => ({
-  all: data.length,
-  active: data.filter((row) => row.status === 'Aktiv').length,
-  pending: data.filter((row) => row.status === 'Gözlənilir').length,
-  deactive: data.filter((row) => row.status === 'Deaktiv').length,
-});
+const getTabCounts = (data: Partner[] | null | undefined) => {
+  if (!data) {
+    return { all: 0, active: 0, pending: 0, deactive: 0 };
+  }
+
+  return {
+    all: data.length,
+    active: data.filter((row) => row.status === EStatus.ACCEPTED).length,
+    pending: data.filter((row) => row.status === EStatus.PENDING).length,
+    deactive: data.filter((row) => row.status === EStatus.REJECTED).length,
+  };
+};
 
 export default function Kredit() {
   const router = useRouter();
@@ -131,6 +62,8 @@ export default function Kredit() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [activityFilter, setActivityFilter] = useState('all');
+
+  const { data: partnerList, hasData: partnerHasData, loading, error } = useApi('/partner/list');
 
   //   popup
   const [openPopup, setOpenPopup] = useState(false);
@@ -149,6 +82,7 @@ export default function Kredit() {
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
     if (selectedRow) {
+      postChangePartnerStatus(selectedRow.id, event.target.value); // API'ye istek gönder
       selectedRow.status = event.target.value; // Durumu değiştir
     }
     setAnchorEl(null); // Popover'u kapat
@@ -164,7 +98,9 @@ export default function Kredit() {
   const handleActivityFilterChange = (event: any) => {
     setActivityFilter(event.target.value);
   };
-  const tabCounts = getTabCounts(MOCK_DATA);
+  const tabCounts = partnerHasData
+    ? getTabCounts(partnerList)
+    : { all: 0, active: 0, pending: 0, deactive: 0 };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
@@ -183,13 +119,17 @@ export default function Kredit() {
     setPage(0);
   };
 
-  const filteredData = MOCK_DATA.filter((row) => {
-    const statusMatches = tabValue === 'all' || row.status.toLowerCase() === tabValue.toLowerCase();
-    const searchMatches = row.name.toLowerCase().includes(search);
-    const activityMatches =
-      activityFilter === 'all' || row.activity.toLowerCase() === activityFilter.toLowerCase();
-    return statusMatches && searchMatches && activityMatches;
-  });
+  const filteredData = partnerList
+    ? partnerList.filter((row: Partner) => {
+        const statusMatches =
+          tabValue === 'all' || row?.status?.toLowerCase() === tabValue.toLowerCase();
+        const searchMatches = row?.companyName?.toLowerCase().includes(search);
+        const activityMatches =
+          activityFilter === 'all' ||
+          row?.activityType?.toLowerCase() === activityFilter.toLowerCase();
+        return statusMatches && searchMatches && activityMatches;
+      })
+    : [];
 
   // Pagination logic
   const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -215,19 +155,19 @@ export default function Kredit() {
                 {[
                   { value: 'all', label: 'Hamısı', count: tabCounts.all, color: 'default' },
                   {
-                    value: 'Aktiv',
+                    value: EStatus.ACCEPTED,
                     label: 'Aktiv',
                     count: tabCounts.active,
                     color: 'success',
                   },
                   {
-                    value: 'Deaktiv',
+                    value: EStatus.REJECTED,
                     label: 'Deaktiv',
                     count: tabCounts.deactive,
                     color: 'error',
                   },
                   {
-                    value: 'Gözlənilir',
+                    value: EStatus.PENDING,
                     label: 'Gözlənilir',
                     count: tabCounts.pending,
                     color: 'warning',
@@ -299,30 +239,34 @@ export default function Kredit() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paginatedData.map((row) => (
+                    {paginatedData.map((row: Partner) => (
                       <TableRow key={row.id}>
                         <TableCell>{row.id}</TableCell>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell>{row.director}</TableCell>
+                        <TableCell>{row.companyName}</TableCell>
+                        <TableCell>{row.directorName}</TableCell>
                         <TableCell>{row.voen}</TableCell>
-                        <TableCell>{row.activity}</TableCell>
+                        <TableCell>{row.activityType}</TableCell>
                         <TableCell>
                           <Label
                             endIcon={
-                              row.formOfOwnership === 'FIZIKI' ? <Person2 /> : <BusinessCenter />
+                              row.formOfOwnership === EOwnerType.FIZIKI ? (
+                                <Person2 />
+                              ) : (
+                                <BusinessCenter />
+                              )
                             }
                             variant="filled"
                           >
                             {' '}
-                            {row.formOfOwnership === 'FIZIKI' ? 'Fiziki' : 'Hüquqi'}
+                            {row.formOfOwnership === EOwnerType.FIZIKI ? 'Fiziki' : 'Hüquqi'}
                           </Label>
                         </TableCell>
                         <TableCell>
                           <Label
                             color={
-                              row.status === 'Deaktiv'
+                              row.status === EStatus.REJECTED
                                 ? 'error'
-                                : row.status === 'Gözlənilir'
+                                : row.status === EStatus.PENDING
                                   ? 'warning'
                                   : 'success'
                             }
@@ -384,11 +328,11 @@ export default function Kredit() {
                         fullWidth
                         size="small"
                       >
-                        <MenuItem value="Aktiv" color="success" sx={{ text: 'green' }}>
+                        <MenuItem value={EStatus.ACCEPTED} color="success" sx={{ text: 'green' }}>
                           Aktiv
                         </MenuItem>
-                        <MenuItem value="Deaktiv">Deaktiv</MenuItem>
-                        <MenuItem value="Gözlənilir">Gözlənilir</MenuItem>
+                        <MenuItem value={EStatus.REJECTED}>Deaktiv</MenuItem>
+                        <MenuItem value={EStatus.PENDING}>Gözlənilir</MenuItem>
                       </Select>
                     </Box>
                   </Popover>
