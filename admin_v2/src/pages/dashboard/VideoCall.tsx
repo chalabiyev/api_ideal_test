@@ -66,8 +66,7 @@ const VideoCall = () => {
   const { user } = useAuthContext();
   const [clientId, setClientId] = useState('');
   const [operatorId, setOperatorId] = useState('');
-
-  console.log('partnerId:', partnerId);
+  
   useEffect(() => {
     localStream?.getAudioTracks().forEach((track) => {
       track.enabled = isAudioOn;

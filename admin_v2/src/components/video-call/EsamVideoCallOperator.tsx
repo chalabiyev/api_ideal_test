@@ -162,6 +162,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
   const handleNewCall = (s: SignalType) => {
     if (inCall || !prop.setNewCallReceived || !s.meetingID || !s.sender || !s.senderName) return;
 
+    inCall = true;
     // eslint-disable-next-line
     meetingID = s.meetingID;
     receiver = s.sender;

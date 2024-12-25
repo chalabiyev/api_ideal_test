@@ -146,6 +146,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .tokenType(TokenType.BEARER)
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
+                    .partners(savedUser.getPartners())
                     .build();
 
         } catch (Exception e) {
@@ -302,6 +303,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .tokenType(TokenType.BEARER)
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
+                    .partners(savedUser.getPartners())
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -353,6 +355,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .tokenType(TokenType.BEARER)
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
+                    .partners(user.getPartners())
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -396,6 +399,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .tokenType(TokenType.BEARER)
                             .accessToken(accessToken)
                             .refreshToken(refreshToken)
+                            .partners(user.getPartners())
                             .build();
 
                     new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
@@ -549,6 +553,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .tokenType(TokenType.BEARER)
                         .accessToken(jwtToken)
                         .refreshToken(refreshToken)
+                        .partners(user.getPartners())
                         .build();
             } else {
                 throw new BadRequestException("Passwords do not match");
@@ -653,6 +658,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .tokenType(TokenType.BEARER)
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
+                    .partners(savedUser.getPartners())
                     .build();
         }
 
