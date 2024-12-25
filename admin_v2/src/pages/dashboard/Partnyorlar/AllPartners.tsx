@@ -63,7 +63,7 @@ export default function Kredit() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [activityFilter, setActivityFilter] = useState('all');
 
-  const { data: partnerList, hasData: partnerHasData, loading, error } = useApi('/partner/listALL');
+  const { data: partnerList, hasData: partnerHasData, loading, error } = useApi('/partner/listAll');
 
   //   popup
   const [openPopup, setOpenPopup] = useState(false);
