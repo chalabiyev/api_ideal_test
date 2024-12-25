@@ -229,4 +229,12 @@ public class FileController {
         }
     }
 
+    @DeleteMapping("/deleteFile/{fileName}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    public ResponseEntity<Boolean> deleteFile(@PathVariable(value = "fileName", required = true) String fileName) throws Exception {
+        return ResponseEntity.ok(storageService.deleteFile(fileName));
+    }
+
 }

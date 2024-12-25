@@ -47,6 +47,12 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
           toast.error('Müqavilə imzalanmadı.');
           setIsSigning(false);
           setOpenDialog(false);
+          // get signed pdf
+          callGetFile(contractFileName).then((file) => {
+            if (file) {
+              setContractPdf(file);
+            }
+          });
         } else if (res == SimaStatus.Signing && checkCounter < 5) {
           setTimeout(() => {
             setCheckCounter(checkCounter + 1);
