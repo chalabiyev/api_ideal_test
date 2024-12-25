@@ -34,4 +34,5 @@ public interface StorageService {
 
     void deleteExistingImages(String basePath) throws IOException;
 
+    boolean deleteFile(String filename)  throws Exception ;
 }
