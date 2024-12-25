@@ -31,5 +31,6 @@ public class SimaEncodedContract {
     private String signerCert;
     private String dataSignature;
     private AuthenticationResponse tokenData;
+    private String fileName;
 
 }
