@@ -13,7 +13,8 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import { SignalType } from '../video-call/WebsocketTypes';
-import { callGetFile } from 'src/api/FileService';
+import { callDeleteFile, callGetFile } from 'src/api/FileService';
+import { toast } from 'sonner';
 
 const TabVideoRecord = ({
   userInfo,
@@ -35,10 +36,11 @@ const TabVideoRecord = ({
   setVideoData: (s: string) => void;
 }) => {
   const [recording, setRecording] = useState(false);
-  const [dummyTextOpen, setDummyTextOpen] = useState(false);
+  const [signTextOpen, setSignTextOpen] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [videoSignText, setVideoSignText] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoFileName, setVideoFileName] = useState('');
 
   useEffect(() => {
     if (userInfo && creditAmount && creditDuration) {
@@ -47,11 +49,13 @@ const TabVideoRecord = ({
   }, [userInfo, creditAmount, creditDuration]);
 
   const handleStartRecording = () => {
+    showSignText();
     sendSignal({ type: 'startVideoRecord' });
     setRecording(true);
   };
 
   const handleStopRecording = () => {
+    hideSignText();
     sendSignal({ type: 'stopVideoRecord' });
     setRecording(false);
   };
@@ -68,27 +72,32 @@ const TabVideoRecord = ({
   const confirmDeleteRecording = () => {
     setRecording(false);
     setConfirmationOpen(false);
-    alert('Silindi.');
+    callDeleteFile(videoFileName).then((res) => {
+      toast.success(res ? 'Silindi.' : 'Silinmədi.');
+    }).catch((err) => {
+      toast.error('Silinmədi.');
+    });
   };
 
   const cancelDeleteRecording = () => {
     setConfirmationOpen(false);
   };
 
-  const handleDummyTextOpen = () => {
+  const showSignText = () => {
     sendSignal({ type: 'showSignText', msg: videoSignText });
-    setDummyTextOpen(true);
+    setSignTextOpen(true);
   };
 
-  const handleDummyTextClose = () => {
+  const hideSignText = () => {
     sendSignal({ type: 'hideSignText' });
-    setDummyTextOpen(false);
+    setSignTextOpen(false);
   };
 
   const today = format(new Date(), 'dd/MM/yyyy');
 
   useEffect(() => {
     if (newSignal && newSignal.type == 'videoRecord' && newSignal.msg) {
+      setVideoFileName(newSignal.msg!);
       callGetFile(newSignal.msg).then((res) => {
         if (res)
           setVideoData(res);
@@ -150,7 +159,7 @@ const TabVideoRecord = ({
             <Button variant="outlined" color="warning" onClick={handlePlayVideo}>
               Video çəkilişə bax
             </Button>
-            <Button variant="outlined" color="info" onClick={handleDummyTextOpen}>
+            <Button variant="outlined" color="info" onClick={showSignText}>
               İmza mətni göstər
             </Button>
             <Button variant="outlined" color="error" onClick={handleDeleteRecording}>
@@ -184,8 +193,7 @@ const TabVideoRecord = ({
         </Button>
       </Box>
 
-      {/* Dummy Text Modal */}
-      <Modal open={dummyTextOpen} onClose={handleDummyTextClose} aria-labelledby="dummy-text-title">
+      <Modal open={signTextOpen} onClose={hideSignText} aria-labelledby="dummy-text-title">
         <Box
           sx={{
             position: 'absolute',
@@ -208,7 +216,7 @@ const TabVideoRecord = ({
             {videoSignText}
           </Typography>
           <Box mt={2} textAlign="right">
-            <Button variant="contained" onClick={handleDummyTextClose}>
+            <Button variant="contained" onClick={hideSignText}>
               Bağla
             </Button>
           </Box>

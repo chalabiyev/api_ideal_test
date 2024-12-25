@@ -46,3 +46,21 @@ export const uploadFile = async (file: Blob) => {
     return { ok: false, data: null };
   }
 };
+
+export const callDeleteFile = async (fileName: string) => {
+  const response = await fetch(`${BASE_URL}/file/deleteFile/${fileName}`, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${token}`,
+      'X-API-KEY': API_KEY,
+    },
+    method: 'DELETE',
+  });
+  if (response.ok) {
+    const result = await response.json() as boolean;
+    return result;
+    // eslint-disable-next-line
+  } else {
+    return false;
+  }
+};
