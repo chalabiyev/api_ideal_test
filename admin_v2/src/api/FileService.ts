@@ -24,10 +24,9 @@ export const callGetFile = async (fileName: string) => {
   }
 };
 
-export const uploadFile = async (file: Blob, fileName: string) => {
+export const uploadFile = async (file: Blob) => {
   let fdata = new FormData();
   fdata.append('file', file);
-  fdata.append('fileName', fileName);
   fdata.append('isPublic', "false");
   const response = await fetch(`${BASE_URL}/file/uploadFile`, {
     headers: {
