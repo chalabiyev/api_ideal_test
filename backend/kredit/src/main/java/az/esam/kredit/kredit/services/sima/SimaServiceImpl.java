@@ -263,7 +263,7 @@ public class SimaServiceImpl implements SimaService {
         String tsCert = request.getHeader("ts-cert");
         String tsSign = request.getHeader("ts-sign");
         log.info("sima callBack tsCert : {}", tsCert);
-        log.info("sima callBack dataSignature : {}", callBack.getDataSignature());
+//        log.info("sima callBack dataSignature : {}", callBack.getDataSignature());
         SimaCertPersonInfo person = getPersonFromCertificate(tsCert);
         if (person != null) {
             log.info("sima callBack certificate person : {}", person);
@@ -280,6 +280,13 @@ public class SimaServiceImpl implements SimaService {
                     contract.setSignerIP(getClientIpAddress(request));
                     contract.setStatus(ContractStatusEnum.succesed);
                     contract.setSignerFin(person.getFinCode());
+                    if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Sign) {
+                        if (contract.getFileName() != null) {
+                            byte[] bytes = Base64.getDecoder().decode(contract.getDataSignature());
+                            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+                            storageService.store(inputStream, contract.getFileName());
+                        }
+                    }
                 } else {
                     contract.setStatus(ContractStatusEnum.failed);
                 }
@@ -618,6 +625,7 @@ public class SimaServiceImpl implements SimaService {
                     .expDate(end)
                     .status(ContractStatusEnum.created)
                     .signerFin(finCode)
+                    .fileName(fileName)
                     .build();
             simaEncodedContractRepository.insert(simaEncodedContract);
         } catch (JsonProcessingException ex) {
