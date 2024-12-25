@@ -54,16 +54,13 @@ public class FileController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam(value = "fileName", required = false) String fileName,
             @RequestParam(value = "isPublic", required = false, defaultValue = "false") boolean isPublic,
             Authentication authentication
     ) {
         try {
             var user = userRepository.findByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            fileName = fileName == null ?
-                    System.currentTimeMillis() + "_" + normalizeFileName(file.getOriginalFilename())
-                    : fileName;
+            String fileName = System.currentTimeMillis() + "_" + normalizeFileName(file.getOriginalFilename());
             logger.info(fileName);
             logger.info(file.toString());
             storageService.store(file, fileName);
