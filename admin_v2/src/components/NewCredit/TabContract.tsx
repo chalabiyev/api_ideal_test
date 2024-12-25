@@ -32,6 +32,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
 
   const handleSign = async () => {
     setCheckCounter(1);
+    setOpenDialog(true);
     sendSignal({ type: 'signPdf', msg: contractFileName });
   };
 
@@ -110,7 +111,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
           {/* <Typography variant="body2"> */}
           {/* FIXME : CİHAN : İLKİN BEY BURAYA GÜZEL BİR DİALOG YAZAR MISINIZ? */}
           {contractGenerating && <Typography>Müqavilə oluşturuluyor...</Typography>}
-          {!contractGenerating && <embed src={contractPdf} width="100%" height="400px" />}
+          {!contractGenerating && <embed src={`${contractPdf}#toolbar=0&navpanes=0&scrollbar=0`} width="100%" height="400px" />}
           {/* </Typography> */}
         </CardContent>
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
