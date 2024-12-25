@@ -63,7 +63,7 @@ export default function Kredit() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [activityFilter, setActivityFilter] = useState('all');
 
-  const { data: partnerList, hasData: partnerHasData, loading, error } = useApi('/partner/list');
+  const { data: partnerList, hasData: partnerHasData, loading, error } = useApi('/partner/listALL');
 
   //   popup
   const [openPopup, setOpenPopup] = useState(false);
@@ -231,7 +231,7 @@ export default function Kredit() {
                       <TableCell sx={{ minWidth: '100px' }}>N°</TableCell>
                       <TableCell sx={{ minWidth: '160px' }}>Partnyorun adı</TableCell>
                       <TableCell sx={{ minWidth: '200px' }}>Direktor/Sahib</TableCell>
-                      <TableCell sx={{ minWidth: '100px' }}>VÖEN</TableCell>
+                      <TableCell sx={{ minWidth: '180px' }}>VÖEN</TableCell>
                       <TableCell sx={{ minWidth: '210px' }}>Şirkətin fəaliyyət sahəsi</TableCell>
                       <TableCell sx={{ minWidth: '210px' }}>Sahibkarlıq forması</TableCell>
                       <TableCell>Status</TableCell>
@@ -271,7 +271,11 @@ export default function Kredit() {
                                   : 'success'
                             }
                           >
-                            {row.status}
+                            {row.status === EStatus.REJECTED
+                              ? 'Deaktiv'
+                              : row.status === EStatus.PENDING
+                                ? 'Gözlənilir'
+                                : 'Aktiv'}
                           </Label>
                         </TableCell>
                         <TableCell
