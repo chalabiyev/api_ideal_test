@@ -48,7 +48,7 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException(FAILED_TO_STORE_EMPTY_FILE);
             }
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(file.getOriginalFilename()))
+                    Paths.get(file.getOriginalFilename()))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check
@@ -71,7 +71,7 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException(FAILED_TO_STORE_EMPTY_FILE);
             }
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(fileName))
+                    Paths.get(fileName))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check
@@ -94,7 +94,7 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException(FAILED_TO_STORE_EMPTY_FILE);
             }
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(fileName))
+                    Paths.get(fileName))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check
@@ -150,11 +150,10 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public void deleteExistingImages(String fileName) throws IOException {
         Path destinationFile = this.rootLocation.resolve(
-                        Paths.get(fileName))
+                Paths.get(fileName))
                 .normalize().toAbsolutePath();
         Path dir = Paths.get(destinationFile.toString()).getParent(); // Get the directory where the images will be stored
         String baseFileName = Paths.get(destinationFile.toString()).getFileName().toString();
-
 
         try (Stream<Path> files = Files.list(dir)) {
             files.filter(file -> file.getFileName().toString().startsWith(baseFileName))
@@ -190,5 +189,13 @@ public class FileSystemStorageService implements StorageService {
         } catch (MalformedURLException ex) {
             return false;
         }
+    }
+
+    @Override
+    public boolean deleteFile(String filename) throws Exception {
+        Path destinationFile = this.rootLocation.resolve(
+                Paths.get(filename))
+                .normalize().toAbsolutePath();
+        return Files.deleteIfExists(destinationFile);
     }
 }
