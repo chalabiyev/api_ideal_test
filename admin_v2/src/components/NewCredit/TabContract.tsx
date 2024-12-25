@@ -47,7 +47,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
           toast.error('Müqavilə imzalanmadı.');
           setIsSigning(false);
           setOpenDialog(false);
-          //get signed pdf
+          // get signed pdf
           callGetFile(contractFileName).then((file) => {
             if (file) {
               setContractPdf(file);
