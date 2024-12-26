@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { SignalType } from '../video-call/WebsocketTypes';
 import { callDeleteFile, callGetFile } from 'src/api/FileService';
 import { toast } from 'sonner';
+import { Iconify } from '../iconify';
 
 const TabVideoRecord = ({
   userInfo,
@@ -24,7 +25,7 @@ const TabVideoRecord = ({
   newSignal,
   sendSignal,
   videoData,
-  setVideoData
+  setVideoData,
 }: {
   userInfo: any;
   creditAmount: number;
@@ -42,9 +43,14 @@ const TabVideoRecord = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoFileName, setVideoFileName] = useState('');
 
+  ////
+  const [isRecordStarted, setIsRecordStarted] = useState(false);
+
   useEffect(() => {
     if (userInfo && creditAmount && creditDuration) {
-      setVideoSignText(`Mən ${userInfo.personAz?.surname} ${userInfo.personAz?.name} ${userInfo?.personAz?.patronymic}, İdeal kreditdən ${creditDuration} aylıq ${creditAmount} azn kredit götürdüyüm haqqında müraciəti təsdiq edirəm.`);
+      setVideoSignText(
+        `Mən ${userInfo.personAz?.surname} ${userInfo.personAz?.name} ${userInfo?.personAz?.patronymic}, İdeal kreditdən ${creditDuration} aylıq ${creditAmount} azn kredit götürdüyüm haqqında müraciəti təsdiq edirəm.`
+      );
     }
   }, [userInfo, creditAmount, creditDuration]);
 
@@ -52,18 +58,21 @@ const TabVideoRecord = ({
     showSignText();
     sendSignal({ type: 'startVideoRecord' });
     setRecording(true);
+    toast.success('Video yazı başladı');
+    setIsRecordStarted(true);
   };
 
   const handleStopRecording = () => {
     hideSignText();
     sendSignal({ type: 'stopVideoRecord' });
     setRecording(false);
+    toast.warning('Video yüklənir..');
+    setIsRecordStarted(false);
   };
 
   const handlePlayVideo = () => {
-    if (videoRef.current)
-      videoRef.current.play();
-  }
+    if (videoRef.current) videoRef.current.play();
+  };
 
   const handleDeleteRecording = () => {
     setConfirmationOpen(true);
@@ -72,11 +81,13 @@ const TabVideoRecord = ({
   const confirmDeleteRecording = () => {
     setRecording(false);
     setConfirmationOpen(false);
-    callDeleteFile(videoFileName).then((res) => {
-      toast.success(res ? 'Silindi.' : 'Silinmədi.');
-    }).catch((err) => {
-      toast.error('Silinmədi.');
-    });
+    callDeleteFile(videoFileName)
+      .then((res) => {
+        toast.success(res ? 'Silindi.' : 'Silinmədi.');
+      })
+      .catch((err) => {
+        toast.error('Silinmədi.');
+      });
   };
 
   const cancelDeleteRecording = () => {
@@ -99,9 +110,8 @@ const TabVideoRecord = ({
     if (newSignal && newSignal.type == 'videoRecord' && newSignal.msg) {
       setVideoFileName(newSignal.msg!);
       callGetFile(newSignal.msg).then((res) => {
-        if (res)
-          setVideoData(res);
-      })
+        if (res) setVideoData(res);
+      });
     }
   }, [newSignal]);
 
@@ -114,19 +124,28 @@ const TabVideoRecord = ({
               position: 'relative',
               height: '300px',
               backgroundColor: '#000',
+              overflow: 'hidden',
             }}
           >
-            <Typography
-              variant="subtitle1"
-              sx={{
-                position: 'absolute',
-                top: 8,
-                left: 8,
-                color: 'white',
-              }}
-            >
-              {today}
-            </Typography>
+            {isRecordStarted ? (
+              <div className="absolute w-[50px] bg-[khaki]/0 h-[50px] left-0 top-0 z-[1] rounded-sm rounded-l-none flex items-center justify-center animate-pulse">
+                <Iconify width={35} icon="mdi:record" color={'red'} />
+              </div>
+            ) : (
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  left: 8,
+                  color: 'white',
+                  zIndex: 1,
+                }}
+              >
+                {today}
+              </Typography>
+            )}
+
             <Typography
               variant="h6"
               sx={{
@@ -137,7 +156,12 @@ const TabVideoRecord = ({
                 height: '100%',
               }}
             >
-              <video ref={videoRef} src={videoData} style={{ width: '100%', height: '100%' }} controls>
+              <video
+                ref={videoRef}
+                src={videoData}
+                style={{ width: '100%', height: '100%' }}
+                controls
+              >
                 <track kind="captions" srcLang="az" label="Azerbaycan" default />
               </video>
             </Typography>
@@ -156,9 +180,9 @@ const TabVideoRecord = ({
                 Bitir
               </Button>
             )}
-            <Button variant="outlined" color="warning" onClick={handlePlayVideo}>
+            {/* <Button variant="outlined" color="warning" onClick={handlePlayVideo}>
               Video çəkilişə bax
-            </Button>
+            </Button> */}
             <Button variant="outlined" color="info" onClick={showSignText}>
               İmza mətni göstər
             </Button>
@@ -212,9 +236,7 @@ const TabVideoRecord = ({
           <Typography id="dummy-text-title" variant="h6" mb={2}>
             Mətn başlığı
           </Typography>
-          <Typography>
-            {videoSignText}
-          </Typography>
+          <Typography>{videoSignText}</Typography>
           <Box mt={2} textAlign="right">
             <Button variant="contained" onClick={hideSignText}>
               Bağla
