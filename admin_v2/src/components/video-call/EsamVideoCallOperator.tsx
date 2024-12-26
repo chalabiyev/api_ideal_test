@@ -222,6 +222,16 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     }
   }, [prop.outgoingChatMessage]);
 
+  useEffect(() => {
+    if (prop.localStream && peerConnection) {
+      prop.localStream.getTracks().forEach((track) => {
+        if (peerConnection) {
+          peerConnection.addTrack(track, prop.localStream);
+        }
+      });
+    }
+  }, [prop.localStream]);
+
   const listenSignals = (s: SignalType) => {
     console.log("listenSignals", s);
     if (s.type == 'newcall' || s.type == 'cancel' || s.receiver == clientUUID) {

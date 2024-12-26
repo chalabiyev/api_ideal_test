@@ -29,6 +29,8 @@ import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOp
 import { useAuthContext } from 'src/auth/hooks';
 import { toast } from 'sonner';
 import { getPartnerById } from 'src/api/PartnerService';
+import WebcamConfig from 'src/components/video-call/WebCamConfig';
+import { CameraAlt, CameraFront } from '@mui/icons-material';
 
 let partnerName = '';
 
@@ -66,7 +68,7 @@ const VideoCall = () => {
   const { user } = useAuthContext();
   const [clientId, setClientId] = useState('');
   const [operatorId, setOperatorId] = useState('');
-  
+
   useEffect(() => {
     localStream?.getAudioTracks().forEach((track) => {
       track.enabled = isAudioOn;
@@ -147,11 +149,11 @@ const VideoCall = () => {
   }, [isVideoOn]);
 
   const toggleVideo = () => {
-    setIsVideoOn((prev) => !prev);
+    setIsVideoOn(!isVideoOn);
   };
 
   const toggleAudio = () => {
-    setIsAudioOn((prev) => !prev);
+    setIsAudioOn(!isAudioOn);
   };
 
   const endCall = () => {
@@ -478,24 +480,22 @@ const VideoCall = () => {
               }}
               whileDrag={{ cursor: 'grabbing' }}
             >
-              {isVideoOn ? (
-                <WebCam
-                  onStreamChanged={handleLocalStream}
-                  setShowSettings={setShowWebCamSettings}
-                  showSettings={showWebCamSettings}
-                  width={320}
-                  height={210}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <VideocamOffIcon fontSize="large" style={{ color: '#fff' }} />
-              )}
+              <WebCam
+                onStreamChanged={handleLocalStream}
+                width={320}
+                height={210}
+                className="w-full h-full object-cover"
+                showSettings={showWebCamSettings}
+              />
             </m.div>
           </LazyMotion>
         </Box>
-
+        <WebcamConfig showSettings={showWebCamSettings} setShowSettings={setShowWebCamSettings} />
         <Box sx={{ width: '100%', marginTop: 2, textAlign: 'center' }}>
           <Box sx={{ marginTop: 2 }}>
+            <IconButton onClick={() => setShowWebCamSettings(true)} color="primary" sx={{ margin: 1 }}>
+              <CameraAlt />
+            </IconButton>
             <IconButton onClick={toggleVideo} color="primary" sx={{ margin: 1 }}>
               {isVideoOn ? <VideocamIcon /> : <VideocamOffIcon />}
             </IconButton>
