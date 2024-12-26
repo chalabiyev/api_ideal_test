@@ -75,8 +75,7 @@ export const paths = {
     root: `/partynorlar`,
     yenipartnyor: {
       root: `/partynorlar/yeni-partnyor`,
-      fiziki: `/partynorlar/yeni-partnyor/fiziki`,
-      huquqi: `/partynorlar/yeni-partnyor/huquqi`,
+      fiziki: `/partynorlar/yeni-partnyor/create`,
     },
     partnyorlarlist: `/partynorlar/list`,
     duzeliset: (id: string) => `/partynorlar/duzeliset/${id}`,

@@ -121,6 +121,26 @@ export const navData = [
       },
     ],
   },
+  // {
+  //   items: [
+  //     {
+  //       title: 'Partynor',
+  //       path: paths.partners.root,
+  //       icon: ICONS.partner,
+  //       children: [
+  //         {
+  //           title: 'Yeni partnyor',
+  //           path: paths.partners.yenipartnyor.root,
+  //           children: [
+  //             { title: 'Fiziki şəxs', path: paths.partners.yenipartnyor.fiziki },
+  //             { title: 'Hüquqi şəxs', path: paths.partners.yenipartnyor.huquqi },
+  //           ],
+  //         },
+  //         { title: 'Bütün partynorlar', path: paths.partners.partnyorlarlist },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     items: [
       {
@@ -130,11 +150,8 @@ export const navData = [
         children: [
           {
             title: 'Yeni partnyor',
-            path: paths.partners.yenipartnyor.root,
-            children: [
-              { title: 'Fiziki şəxs', path: paths.partners.yenipartnyor.fiziki },
-              { title: 'Hüquqi şəxs', path: paths.partners.yenipartnyor.huquqi },
-            ],
+            path: paths.partners.yenipartnyor.fiziki,
+            
           },
           { title: 'Bütün partynorlar', path: paths.partners.partnyorlarlist },
         ],
