@@ -3,10 +3,6 @@ pipelines:
     release:
       - step:
           name: Clear Old Files
-          size: 2x
-          image: 'node:20'
-          caches:
-            - node
           script:
             - pipe: 'atlassian/ssh-run:0.4.3'
               variables:
