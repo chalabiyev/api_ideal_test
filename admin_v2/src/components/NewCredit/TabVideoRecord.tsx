@@ -43,7 +43,6 @@ const TabVideoRecord = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoFileName, setVideoFileName] = useState('');
 
-  ////
   const [isRecordStarted, setIsRecordStarted] = useState(false);
 
   useEffect(() => {
@@ -129,7 +128,7 @@ const TabVideoRecord = ({
           >
             {isRecordStarted ? (
               <div className="absolute w-[50px] bg-[khaki]/0 h-[50px] left-0 top-0 z-[1] rounded-sm rounded-l-none flex items-center justify-center animate-pulse">
-                <Iconify width={35} icon="mdi:record" color={'red'} />
+                <Iconify width={35} icon="mdi:record" color="red" />
               </div>
             ) : (
               <Typography
