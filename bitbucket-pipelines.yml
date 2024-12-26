@@ -13,6 +13,7 @@ pipelines:
       - step:
           name: Backend Build and Deploy
           image: 'maven:3.8.7'
+          deployment: Production
           script:
             - cd backend/kredit
             - mvn clean install -DskipTests
@@ -31,6 +32,7 @@ pipelines:
                 COMMAND: echo "sleep 5 ; bash restart_kredit_backend.sh" | at now
       - step:
           name: Admin v2 Build and Deploy
+          deployment: Production
           size: 2x
           image: 'node:20'
           caches:
