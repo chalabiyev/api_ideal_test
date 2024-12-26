@@ -18,46 +18,27 @@ export interface WebCamConfig {
 
 export interface WebCamProp {
   className?: string;
-  onStreamChanged: (s: MediaStream) => void;
-  showSettings: boolean;
-  setShowSettings: (s: boolean) => void;
+  onStreamChanged: (s: MediaStream) => void;  
   width: number;
   height: number;
+  showSettings: boolean;
 }
 
 export const WebCam = ({
   className,
   onStreamChanged,
-  showSettings,
-  setShowSettings,
   width,
   height,
+  showSettings
 }: WebCamProp) => {
-  const backgroundOptions = ['No background', 'Blur Background', 'Background Image'];
+
   const webCamRef = useRef<HTMLVideoElement>(null);
   const canvasForBackgroundRef = useRef<HTMLCanvasElement>(null);
   const canvasRef = useRef<HTMLVideoElement>(null);
   const resultVideoRef = useRef<HTMLVideoElement>(null);
   const operatorBackgrounRef = useRef<HTMLImageElement>(null);
-  const [webCams, setWebCams] = useState<MediaDeviceInfo[]>([]);
-  const [mics, setMics] = useState<MediaDeviceInfo[]>([]);
 
-  const getDevices = () => {
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-      setWebCams(devices.filter((f) => f.kind == 'videoinput'));
-      setMics(devices.filter((f) => f.kind == 'audioinput'));
-    });
-  };
-
-  const [webCamConfig, setWebCamConfig] = useState<WebCamConfig>({
-    backgroundOption: 0,
-    showOriginal: false,
-    left: 0,
-    top: 0,
-    cropWidth: 640,
-    cropHeight: 480,
-    mirrorEnabled: false,
-  });
+  const [webCamConfig, setWebCamConfig] = useState<WebCamConfig>();
 
   const loadBodyPix = () => {
     let options: any = {
@@ -72,6 +53,7 @@ export const WebCam = ({
   };
 
   const perform = async (net: any) => {
+    if(!webCamConfig) return;
     // eslint-disable-next-line
     const width = webCamRef.current!.width;
     // eslint-disable-next-line
@@ -125,12 +107,21 @@ export const WebCam = ({
   };
 
   useEffect(() => {
-    getDevices();
     let wcConf = localStorage.getItem('webCamConfig');
     if (wcConf) {
       setWebCamConfig(JSON.parse(wcConf) as WebCamConfig);
+    }else{
+      setWebCamConfig({
+        backgroundOption: 0,
+        showOriginal: true,
+        left: 0,
+        top: 0,
+        cropWidth: 0,
+        cropHeight: 0,
+        mirrorEnabled: false,
+      });
     }
-  }, []);
+  }, [showSettings]);
 
   const sendStream = (videoStream: MediaStream, micDeviceId: string) => {
     let lastStream = new MediaStream(videoStream);
@@ -148,6 +139,7 @@ export const WebCam = ({
   };
 
   useEffect(() => {
+    if (!webCamConfig) return;
     try {
       if ((webCamRef.current! as any).srcObject) {
         (webCamRef.current! as any).srcObject.getTracks().forEach(function (track: any) {
@@ -164,22 +156,22 @@ export const WebCam = ({
           track.stop();
         });
       }
-    } catch (error) {}
+    } catch (error) { }
     let query =
       webCamConfig.webCamDeviceId != undefined
         ? {
-            video: {
-              width: webCamConfig.backgroundOption == 0 ? 1280 : 640,
-              height: webCamConfig.backgroundOption == 0 ? 720 : 480,
-              deviceId: webCamConfig.webCamDeviceId,
-            },
-          }
+          video: {
+            width: webCamConfig.backgroundOption == 0 ? 1280 : 640,
+            height: webCamConfig.backgroundOption == 0 ? 720 : 480,
+            deviceId: webCamConfig.webCamDeviceId,
+          },
+        }
         : {
-            video: {
-              width: webCamConfig.backgroundOption == 0 ? 1280 : 640,
-              height: webCamConfig.backgroundOption == 0 ? 720 : 480,
-            },
-          };
+          video: {
+            width: webCamConfig.backgroundOption == 0 ? 1280 : 640,
+            height: webCamConfig.backgroundOption == 0 ? 720 : 480,
+          },
+        };
     navigator.mediaDevices
       .getUserMedia(query)
       .then((ws) => {
@@ -194,8 +186,8 @@ export const WebCam = ({
           ) {
             alert(
               'Your browser does not support the experimental MediaStreamTrack API ' +
-                'for Insertable Streams of Media. See the note at the bottom of the ' +
-                'page.'
+              'for Insertable Streams of Media. See the note at the bottom of the ' +
+              'page.'
             );
           }
           const track = ws.getVideoTracks()[0];
@@ -239,6 +231,7 @@ export const WebCam = ({
   }, [webCamConfig]);
 
   const transform = (origVideoFrame: any, controller: any) => {
+    if(!webCamConfig) return;
     // Cropping from an existing video frame is supported by the API in Chrome 94+.
     const newFrame = new VideoFrame(origVideoFrame, {
       visibleRect: {
@@ -252,99 +245,8 @@ export const WebCam = ({
     origVideoFrame.close();
   };
 
-  const saveSettings = () => {
-    setShowSettings(false);
-    localStorage.setItem('webCamConfig', JSON.stringify(webCamConfig));
-  };
-  const hideSettings = () => {
-    setShowSettings(false);
-  };
-
   return (
     <div className={className} id="webcam">
-      <div className="modal" style={{ display: showSettings ? 'block' : 'none' }}>
-        <div className="modal-content">
-          <div className="modal-header">
-            <span className="close">&times;</span>
-            <h2>WebCam Settings</h2>
-          </div>
-          <div className="modal-body">
-            <div className="webcamSettingsform">
-              <div className="container">
-                <label htmlFor="webcam">
-                  <b>WebCam</b>
-                </label>
-                <select
-                  id="webcam"
-                  value={webCamConfig.webCamDeviceId}
-                  onChange={(e) =>
-                    setWebCamConfig({ ...webCamConfig, webCamDeviceId: e.target.value })
-                  }
-                >
-                  {webCams.map((wc) => {
-                    return (
-                      <option key={wc.deviceId} value={wc.deviceId}>
-                        {wc.label}
-                      </option>
-                    );
-                  })}
-                </select>
-                <label htmlFor="background">
-                  <b>Background</b>
-                </label>
-                <select
-                  id="background"
-                  value={webCamConfig.backgroundOption}
-                  onChange={(e) =>
-                    setWebCamConfig({ ...webCamConfig, backgroundOption: parseInt(e.target.value) })
-                  }
-                >
-                  {backgroundOptions.map((itm, itmidx) => {
-                    return (
-                      <option key={itm} value={itmidx}>
-                        {itm}
-                      </option>
-                    );
-                  })}
-                </select>
-                <label htmlFor="mirror">
-                  <b>Mirror Enabled</b>
-                </label>
-                <input
-                  id="mirror"
-                  type="checkbox"
-                  checked={webCamConfig.mirrorEnabled}
-                  onChange={(e) =>
-                    setWebCamConfig({ ...webCamConfig, mirrorEnabled: e.target.checked })
-                  }
-                />
-                <label htmlFor="mic">
-                  <b>Microphone</b>
-                </label>
-                <select
-                  id="mic"
-                  value={webCamConfig.micDeviceId}
-                  onChange={(e) =>
-                    setWebCamConfig({ ...webCamConfig, micDeviceId: e.target.value })
-                  }
-                >
-                  {mics.map((wc) => {
-                    return (
-                      <option key={wc.deviceId} value={wc.deviceId}>
-                        {wc.label}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button onClick={saveSettings}>Save</button>
-            <button onClick={hideSettings}>Close</button>
-          </div>
-        </div>
-      </div>
       <img
         alt="bg"
         hidden={true}
@@ -354,12 +256,12 @@ export const WebCam = ({
         height={height}
       />
       <video
-        hidden={!webCamConfig.showOriginal}
+        hidden={!webCamConfig?.showOriginal}
         ref={webCamRef}
         width={width}
         height={height}
         muted={true}
-        className={webCamConfig.mirrorEnabled ? 'mirroredWebCamClass' : ''}
+        className={webCamConfig?.mirrorEnabled ? 'mirroredWebCamClass' : ''}
       ></video>
       <video
         hidden={true}
@@ -367,14 +269,14 @@ export const WebCam = ({
         width={width}
         height={height}
         muted={true}
-        className={webCamConfig.mirrorEnabled ? 'mirroredWebCamClass' : ''}
+        className={webCamConfig?.mirrorEnabled ? 'mirroredWebCamClass' : ''}
       ></video>
       <canvas
         hidden={true}
         ref={canvasForBackgroundRef}
         width={width}
         height={height}
-        className={webCamConfig.mirrorEnabled ? 'mirroredWebCamClass' : ''}
+        className={webCamConfig?.mirrorEnabled ? 'mirroredWebCamClass' : ''}
       ></canvas>
       <video
         ref={resultVideoRef}
@@ -382,7 +284,7 @@ export const WebCam = ({
         width={width}
         height={height}
         muted={true}
-        className={className + (webCamConfig.mirrorEnabled ? ' mirroredWebCamClass' : '')}
+        className={className + (webCamConfig?.mirrorEnabled ? ' mirroredWebCamClass' : '')}
         style={{ objectFit: 'cover' }}
       ></video>
     </div>
