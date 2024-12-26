@@ -2,6 +2,19 @@ pipelines:
   branches:
     release:
       - step:
+          name: Clear Old Files
+          size: 2x
+          image: 'node:20'
+          caches:
+            - node
+          script:
+            - pipe: 'atlassian/ssh-run:0.4.3'
+              variables:
+                SSH_USER: esam
+                SSH_KEY: $MY_SSH_KEY
+                SERVER: 46.202.143.42
+                COMMAND: rm -rf /var/www/html/kreditadmin/*
+      - step:
           name: Backend Build and Deploy
           image: 'maven:3.8.7'
           script:
