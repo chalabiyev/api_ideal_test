@@ -12,7 +12,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,30 +29,41 @@ public class SocketHandler extends TextWebSocketHandler {
     private static final String socketKEY = "0916d3d3-f102-4932-be77-cd0084e13c74";
     public static List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     private static final Logger logger = Logger.getLogger("SocketHandler");
-    private static final List<String> sendAllTypes = Arrays
-            .asList("acceptcall",
-                    "acceptcallnotary",
-                    "answer",
-                    "callNotary",
-                    "cancel",
-                    "ClientCheck",
-                    "clientOK",
-                    "endmeeting",
-                    "reject",
-                    "rejectnotary",
-                    "newcall"
-            );
-    private static final List<String> setMeetingIdTypes = Arrays
-            .asList("acceptcall",
-                    "acceptcallnotary",
-                    "newcall"
-            );
-
     VideoMeetingService videoMeetingService;
 
     @Autowired
     public SocketHandler(VideoMeetingService _videoMeetingService) {
         this.videoMeetingService = _videoMeetingService;
+    }
+
+    void sendMessageToAllOperators(TextMessage message) {
+        List<WebSocketSession> operatorSessions = sessions.stream().filter(f -> f.getAttributes().containsKey("isOperator") && (boolean) f.getAttributes().get("isOperator") == true).toList();
+        for (WebSocketSession webSocketSession : operatorSessions) {
+            if (webSocketSession.isOpen()) {
+                synchronized (webSocketSession) {
+                    try {
+                        webSocketSession.sendMessage(message);
+                    } catch (Exception e) {
+                        logger.log(Level.FINE, "Error", e);
+                    }
+                }
+            }
+        }
+    }
+
+    void sendMessageToClientId(TextMessage message, String receiver) {
+        List<WebSocketSession> operatorSessions = sessions.stream().filter(f -> f.getAttributes().containsKey("clientUUID") && f.getAttributes().get("clientUUID").equals(receiver)).toList();
+        for (WebSocketSession webSocketSession : operatorSessions) {
+            if (webSocketSession.isOpen()) {
+                synchronized (webSocketSession) {
+                    try {
+                        webSocketSession.sendMessage(message);
+                    } catch (Exception e) {
+                        logger.log(Level.FINE, "Error", e);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -63,92 +73,72 @@ public class SocketHandler extends TextWebSocketHandler {
             Document document = Document.parse(message.getPayload());
             boolean sendAll = false;
             String meetingID = document.containsKey("meetingID") ? document.getString("meetingID") : "";
+            String sender = document.containsKey("sender") ? document.getString("sender") : "";
+            String receiver = document.containsKey("receiver") ? document.getString("receiver") : "";
+            String senderIP = session.getRemoteAddress().getHostString();
             if (document.containsKey("type")) {
-                if ("setClientUUID".equals(document.getString("type")) && !session.getAttributes().containsKey("clientUUID")) {
-                    session.getAttributes().put("clientUUID", document.getString("clientUUID"));
-                    if (socketKEY.equals(document.getString("socketKEY"))) {
-                        session.getAttributes().put("secured", true);
-                    } else {
-                        session.getAttributes().put("secured", false);
-                        return;
-                    }
-                    for (WebSocketSession socket : sessions) {
-                        try {
-                            if (socket.getAttributes().containsKey("meetingID") && socket.getAttributes().get("clientUUID").equals(session.getAttributes().get("clientUUID"))) {
-                                session.getAttributes().put("meetingID", socket.getAttributes().get("meetingID"));
-                                break;
+                SocketMessageTypeEnum type = SocketMessageTypeEnum.valueOf(document.getString("type"));
+                switch (type) {
+                    case setClientUUID:
+                        if (!session.getAttributes().containsKey("clientUUID")) {
+                            session.getAttributes().put("clientUUID", document.getString("clientUUID"));
+                            if (document.containsKey("operator")) {
+                                session.getAttributes().put("isOperator", true);
+                            } else {
+                                session.getAttributes().put("isOperator", false);
                             }
-                        } catch (Exception e) {
-                        }
-                    }
-                } else if (sendAllTypes.contains(document.getString("type"))) {
-                    sendAll = true;
-                    if ("endmeeting".equals(document.getString("type"))) {
-                        Optional<VideoMeeting> foundedMeeting = videoMeetingService.findByMeetingId(meetingID);
-                        if (foundedMeeting.isPresent()) {
-                            VideoMeeting vm = foundedMeeting.get();
-                            vm.setEndTime(new Date());
-                            videoMeetingService.update(vm);
-                        }
-                    }
-                }
-                if (setMeetingIdTypes.contains(document.getString("type"))) {
-                    session.getAttributes().put("meetingID", meetingID);
-                    for (WebSocketSession socket : sessions) {
-                        try {
-                            if (socket.getAttributes().get("clientUUID").equals(session.getAttributes().get("clientUUID"))) {
-                                socket.getAttributes().put("meetingID", meetingID);
+                            if (socketKEY.equals(document.getString("socketKEY"))) {
+                                session.getAttributes().put("secured", true);
+                            } else {
+                                session.getAttributes().put("secured", false);
+                                return;
                             }
-                        } catch (Exception e) {
+                            for (WebSocketSession socket : sessions) {
+                                try {
+                                    if (socket.getAttributes().containsKey("meetingID") && socket.getAttributes().get("clientUUID").equals(session.getAttributes().get("clientUUID"))) {
+                                        session.getAttributes().put("meetingID", socket.getAttributes().get("meetingID"));
+                                        break;
+                                    }
+                                } catch (Exception e) {
+                                }
+                            }
                         }
-                    }
-                    if ("newcall".equals(document.getString("type"))) {
+                        break;
+                    case newcall:
                         if (videoMeetingService.findByMeetingId(meetingID).isEmpty()) {
                             videoMeetingService.create(VideoMeeting
                                     .builder()
                                     .meetingId(meetingID)
-                                    .clientIP(session.getRemoteAddress().getHostString())
+                                    .clientIP(senderIP)
                                     .clientId(session.getAttributes().get("clientUUID").toString())
                                     .startTime(new Date())
                                     .build());
                         }
-                    } else if ("acceptcall".equals(document.getString("type"))) {
+                        sendMessageToAllOperators(message);
+                        break;
+                    case acceptcall:
                         Optional<VideoMeeting> foundedMeeting = videoMeetingService.findByMeetingId(meetingID);
                         if (foundedMeeting.isPresent()) {
                             VideoMeeting vm = foundedMeeting.get();
-                            vm.setOperatorIP(session.getRemoteAddress().getHostString());
+                            vm.setOperatorIP(senderIP);
                             vm.setOperatorId(session.getAttributes().get("clientUUID").toString());
                             videoMeetingService.update(vm);
+                            sendMessageToAllOperators(message);
+                            sendMessageToClientId(message, receiver);
                         }
-                    } else if ("acceptcallnotary".equals(document.getString("type"))) {
-                        Optional<VideoMeeting> foundedMeeting = videoMeetingService.findByMeetingId(meetingID);
-                        if (foundedMeeting.isPresent()) {
-                            VideoMeeting vm = foundedMeeting.get();
-                            vm.setNoterIP(session.getRemoteAddress().getHostString());
-                            vm.setNoterId(session.getAttributes().get("clientUUID").toString());
-                            videoMeetingService.update(vm);
-                        }
-                    }
+                        break;
+                    case reject:
+                        sendMessageToAllOperators(message);
+                        sendMessageToClientId(message, receiver);
+                        break;
+                    default:
+                        sendMessageToClientId(message, receiver);
+                        break;
                 }
             }
-            String senderIP = session.getRemoteAddress().getHostString();
             logger.info("sender : ".concat(senderIP));
             logger.info("sender ClientUUID : ".concat(document.containsKey("clientUUID") ? document.getString("clientUUID") : ""));
             logger.info("message : ".concat(message.getPayload().length() < 150 ? message.getPayload() : message.getPayload().substring(0, 149)));
-
-            for (WebSocketSession webSocketSession : sessions) {
-                if (webSocketSession.isOpen() && !webSocketSession.getId().equals(session.getId())) {
-                    synchronized (webSocketSession) {
-                        try {
-                            if (sendAll || webSocketSession.getAttributes().get("meetingID").equals(session.getAttributes().get("meetingID"))) {
-                                webSocketSession.sendMessage(message);
-                            }
-                        } catch (Exception e) {
-                            logger.log(Level.FINE, "Error", e);
-                        }
-                    }
-                }
-            }
         } catch (Exception e) {
             logger.log(Level.FINE, "Error", e);
         }

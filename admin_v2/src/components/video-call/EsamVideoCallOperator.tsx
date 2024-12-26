@@ -43,7 +43,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
   const handleSocketOpen = () => {
     if (ws) {
       ws.send(
-        JSON.stringify({ type: 'setClientUUID', clientUUID: clientUUID, socketKEY: webSocketKey })
+        JSON.stringify({ type: 'setClientUUID', clientUUID: clientUUID, socketKEY: webSocketKey, operator: true })
       );
       if (prop.setClientUUID)
         prop.setClientUUID(clientUUID);
@@ -171,7 +171,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     if (s.senderPin) receiverPin = s.senderPin;
     prop.setNewCallReceived(true, s);
     if (s.partnerId) {
-      const { partnerId } = s; 
+      const { partnerId } = s;
       prop.setPartnerId(partnerId);
       prop.partnerId = partnerId;
     }
