@@ -13,7 +13,6 @@ pipelines:
       - step:
           name: Backend Build and Deploy
           image: 'maven:3.8.7'
-          deployment: Production
           script:
             - cd backend/kredit
             - mvn clean install -DskipTests
