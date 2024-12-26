@@ -2,14 +2,52 @@ import React, { useState } from 'react';
 import { Box, Button, Typography, Grid, IconButton, Stack, Card } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { toast } from 'sonner';
+import { usePostFile } from 'src/api/usePostFile';
 
-const FizikiMuqavile = () => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+const FizikiMuqavile = ({
+  setOtherFilesPreview,
+  setPartnerData,
+}: {
+  setOtherFilesPreview: any;
+  setPartnerData: any;
+}) => {
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const { postData: uploadFile } = usePostFile('file/uploadFile');
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setUploadedFile(file);
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('isPublic', 'false');
+
+      try {
+        await toast.promise(
+          (async () => {
+            const response = await uploadFile(formData);
+            if (response) {
+              console.log('response varsa', response);
+              setOtherFilesPreview((prev: any) => ({
+                ...prev,
+                signableContract: [response.message],
+              }));
+              setUploadedFile(response.message);
+              setPartnerData((prev: any) => ({
+                ...prev,
+                signableContract: response.message,
+              }));
+            }
+          })(),
+          {
+            loading: 'Yükleniyor...',
+            success: 'Dosya yüklendi!',
+            error: 'Yükleme sırasında hata oluştu!',
+          }
+        );
+      } catch (error) {
+        console.error('Yükleme hatası:', error);
+        toast.error('Yükleme sırasında hata oluştu!');
+      }
     }
   };
 
@@ -17,12 +55,25 @@ const FizikiMuqavile = () => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) {
-      setUploadedFile(file);
+      const fileInputEvent = {
+        target: {
+          files: [file],
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+      handleFileChange(fileInputEvent);
     }
   };
 
   const handleFileRemove = () => {
     setUploadedFile(null);
+    setOtherFilesPreview((prev: any) => ({
+      ...prev,
+      signableContract: '',
+    }));
+    setPartnerData((prev: any) => ({
+      ...prev,
+      signableContract: '',
+    }));
   };
 
   return (
@@ -74,10 +125,7 @@ const FizikiMuqavile = () => {
           <Icon icon="mdi:file-document" width={40} color="#4caf50" />
           <Box flex={1}>
             <Typography variant="body2" noWrap>
-              {uploadedFile.name}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+              {uploadedFile}
             </Typography>
           </Box>
           <IconButton
@@ -104,10 +152,10 @@ const FizikiMuqavile = () => {
         </Stack>
       )}
 
-      <Button
+      {/* <Button
         onClick={() => {
           setUploadedFile(null);
-          toast.success('Muqavilə göndərildi!')
+          toast.success('Muqavilə göndərildi!');
         }}
         disabled={!uploadedFile}
         color="success"
@@ -116,7 +164,7 @@ const FizikiMuqavile = () => {
         sx={{ mt: 2 }}
       >
         İmzala və göndər
-      </Button>
+      </Button> */}
     </Box>
   );
 };

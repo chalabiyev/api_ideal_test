@@ -3,13 +3,8 @@ import { Box, Tab } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import useApi from 'src/api/useApi';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { DashboardContent } from 'src/layouts/dashboard';
-import ProfileTab from './ProfileTab';
-import BankInfoTab from './BankInfoTab';
-import FizikiMuqavile from './FizikiMuqavile';
-import LegalProfileTab from './LegalProfileTab';
 
 const metadata = { title: `Partnyor | Düzəliş et` };
 
@@ -69,12 +64,12 @@ const EditPartnyor = () => {
             </Box>
             <TabPanel sx={{ py: 3, px: 0 }} value="1">
               {/* parner eger fiziki ise bu tab  */}
-              <ProfileTab />
+              {/* <ProfileTab /> */}
               {/* huquqi ise bu tab  */}
               {/* <LegalProfileTab /> */}
             </TabPanel>
             <TabPanel sx={{ py: 3, px: 0 }} value="2">
-              <BankInfoTab />
+              {/* <BankInfoTab /> */}
             </TabPanel>
             {/* <TabPanel sx={{ py: 3, px: 0 }} value="3">
               <FizikiMuqavile />

@@ -39,8 +39,7 @@ const FizikiMelumat = lazy(() => import('src/pages/dashboard/FizikiMuraciet/Melu
 // parners
 const PartnyorlarList = lazy(() => import('src/pages/dashboard/Partnyorlar/AllPartners'));
 const EditPartnyor = lazy(() => import('src/pages/dashboard/Partnyorlar/EditPartnyor'));
-const Fiziki = lazy(() => import('src/pages/dashboard/Partnyorlar/Fiziki'));
-const Huquqi = lazy(() => import('src/pages/dashboard/Partnyorlar/Huquqi'));
+const NewPartner = lazy(() => import('src/pages/dashboard/Partnyorlar/NewPartner'));
 
 // muraciet
 const Muraciet = lazy(() => import('src/pages/dashboard/Muracietler/Muraciet'));
@@ -99,8 +98,7 @@ export const dashboardRoutes = [
           {
             path: 'yeni-partnyor',
             children: [
-              { path: 'fiziki', element: <Fiziki /> },
-              { path: 'huquqi', element: <Huquqi /> },
+              { path: 'create', element: <NewPartner /> },
             ],
           },
           { path: 'duzeliset/:id', element: <EditPartnyor /> },
