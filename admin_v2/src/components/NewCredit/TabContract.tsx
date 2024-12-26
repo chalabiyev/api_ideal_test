@@ -84,16 +84,16 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
               setContractGenerating(false);
             }
             else {
-              toast.error("Kontrakt oluşturulamadı!");
+              toast.error("Müqavilə tərtib olunmadı!");
               setContractGenerating(false);
             }
           }).catch((err) => {
-            toast.error("Kontrakt oluşturulamadı!");
+            toast.error("Müqavilə tərtib olunmadı!");
             setContractGenerating(false);
           });
         }
       }).catch((err) => {
-        toast.error("Kontrakt oluşturulamadı!");
+        toast.error("Müqavilə tərtib olunmadı!");
         setContractGenerating(false);
       });
     }
@@ -116,7 +116,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
         >
           {/* <Typography variant="body2"> */}
           {/* FIXME : CİHAN : İLKİN BEY BURAYA GÜZEL BİR DİALOG YAZAR MISINIZ? */}
-          {contractGenerating && <Typography>Müqavilə oluşturuluyor...</Typography>}
+          {contractGenerating && <Typography>Müqavilə yaradılır...</Typography>}
           {!contractGenerating && <embed src={`${contractPdf}#toolbar=0&navpanes=0&scrollbar=0`} width="100%" height="400px" />}
           {/* </Typography> */}
         </CardContent>
