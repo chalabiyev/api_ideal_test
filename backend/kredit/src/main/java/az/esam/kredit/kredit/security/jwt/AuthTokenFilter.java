@@ -118,7 +118,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         return requestURI.startsWith("/swagger")
                 || requestURI.startsWith("/v3/api-docs")
                 || requestURI.startsWith("/swagger-ui.html")                
-                || requestURI.startsWith("/api/auth/getUserPhoto");
+                || requestURI.startsWith("/api/auth/getUserPhoto")
+                || requestURI.startsWith("/api/file/getPublicFile");
     }
 
     private boolean checkApiKey(HttpServletRequest request) {

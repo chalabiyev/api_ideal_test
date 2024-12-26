@@ -15,10 +15,14 @@ import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation'
 import TabContract from 'src/components/NewCredit/TabContract';
 import { CreditRequest } from 'src/types/CreditRequest';
 import { RecruiterDataType } from './types';
+import { SignalType } from 'src/components/video-call/WebsocketTypes';
+import { v4 as uuidv4 } from 'uuid';
 
 // ----------------------------------------------------------------------
 
 const metadata = { title: `Video müraciət | Nağd ` };
+// FIXME : Cihan : sadece video imza tabında değil diğer tablarda da web socket lazım  olabilir o yüzden bu sayfaya taşıdım.
+let wsNK: WebSocket;
 
 export default function Page() {
   // eslint-disable-next-line
@@ -55,6 +59,10 @@ export default function Page() {
   const endpointUserByUserName = `/auth/getUserByUserName/${pin}`;
   const { data: userData } = useApi(endpointUserByUserName);
   const [creditRequest, setCreditRequest] = useState<CreditRequest>({});
+  const [newSignal, setNewSignal] = useState<SignalType>();
+  const [videoData, setVideoData] = useState('');
+  const [contractPdf, setContractPdf] = useState("");
+  const [contractFileName, setContractFileName] = useState("");
 
   // requriment data
   const [recruiterData, setRecruiterData] = useState<RecruiterDataType>({
@@ -111,9 +119,63 @@ export default function Page() {
     // eslint-disable-next-line
   }, [data, guarantorData]);
 
+  useEffect(()=>{
+    // credit request değiştiyse contract ta değişmeli!.
+    setContractPdf("");
+  },[creditRequest]);
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
+  const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
+  const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
+
+  const handleSocketOpen = () => {
+    if (wsNK) {
+      wsNK.send(
+        JSON.stringify({ type: 'setClientUUID', clientUUID: operatorId, socketKEY: webSocketKey })
+      );
+    }
+  };
+
+  const sendSignal = (data: SignalType) => {
+    if (wsNK && wsNK.readyState == WebSocket.OPEN) {
+      let msg = { ...data, clientUUID: operatorId, sender: operatorId, receiver: clientId };
+      console.log("sendSignal", msg);
+      wsNK.send(JSON.stringify(msg));
+    }
+  };
+
+  const listenSignals = (s: SignalType) => {
+    console.log("listenSignals", s);
+    if (s.receiver == operatorId) {
+      setNewSignal({ ...s, msgid: uuidv4() });
+    }
+  };
+
+  const handleMessage = (event: MessageEvent) => {
+    if (event.data && event.data.trim().length > 0) {
+      try {
+        let msg = JSON.parse(event.data) as SignalType;
+        listenSignals(msg);
+      } catch (error) { }
+    }
+  };
+
+  useEffect(() => {
+    if (!wsNK) {
+      wsNK = new WebSocket(webSocketUri);
+      wsNK.onopen = handleSocketOpen;
+      wsNK.onmessage = handleMessage;
+      setInterval(() => {
+        if (wsNK.readyState == WebSocket.CLOSED) {
+          wsNK = new WebSocket(webSocketUri);
+        }
+      }, 30000);
+    }
+  }, []);
+
 
   return (
     <>
@@ -213,14 +275,20 @@ export default function Page() {
                 setValue={setValue}
                 userInfo={userInfo}
                 creditAmount={creditAmount}
-                creditDuration={creditDuration}
-                clientId={clientId}
-                operatorId={operatorId}
+                creditDuration={creditDuration}                
+                newSignal={newSignal}
+                sendSignal={sendSignal}
+                videoData={videoData}
+                setVideoData={setVideoData}
               />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="8">
-              <TabContract creditRequest={creditRequest} />
+              <TabContract creditRequest={creditRequest} 
+              contractPdf={contractPdf} setContractPdf={setContractPdf}
+              contractFileName={contractFileName} setContractFileName={setContractFileName}
+              newSignal={newSignal} sendSignal={sendSignal}
+               />
             </TabPanel>
           </TabContext>
         </Box>

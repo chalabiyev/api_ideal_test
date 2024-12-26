@@ -28,7 +28,9 @@ import { WebCam } from 'src/components/video-call/WebCam';
 import { EsamVideoCallOperator } from 'src/components/video-call/EsamVideoCallOperator';
 import { useAuthContext } from 'src/auth/hooks';
 import { toast } from 'sonner';
+import { getPartnerById } from 'src/api/PartnerService';
 
+let partnerName = '';
 
 const VideoCall = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
@@ -54,6 +56,8 @@ const VideoCall = () => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const [clientPin, setClientPin] = useState<string>('');
   const [clientName, setClientName] = useState<string>('');
+  const [partnerId, setPartnerId] = useState<string>('');
+
   const [clientPhoto, setClientPhoto] = useState<string>('');
   const [newCallType, setNewCallType] = useState<string>('');
   const [acceptCall, setAccepCall] = useState(false);
@@ -62,12 +66,24 @@ const VideoCall = () => {
   const { user } = useAuthContext();
   const [clientId, setClientId] = useState('');
   const [operatorId, setOperatorId] = useState('');
-
+  
   useEffect(() => {
     localStream?.getAudioTracks().forEach((track) => {
       track.enabled = isAudioOn;
     })
   }, [isAudioOn]);
+
+  const getPartner = async (id: string) => {
+    const partner = await getPartnerById(id);
+    partnerName = partner?.companyName || '';
+    return partnerName;
+  };
+
+  useEffect(() => {
+    if (partnerId) {
+      getPartner(partnerId);
+    }
+  }, [partnerId]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -288,7 +304,7 @@ const VideoCall = () => {
             {clientName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {/* Embawood mebel mağazası */}
+            {partnerName}
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', padding: 2, gap: 2, width: '100%' }}>
@@ -495,6 +511,8 @@ const VideoCall = () => {
 
       {localStream && (
         <EsamVideoCallOperator
+          setPartnerId={setPartnerId}
+          partnerId={partnerId}
           localName={user?.fullName}
           localPin="1234567"
           localStream={localStream}

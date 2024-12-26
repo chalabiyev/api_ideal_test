@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { SignalType } from './WebsocketTypes';
 
 export interface EsamVideoCallOperatorProp {
+  partnerId?: string;
+  setPartnerId: (value: string) => void;
   localStream: MediaStream;
   localPin: string;
   localName: string;
@@ -160,12 +162,19 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
   const handleNewCall = (s: SignalType) => {
     if (inCall || !prop.setNewCallReceived || !s.meetingID || !s.sender || !s.senderName) return;
 
+    inCall = true;
     // eslint-disable-next-line
     meetingID = s.meetingID;
     receiver = s.sender;
     receiverName = s.senderName;
+    // eslint-disable-next-line
     if (s.senderPin) receiverPin = s.senderPin;
     prop.setNewCallReceived(true, s);
+    if (s.partnerId) {
+      const { partnerId } = s; 
+      prop.setPartnerId(partnerId);
+      prop.partnerId = partnerId;
+    }
   };
 
   useEffect(() => {

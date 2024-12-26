@@ -13,52 +13,66 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import { SignalType } from '../video-call/WebsocketTypes';
-import { callGetFile } from 'src/api/FileService';
-
-let wsVideoRecord: WebSocket;
+import { callDeleteFile, callGetFile } from 'src/api/FileService';
+import { toast } from 'sonner';
+import { Iconify } from '../iconify';
 
 const TabVideoRecord = ({
   userInfo,
   creditAmount,
   creditDuration,
   setValue,
-  clientId,
-  operatorId
+  newSignal,
+  sendSignal,
+  videoData,
+  setVideoData,
 }: {
   userInfo: any;
   creditAmount: number;
   creditDuration: number;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  clientId: string;
-  operatorId: string;
+  newSignal: SignalType | undefined;
+  sendSignal: (s: SignalType) => void;
+  videoData: string;
+  setVideoData: (s: string) => void;
 }) => {
   const [recording, setRecording] = useState(false);
-  const [dummyTextOpen, setDummyTextOpen] = useState(false);
+  const [signTextOpen, setSignTextOpen] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [videoSignText, setVideoSignText] = useState('');
-  const [videoData, setVideoData] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoFileName, setVideoFileName] = useState('');
+
+  ////
+  const [isRecordStarted, setIsRecordStarted] = useState(false);
 
   useEffect(() => {
     if (userInfo && creditAmount && creditDuration) {
-      setVideoSignText(`Mən ${userInfo.personAz?.surname} ${userInfo.personAz?.name} ${userInfo?.personAz?.patronymic}, İdeal kreditdən ${creditDuration} aylıq ${creditAmount} azn kredit götürdüyüm haqqında müraciəti təsdiq edirəm.`);
+      setVideoSignText(
+        `Mən ${userInfo.personAz?.surname} ${userInfo.personAz?.name} ${userInfo?.personAz?.patronymic}, İdeal kreditdən ${creditDuration} aylıq ${creditAmount} azn kredit götürdüyüm haqqında müraciəti təsdiq edirəm.`
+      );
     }
   }, [userInfo, creditAmount, creditDuration]);
 
   const handleStartRecording = () => {
+    showSignText();
     sendSignal({ type: 'startVideoRecord' });
     setRecording(true);
+    toast.success('Video yazı başladı');
+    setIsRecordStarted(true);
   };
 
   const handleStopRecording = () => {
+    hideSignText();
     sendSignal({ type: 'stopVideoRecord' });
     setRecording(false);
+    toast.warning('Video yüklənir..');
+    setIsRecordStarted(false);
   };
 
   const handlePlayVideo = () => {
-    if (videoRef.current)
-      videoRef.current.play();
-  }
+    if (videoRef.current) videoRef.current.play();
+  };
 
   const handleDeleteRecording = () => {
     setConfirmationOpen(true);
@@ -67,77 +81,39 @@ const TabVideoRecord = ({
   const confirmDeleteRecording = () => {
     setRecording(false);
     setConfirmationOpen(false);
-    alert('Silindi.');
+    callDeleteFile(videoFileName)
+      .then((res) => {
+        toast.success(res ? 'Silindi.' : 'Silinmədi.');
+      })
+      .catch((err) => {
+        toast.error('Silinmədi.');
+      });
   };
 
   const cancelDeleteRecording = () => {
     setConfirmationOpen(false);
   };
 
-  const handleDummyTextOpen = () => {
+  const showSignText = () => {
     sendSignal({ type: 'showSignText', msg: videoSignText });
-    setDummyTextOpen(true);
+    setSignTextOpen(true);
   };
 
-  const handleDummyTextClose = () => {
+  const hideSignText = () => {
     sendSignal({ type: 'hideSignText' });
-    setDummyTextOpen(false);
+    setSignTextOpen(false);
   };
 
   const today = format(new Date(), 'dd/MM/yyyy');
-  const webSocketUri = import.meta.env.VITE_WEB_SOCKET_URL;
-  const webSocketKey = import.meta.env.VITE_WEB_SOCKET_KEY;
-
-  const handleSocketOpen = () => {
-    if (wsVideoRecord) {
-      wsVideoRecord.send(
-        JSON.stringify({ type: 'setClientUUID', clientUUID: operatorId, socketKEY: webSocketKey })
-      );
-    }
-  };
-
-  const sendSignal = (data: SignalType) => {
-    if (wsVideoRecord && wsVideoRecord.readyState == WebSocket.OPEN) {
-      let msg = { ...data, clientUUID: operatorId, sender: operatorId, receiver: clientId };
-      console.log("sendSignal", msg);
-      wsVideoRecord.send(JSON.stringify(msg));
-    }
-  };
-
-  const listenSignals = (s: SignalType) => {
-    console.log("listenSignals", s);
-    if (s.receiver == operatorId) {
-      if (s.type == 'videoRecord' && s.msg) {
-        callGetFile(s.msg).then((res) => {
-          if (res)
-            setVideoData(res);
-        })
-      }
-    }
-  };
-
-  const handleMessage = (event: MessageEvent) => {
-    if (event.data && event.data.trim().length > 0) {
-      try {
-        let msg = JSON.parse(event.data) as SignalType;
-        listenSignals(msg);
-      } catch (error) { }
-    }
-  };
 
   useEffect(() => {
-    if (!wsVideoRecord) {
-      wsVideoRecord = new WebSocket(webSocketUri);
-      wsVideoRecord.onopen = handleSocketOpen;
-      wsVideoRecord.onmessage = handleMessage;
-      setInterval(() => {
-        if (wsVideoRecord.readyState == WebSocket.CLOSED) {
-          wsVideoRecord = new WebSocket(webSocketUri);
-        }
-      }, 30000);
+    if (newSignal && newSignal.type == 'videoRecord' && newSignal.msg) {
+      setVideoFileName(newSignal.msg!);
+      callGetFile(newSignal.msg).then((res) => {
+        if (res) setVideoData(res);
+      });
     }
-  }, []);
-
+  }, [newSignal]);
 
   return (
     <Box sx={{ p: 2 }}>
@@ -148,19 +124,28 @@ const TabVideoRecord = ({
               position: 'relative',
               height: '300px',
               backgroundColor: '#000',
+              overflow: 'hidden',
             }}
           >
-            <Typography
-              variant="subtitle1"
-              sx={{
-                position: 'absolute',
-                top: 8,
-                left: 8,
-                color: 'white',
-              }}
-            >
-              {today}
-            </Typography>
+            {isRecordStarted ? (
+              <div className="absolute w-[50px] bg-[khaki]/0 h-[50px] left-0 top-0 z-[1] rounded-sm rounded-l-none flex items-center justify-center animate-pulse">
+                <Iconify width={35} icon="mdi:record" color={'red'} />
+              </div>
+            ) : (
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  left: 8,
+                  color: 'white',
+                  zIndex: 1,
+                }}
+              >
+                {today}
+              </Typography>
+            )}
+
             <Typography
               variant="h6"
               sx={{
@@ -171,7 +156,12 @@ const TabVideoRecord = ({
                 height: '100%',
               }}
             >
-              <video ref={videoRef} src={videoData} style={{ width: '100%', height: '100%' }} controls>
+              <video
+                ref={videoRef}
+                src={videoData}
+                style={{ width: '100%', height: '100%' }}
+                controls
+              >
                 <track kind="captions" srcLang="az" label="Azerbaycan" default />
               </video>
             </Typography>
@@ -190,10 +180,10 @@ const TabVideoRecord = ({
                 Bitir
               </Button>
             )}
-            <Button variant="outlined" color="warning" onClick={handlePlayVideo}>
+            {/* <Button variant="outlined" color="warning" onClick={handlePlayVideo}>
               Video çəkilişə bax
-            </Button>
-            <Button variant="outlined" color="info" onClick={handleDummyTextOpen}>
+            </Button> */}
+            <Button variant="outlined" color="info" onClick={showSignText}>
               İmza mətni göstər
             </Button>
             <Button variant="outlined" color="error" onClick={handleDeleteRecording}>
@@ -227,8 +217,7 @@ const TabVideoRecord = ({
         </Button>
       </Box>
 
-      {/* Dummy Text Modal */}
-      <Modal open={dummyTextOpen} onClose={handleDummyTextClose} aria-labelledby="dummy-text-title">
+      <Modal open={signTextOpen} onClose={hideSignText} aria-labelledby="dummy-text-title">
         <Box
           sx={{
             position: 'absolute',
@@ -247,11 +236,9 @@ const TabVideoRecord = ({
           <Typography id="dummy-text-title" variant="h6" mb={2}>
             Mətn başlığı
           </Typography>
-          <Typography>
-            {videoSignText}
-          </Typography>
+          <Typography>{videoSignText}</Typography>
           <Box mt={2} textAlign="right">
-            <Button variant="contained" onClick={handleDummyTextClose}>
+            <Button variant="contained" onClick={hideSignText}>
               Bağla
             </Button>
           </Box>
