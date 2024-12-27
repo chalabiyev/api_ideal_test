@@ -1,8 +1,12 @@
 package az.esam.kredit.kredit.controller;
 
 import az.esam.kredit.kredit.entities.CreditRequest;
+import az.esam.kredit.kredit.entities.CreditRequestDto;
+import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
+import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.services.internal.creditRequest.CreditRequestService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import jakarta.validation.constraints.NotBlank;
@@ -14,8 +18,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
@@ -27,11 +33,39 @@ public class CreditRequestController {
     @Autowired
     CreditRequestService creditRequestService;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    ObjectMapper om;
+
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/create")
     public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {
+        var user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        request.setRequestedUser(user);
+        return ResponseEntity.ok(creditRequestService.create(request, authentication));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/createA")
+    public ResponseEntity<CreditRequest> createAdmin(@RequestBody CreditRequestDto requestdto, Authentication authentication) throws Exception {
+        Optional<User> user = userRepository.findByUsername(requestdto.getRequestedUserPin());
+        if (user.isEmpty()) {
+            user = userRepository.findByPin(requestdto.getRequestedUserPin());
+        }
+        CreditRequest request = om.readValue(om.writeValueAsString(requestdto), CreditRequest.class);
+        if (user.isPresent()) {
+            request.setRequestedUser(user.get());
+        } else {
+            throw new Exception("User not found");
+        }
+
         return ResponseEntity.ok(creditRequestService.create(request, authentication));
     }
 

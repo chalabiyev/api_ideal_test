@@ -16,41 +16,43 @@ import { SignalType } from '../video-call/WebsocketTypes';
 import { callDeleteFile, callGetFile } from 'src/api/FileService';
 import { toast } from 'sonner';
 import { Iconify } from '../iconify';
+import { CreditRequestDto } from 'src/types/CreditRequestDto';
+import { set } from 'nprogress';
 
 const TabVideoRecord = ({
   userInfo,
-  creditAmount,
-  creditDuration,
+  creditRequest,
   setValue,
   newSignal,
   sendSignal,
   videoData,
   setVideoData,
+  setCreditRequest
 }: {
   userInfo: any;
-  creditAmount: number;
-  creditDuration: number;
+  creditRequest: CreditRequestDto;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   newSignal: SignalType | undefined;
   sendSignal: (s: SignalType) => void;
   videoData: string;
   setVideoData: (s: string) => void;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
 }) => {
   const [recording, setRecording] = useState(false);
   const [signTextOpen, setSignTextOpen] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
-  const [videoSignText, setVideoSignText] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoFileName, setVideoFileName] = useState('');
   const [isRecordStarted, setIsRecordStarted] = useState(false);
 
   useEffect(() => {
-    if (userInfo && creditAmount && creditDuration) {
-      setVideoSignText(
-        `Mən ${userInfo.personAz?.surname} ${userInfo.personAz?.name} ${userInfo?.personAz?.patronymic}, İdeal kreditdən ${creditDuration} aylıq ${creditAmount} azn kredit götürdüyüm haqqında müraciəti təsdiq edirəm.`
+    if (userInfo && creditRequest.creditAmount && creditRequest.creditTerm) {
+      setCreditRequest({
+        ...creditRequest,
+        videoSignText: `Mən ${userInfo.personAz?.surname} ${userInfo.personAz?.name} ${userInfo?.personAz?.patronymic}, İdeal kreditdən ${creditRequest.creditTerm} aylıq ${creditRequest.creditAmount} azn kredit götürdüyüm haqqında müraciəti təsdiq edirəm.`
+      }
       );
     }
-  }, [userInfo, creditAmount, creditDuration]);
+  }, [userInfo, creditRequest]);
 
   const handleStartRecording = () => {
     showSignText();
@@ -77,11 +79,17 @@ const TabVideoRecord = ({
   };
 
   const confirmDeleteRecording = () => {
+    if (!creditRequest.videoSignFileName) return;
+
     setRecording(false);
     setConfirmationOpen(false);
-    callDeleteFile(videoFileName)
+    callDeleteFile(creditRequest.videoSignFileName)
       .then((res) => {
-        toast.success(res ? 'Silindi.' : 'Silinmədi.');
+        toast.success(res == true ? 'Silindi.' : 'Silinmədi.');
+        if (res == true) {
+          setCreditRequest({ ...creditRequest, videoSignFileName: '' });
+          setVideoData('');
+        }
       })
       .catch((err) => {
         toast.error('Silinmədi.');
@@ -93,7 +101,7 @@ const TabVideoRecord = ({
   };
 
   const showSignText = () => {
-    sendSignal({ type: 'showSignText', msg: videoSignText });
+    sendSignal({ type: 'showSignText', msg: creditRequest.videoSignText });
     setSignTextOpen(true);
   };
 
@@ -106,7 +114,7 @@ const TabVideoRecord = ({
 
   useEffect(() => {
     if (newSignal && newSignal.type == 'videoRecord' && newSignal.msg) {
-      setVideoFileName(newSignal.msg!);
+      setCreditRequest({ ...creditRequest, videoSignFileName: newSignal.msg });
       callGetFile(newSignal.msg).then((res) => {
         if (res) setVideoData(res);
       });
@@ -234,7 +242,7 @@ const TabVideoRecord = ({
           <Typography id="dummy-text-title" variant="h6" mb={2}>
             Mətn başlığı
           </Typography>
-          <Typography>{videoSignText}</Typography>
+          <Typography>{creditRequest.videoSignText}</Typography>
           <Box mt={2} textAlign="right">
             <Button variant="contained" onClick={hideSignText}>
               Bağla

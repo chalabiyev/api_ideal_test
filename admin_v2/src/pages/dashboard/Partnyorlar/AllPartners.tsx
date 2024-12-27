@@ -33,7 +33,7 @@ import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
-import { EOwnerType, EStatus, Partner } from 'src/types/CreditRequest';
+import { EOwnerType, EStatus, Partner } from 'src/types/CreditRequestDto';
 
 // const getTabCounts = (data: Partner[]) => ({
 //   all: data?.length,
