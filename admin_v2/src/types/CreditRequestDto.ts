@@ -1,4 +1,4 @@
-export interface CreditRequest {
+export interface CreditRequestDto {
   createdBy?: string;
   updatedBy?: string;
   createdDate?: Date;
@@ -10,13 +10,13 @@ export interface CreditRequest {
   creditTerm?: number;
   creditAmountWithText?: string;
   requestDate?: Date;
-  confirmStatus?: string;
-  activateStatus?: string;
-  finalStatus?: string;
+  confirmStatus?: 'Requested' | 'Accepted' | 'Rejected';
+  activateStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
+  finalStatus?: ' PENDING' | 'ACCEPTED' | 'REJECTED';
   requestedUserPin?: string;
   confirmDate?: Date;
   confirmerComment?: string;
-  creditType?: string;
+  creditType?: 'ABOVE_500' | 'BELOW_500' | 'PARTNER_CREDIT';
   serviceRate?: number;
   cartCost?: number;
   insuranceCost?: number;
@@ -28,11 +28,15 @@ export interface CreditRequest {
   otherPayment?: number;
   notarialCost?: string;
   insuranceType?: string;
-  guarantee?: string;
+  guarantee?: 'NONE' | 'ZAMIN' | 'GIROV';
   spouses?: Spouse[];
   fine?: string;
   simaContractOperationId?: string;
   connectedWithBOKT?: boolean;
+  contractFileName?: string;
+  videoSignFileName?: string;
+  decisionQueryEnabled?: boolean;
+  videoSignText?: string;
 }
 
 export interface User {
@@ -147,9 +151,9 @@ export interface Token {
 }
 
 export interface OtherPhoneNumbers {
-  additionalProp1?: string;
-  additionalProp2?: string;
-  additionalProp3?: string;
+  Ev: string;
+  Is: string;
+  GSM: string;
 }
 
 export interface Spouse {

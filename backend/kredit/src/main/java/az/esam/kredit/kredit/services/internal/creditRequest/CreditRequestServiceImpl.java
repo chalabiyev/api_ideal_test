@@ -40,8 +40,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public CreditRequest create(CreditRequest request, Authentication authentication) {
-        var user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
         request.setRequestDate(new Date());
         if (request.getCreditAmount() == null) {
             request.setCreditAmount(499d);
@@ -73,7 +72,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         request.setAmountToBePaid(amountToPay);
 
         request.setConfirmStatus(CreditRequestStatusEnum.Requested);
-        request.setRequestedUser(user);
 
         // muracite baxilir sms
         smsService.sendSMS(request.getRequestedUser().getPhoneNumber(),
@@ -103,11 +101,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             }
 
             // TODO check if user has active credit
-
             if (!flag) {
                 request.setConfirmStatus(CreditRequestStatusEnum.Accepted);
                 request.setActivateStatus(EActivateStatus.PENDING);
-
 
                 // muraciet tesdiqlendi sms
                 smsService.sendSMS(request.getRequestedUser().getPhoneNumber(),
@@ -116,7 +112,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 creditRequestRepository.save(request);
             }
         }
-
 
         return request;
     }
@@ -129,8 +124,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
         if (creditRequest.getRequestedUser().getId().equals(user.getId())
                 && creditRequest.getConfirmStatus() == CreditRequestStatusEnum.Accepted
-                && creditRequest.getActivateStatus() == EActivateStatus.PENDING
-        ) {
+                && creditRequest.getActivateStatus() == EActivateStatus.PENDING) {
             // sign with sima
             SimaQRResponse simaQRResponse = simaService.getAuthQR(creditRequest.getRequestedUser().getPin(), ContractTypeEnum.Sign);
 

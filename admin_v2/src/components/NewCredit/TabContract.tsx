@@ -11,16 +11,17 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { toast } from 'sonner';
-import { CreditRequest } from 'src/types/CreditRequest';
+import { CreditRequestDto } from 'src/types/CreditRequestDto';
 import { generateContract, getPdfQR, getSimaStatus, SimaStatus } from 'src/api/ContractService';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 import { callGetFile } from 'src/api/FileService';
 import { SimaQRResponse } from 'src/types/SimaQRResponse';
 import { SignalType } from '../video-call/WebsocketTypes';
+import { createCreditRequest } from 'src/api/CreditService';
 
-const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileName, setContractFileName, newSignal, sendSignal }:
+const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, sendSignal, setCreditRequest }:
   {
-    creditRequest: CreditRequest, contractPdf: string; setContractPdf: any; contractFileName: string; setContractFileName: any;
+    creditRequest: CreditRequestDto, contractPdf: string; setContractPdf: any; setCreditRequest: any;
     newSignal: SignalType | undefined;
     sendSignal: (s: SignalType) => void;
   }) => {
@@ -33,26 +34,38 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
   const handleSign = async () => {
     setCheckCounter(1);
     setOpenDialog(true);
-    sendSignal({ type: 'signPdf', msg: contractFileName });
+    sendSignal({ type: 'signPdf', msg: creditRequest.contractFileName });
   };
 
   const checkSignStatus = () => {
-    if (simaOperationId) {
+    if (simaOperationId && creditRequest.contractFileName) {
       getSimaStatus(simaOperationId).then((res: SimaStatus) => {
         if (res == SimaStatus.Success) {
           setIsSigning(false);
           setOpenDialog(false);
           toast.success('Müqavilə uğurla imzalandı!');
-        } else if (res == SimaStatus.Failed) {
-          toast.error('Müqavilə imzalanmadı.');
-          setIsSigning(false);
-          setOpenDialog(false);
-          // get signed pdf
-          callGetFile(contractFileName).then((file) => {
+          callGetFile(creditRequest.contractFileName!).then((file) => {
             if (file) {
               setContractPdf(file);
             }
           });
+          createCreditRequest(creditRequest).then((res) => {
+            if (res) {
+              setCreditRequest(res);
+              toast.success('Müraciət uğurla yaradıldı!');
+              setTimeout(() => {
+                window.location.href = '/esassehife/statistika';
+              }, 1000);
+            } else {
+              toast.error('Müraciət yaradılmadı!');
+            }
+          }).catch(() => {
+            toast.error('Müraciət yaradılmadı!');
+          });
+        } else if (res == SimaStatus.Failed) {
+          toast.error('Müqavilə imzalanmadı.');
+          setIsSigning(false);
+          setOpenDialog(false);
         } else if (res == SimaStatus.Signing && checkCounter < 5) {
           setTimeout(() => {
             setCheckCounter(checkCounter + 1);
@@ -77,7 +90,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
       setContractGenerating(true);
       generateContract(creditRequest).then((res: ContractGenerateResponse | null) => {
         if (res?.status == 'success') {
-          setContractFileName(res.pdfName);
+          setCreditRequest({ ...creditRequest, contractFileName: res.pdfName });
           callGetFile(res.pdfName).then((file) => {
             if (file) {
               setContractPdf(file);
@@ -114,11 +127,8 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, contractFileN
             overflow: 'auto',
           }}
         >
-          {/* <Typography variant="body2"> */}
-          {/* FIXME : CİHAN : İLKİN BEY BURAYA GÜZEL BİR DİALOG YAZAR MISINIZ? */}
           {contractGenerating && <Typography>Müqavilə yaradılır...</Typography>}
           {!contractGenerating && <embed src={`${contractPdf}#toolbar=0&navpanes=0&scrollbar=0`} width="100%" height="400px" />}
-          {/* </Typography> */}
         </CardContent>
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button

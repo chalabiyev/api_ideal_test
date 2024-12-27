@@ -62,7 +62,10 @@ public class CreditRequest extends BaseEntity {
     private String fine;
 
     private String simaContractOperationId;
-
+    private String contractFileName;
+    private String videoSignFileName;
+    private Boolean decisionQueryEnabled;
+    private String videoSignText;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -96,27 +99,26 @@ public class CreditRequest extends BaseEntity {
         map.put("guarantee", guarantee != null ? guarantee.name() : null);
         map.put("spouses", spouses != null
                 ? spouses.stream().map(spouse -> {
-            Map<String, Object> spouseMap = new HashMap<>();
-            spouseMap.put("fullName", spouse.getFullName());
-            spouseMap.put("serialNumber", spouse.getSerialNumber());
-            spouseMap.put("eventDate", spouse.getEventDate());
-            spouseMap.put("organisationName", spouse.getOrganisationName());
-            spouseMap.put("birthAddress", spouse.getBirthAddress());
-            spouseMap.put("nationality", spouse.getNationality());
-            spouseMap.put("address", spouse.getAddress());
-            spouseMap.put("factAddress", spouse.getFactAddress());
-            spouseMap.put("phoneNumbers", spouse.getPhoneNumbers());
-            spouseMap.put("workPlace", spouse.getWorkPlace());
-            spouseMap.put("workAddress", spouse.getWorkAddress());
-            spouseMap.put("position", spouse.getPosition());
-            return spouseMap;
-        }).collect(Collectors.toList())
+                    Map<String, Object> spouseMap = new HashMap<>();
+                    spouseMap.put("fullName", spouse.getFullName());
+                    spouseMap.put("serialNumber", spouse.getSerialNumber());
+                    spouseMap.put("eventDate", spouse.getEventDate());
+                    spouseMap.put("organisationName", spouse.getOrganisationName());
+                    spouseMap.put("birthAddress", spouse.getBirthAddress());
+                    spouseMap.put("nationality", spouse.getNationality());
+                    spouseMap.put("address", spouse.getAddress());
+                    spouseMap.put("factAddress", spouse.getFactAddress());
+                    spouseMap.put("phoneNumbers", spouse.getPhoneNumbers());
+                    spouseMap.put("workPlace", spouse.getWorkPlace());
+                    spouseMap.put("workAddress", spouse.getWorkAddress());
+                    spouseMap.put("position", spouse.getPosition());
+                    return spouseMap;
+                }).collect(Collectors.toList())
                 : null);
         map.put("fine", fine);
         map.put("simaContractOperationId", simaContractOperationId);
 
         return map;
     }
-
 
 }

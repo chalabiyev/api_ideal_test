@@ -1,4 +1,4 @@
-import { Partner } from 'src/types/CreditRequest';
+import { Partner } from 'src/types/CreditRequestDto';
 import axiosInstance from 'src/utils/axios';
 
 export const postChangePartnerStatus = async (id: string, status: string) => {
