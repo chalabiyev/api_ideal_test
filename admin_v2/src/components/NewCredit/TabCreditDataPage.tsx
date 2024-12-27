@@ -9,86 +9,53 @@ import {
   FormControlLabel,
   Button,
 } from '@mui/material';
-import { CreditRequest } from 'src/types/CreditRequest';
+import { CreditRequestDto } from 'src/types/CreditRequestDto';
 
 const TabCreditDataPage = ({
   setValue,
-  creditAmount,
-  creditDuration,
-  setCreditAmount,
-  setCreditDuration,
   creditRequest,
   setCreditRequest
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  creditAmount: number;
-  creditDuration: number;
-  setCreditAmount: React.Dispatch<React.SetStateAction<number>>;
-  setCreditDuration: React.Dispatch<React.SetStateAction<number>>;
-  creditRequest: CreditRequest;
-  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
+  creditRequest: CreditRequestDto;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
 }) => {
-  // const [creditAmount, setCreditAmount] = useState<string>('');
-  const [serviceFee, setServiceFee] = useState<number>(1.5);
-  const [annualInterestRate, setAnnualInterestRate] = useState<string>('');
-  // const [creditDuration, setCreditDuration] = useState<number>(12);
-  const [cardCost, setCardCost] = useState<number>(10);
-  const [valuationFee, setValuationFee] = useState<number>(20);
-  const [insuranceFee, setInsuranceFee] = useState<number>(1);
-  const [purpose, setPurpose] = useState<string>('');
-  const [isDecisionQueryEnabled, setIsDecisionQueryEnabled] = useState<boolean>(false);
 
   const calculateMonthlyPayment = (): string => {
-    if (!creditAmount || !annualInterestRate || !creditDuration) return '0.00';
+    if (!creditRequest || !creditRequest.creditAmount || !creditRequest.annualPercent || !creditRequest.creditTerm) return '0.00';
 
-    // const principal = parseFloat(creditAmount);
-    const monthlyRate = parseFloat(annualInterestRate) / 100 / 12;
-    const durationInMonths = parseInt(creditDuration.toString(), 10);
+    // const principal = parseFloat(creditRequest.creditAmount);
+    const monthlyRate = creditRequest.annualPercent / 100 / 12;
+    const durationInMonths = parseInt(creditRequest.creditTerm.toString(), 10);
 
     if (monthlyRate === 0) {
-      return (creditAmount / durationInMonths).toFixed(2);
+      return (creditRequest.creditAmount / durationInMonths).toFixed(2);
     }
 
     const monthlyPayment =
       // eslint-disable-next-line
-      (creditAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -durationInMonths));
+      (creditRequest.creditAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -durationInMonths));
 
     return monthlyPayment.toFixed(2);
   };
 
   const calculateTotalPayment = (): string => {
-    return (parseFloat(calculateMonthlyPayment()) * creditDuration).toFixed(2);
+    return (parseFloat(calculateMonthlyPayment()) * creditRequest.creditTerm!).toFixed(2);
   };
 
   const calculateTotalInterest = (): string => {
-    return (parseFloat(calculateTotalPayment()) - creditAmount).toFixed(2);
+    return (parseFloat(calculateTotalPayment()) - creditRequest.creditAmount!).toFixed(2);
   };
 
   const calculateCardAmount = (): string => {
-    const principal = creditAmount || 0;
-    const serviceCost = (principal * serviceFee) / 100;
-    const insuranceCost = (principal * insuranceFee) / 100;
+    const principal = creditRequest.creditAmount || 0;
+    const serviceCost = (principal * (creditRequest.serviceRate || 0)) / 100;
+    const insuranceCost = (principal * (creditRequest.insuranceCost || 0)) / 100;
 
-    const cardAmount = principal - serviceCost - insuranceCost - cardCost - valuationFee;
+    const cardAmount = principal - serviceCost - insuranceCost - creditRequest.cartCost! - creditRequest.valuationCost!;
 
     return cardAmount.toFixed(2);
   };
-
-  useEffect(() => {
-    setCreditRequest({
-      ...creditRequest,
-      creditAmount: creditAmount,
-      creditTerm: creditDuration,
-      annualPercent: parseFloat(annualInterestRate),
-      serviceRate: serviceFee,
-      cartCost: cardCost,
-      valuationCost: valuationFee,
-      insuranceCost: insuranceFee,
-      monthlyPayment: parseFloat(calculateMonthlyPayment()),
-      amountToBePaid: parseFloat(calculateTotalPayment()),
-      creditPurpose: purpose
-    });
-  }, [creditAmount, creditDuration, serviceFee, cardCost, purpose, valuationFee, insuranceFee]);
 
   return (
     <Box sx={{ py: 4 }}>
@@ -103,8 +70,8 @@ const TabCreditDataPage = ({
           <TextField
             label="Kredit Miqdarı (AZN)"
             type="number"
-            value={creditAmount}
-            onChange={(e) => setCreditAmount(parseFloat(e.target.value))}
+            value={creditRequest.creditAmount}
+            onChange={(e) => setCreditRequest({ ...creditRequest, creditAmount: parseFloat(e.target.value) })}
             fullWidth
           />
         </Grid>
@@ -114,18 +81,18 @@ const TabCreditDataPage = ({
           <TextField
             label="İllik Faiz Dərəcəsi (%)"
             type="number"
-            value={annualInterestRate}
-            onChange={(e) => setAnnualInterestRate(e.target.value)}
+            value={creditRequest.annualPercent}
+            onChange={(e) => setCreditRequest({ ...creditRequest, annualPercent: parseFloat(e.target.value) })}
             fullWidth
           />
         </Grid>
 
         {/* Kreditin Müddəti */}
         <Grid item xs={12}>
-          <Typography gutterBottom>Kreditin Müddəti: {creditDuration} ay</Typography>
+          <Typography gutterBottom>Kreditin Müddəti: {creditRequest.creditTerm} ay</Typography>
           <Slider
-            value={creditDuration}
-            onChange={(e, newValue) => setCreditDuration(newValue as number)}
+            value={creditRequest.creditTerm}
+            onChange={(e, newValue) => setCreditRequest({ ...creditRequest, creditTerm: newValue as number })}
             valueLabelDisplay="auto"
             min={6}
             defaultValue={12}
@@ -135,10 +102,10 @@ const TabCreditDataPage = ({
 
         {/* Xidmət Haqqı */}
         <Grid item xs={12}>
-          <Typography gutterBottom>Xidmət haqqı: {serviceFee} %</Typography>
+          <Typography gutterBottom>Xidmət haqqı: {creditRequest.serviceRate} %</Typography>
           <Slider
-            value={serviceFee}
-            onChange={(e, newValue) => setServiceFee(newValue as number)}
+            value={creditRequest.serviceRate}
+            onChange={(e, newValue) => setCreditRequest({ ...creditRequest, serviceRate: newValue as number })}
             valueLabelDisplay="auto"
             min={0.1}
             max={50}
@@ -152,8 +119,8 @@ const TabCreditDataPage = ({
           <TextField
             label="Kart Xərci (AZN)"
             type="number"
-            value={cardCost}
-            onChange={(e) => setCardCost(Number(e.target.value))}
+            value={creditRequest.cartCost}
+            onChange={(e) => setCreditRequest({ ...creditRequest, cartCost: parseFloat(e.target.value) })}
             fullWidth
           />
         </Grid>
@@ -163,18 +130,18 @@ const TabCreditDataPage = ({
           <TextField
             label="Qiymətləndirmə Xərci (AZN)"
             type="number"
-            value={valuationFee}
-            onChange={(e) => setValuationFee(Number(e.target.value))}
+            value={creditRequest.valuationCost}
+            onChange={(e) => setCreditRequest({ ...creditRequest, valuationCost: parseFloat(e.target.value) })}
             fullWidth
           />
         </Grid>
 
         {/* Sığorta Xərci */}
         <Grid item xs={12}>
-          <Typography gutterBottom>Sığorta xərci: {insuranceFee} %</Typography>
+          <Typography gutterBottom>Sığorta xərci: {creditRequest.insuranceCost} %</Typography>
           <Slider
-            value={insuranceFee}
-            onChange={(e, newValue) => setInsuranceFee(newValue as number)}
+            value={creditRequest.insuranceCost}
+            onChange={(e, newValue) => setCreditRequest({ ...creditRequest, insuranceCost: newValue as number })}
             valueLabelDisplay="auto"
             min={0.1}
             max={10}
@@ -219,8 +186,8 @@ const TabCreditDataPage = ({
             label="Krediti almaq üçün məqsəd"
             multiline
             rows={4}
-            value={purpose}
-            onChange={(e) => setPurpose(e.target.value)}
+            value={creditRequest.creditPurpose}
+            onChange={(e) => setCreditRequest({ ...creditRequest, creditPurpose: e.target.value })}
             fullWidth
           />
         </Grid>
@@ -230,8 +197,8 @@ const TabCreditDataPage = ({
           <FormControlLabel
             control={
               <Switch
-                checked={isDecisionQueryEnabled}
-                onChange={() => setIsDecisionQueryEnabled((prev) => !prev)}
+                checked={creditRequest.decisionQueryEnabled}
+                onChange={() => setCreditRequest({ ...creditRequest, decisionQueryEnabled: !creditRequest.decisionQueryEnabled })}
               />
             }
             label="Qərar üçün sorğu göndər"

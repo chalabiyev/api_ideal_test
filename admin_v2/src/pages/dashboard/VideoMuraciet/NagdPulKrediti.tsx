@@ -13,7 +13,7 @@ import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
-import { CreditRequest } from 'src/types/CreditRequest';
+import { CreditRequestDto } from 'src/types/CreditRequestDto';
 import { RecruiterDataType } from './types';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,8 +42,6 @@ export default function Page() {
   const [guarantorInfo, setGuarantorInfo] = React.useState<any>(null);
   const [guarantorPin, setGuarantorPin] = React.useState<string>('');
   const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
-  const [creditAmount, setCreditAmount] = useState<number>(0);
-  const [creditDuration, setCreditDuration] = useState<number>(12);
 
   const guarantorEndpoint = `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`;
   const {
@@ -58,11 +56,24 @@ export default function Page() {
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
   const endpointUserByUserName = `/auth/getUserByUserName/${pin}`;
   const { data: userData } = useApi(endpointUserByUserName);
-  const [creditRequest, setCreditRequest] = useState<CreditRequest>({});
+  const [creditRequest, setCreditRequest] = useState<CreditRequestDto>({
+    creditAmount: 0,
+    creditTerm: 12,
+    annualPercent: 0,
+    serviceRate: 1.5,
+    insuranceCost: 1,
+    cartCost: 10,
+    valuationCost: 0,
+    contractFileName: '',
+    videoSignText: '',
+    requestedUserPin: '',
+    phoneNumber: '',
+    requestDate: new Date(),
+    decisionQueryEnabled: false,
+  });
   const [newSignal, setNewSignal] = useState<SignalType>();
   const [videoData, setVideoData] = useState('');
   const [contractPdf, setContractPdf] = useState("");
-  const [contractFileName, setContractFileName] = useState("");
 
   // requriment data
   const [recruiterData, setRecruiterData] = useState<RecruiterDataType>({
@@ -119,10 +130,10 @@ export default function Page() {
     // eslint-disable-next-line
   }, [data, guarantorData]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // credit request değiştiyse contract ta değişmeli!.
     setContractPdf("");
-  },[creditRequest]);
+  }, [creditRequest]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -261,10 +272,6 @@ export default function Page() {
             <TabPanel sx={{ p: 0 }} value="6">
               <TabCreditDataPage
                 setValue={setValue}
-                creditAmount={creditAmount}
-                creditDuration={creditDuration}
-                setCreditAmount={setCreditAmount}
-                setCreditDuration={setCreditDuration}
                 creditRequest={creditRequest}
                 setCreditRequest={setCreditRequest}
               />
@@ -274,21 +281,20 @@ export default function Page() {
               <TabVideoRecord
                 setValue={setValue}
                 userInfo={userInfo}
-                creditAmount={creditAmount}
-                creditDuration={creditDuration}                
                 newSignal={newSignal}
                 sendSignal={sendSignal}
                 videoData={videoData}
                 setVideoData={setVideoData}
+                creditRequest={creditRequest}
+                setCreditRequest={setCreditRequest}
               />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="8">
-              <TabContract creditRequest={creditRequest} 
-              contractPdf={contractPdf} setContractPdf={setContractPdf}
-              contractFileName={contractFileName} setContractFileName={setContractFileName}
-              newSignal={newSignal} sendSignal={sendSignal}
-               />
+              <TabContract creditRequest={creditRequest}
+                contractPdf={contractPdf} setContractPdf={setContractPdf}
+                newSignal={newSignal} sendSignal={sendSignal} setCreditRequest={setCreditRequest}
+              />
             </TabPanel>
           </TabContext>
         </Box>

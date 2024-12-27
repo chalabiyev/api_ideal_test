@@ -7,7 +7,7 @@ import { STORAGE_KEY } from 'src/auth/context/jwt';
 // eslint-disable-next-line
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 // eslint-disable-next-line
-import { CreditRequest } from 'src/types/CreditRequest';
+import { CreditRequestDto } from 'src/types/CreditRequestDto';
 // eslint-disable-next-line
 import { SimaQRResponse } from 'src/types/SimaQRResponse';
 
@@ -20,7 +20,7 @@ export enum SimaStatus {
     Failed = "failed",
 }
 
-export const generateContract = async (creditRequest: CreditRequest) => {
+export const generateContract = async (creditRequest: CreditRequestDto) => {
     const response = await fetch(`${BASE_URL}/contract/generate`, {
         "headers": {
             "Access-Control-Allow-Origin": "*",

@@ -51,5 +51,9 @@ public class CreditRequestDto {
     private String fine;
 
     private String simaContractOperationId;
+    private String contractFileName;
+    private String videoSignFileName;
+    private Boolean decisionQueryEnabled;
+    private String videoSignText;
 
 }
