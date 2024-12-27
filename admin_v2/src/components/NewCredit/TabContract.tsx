@@ -29,6 +29,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
   const [openDialog, setOpenDialog] = useState(false);
   const [contractGenerating, setContractGenerating] = useState(false);
   const [simaOperationId, setSimaOperationId] = useState<string>();
+  const [intervalId, setIntervalId] = useState<number | null>(null);
   const [checkCounter, setCheckCounter] = useState(0);
 
   const handleSign = async () => {
@@ -39,8 +40,18 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
 
   const checkSignStatus = () => {
     if (simaOperationId && creditRequest.contractFileName) {
+      setCheckCounter(checkCounter + 1);
+      if (checkCounter > 10) {
+        if (intervalId)
+          clearInterval(intervalId);
+        setIsSigning(false);
+        setOpenDialog(false);
+        toast.error('Müqavilə imzalanmadı.');
+      }
       getSimaStatus(simaOperationId).then((res: SimaStatus) => {
         if (res == SimaStatus.Success) {
+          if (intervalId)
+            clearInterval(intervalId);
           setIsSigning(false);
           setOpenDialog(false);
           toast.success('Müqavilə uğurla imzalandı!');
@@ -63,14 +74,11 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
             toast.error('Müraciət yaradılmadı!');
           });
         } else if (res == SimaStatus.Failed) {
+          if (intervalId)
+            clearInterval(intervalId);
           toast.error('Müqavilə imzalanmadı.');
           setIsSigning(false);
           setOpenDialog(false);
-        } else if (res == SimaStatus.Signing && checkCounter < 5) {
-          setTimeout(() => {
-            setCheckCounter(checkCounter + 1);
-            checkSignStatus();
-          }, 5000);
         }
       });
     }
@@ -81,7 +89,12 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
       setSimaOperationId(newSignal.msg);
       setOpenDialog(true);
       setIsSigning(true);
-      checkSignStatus();
+      setCheckCounter(1);
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+      const newIntervalId = window.setInterval(() => checkSignStatus(), 3000);
+      setIntervalId(newIntervalId);
     }
   }, [newSignal]);
 
