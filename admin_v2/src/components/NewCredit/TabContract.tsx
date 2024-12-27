@@ -31,6 +31,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
   const [simaOperationId, setSimaOperationId] = useState<string>();
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const [checkCounter, setCheckCounter] = useState(0);
+  const [currentStatus, setCurrentStatus] = useState<string>('');
 
   const handleSign = async () => {
     setCheckCounter(1);
@@ -54,7 +55,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
             clearInterval(intervalId);
           setIsSigning(false);
           setOpenDialog(false);
-          toast.success('Müqavilə uğurla imzalandı!');
+          setCurrentStatus('Müqavilə uğurla imzalandı!');
           callGetFile(creditRequest.contractFileName!).then((file) => {
             if (file) {
               setContractPdf(file);
@@ -63,15 +64,15 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
           createCreditRequest(creditRequest).then((res) => {
             if (res) {
               setCreditRequest(res);
-              toast.success('Müraciət uğurla yaradıldı!');
+              setCurrentStatus('Müraciət uğurla bildirildi!');
               setTimeout(() => {
                 window.location.href = '/esassehife/statistika';
               }, 1000);
             } else {
-              toast.error('Müraciət yaradılmadı!');
+              setCurrentStatus('Müraciət yaradılmadı!');
             }
           }).catch(() => {
-            toast.error('Müraciət yaradılmadı!');
+            setCurrentStatus('Müraciət yaradılmadı!');
           });
         } else if (res == SimaStatus.Failed) {
           if (intervalId)
@@ -85,21 +86,30 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
   }
 
   useEffect(() => {
-    if (newSignal?.type == 'signingPdf' && newSignal.msg) {
-      setSimaOperationId(newSignal.msg);
-      setOpenDialog(true);
-      setIsSigning(true);
+    if (simaOperationId && creditRequest.contractFileName) {
       setCheckCounter(1);
       if (intervalId) {
         clearInterval(intervalId);
       }
       const newIntervalId = window.setInterval(() => checkSignStatus(), 3000);
       setIntervalId(newIntervalId);
+    } else if (intervalId) {
+      clearInterval(intervalId);
+    }
+  }, [simaOperationId]);
+
+
+  useEffect(() => {
+    if (newSignal?.type == 'signingPdf' && newSignal.msg) {
+      setCurrentStatus('Müqavilə imzalanır...');
+      setSimaOperationId(newSignal.msg);
+      setOpenDialog(true);
+      setIsSigning(true);
     }
   }, [newSignal]);
 
   useEffect(() => {
-    if (creditRequest && !contractPdf) {
+    if (creditRequest && !contractPdf && !contractGenerating) {
       setContractGenerating(true);
       generateContract(creditRequest).then((res: ContractGenerateResponse | null) => {
         if (res?.status == 'success') {
@@ -123,7 +133,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
         setContractGenerating(false);
       });
     }
-  }, [creditRequest]);
+  }, [creditRequest, contractPdf]);
 
   return (
     <Box sx={{ py: 4 }}>
@@ -169,7 +179,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
                 gap: 2,
               }}
             >
-              <Typography variant="h6"> İmzalanır </Typography>
+              <Typography variant="h6"> {currentStatus} </Typography>
               <CircularProgress color="success" size={20} />
             </Box>
           )}
@@ -185,9 +195,10 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
               }}
             >
               <img src="/signing.gif" alt="Signing" width={330} height={290} />
+              <Typography>{currentStatus}</Typography>
             </Box>
           ) : (
-            <Typography>İmzalama tamamlandı. Nəticə bildirildi.</Typography>
+            <Typography>{currentStatus}</Typography>
           )}
         </DialogContent>
         <DialogActions>
