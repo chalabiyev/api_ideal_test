@@ -55,5 +55,6 @@ public class CreditRequestDto {
     private String videoSignFileName;
     private Boolean decisionQueryEnabled;
     private String videoSignText;
+    private String partnerId;
 
 }

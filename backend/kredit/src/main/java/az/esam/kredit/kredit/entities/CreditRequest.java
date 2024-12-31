@@ -67,6 +67,17 @@ public class CreditRequest extends BaseEntity {
     private Boolean decisionQueryEnabled;
     private String videoSignText;
 
+    @DocumentReference
+    private Partner partner;
+
+    private String guarantorPhoneNumber;
+    private String guarantorPin;
+    private String guarantorFullName;
+    private String guarantorName;
+    private String guarantorSurname;
+    private String guarantorFatherName;
+    private String guarantorRelation;
+
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);

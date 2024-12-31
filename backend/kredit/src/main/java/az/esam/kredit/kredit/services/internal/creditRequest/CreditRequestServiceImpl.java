@@ -1,7 +1,9 @@
 package az.esam.kredit.kredit.services.internal.creditRequest;
 
+import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.entities.Credit;
 import az.esam.kredit.kredit.entities.CreditRequest;
+import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.entities.enums.*;
 import az.esam.kredit.kredit.entities.sima.ContractTypeEnum;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
@@ -18,6 +20,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.support.PageableExecutionUtils;
 
 @Slf4j
 @Service
@@ -37,6 +46,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Autowired
     SMSService smsService;
+
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     @Override
     public CreditRequest create(CreditRequest request, Authentication authentication) {
@@ -78,6 +90,13 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 "Sizin kredit muracietiniz qebul olundu, tezliklə sizə status barədə məlumat veriləcək");
 
         creditRequestRepository.insert(request);
+        if (request.getPartner() != null) {
+            request.setCreditType(ECreditType.PARTNER_CREDIT);
+        } else if (request.getCreditAmount() > 500d) {
+            request.setCreditType(ECreditType.ABOVE_500);
+        } else if (request.getCreditAmount() < 500d) {
+            request.setCreditType(ECreditType.BELOW_500);
+        }
 
         boolean flag = false;
         if (request.getCreditType() != null && request.getCreditType().equals(ECreditType.BELOW_500)) {
@@ -118,7 +137,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public SimaQRResponse activate(String creditRequestId, Authentication authentication) {
-        var user = userRepository.findByEmail(authentication.getName())
+        var user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
                 .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
@@ -164,7 +183,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public CreditRequest get(String id, Authentication authentication) {
-        var user = userRepository.findByEmail(authentication.getName())
+        var user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
         if (user.getRoles().stream().filter(f -> f.getName() == ERole.ROLE_ADMIN).count() == 0) {
@@ -217,5 +236,81 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 .fine(creditRequest.getFine())
                 .simaContractOperationId(simaContractOperationId)
                 .build();
+    }
+
+    @Override
+    public Page<CreditRequest> search(CreditRequestSearchDto search) {
+        Query q = new Query().skip(search.getPage() * search.getPageSize())
+                .limit(search.getPageSize());
+        if (search.getCreditType() != null && !search.getCreditType().isEmpty()) {
+            q.addCriteria(Criteria.where("creditType").is(ECreditType.valueOf(search.getCreditType()).name()));
+        }
+        if (search.getSearch() != null && search.getSearch().trim().length() > 0) {
+            Criteria c = Criteria
+                    .where("id").ne(null)
+                    .orOperator(
+                            Criteria.where("username").regex(search.getSearch()),
+                            Criteria.where("pin").regex(search.getSearch()),
+                            Criteria.where("seriaNo").regex(search.getSearch()),
+                            Criteria.where("fullName").regex(search.getSearch()),
+                            Criteria.where("name").regex(search.getSearch()),
+                            Criteria.where("surname").regex(search.getSearch()),
+                            Criteria.where("phoneNumber").regex(search.getSearch()),
+                            Criteria.where("email").regex(search.getSearch()));
+
+            List<User> users = mongoTemplate.find(Query.query(c), User.class);
+            q.addCriteria(Criteria
+                    .where("id").ne(null)
+                    .orOperator(
+                            Criteria.where("creditPurpose").regex(search.getSearch()),
+                            Criteria.where("requestedUser").in(users)));
+        }
+
+        List<CreditRequest> list = mongoTemplate.find(q.with(Sort.by(Sort.Order.desc("requestDate"))), CreditRequest.class);
+
+        return PageableExecutionUtils.getPage(
+                list,
+                list.isEmpty() ? Pageable.unpaged() : Pageable.ofSize(list.size()).withPage(search.getPage()),
+                () -> mongoTemplate.count(Query.of(q).limit(-1).skip(-1), CreditRequest.class));
+
+    }
+
+    @Override
+    public Long countOf(ECreditType creditType) {
+        return creditRequestRepository.countByCreditType(creditType);
+    }
+
+    @Override
+    public CreditRequest acceptByAdmin(String creditRequestId, Authentication authentication) {
+        var user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
+                .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
+
+        creditRequest.setConfirmStatus(CreditRequestStatusEnum.Accepted);
+        creditRequest = creditRequestRepository.save(creditRequest);
+        // send sms to user
+        smsService.sendSMS(creditRequest.getRequestedUser().getPhoneNumber(),
+                "Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit təsdiq edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun");
+
+        return creditRequest;
+    }
+
+    @Override
+    public CreditRequest rejectByAdmin(String creditRequestId, Authentication authentication) {
+        var user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
+                .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
+
+        creditRequest.setConfirmStatus(CreditRequestStatusEnum.Rejected);
+        creditRequest.setActivateStatus(EActivateStatus.REJECTED);
+        creditRequest.setFinalStatus(EFinalStatus.REJECTED);
+        creditRequest = creditRequestRepository.save(creditRequest);
+        // send sms to user
+        smsService.sendSMS(creditRequest.getRequestedUser().getPhoneNumber(),
+                "Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit ləğv edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun");
+
+        return creditRequest;
     }
 }

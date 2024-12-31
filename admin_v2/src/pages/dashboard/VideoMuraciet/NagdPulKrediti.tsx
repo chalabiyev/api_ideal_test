@@ -130,11 +130,6 @@ export default function Page() {
     // eslint-disable-next-line
   }, [data, guarantorData]);
 
-  useEffect(() => {
-    // credit request değiştiyse contract ta değişmeli!.
-    setContractPdf("");
-  }, [creditRequest]);
-
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };

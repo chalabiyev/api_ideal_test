@@ -1,3 +1,57 @@
+export type ECreditType = 'ABOVE_500' | 'BELOW_500' | 'PARTNER_CREDIT' | 'BUSINESS_CREDIT' | undefined | '';
+
+export type EFinalStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined;
+
+export interface CreditRequest {
+  createdBy?: string;
+  updatedBy?: string;
+  createdDate?: Date;
+  updatedDate?: Date;
+  id?: string;
+  phoneNumber?: string;
+  otherPhoneNumbers?: OtherPhoneNumbers;
+  creditAmount?: number;
+  creditTerm?: number;
+  creditAmountWithText?: string;
+  requestDate?: Date;
+  confirmStatus?: 'Requested' | 'Accepted' | 'Rejected';
+  activateStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
+  finalStatus?: EFinalStatus;
+  requestedUser?: User;
+  confirmDate?: Date;
+  confirmerComment?: string;
+  creditType?: ECreditType;
+  serviceRate?: number;
+  cartCost?: number;
+  insuranceCost?: number;
+  valuationCost?: number;
+  monthlyPayment?: number;
+  amountToBePaid?: number;
+  creditPurpose?: string;
+  annualPercent?: number;
+  otherPayment?: number;
+  notarialCost?: string;
+  insuranceType?: string;
+  guarantee?: 'NONE' | 'ZAMIN' | 'GIROV';
+  spouses?: Spouse[];
+  fine?: string;
+  simaContractOperationId?: string;
+  connectedWithBOKT?: boolean;
+  contractFileName?: string;
+  videoSignFileName?: string;
+  decisionQueryEnabled?: boolean;
+  videoSignText?: string;
+  partner?: Partner;
+  guarantorPhoneNumber?: string;
+  guarantorPin?: string;
+  guarantorFullName?: string;
+  guarantorName?: string;
+  guarantorSurname?: string;
+  guarantorFatherName?: string;
+  guarantorRelation?: string;
+}
+
+
 export interface CreditRequestDto {
   createdBy?: string;
   updatedBy?: string;
@@ -12,11 +66,11 @@ export interface CreditRequestDto {
   requestDate?: Date;
   confirmStatus?: 'Requested' | 'Accepted' | 'Rejected';
   activateStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
-  finalStatus?: ' PENDING' | 'ACCEPTED' | 'REJECTED';
+  finalStatus?: EFinalStatus;
   requestedUserPin?: string;
   confirmDate?: Date;
   confirmerComment?: string;
-  creditType?: 'ABOVE_500' | 'BELOW_500' | 'PARTNER_CREDIT';
+  creditType?: ECreditType;
   serviceRate?: number;
   cartCost?: number;
   insuranceCost?: number;
@@ -129,7 +183,7 @@ export interface Partner {
   companyImages?: string[];
   city?: string;
   address?: string;
-  status?: EStatus;
+  status: EStatus;
 }
 
 export interface Role {
@@ -169,4 +223,12 @@ export interface Spouse {
   workPlace?: string;
   workAddress?: string;
   position?: string;
+}
+
+
+export interface CreditRequestSearchDto {
+  creditType?: ECreditType;
+  search?: string;
+  pageSize: number;
+  page: number;
 }

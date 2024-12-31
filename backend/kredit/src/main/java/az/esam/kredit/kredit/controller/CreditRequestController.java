@@ -1,8 +1,10 @@
 package az.esam.kredit.kredit.controller;
 
+import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.entities.CreditRequest;
 import az.esam.kredit.kredit.entities.CreditRequestDto;
 import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.enums.ECreditType;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
 import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.services.internal.creditRequest.CreditRequestService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -119,4 +122,41 @@ public class CreditRequestController {
         return ResponseEntity.ok(creditRequestService.count());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/search")
+    public ResponseEntity<Page<CreditRequest>> search(@RequestBody CreditRequestSearchDto search) {
+        return ResponseEntity.ok(creditRequestService.search(search));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @GetMapping("/countOf/{creditType}")
+    public ResponseEntity<Long> countOf(@PathVariable String creditType) {
+        return ResponseEntity.ok(creditRequestService.countOf(ECreditType.valueOf(creditType)));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @GetMapping("/acceptByAdmin")
+    public ResponseEntity<CreditRequest> acceptByAdmin(
+            @RequestParam @NotBlank(message = "Kredit request id boş ola bilməz") String creditRequestId,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(creditRequestService.acceptByAdmin(creditRequestId, authentication));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @GetMapping("/rejectByAdmin")
+    public ResponseEntity<CreditRequest> rejectByAdmin(
+            @RequestParam @NotBlank(message = "Kredit request id boş ola bilməz") String creditRequestId,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(creditRequestService.rejectByAdmin(creditRequestId, authentication));
+    }
 }
