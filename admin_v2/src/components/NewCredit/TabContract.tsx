@@ -65,9 +65,6 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
             if (res) {
               setCreditRequest(res);
               setCurrentStatus('Müraciət uğurla bildirildi!');
-              setTimeout(() => {
-                window.location.href = '/esassehife/statistika';
-              }, 1000);
             } else {
               setCurrentStatus('Müraciət yaradılmadı!');
             }
@@ -109,7 +106,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
   }, [newSignal]);
 
   useEffect(() => {
-    if (creditRequest && !contractPdf && !contractGenerating) {
+    if (creditRequest && !contractGenerating) {
       setContractGenerating(true);
       generateContract(creditRequest).then((res: ContractGenerateResponse | null) => {
         if (res?.status == 'success') {
@@ -133,7 +130,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
         setContractGenerating(false);
       });
     }
-  }, [creditRequest, contractPdf]);
+  }, [creditRequest]);
 
   return (
     <Box sx={{ py: 4 }}>

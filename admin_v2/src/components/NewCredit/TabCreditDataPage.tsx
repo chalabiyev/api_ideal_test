@@ -57,6 +57,16 @@ const TabCreditDataPage = ({
     return cardAmount.toFixed(2);
   };
 
+  useEffect(() => {
+    setCreditRequest({
+      ...creditRequest,
+      monthlyPayment: parseFloat(calculateMonthlyPayment()),
+      amountToBePaid: parseFloat(calculateTotalPayment()),
+      insuranceCost: parseFloat(calculateTotalInterest()),
+      cartCost: parseFloat(calculateCardAmount())
+    });
+  }, [creditRequest.creditAmount, creditRequest.annualPercent, creditRequest.creditTerm, creditRequest.serviceRate, creditRequest.insuranceCost, creditRequest.cartCost, creditRequest.valuationCost]);
+
   return (
     <Box sx={{ py: 4 }}>
       {/* Başlıq */}
@@ -154,7 +164,7 @@ const TabCreditDataPage = ({
         <Grid item xs={12} sm={6}>
           <TextField
             label="Aylıq Ödəniş (AZN)"
-            value={calculateMonthlyPayment()}
+            value={creditRequest.monthlyPayment}
             fullWidth
             disabled
           />
@@ -164,7 +174,7 @@ const TabCreditDataPage = ({
         <Grid item xs={12} sm={6}>
           <TextField
             label="Cəmi Ödəniləcək Məbləğ (AZN)"
-            value={calculateTotalPayment()}
+            value={creditRequest.amountToBePaid}
             fullWidth
             disabled
           />
@@ -174,7 +184,7 @@ const TabCreditDataPage = ({
         <Grid item xs={12} sm={6}>
           <TextField
             label="Karta Gedən Məbləğ (AZN)"
-            value={calculateCardAmount()}
+            value={creditRequest.cartCost}
             fullWidth
             disabled
           />

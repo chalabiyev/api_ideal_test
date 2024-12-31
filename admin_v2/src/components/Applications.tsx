@@ -24,180 +24,204 @@ import {
   Popover,
   Tooltip,
 } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { ArrowRightIcon } from '@mui/x-date-pickers';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { countOfCreditRequests, countOfCreditRequestsAll, creditRequestSearch } from 'src/api/CreditService';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
+import { ECreditType } from 'src/types/CreditRequestDto';
+import { CreditRequestSearchResponse } from 'src/types/CreditRequestSearchResponse';
+import { formatDate, formatDDate } from 'src/utils/formatDate';
 
-// Table Data
-const MOCK_DATA = [
-  {
-    id: 1,
-    creditType: '500 azn-dən yuxarı',
-    amount: '350 azn',
-    applicationDate: '12/12/2024',
-    operator: 'Əhməd Mustafayev',
-    name: 'Şaban Qarabağlı Mahmud oğlu',
-    contactNumbers: ['0709919999', '0551234567', '0779876543'],
-    contactPerson: 'Rəşad Məmmədov',
-    contactPersonRole: 'Əmisi',
-    contactPersonNumber: '0708765432',
-    statusM: 'Baxılır',
-    statusIK: 'Təstiqlənib',
-  },
-  {
-    id: 2,
-    creditType: '500 azn-dən aşağı',
-    amount: '200 azn',
-    applicationDate: '10/12/2024',
-    operator: 'Günel Qurbanova',
-    name: 'Murad Əliyev Orxan oğlu',
-    contactNumbers: ['0553332211', '0705557788'],
-    contactPerson: 'Aysel Həsənova',
-    contactPersonRole: 'Bacısı',
-    contactPersonNumber: '0501112233',
-    statusM: 'Təstiqlənib',
-    statusIK: 'İmtina edilib',
-  },
-  {
-    id: 3,
-    creditType: 'Partnyorluq',
-    amount: '1500 azn',
-    applicationDate: '08/12/2024',
-    operator: 'Elçin Hüseynov',
-    name: 'Namiq Süleymanlı Həsən oğlu',
-    contactNumbers: ['0504567890', '0771239876'],
-    contactPerson: 'Vüqar Rəhimov',
-    contactPersonRole: 'Dostu',
-    contactPersonNumber: '0559991122',
-    statusM: 'Baxılır',
-    statusIK: 'Baxılır',
-  },
-  {
-    id: 4,
-    creditType: 'Biznes',
-    amount: '5000 azn',
-    applicationDate: '05/12/2024',
-    operator: 'Leyla Sadıqlı',
-    name: 'Arif Məmmədov Elçin oğlu',
-    contactNumbers: ['0519876543', '0555432109'],
-    contactPerson: 'Rəşid Orucov',
-    contactPersonRole: 'Qardaşı',
-    contactPersonNumber: '0776543210',
-    statusM: 'İmtina edilib',
-    statusIK: 'Təstiqlənib',
-  },
-  {
-    id: 5,
-    creditType: '500 azn-dən yuxarı',
-    amount: '600 azn',
-    applicationDate: '01/12/2024',
-    operator: 'Kamil Qasımov',
-    name: 'Nigar Əhmədova Qasım qızı',
-    contactNumbers: ['0502345678', '0779874321'],
-    contactPerson: 'Cavid Məmmədov',
-    contactPersonRole: 'Ata',
-    contactPersonNumber: '0558765432',
-    statusM: 'Təstiqlənib',
-    statusIK: 'İmtina edilib',
-  },
-  {
-    id: 6,
-    creditType: '500 azn-dən aşağı',
-    amount: '120 azn',
-    applicationDate: '29/11/2024',
-    operator: 'Nail Rüstəmov',
-    name: 'Elnur Quliyev Tahir oğlu',
-    contactNumbers: ['0701234567', '0554567890'],
-    contactPerson: 'Kamran Həsənov',
-    contactPersonRole: 'Baba',
-    contactPersonNumber: '0709876543',
-    statusM: 'Baxılır',
-    statusIK: 'Təstiqlənib',
-  },
-  {
-    id: 7,
-    creditType: 'Partnyorluq',
-    amount: '800 azn',
-    applicationDate: '25/11/2024',
-    operator: 'Aysel Məmmədli',
-    name: 'Nazim Qurbanov Tural oğlu',
-    contactNumbers: ['0515678901', '0508765432'],
-    contactPerson: 'Esmira Vəliyeva',
-    contactPersonRole: 'Qohum',
-    contactPersonNumber: '0771234567',
-    statusM: 'Təstiqlənib',
-    statusIK: 'İmtina edilib',
-  },
-  {
-    id: 8,
-    creditType: 'Biznes',
-    amount: '2000 azn',
-    applicationDate: '20/11/2024',
-    operator: 'Orxan Həsənov',
-    name: 'Cavid Nəcəfov Əli oğlu',
-    contactNumbers: ['0771122334', '0506677889'],
-    contactPerson: 'Hikmət Rəhimov',
-    contactPersonRole: 'Anası',
-    contactPersonNumber: '0559988776',
-    statusM: 'Baxılır',
-    statusIK: 'Baxılır',
-  },
-  {
-    id: 9,
-    creditType: '500 azn-dən yuxarı',
-    amount: '900 azn',
-    applicationDate: '15/11/2024',
-    operator: 'Sevinc Həsənova',
-    name: 'Tamerlan Orucov Fərhad oğlu',
-    contactNumbers: ['0702233445', '0556677889'],
-    contactPerson: 'Rəşid Məmmədov',
-    contactPersonRole: 'Dost',
-    contactPersonNumber: '0701122334',
-    statusM: 'Təstiqlənib',
-    statusIK: 'Təstiqlənib',
-  },
-  {
-    id: 10,
-    creditType: '500 azn-dən aşağı',
-    amount: '450 azn',
-    applicationDate: '10/11/2024',
-    operator: 'Samir Hüseynov',
-    name: 'Esmira Quliyeva Cavid qızı',
-    contactNumbers: ['0509988776', '0775544332'],
-    contactPerson: 'Səmra İsmayılova',
-    contactPersonRole: 'Anası',
-    contactPersonNumber: '0772233445',
-    statusM: 'İmtina edilib',
-    statusIK: 'Baxılır',
-  },
-];
+// // Table Data
+// const MOCK_DATA = [
+//   {
+//     id: 1,
+//     creditType: '500 azn-dən yuxarı',
+//     amount: '350 azn',
+//     applicationDate: '12/12/2024',
+//     operator: 'Əhməd Mustafayev',
+//     name: 'Şaban Qarabağlı Mahmud oğlu',
+//     contactNumbers: ['0709919999', '0551234567', '0779876543'],
+//     contactPerson: 'Rəşad Məmmədov',
+//     contactPersonRole: 'Əmisi',
+//     contactPersonNumber: '0708765432',
+//     statusM: 'Baxılır',
+//     statusIK: 'Təstiqlənib',
+//   },
+//   {
+//     id: 2,
+//     creditType: '500 azn-dən aşağı',
+//     amount: '200 azn',
+//     applicationDate: '10/12/2024',
+//     operator: 'Günel Qurbanova',
+//     name: 'Murad Əliyev Orxan oğlu',
+//     contactNumbers: ['0553332211', '0705557788'],
+//     contactPerson: 'Aysel Həsənova',
+//     contactPersonRole: 'Bacısı',
+//     contactPersonNumber: '0501112233',
+//     statusM: 'Təstiqlənib',
+//     statusIK: 'İmtina edilib',
+//   },
+//   {
+//     id: 3,
+//     creditType: 'Partnyorluq',
+//     amount: '1500 azn',
+//     applicationDate: '08/12/2024',
+//     operator: 'Elçin Hüseynov',
+//     name: 'Namiq Süleymanlı Həsən oğlu',
+//     contactNumbers: ['0504567890', '0771239876'],
+//     contactPerson: 'Vüqar Rəhimov',
+//     contactPersonRole: 'Dostu',
+//     contactPersonNumber: '0559991122',
+//     statusM: 'Baxılır',
+//     statusIK: 'Baxılır',
+//   },
+//   {
+//     id: 4,
+//     creditType: 'Biznes',
+//     amount: '5000 azn',
+//     applicationDate: '05/12/2024',
+//     operator: 'Leyla Sadıqlı',
+//     name: 'Arif Məmmədov Elçin oğlu',
+//     contactNumbers: ['0519876543', '0555432109'],
+//     contactPerson: 'Rəşid Orucov',
+//     contactPersonRole: 'Qardaşı',
+//     contactPersonNumber: '0776543210',
+//     statusM: 'İmtina edilib',
+//     statusIK: 'Təstiqlənib',
+//   },
+//   {
+//     id: 5,
+//     creditType: '500 azn-dən yuxarı',
+//     amount: '600 azn',
+//     applicationDate: '01/12/2024',
+//     operator: 'Kamil Qasımov',
+//     name: 'Nigar Əhmədova Qasım qızı',
+//     contactNumbers: ['0502345678', '0779874321'],
+//     contactPerson: 'Cavid Məmmədov',
+//     contactPersonRole: 'Ata',
+//     contactPersonNumber: '0558765432',
+//     statusM: 'Təstiqlənib',
+//     statusIK: 'İmtina edilib',
+//   },
+//   {
+//     id: 6,
+//     creditType: '500 azn-dən aşağı',
+//     amount: '120 azn',
+//     applicationDate: '29/11/2024',
+//     operator: 'Nail Rüstəmov',
+//     name: 'Elnur Quliyev Tahir oğlu',
+//     contactNumbers: ['0701234567', '0554567890'],
+//     contactPerson: 'Kamran Həsənov',
+//     contactPersonRole: 'Baba',
+//     contactPersonNumber: '0709876543',
+//     statusM: 'Baxılır',
+//     statusIK: 'Təstiqlənib',
+//   },
+//   {
+//     id: 7,
+//     creditType: 'Partnyorluq',
+//     amount: '800 azn',
+//     applicationDate: '25/11/2024',
+//     operator: 'Aysel Məmmədli',
+//     name: 'Nazim Qurbanov Tural oğlu',
+//     contactNumbers: ['0515678901', '0508765432'],
+//     contactPerson: 'Esmira Vəliyeva',
+//     contactPersonRole: 'Qohum',
+//     contactPersonNumber: '0771234567',
+//     statusM: 'Təstiqlənib',
+//     statusIK: 'İmtina edilib',
+//   },
+//   {
+//     id: 8,
+//     creditType: 'Biznes',
+//     amount: '2000 azn',
+//     applicationDate: '20/11/2024',
+//     operator: 'Orxan Həsənov',
+//     name: 'Cavid Nəcəfov Əli oğlu',
+//     contactNumbers: ['0771122334', '0506677889'],
+//     contactPerson: 'Hikmət Rəhimov',
+//     contactPersonRole: 'Anası',
+//     contactPersonNumber: '0559988776',
+//     statusM: 'Baxılır',
+//     statusIK: 'Baxılır',
+//   },
+//   {
+//     id: 9,
+//     creditType: '500 azn-dən yuxarı',
+//     amount: '900 azn',
+//     applicationDate: '15/11/2024',
+//     operator: 'Sevinc Həsənova',
+//     name: 'Tamerlan Orucov Fərhad oğlu',
+//     contactNumbers: ['0702233445', '0556677889'],
+//     contactPerson: 'Rəşid Məmmədov',
+//     contactPersonRole: 'Dost',
+//     contactPersonNumber: '0701122334',
+//     statusM: 'Təstiqlənib',
+//     statusIK: 'Təstiqlənib',
+//   },
+//   {
+//     id: 10,
+//     creditType: '500 azn-dən aşağı',
+//     amount: '450 azn',
+//     applicationDate: '10/11/2024',
+//     operator: 'Samir Hüseynov',
+//     name: 'Esmira Quliyeva Cavid qızı',
+//     contactNumbers: ['0509988776', '0775544332'],
+//     contactPerson: 'Səmra İsmayılova',
+//     contactPersonRole: 'Anası',
+//     contactPersonNumber: '0772233445',
+//     statusM: 'İmtina edilib',
+//     statusIK: 'Baxılır',
+//   },
+// ];
 
-const getTabCounts = (data: typeof MOCK_DATA) => ({
-  all: data.length,
-  above: data.filter((row) => row.creditType === '500 azn-dən yuxarı').length,
-  below: data.filter((row) => row.creditType === '500 azn-dən aşağı').length,
-  partner: data.filter((row) => row.creditType === 'Partnyorluq').length,
-  businness: data.filter((row) => row.creditType === 'Biznes').length,
-});
+// const getTabCounts = (data: typeof MOCK_DATA) => ({
+//   all: data.length,
+//   above: data.filter((row) => row.creditType === '500 azn-dən yuxarı').length,
+//   below: data.filter((row) => row.creditType === '500 azn-dən aşağı').length,
+//   partner: data.filter((row) => row.creditType === 'Partnyorluq').length,
+//   businness: data.filter((row) => row.creditType === 'Biznes').length,
+// });
+
+export const creditTypeMap = { undefined: '', 'ABOVE_500': '500 azn-dən yuxarı', 'BELOW_500': '500 azn-dən aşağı', 'PARTNER_CREDIT': 'Partnyorluq', 'BUSINESS_CREDIT': 'Biznes' };
 
 export default function Kredit() {
   const router = useRouter();
-  const [tabValue, setTabValue] = useState('all');
+  const [creditType, setCreditType] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [activityFilter, setActivityFilter] = useState('all');
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  // const [activityFilter, setActivityFilter] = useState('all');
 
   //   popup
   const [openPopup, setOpenPopup] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  // const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [tabCounts, setTabCounts] = useState<any>({ all: 0, above: 0, below: 0, partner: 0, businness: 0 });
+  const [data, setData] = useState<CreditRequestSearchResponse>({ content: [], numberOfElements: 0, totalPages: 0, totalElements: 0 });
+
+  useEffect(() => {
+    if (tabCounts.all === 0) {
+      setTabCounts({
+        ...tabCounts,
+        all: countOfCreditRequestsAll(),
+        below: countOfCreditRequests('BELOW_500'),
+        above: countOfCreditRequests('ABOVE_500'),
+        partner: countOfCreditRequests('PARTNER_CREDIT'),
+        businness: countOfCreditRequests('BUSINESS_CREDIT')
+      });
+    }
+  }, []);
 
   const handleEditClick = (event: React.MouseEvent<HTMLElement>, row: any) => {
     setAnchorEl(event.currentTarget); // Butonun konumunu al
@@ -217,22 +241,22 @@ export default function Kredit() {
 
   const isPopupOpen = Boolean(anchorEl);
 
-  const handleActivateClick = (row: any) => {
-    setSelectedRow(row);
-    setOpenPopup(true);
-  };
+  // const handleActivateClick = (row: any) => {
+  //   setSelectedRow(row);
+  //   setOpenPopup(true);
+  // };
 
-  const handleActivityFilterChange = (event: any) => {
-    setActivityFilter(event.target.value);
-  };
-  const tabCounts = getTabCounts(MOCK_DATA);
+  // const handleActivityFilterChange = (event: any) => {
+  //   setActivityFilter(event.target.value);
+  // };
+  // const tabCounts = getTabCounts(MOCK_DATA);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setTabValue(newValue);
+    setCreditType(newValue);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value.toLowerCase());
+    setSearch(event.target.value);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -244,46 +268,54 @@ export default function Kredit() {
     setPage(0);
   };
 
-  const filteredData = MOCK_DATA.filter((row) => {
-    const statusMatches =
-      tabValue === 'all' || row.creditType.toLowerCase() === tabValue.toLowerCase();
-    const searchMatches = row.name.toLowerCase().includes(search);
-    const activityMatches = activityFilter === 'all';
-    return statusMatches && searchMatches && activityMatches;
-  });
+  // const filteredData = MOCK_DATA.filter((row) => {
+  //   const statusMatches =
+  //     tabValue === 'all' || row.creditType.toLowerCase() === tabValue.toLowerCase();
+  //   const searchMatches = row.name.toLowerCase().includes(search);
+  //   const activityMatches = activityFilter === 'all';
+  //   return statusMatches && searchMatches && activityMatches;
+  // });
 
   // Pagination logic
-  const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  // const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  useEffect(() => {
+    creditRequestSearch({ page: page, pageSize: rowsPerPage, search: search, creditType: creditType as ECreditType })
+      .then((res: CreditRequestSearchResponse | null) => {
+        setData(res ?? { content: [], numberOfElements: 0, totalPages: 0, totalElements: 0 });
+      });
+  }, [page, rowsPerPage, creditType, search]);
+  
 
   return (
     <Box mt={3}>
       {/* Tabs */}
       <Card className="p-1 px-5">
-        <TabContext value={tabValue}>
+        <TabContext value={creditType}>
           <Box sx={{ borderBottom: 0 }}>
             <TabList onChange={handleTabChange}>
               {[
-                { value: 'all', label: 'Hamısı', count: tabCounts.all, color: 'default' },
+                { value: '', label: 'Hamısı', count: tabCounts.all, color: 'default' },
                 {
-                  value: '500 azn-dən yuxarı',
+                  value: 'ABOVE_500',
                   label: '500 azn-dən yuxarı',
                   count: tabCounts.above,
                   color: 'success',
                 },
                 {
-                  value: '500 azn-dən aşağı',
+                  value: 'BELOW_500',
                   label: '500 azn-dən aşağı',
                   count: tabCounts.below,
                   color: 'error',
                 },
                 {
-                  value: 'Partnyorluq',
+                  value: 'PARTNER_CREDIT',
                   label: 'Partnyorluq',
                   count: tabCounts.partner,
                   color: 'warning',
                 },
                 {
-                  value: 'Biznes',
+                  value: 'BUSINESS_CREDIT',
                   label: 'Biznes',
                   count: tabCounts.businness,
                   color: 'info',
@@ -297,7 +329,7 @@ export default function Kredit() {
                     <Box display="flex" alignItems="center" gap={1}>
                       {tab.label}
                       <Label
-                        variant={tabValue === tab.value ? 'filled' : 'soft'}
+                        variant={creditType === tab.value ? 'filled' : 'soft'}
                         color={tab.color as 'default' | 'success' | 'error' | 'warning'}
                       >
                         {tab.count}
@@ -339,7 +371,7 @@ export default function Kredit() {
           </Box>
 
           {/* Table */}
-          <TabPanel sx={{ p: 0 }} value={tabValue}>
+          <TabPanel sx={{ p: 0 }} value={creditType}>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -362,76 +394,97 @@ export default function Kredit() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {paginatedData.map((row, index) => (
+                  {data.content.map((row, index) => (
                     <TableRow key={row.id}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{row.creditType}</TableCell>
-                      <TableCell>{row.amount}</TableCell>
-                      <TableCell>{row.applicationDate}</TableCell>
-                      <TableCell>{row.operator}</TableCell>
-                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.creditType ? creditTypeMap[row.creditType] : ''}</TableCell>
+                      <TableCell>{row.creditAmount}</TableCell>
+                      <TableCell>{row.requestDate ? formatDDate(row.requestDate) : ''}</TableCell>
+                      <TableCell>{row.createdBy}</TableCell>
+                      <TableCell>{`${row.requestedUser?.surname},  ${row.requestedUser?.name}, ${row.requestedUser?.fatherName} `}</TableCell>
                       <TableCell>
-                        {row.contactNumbers.map((a) => {
-                          return (
-                            <Card key={a} sx={{ display: 'inline-block', mr: 1 }}>
-                              {' '}
-                              <Label key={a} variant="filled">
-                                {a}
-                              </Label>
-                            </Card>
-                          );
-                        })}
+                        {row.phoneNumber &&
+                          <Card sx={{ display: 'inline-block', mr: 1 }}>
+                            {' '}
+                            <Label variant="filled">
+                              {row.phoneNumber}
+                            </Label>
+                          </Card>}
+                        {row.otherPhoneNumbers?.Ev &&
+                          <Card sx={{ display: 'inline-block', mr: 1 }}>
+                            {' '}
+                            <Label variant="filled">
+                              {row.otherPhoneNumbers?.Ev}
+                            </Label>
+                          </Card>}
+                        {row.otherPhoneNumbers?.GSM &&
+                          <Card sx={{ display: 'inline-block', mr: 1 }}>
+                            {' '}
+                            <Label variant="filled">
+                              {row.otherPhoneNumbers?.GSM}
+                            </Label>
+                          </Card>}
                       </TableCell>
-                      <TableCell>{row.contactPerson}</TableCell>
-                      <TableCell>{row.contactPersonRole}</TableCell>
+                      <TableCell>{row.guarantorFullName}</TableCell>
+                      <TableCell>{row.guarantorRelation}</TableCell>
                       <TableCell>
-                        {row.contactPersonNumber ? (
-                          <Label variant="filled">{row.contactPersonNumber}</Label>
+                        {row.guarantorPhoneNumber ? (
+                          <Label variant="filled">{row.guarantorPhoneNumber}</Label>
                         ) : (
                           ''
                         )}
                       </TableCell>
                       <TableCell>
-                        {row.statusM ? (
+                        {row.activateStatus ? (
                           <Label
                             color={
-                              row.statusM === 'Baxılır'
+                              row.activateStatus === 'PENDING'
                                 ? 'warning'
-                                : row.statusM === 'Təstiqlənib'
+                                : row.activateStatus === 'ACCEPTED'
                                   ? 'success'
                                   : 'error'
                             }
                             variant="soft"
                           >
-                            {row.statusM}
+                            {row.activateStatus == 'PENDING' ? 'Baxılır' : row.activateStatus == 'ACCEPTED' ? 'Təstiqlənib' : 'İmtina edilib'}
                           </Label>
                         ) : (
-                          ''
+                          <Label
+                            color='warning'
+                            variant="soft"
+                          >
+                            Baxılır
+                          </Label>
                         )}
                       </TableCell>
                       <TableCell>
-                        {row.statusIK ? (
+                        {row.finalStatus ? (
                           <Label
                             color={
-                              row.statusIK === 'Baxılır'
+                              row.finalStatus === 'PENDING'
                                 ? 'warning'
-                                : row.statusIK === 'Təstiqlənib'
+                                : row.finalStatus === 'ACCEPTED'
                                   ? 'success'
                                   : 'error'
                             }
                             variant="soft"
                           >
-                            {row.statusIK}
+                            {row.finalStatus == 'PENDING' ? 'Baxılır' : row.finalStatus == 'ACCEPTED' ? 'Təstiqlənib' : 'İmtina edilib'}
                           </Label>
                         ) : (
-                          ''
+                          <Label
+                            color='warning'
+                            variant="soft"
+                          >
+                            Baxılır
+                          </Label>
                         )}
                       </TableCell>
                       <TableCell>
                         <Tooltip title="Ətraflı" placement="top" arrow>
                           <Button
                             onClick={() => {
-                              router.push(`/muracietler/muraciet?id:${row.id}`);
+                              router.push(`/muracietler/muraciet?id=${row.id}`);
                             }}
                             sx={{ borderRadius: 100, cursor: 'pointer' }}
                             variant="text"
@@ -487,11 +540,12 @@ export default function Kredit() {
               labelDisplayedRows={({ from, to, count }) => `${from}-${to} / ${count}`}
               showFirstButton
               showLastButton
-              count={filteredData.length}
+              count={data.totalElements}
               page={page}
               onPageChange={handleChangePage}
               rowsPerPage={rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25, 50, 100]}
             />
           </TabPanel>
         </TabContext>
