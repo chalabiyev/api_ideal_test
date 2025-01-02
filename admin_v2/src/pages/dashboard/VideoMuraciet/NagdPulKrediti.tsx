@@ -14,7 +14,6 @@ import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
 import { CreditRequestDto } from 'src/types/CreditRequestDto';
-import { RecruiterDataType } from './types';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -70,29 +69,29 @@ export default function Page() {
     phoneNumber: '',
     requestDate: new Date(),
     decisionQueryEnabled: false,
+    guarantors: [],
+    recruiter: {
+      education: '',
+      companyName: '',
+      salary: 0,
+      address: '',
+      position: '',
+      workExperience: 0,
+      contractStartDate: '',
+      contractEndDate: '',
+      toplamodenis: 0,
+      akbmelumatlari: '',
+      daxilirisk: '',
+      ayliqemekhaqqi: 0,
+      ayliqcemigelir: 0,
+      xerclerincemi: 0,
+      xalisgelir: 0,
+    },
   });
   const [newSignal, setNewSignal] = useState<SignalType>();
   const [videoData, setVideoData] = useState('');
   const [contractPdf, setContractPdf] = useState("");
 
-  // requriment data
-  const [recruiterData, setRecruiterData] = useState<RecruiterDataType>({
-    education: '',
-    companyName: '',
-    salary: '',
-    address: '',
-    position: '',
-    workExperience: '',
-    contractStartDate: '',
-    contractEndDate: '',
-    toplamodenis: '',
-    akbmelumatlari: '',
-    daxilirisk: '',
-    ayliqemekhaqqi: '',
-    ayliqcemigelir: '',
-    xerclerincemi: '',
-    xalisgelir: '',
-  });
 
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
@@ -111,8 +110,11 @@ export default function Page() {
 
   const getGuarantorInfo = () => {
     if (hasGuarantorData) {
-      console.log('guarantorData : ', guarantorData);
       setGuarantorInfo(guarantorData);
+      setCreditRequest({
+        ...creditRequest,
+        guarantors: [guarantorData]
+      });
     }
   };
 
@@ -238,8 +240,8 @@ export default function Page() {
 
             <TabPanel sx={{ p: 0 }} value="2">
               <RecruiterData
-                recruiterData={recruiterData}
-                setRecruiterData={setRecruiterData}
+                creditRequest={creditRequest}
+                setCreditRequest={setCreditRequest}
                 setValue={setValue}
               />
             </TabPanel>

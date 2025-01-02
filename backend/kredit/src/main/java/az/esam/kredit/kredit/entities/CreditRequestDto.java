@@ -57,4 +57,7 @@ public class CreditRequestDto {
     private String videoSignText;
     private String partnerId;
 
+    private List<Guarantor> guarantors;
+    private Recruiter recruiter;
+
 }

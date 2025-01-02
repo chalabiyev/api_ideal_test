@@ -1,3 +1,5 @@
+import { RecruiterDataType, Guarantor } from "src/pages/dashboard/VideoMuraciet/types";
+
 export type ECreditType = 'ABOVE_500' | 'BELOW_500' | 'PARTNER_CREDIT' | 'BUSINESS_CREDIT' | undefined | '';
 
 export type EFinalStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined;
@@ -42,13 +44,8 @@ export interface CreditRequest {
   decisionQueryEnabled?: boolean;
   videoSignText?: string;
   partner?: Partner;
-  guarantorPhoneNumber?: string;
-  guarantorPin?: string;
-  guarantorFullName?: string;
-  guarantorName?: string;
-  guarantorSurname?: string;
-  guarantorFatherName?: string;
-  guarantorRelation?: string;
+  guarantors?: Guarantor[];
+  recruiter?: RecruiterDataType;
 }
 
 
@@ -91,6 +88,8 @@ export interface CreditRequestDto {
   videoSignFileName?: string;
   decisionQueryEnabled?: boolean;
   videoSignText?: string;
+  guarantors: Guarantor[];
+  recruiter: RecruiterDataType;
 }
 
 export interface User {

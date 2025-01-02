@@ -70,13 +70,10 @@ public class CreditRequest extends BaseEntity {
     @DocumentReference
     private Partner partner;
 
-    private String guarantorPhoneNumber;
-    private String guarantorPin;
-    private String guarantorFullName;
-    private String guarantorName;
-    private String guarantorSurname;
-    private String guarantorFatherName;
-    private String guarantorRelation;
+    @DocumentReference
+    private List<Guarantor> guarantors;
+
+    private Recruiter recruiter;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();

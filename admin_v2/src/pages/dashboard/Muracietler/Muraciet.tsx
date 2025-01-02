@@ -7,6 +7,9 @@ import { CreditRequest } from 'src/types/CreditRequestDto';
 import { acceptCreditRequestByAdmin, getCreditRequest, rejectCreditRequestByAdmin } from 'src/api/CreditService';
 import { creditTypeMap } from 'src/components/Applications';
 import { toast } from 'sonner';
+import { Label } from 'recharts';
+import { callGetFile } from 'src/api/FileService';
+import { Iconify } from 'src/components/iconify';
 
 const Muraciet = () => {
   const [data, setData] = React.useState<CreditRequest>({});
@@ -39,6 +42,31 @@ const Muraciet = () => {
       toast.error('Müraciət ləğv edilə bilmədi');
     }
   }
+
+  const handleDownloadContract = () => {
+    if (!data.contractFileName) return;
+    callGetFile(data.contractFileName).then((response) => {
+      if (!response) return;
+      const link = document.createElement('a');
+      link.href = response;
+      link.setAttribute('download', data.contractFileName!);
+      document.body.appendChild(link);
+      link.click();
+    });
+  }
+
+  const handleDownloadVideoSign = () => {
+    if (!data.videoSignFileName) return;
+    callGetFile(data.videoSignFileName).then((response) => {
+      if (!response) return;
+      const link = document.createElement('a');
+      link.href = response;
+      link.setAttribute('download', data.videoSignFileName!);
+      document.body.appendChild(link);
+      link.click();
+    });
+  }
+
 
   return (
     <>
@@ -145,17 +173,17 @@ const Muraciet = () => {
             ))}
 
             {/* Guarantor Details */}
-            {/* <Grid item xs={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 Zamin Məlumatları
               </Typography>
-              {data.guarantors.map((guarantor, index) => (
+              {data.guarantors?.map((guarantor, index) => (
                 <Grid container spacing={3} key={index}>
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       label="Zaminin Adı Soyadı"
-                      value={guarantor.name}
+                      value={guarantor.personAz.name}
                       variant="outlined"
                     />
                   </Grid>
@@ -163,7 +191,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Seriya Nömrəsi"
-                      value={guarantor.serialNumber}
+                      value={guarantor.documentNumber}
                       variant="outlined"
                     />
                   </Grid>
@@ -171,7 +199,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Əlaqə Telefonu"
-                      value={guarantor.phone}
+                      value={guarantor.phoneNumber}
                       variant="outlined"
                     />
                   </Grid>
@@ -179,7 +207,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Ünvanı"
-                      value={guarantor.address}
+                      value={guarantor.addressDetail.address}
                       variant="outlined"
                     />
                   </Grid>
@@ -187,7 +215,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin İş Yeri"
-                      value={guarantor.workplace}
+                      value={guarantor.workPlace}
                       variant="outlined"
                     />
                   </Grid>
@@ -201,7 +229,7 @@ const Muraciet = () => {
                   </Grid>
                 </Grid>
               ))}
-            </Grid> */}
+            </Grid>
 
             {/* Loan Purpose */}
             <Grid item xs={12} md={6}>
@@ -211,6 +239,26 @@ const Muraciet = () => {
                 value={data.creditPurpose}
                 variant="outlined"
               />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                title='Download PDF Contract'
+                startIcon={<Iconify icon="mdi:download" />}
+                onClick={handleDownloadContract}
+              >
+                Download PDF Contract
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                title='Download VideoSign'
+                startIcon={<Iconify icon="mdi:download" />}
+                onClick={handleDownloadVideoSign}>
+                Download VideoSign
+              </Button>
             </Grid>
             {/* Actions */}
             <Grid item xs={12}>

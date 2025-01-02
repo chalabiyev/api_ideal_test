@@ -1,18 +1,19 @@
 import React from 'react';
 import { Box, Card, CardContent, Grid, TextField, Typography, Button } from '@mui/material';
 import { RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
+import { CreditRequestDto } from 'src/types/CreditRequestDto';
 
 const RecruiterData = ({
   setValue,
-  recruiterData,
-  setRecruiterData,
+  creditRequest,
+  setCreditRequest,
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  recruiterData: RecruiterDataType;
-  setRecruiterData: React.Dispatch<React.SetStateAction<RecruiterDataType>>;
+  creditRequest: CreditRequestDto;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
 }) => {
-  const handleChange = (key: keyof RecruiterDataType, value: string) => {
-    setRecruiterData((prev) => ({ ...prev, [key]: value }));
+  const handleChange = (key: keyof RecruiterDataType, value: any) => {
+    setCreditRequest((prev) => ({ ...prev, recruiter: { ...prev.recruiter, [key]: value } }));
   };
   return (
     <Box sx={{ py: 4 }}>
@@ -32,7 +33,7 @@ const RecruiterData = ({
               <TextField
                 label="Təhsili"
                 fullWidth
-                value={recruiterData.education}
+                value={creditRequest.recruiter.education}
                 onChange={(e) => handleChange('education', e.target.value)}
               />
             </Grid>
@@ -40,7 +41,7 @@ const RecruiterData = ({
               <TextField
                 label="İşlədiyi yerin hüquqi adı"
                 fullWidth
-                value={recruiterData.companyName}
+                value={creditRequest.recruiter.companyName}
                 onChange={(e) => handleChange('companyName', e.target.value)}
               />
             </Grid>
@@ -58,8 +59,8 @@ const RecruiterData = ({
             <Grid item xs={12} sm={6}>
               <TextField
                 label="İşçinin aylıq əmək haqqı (manatla)"
-                value={recruiterData.salary}
-                onChange={(e) => handleChange('salary', e.target.value)}
+                value={creditRequest.recruiter.salary}
+                onChange={(e) => handleChange('salary', parseFloat(e.target.value))}
                 fullWidth
               />
             </Grid>
@@ -67,7 +68,7 @@ const RecruiterData = ({
               <TextField
                 label="İşlədiyi yerin ünvanı"
                 fullWidth
-                value={recruiterData.address}
+                value={creditRequest.recruiter.address}
                 onChange={(e) => handleChange('address', e.target.value)}
               />
             </Grid>
@@ -75,7 +76,7 @@ const RecruiterData = ({
               <TextField
                 label="Tutduğu vəzifə"
                 fullWidth
-                value={recruiterData.position}
+                value={creditRequest.recruiter.position}
                 onChange={(e) => handleChange('position', e.target.value)}
               />
             </Grid>
@@ -83,8 +84,8 @@ const RecruiterData = ({
               <TextField
                 label="Staj"
                 fullWidth
-                value={recruiterData.workExperience}
-                onChange={(e) => handleChange('workExperience', e.target.value)}
+                value={creditRequest.recruiter.workExperience}
+                onChange={(e) => handleChange('workExperience', parseFloat(e.target.value))}
               />
             </Grid>
           </Grid>
@@ -102,32 +103,32 @@ const RecruiterData = ({
               <TextField
                 label="Aylıq əmək haqqı"
                 fullWidth
-                value={recruiterData.ayliqemekhaqqi}
-                onChange={(e) => handleChange('ayliqemekhaqqi', e.target.value)}
+                value={creditRequest.recruiter.ayliqemekhaqqi}
+                onChange={(e) => handleChange('ayliqemekhaqqi', parseFloat(e.target.value))}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Aylıq cəmi gəlirlərin məbləği"
                 fullWidth
-                value={recruiterData.ayliqcemigelir}
-                onChange={(e) => handleChange('ayliqcemigelir', e.target.value)}
+                value={creditRequest.recruiter.ayliqcemigelir}
+                onChange={(e) => handleChange('ayliqcemigelir', parseFloat(e.target.value))}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Xərclərin cəmi"
                 fullWidth
-                value={recruiterData.xerclerincemi}
-                onChange={(e) => handleChange('xerclerincemi', e.target.value)}
+                value={creditRequest.recruiter.xerclerincemi}
+                onChange={(e) => handleChange('xerclerincemi', parseFloat(e.target.value))}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Xalis gəlir (İxrac)"
                 fullWidth
-                value={recruiterData.xalisgelir}
-                onChange={(e) => handleChange('xalisgelir', e.target.value)}
+                value={creditRequest.recruiter.xalisgelir}
+                onChange={(e) => handleChange('xalisgelir', parseFloat(e.target.value))}
               />
             </Grid>
           </Grid>
@@ -147,7 +148,7 @@ const RecruiterData = ({
                 label="Əmək müqaviləsinin bağlandığı tarix"
                 InputLabelProps={{ shrink: true }}
                 fullWidth
-                value={recruiterData.contractStartDate}
+                value={creditRequest.recruiter.contractStartDate}
                 onChange={(e) => handleChange('contractStartDate', e.target.value)}
               />
             </Grid>
@@ -157,7 +158,7 @@ const RecruiterData = ({
                 label="Müddətli əmək müqaviləsinin qurtardığı tarix"
                 InputLabelProps={{ shrink: true }}
                 fullWidth
-                value={recruiterData.contractEndDate}
+                value={creditRequest.recruiter.contractEndDate}
                 onChange={(e) => handleChange('contractEndDate', e.target.value)}
               />
             </Grid>
@@ -177,8 +178,8 @@ const RecruiterData = ({
                 label="Toplam ödənişin yekun məbləği"
                 fullWidth
                 variant="outlined"
-                value={recruiterData.toplamodenis}
-                onChange={(e) => handleChange('toplamodenis', e.target.value)}
+                value={creditRequest.recruiter.toplamodenis}
+                onChange={(e) => handleChange('toplamodenis', parseFloat(e.target.value))}
               />
             </Grid>
             <Grid item xs={12}>
@@ -186,7 +187,7 @@ const RecruiterData = ({
                 label="AKB məlumatlarına əsasən"
                 fullWidth
                 variant="outlined"
-                value={recruiterData.akbmelumatlari}
+                value={creditRequest.recruiter.akbmelumatlari}
                 onChange={(e) => handleChange('akbmelumatlari', e.target.value)}
               />
             </Grid>
@@ -195,7 +196,7 @@ const RecruiterData = ({
                 label="Daxili risk sistemi üzrə"
                 fullWidth
                 variant="outlined"
-                value={recruiterData.daxilirisk}
+                value={creditRequest.recruiter.daxilirisk}
                 onChange={(e) => handleChange('daxilirisk', e.target.value)}
               />
             </Grid>

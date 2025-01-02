@@ -1,24 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Card, CardContent, Grid, TextField, Typography, Avatar } from '@mui/material';
-
-interface Zamin {
-  personAz: {
-    name: string;
-    surname: string;
-    patronymic: string;
-  };
-  id: number;
-  pin: string;
-  documentNumber: string;
-  image: string;
-  addressDetail: { address: string };
-  birthDate: string;
-  birthAddress: string;
-  maritalStatus: string;
-  militaryStatus: string;
-  gender: string;
-  isActive: boolean;
-}
+import { Guarantor } from 'src/pages/dashboard/VideoMuraciet/types';
+ 
 
 const TabGuarantor = ({
   setValue,
@@ -37,7 +20,7 @@ const TabGuarantor = ({
   setPin: React.Dispatch<React.SetStateAction<string>>;
   setSeriaNo: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const [zaminList, setZaminList] = useState<Zamin[]>([]);
+  const [zaminList, setZaminList] = useState<Guarantor[]>([]);
 
   const handleSearch = (id: number) => {
     const targetZamin = zaminList.find((zamin) => zamin.id === id);
@@ -77,7 +60,7 @@ const TabGuarantor = ({
   console.log('zaminList : ', zaminList);
 
   const handleAddZamin = () => {
-    setZaminList((prev: Zamin[]) => [
+    setZaminList((prev: Guarantor[]) => [
       ...prev,
       {
         personAz: { name: '', surname: '', patronymic: '' },
@@ -92,6 +75,7 @@ const TabGuarantor = ({
         militaryStatus: '',
         gender: '',
         isActive: false,
+        relation: '',
       },
     ]);
   };
