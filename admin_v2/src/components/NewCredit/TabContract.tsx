@@ -32,6 +32,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const [checkCounter, setCheckCounter] = useState(0);
   const [currentStatus, setCurrentStatus] = useState<string>('');
+  const [contractCreated, setContractCreated] = useState(false);
 
   const handleSign = async () => {
     setCheckCounter(1);
@@ -40,7 +41,7 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
   };
 
   const checkSignStatus = () => {
-    if (simaOperationId && creditRequest.contractFileName) {
+    if (simaOperationId && creditRequest.contractFileName && !contractCreated) {
       setCheckCounter(checkCounter + 1);
       if (checkCounter > 10) {
         if (intervalId)
@@ -56,21 +57,24 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
           setIsSigning(false);
           setOpenDialog(false);
           setCurrentStatus('Müqavilə uğurla imzalandı!');
-          callGetFile(creditRequest.contractFileName!).then((file) => {
-            if (file) {
-              setContractPdf(file);
-            }
-          });
-          createCreditRequest(creditRequest).then((res) => {
-            if (res) {
-              setCreditRequest(res);
-              setCurrentStatus('Müraciət uğurla bildirildi!');
-            } else {
+          if (!contractCreated) {
+            setContractCreated(true);
+            callGetFile(creditRequest.contractFileName!).then((file) => {
+              if (file) {
+                setContractPdf(file);
+              }
+            });
+            createCreditRequest(creditRequest).then((res) => {
+              if (res) {
+                setCreditRequest(res);
+                setCurrentStatus('Müraciət uğurla bildirildi!');
+              } else {
+                setCurrentStatus('Müraciət yaradılmadı!');
+              }
+            }).catch(() => {
               setCurrentStatus('Müraciət yaradılmadı!');
-            }
-          }).catch(() => {
-            setCurrentStatus('Müraciət yaradılmadı!');
-          });
+            });
+          }
         } else if (res == SimaStatus.Failed) {
           if (intervalId)
             clearInterval(intervalId);
