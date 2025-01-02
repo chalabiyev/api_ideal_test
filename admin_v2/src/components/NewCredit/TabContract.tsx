@@ -40,6 +40,27 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
     sendSignal({ type: 'signPdf', msg: creditRequest.contractFileName });
   };
 
+
+  useEffect(() => {
+    if (contractCreated) {
+      callGetFile(creditRequest.contractFileName!).then((file) => {
+        if (file) {
+          setContractPdf(file);
+        }
+      });
+      createCreditRequest(creditRequest).then((res) => {
+        if (res) {
+          setCreditRequest(res);
+          toast.success('Müraciət uğurla bildirildi!');
+        } else {
+          toast.error('Müraciət yaradılmadı!');
+        }
+      }).catch(() => {
+        toast.error('Müraciət yaradılmadı!');
+      });
+    }
+  }, [contractCreated]);
+
   const checkSignStatus = () => {
     if (simaOperationId && creditRequest.contractFileName && !contractCreated) {
       setCheckCounter(checkCounter + 1);
@@ -56,25 +77,8 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
             clearInterval(intervalId);
           setIsSigning(false);
           setOpenDialog(false);
+          setContractCreated(true);
           setCurrentStatus('Müqavilə uğurla imzalandı!');
-          if (!contractCreated) {
-            setContractCreated(true);
-            callGetFile(creditRequest.contractFileName!).then((file) => {
-              if (file) {
-                setContractPdf(file);
-              }
-            });
-            createCreditRequest(creditRequest).then((res) => {
-              if (res) {
-                setCreditRequest(res);
-                setCurrentStatus('Müraciət uğurla bildirildi!');
-              } else {
-                setCurrentStatus('Müraciət yaradılmadı!');
-              }
-            }).catch(() => {
-              setCurrentStatus('Müraciət yaradılmadı!');
-            });
-          }
         } else if (res == SimaStatus.Failed) {
           if (intervalId)
             clearInterval(intervalId);
