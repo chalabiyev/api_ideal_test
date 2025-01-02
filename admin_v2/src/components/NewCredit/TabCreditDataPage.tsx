@@ -57,16 +57,6 @@ const TabCreditDataPage = ({
     return cardAmount.toFixed(2);
   };
 
-  useEffect(() => {
-    setCreditRequest({
-      ...creditRequest,
-      monthlyPayment: parseFloat(calculateMonthlyPayment()),
-      amountToBePaid: parseFloat(calculateTotalPayment()),
-      insuranceCost: parseFloat(calculateTotalInterest()),
-      cartCost: parseFloat(calculateCardAmount())
-    });
-  }, [creditRequest.creditAmount, creditRequest.annualPercent, creditRequest.creditTerm, creditRequest.serviceRate, creditRequest.insuranceCost, creditRequest.cartCost, creditRequest.valuationCost]);
-
   return (
     <Box sx={{ py: 4 }}>
       {/* Başlıq */}
@@ -81,7 +71,13 @@ const TabCreditDataPage = ({
             label="Kredit Miqdarı (AZN)"
             type="number"
             value={creditRequest.creditAmount}
-            onChange={(e) => setCreditRequest({ ...creditRequest, creditAmount: parseFloat(e.target.value) })}
+            onChange={(e) => setCreditRequest({
+              ...creditRequest, creditAmount: parseFloat(e.target.value),
+              monthlyPayment: parseFloat(calculateMonthlyPayment()),
+              amountToBePaid: parseFloat(calculateTotalPayment()),
+              insuranceCost: parseFloat(calculateTotalInterest()),
+              cartCost: parseFloat(calculateCardAmount())
+            })}
             fullWidth
           />
         </Grid>
@@ -92,7 +88,10 @@ const TabCreditDataPage = ({
             label="İllik Faiz Dərəcəsi (%)"
             type="number"
             value={creditRequest.annualPercent}
-            onChange={(e) => setCreditRequest({ ...creditRequest, annualPercent: parseFloat(e.target.value) })}
+            onChange={(e) => setCreditRequest({
+              ...creditRequest,
+              annualPercent: parseFloat(e.target.value)
+            })}
             fullWidth
           />
         </Grid>
@@ -102,7 +101,13 @@ const TabCreditDataPage = ({
           <Typography gutterBottom>Kreditin Müddəti: {creditRequest.creditTerm} ay</Typography>
           <Slider
             value={creditRequest.creditTerm}
-            onChange={(e, newValue) => setCreditRequest({ ...creditRequest, creditTerm: newValue as number })}
+            onChange={(e, newValue) => setCreditRequest({
+              ...creditRequest, creditTerm: newValue as number,
+              monthlyPayment: parseFloat(calculateMonthlyPayment()),
+              amountToBePaid: parseFloat(calculateTotalPayment()),
+              insuranceCost: parseFloat(calculateTotalInterest()),
+              cartCost: parseFloat(calculateCardAmount())
+            })}
             valueLabelDisplay="auto"
             min={6}
             defaultValue={12}
@@ -115,7 +120,13 @@ const TabCreditDataPage = ({
           <Typography gutterBottom>Xidmət haqqı: {creditRequest.serviceRate} %</Typography>
           <Slider
             value={creditRequest.serviceRate}
-            onChange={(e, newValue) => setCreditRequest({ ...creditRequest, serviceRate: newValue as number })}
+            onChange={(e, newValue) => setCreditRequest({
+              ...creditRequest, serviceRate: newValue as number,
+              monthlyPayment: parseFloat(calculateMonthlyPayment()),
+              amountToBePaid: parseFloat(calculateTotalPayment()),
+              insuranceCost: parseFloat(calculateTotalInterest()),
+              cartCost: parseFloat(calculateCardAmount())
+            })}
             valueLabelDisplay="auto"
             min={0.1}
             max={50}
@@ -130,7 +141,12 @@ const TabCreditDataPage = ({
             label="Kart Xərci (AZN)"
             type="number"
             value={creditRequest.cartCost}
-            onChange={(e) => setCreditRequest({ ...creditRequest, cartCost: parseFloat(e.target.value) })}
+            onChange={(e) => setCreditRequest({
+              ...creditRequest, cartCost: parseFloat(e.target.value),
+              monthlyPayment: parseFloat(calculateMonthlyPayment()),
+              amountToBePaid: parseFloat(calculateTotalPayment()),
+              insuranceCost: parseFloat(calculateTotalInterest())
+            })}
             fullWidth
           />
         </Grid>
@@ -141,7 +157,13 @@ const TabCreditDataPage = ({
             label="Qiymətləndirmə Xərci (AZN)"
             type="number"
             value={creditRequest.valuationCost}
-            onChange={(e) => setCreditRequest({ ...creditRequest, valuationCost: parseFloat(e.target.value) })}
+            onChange={(e) => setCreditRequest({
+              ...creditRequest, valuationCost: parseFloat(e.target.value),
+              monthlyPayment: parseFloat(calculateMonthlyPayment()),
+              amountToBePaid: parseFloat(calculateTotalPayment()),
+              insuranceCost: parseFloat(calculateTotalInterest()),
+              cartCost: parseFloat(calculateCardAmount())
+            })}
             fullWidth
           />
         </Grid>
@@ -151,7 +173,13 @@ const TabCreditDataPage = ({
           <Typography gutterBottom>Sığorta xərci: {creditRequest.insuranceCost} %</Typography>
           <Slider
             value={creditRequest.insuranceCost}
-            onChange={(e, newValue) => setCreditRequest({ ...creditRequest, insuranceCost: newValue as number })}
+            onChange={(e, newValue) => setCreditRequest({
+              ...creditRequest, insuranceCost: newValue as number,
+              monthlyPayment: parseFloat(calculateMonthlyPayment()),
+              amountToBePaid: parseFloat(calculateTotalPayment()),
+
+              cartCost: parseFloat(calculateCardAmount())
+            })}
             valueLabelDisplay="auto"
             min={0.1}
             max={10}
@@ -238,6 +266,13 @@ const TabCreditDataPage = ({
         <Button
           onClick={() => {
             window.scrollTo(0, 0);
+            setCreditRequest({
+              ...creditRequest,
+              monthlyPayment: parseFloat(calculateMonthlyPayment()),
+              amountToBePaid: parseFloat(calculateTotalPayment()),
+              insuranceCost: parseFloat(calculateTotalInterest()),
+              cartCost: parseFloat(calculateCardAmount())
+            });
             setValue('7');
           }}
           variant="contained"
