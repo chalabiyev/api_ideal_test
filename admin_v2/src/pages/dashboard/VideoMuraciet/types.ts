@@ -1,23 +1,22 @@
 export type RecruiterDataType = {
   education: string;
   companyName: string;
-  salary: string;
+  salary: number;
   address: string;
   position: string;
-  workExperience: string;
+  workExperience: number;
   contractStartDate: string;
   contractEndDate: string;
-  toplamodenis: string;
+  toplamodenis: number;
   akbmelumatlari: string;
   daxilirisk: string;
-  //   ------
-  ayliqemekhaqqi: string;
-  ayliqcemigelir: string;
-  xerclerincemi: string;
-  xalisgelir: string;
+  ayliqemekhaqqi: number;
+  ayliqcemigelir: number;
+  xerclerincemi: number;
+  xalisgelir: number;
 };
 
-export interface Zamin {
+export interface Guarantor {
   personAz: {
     name: string;
     surname: string;
@@ -34,4 +33,8 @@ export interface Zamin {
   militaryStatus: string;
   gender: string;
   isActive: boolean;
+  relation: string;
+  phoneNumber?: string;
+  workPlace?: string;
+  position?: string;
 }

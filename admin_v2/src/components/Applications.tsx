@@ -285,7 +285,7 @@ export default function Kredit() {
         setData(res ?? { content: [], numberOfElements: 0, totalPages: 0, totalElements: 0 });
       });
   }, [page, rowsPerPage, creditType, search]);
-  
+
 
   return (
     <Box mt={3}>
@@ -350,24 +350,6 @@ export default function Kredit() {
               fullWidth
               onChange={handleSearch}
             />
-            {/* <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              size="medium"
-              value={activityFilter}
-              onChange={handleActivityFilterChange}
-              displayEmpty
-              sx={{ minWidth: 200, ml: 2 }}
-            >
-              <MenuItem value="" disabled>
-                Şirkətin fəaliyyət sahəsi
-              </MenuItem>
-              <MenuItem value="all">Hamısı</MenuItem>
-              <MenuItem value="ticarət">Ticarət</MenuItem>
-              <MenuItem value="qida">Qida</MenuItem>
-              <MenuItem value="xidmət">Xidmət</MenuItem>
-              <MenuItem value="istehsal">İstehsal</MenuItem>
-            </Select> */}
           </Box>
 
           {/* Table */}
@@ -425,11 +407,11 @@ export default function Kredit() {
                             </Label>
                           </Card>}
                       </TableCell>
-                      <TableCell>{row.guarantorFullName}</TableCell>
-                      <TableCell>{row.guarantorRelation}</TableCell>
+                      <TableCell>{row.guarantors && row.guarantors.length > 0 ? `${row.guarantors[0].personAz.name} ${row.guarantors[0].personAz.surname} ${row.guarantors[0].personAz.patronymic}` : ''}</TableCell>
+                      <TableCell>{row.guarantors && row.guarantors.length > 0 ? row.guarantors[0].relation : ''}</TableCell>
                       <TableCell>
-                        {row.guarantorPhoneNumber ? (
-                          <Label variant="filled">{row.guarantorPhoneNumber}</Label>
+                        {row.guarantors && row.guarantors.length > 0 ? (
+                          <Label variant="filled">{row.guarantors[0].phoneNumber}</Label>
                         ) : (
                           ''
                         )}
