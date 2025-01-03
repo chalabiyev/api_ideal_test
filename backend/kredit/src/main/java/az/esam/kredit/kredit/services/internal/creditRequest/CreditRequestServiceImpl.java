@@ -203,8 +203,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     @Override
-    public Long count() {
-        return creditRequestRepository.count();
+    public Long count(Authentication auth) {
+        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
+        return isAdmin(usr) ? creditRequestRepository.count() : creditRequestRepository.countByRequestedUser(usr);
     }
 
     public Credit toCredit(CreditRequest creditRequest, String simaContractOperationId) {
@@ -238,32 +239,51 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 .build();
     }
 
+    boolean isAdmin(User u) {
+        return u.getRoles().stream().filter(f -> f.getName() == ERole.ROLE_ADMIN).count() > 0;
+    }
+
     @Override
-    public Page<CreditRequest> search(CreditRequestSearchDto search) {
+    public Page<CreditRequest> search(CreditRequestSearchDto search, Authentication auth) {
+        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
         Query q = new Query().skip(search.getPage() * search.getPageSize())
                 .limit(search.getPageSize());
         if (search.getCreditType() != null && !search.getCreditType().isEmpty()) {
             q.addCriteria(Criteria.where("creditType").is(ECreditType.valueOf(search.getCreditType()).name()));
         }
+        if (search.getConfirmStatus() != null && !search.getConfirmStatus().isEmpty()) {
+            q.addCriteria(Criteria.where("confirmStatus").is(CreditRequestStatusEnum.valueOf(search.getConfirmStatus()).name()));
+        }
         if (search.getSearch() != null && search.getSearch().trim().length() > 0) {
-            Criteria c = Criteria
-                    .where("id").ne(null)
-                    .orOperator(
-                            Criteria.where("username").regex(search.getSearch()),
-                            Criteria.where("pin").regex(search.getSearch()),
-                            Criteria.where("seriaNo").regex(search.getSearch()),
-                            Criteria.where("fullName").regex(search.getSearch()),
-                            Criteria.where("name").regex(search.getSearch()),
-                            Criteria.where("surname").regex(search.getSearch()),
-                            Criteria.where("phoneNumber").regex(search.getSearch()),
-                            Criteria.where("email").regex(search.getSearch()));
+            if (isAdmin(usr)) {
+                Criteria c = Criteria
+                        .where("id").ne(null)
+                        .orOperator(
+                                Criteria.where("username").regex(search.getSearch()),
+                                Criteria.where("pin").regex(search.getSearch()),
+                                Criteria.where("seriaNo").regex(search.getSearch()),
+                                Criteria.where("fullName").regex(search.getSearch()),
+                                Criteria.where("name").regex(search.getSearch()),
+                                Criteria.where("surname").regex(search.getSearch()),
+                                Criteria.where("phoneNumber").regex(search.getSearch()),
+                                Criteria.where("email").regex(search.getSearch()));
 
-            List<User> users = mongoTemplate.find(Query.query(c), User.class);
-            q.addCriteria(Criteria
-                    .where("id").ne(null)
-                    .orOperator(
-                            Criteria.where("creditPurpose").regex(search.getSearch()),
-                            Criteria.where("requestedUser").in(users)));
+                List<User> users = mongoTemplate.find(Query.query(c), User.class);
+                q.addCriteria(Criteria
+                        .where("id").ne(null)
+                        .orOperator(
+                                Criteria.where("creditPurpose").regex(search.getSearch()),
+                                Criteria.where("requestedUser").in(users)));
+            } else {
+                q.addCriteria(Criteria
+                        .where("requestedUser").is(usr)
+                        .and("creditPurpose").regex(search.getSearch()));
+            }
+        } else {
+            if (!isAdmin(usr)) {
+                q.addCriteria(Criteria
+                        .where("requestedUser").is(usr));
+            }
         }
 
         List<CreditRequest> list = mongoTemplate.find(q.with(Sort.by(Sort.Order.desc("requestDate"))), CreditRequest.class);
@@ -276,8 +296,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     @Override
-    public Long countOf(ECreditType creditType) {
-        return creditRequestRepository.countByCreditType(creditType);
+    public Long countOf(ECreditType creditType, Authentication auth) {
+        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
+        return isAdmin(usr) ? creditRequestRepository.countByCreditType(creditType) : creditRequestRepository.countByCreditTypeAndRequestedUser(creditType, usr);
     }
 
     @Override
@@ -312,5 +333,11 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 "Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit ləğv edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun");
 
         return creditRequest;
+    }
+
+    @Override
+    public Long countOfConfirmStatus(CreditRequestStatusEnum confirmStatus, Authentication auth) {
+        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
+        return isAdmin(usr) ? creditRequestRepository.countByConfirmStatus(confirmStatus) : creditRequestRepository.countByConfirmStatusAndRequestedUser(confirmStatus, usr);
     }
 }

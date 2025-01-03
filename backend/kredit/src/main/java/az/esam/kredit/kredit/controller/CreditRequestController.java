@@ -4,6 +4,7 @@ import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.entities.CreditRequest;
 import az.esam.kredit.kredit.entities.CreditRequestDto;
 import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.enums.CreditRequestStatusEnum;
 import az.esam.kredit.kredit.entities.enums.ECreditType;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
 import az.esam.kredit.kredit.repositories.UserRepository;
@@ -114,28 +115,36 @@ public class CreditRequestController {
         return ResponseEntity.ok(creditRequestService.list());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/count")
-    public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(creditRequestService.count());
+    public ResponseEntity<Long> count(Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.count(authentication));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/search")
-    public ResponseEntity<Page<CreditRequest>> search(@RequestBody CreditRequestSearchDto search) {
-        return ResponseEntity.ok(creditRequestService.search(search));
+    public ResponseEntity<Page<CreditRequest>> search(@RequestBody CreditRequestSearchDto search, Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.search(search, authentication));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/countOf/{creditType}")
-    public ResponseEntity<Long> countOf(@PathVariable String creditType) {
-        return ResponseEntity.ok(creditRequestService.countOf(ECreditType.valueOf(creditType)));
+    public ResponseEntity<Long> countOf(@PathVariable String creditType, Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.countOf(ECreditType.valueOf(creditType), authentication));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @GetMapping("/countOfConfirmStatus/{confirmStatus}")
+    public ResponseEntity<Long> countOfConfirmStatus(@PathVariable String confirmStatus, Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.countOfConfirmStatus(CreditRequestStatusEnum.valueOf(confirmStatus), authentication));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
