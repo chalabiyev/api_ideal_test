@@ -16,4 +16,8 @@ public class SimaCertPersonInfo {
     private String surName;
     private String fatherName;
     private String phoneNumber;
+    private String voen;
+    private String organisation;
+    private String title;
+    private String fullName;
 }

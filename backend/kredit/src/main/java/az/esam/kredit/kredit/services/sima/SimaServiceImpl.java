@@ -428,32 +428,42 @@ public class SimaServiceImpl implements SimaService {
         X509Certificate cert = getCertificateFromB64String(certB64);
         X500Principal p = cert.getSubjectX500Principal();
         String subject = p.toString();
-        String key = "SERIALNUMBER";
-        int keyStart = subject.indexOf(key);
-        int keyEnd = subject.indexOf(",", keyStart);
-        String finCode = subject.substring(keyStart + key.length() + 1, keyEnd);
+        String[] values = subject.split(",");
+        for (String value : values) {
+            String[] kValues = value.split("=");
+            if (kValues != null && kValues.length == 2) {
+                String key = kValues[0].trim();
+                String kvalue = kValues[1].trim();
+                switch (key) {
+                    case "SERIALNUMBER":
+                        result.setFinCode(kvalue);
+                        break;
+                    case "GIVENNAME":
+                        result.setName(kvalue);
+                        break;
+                    case "SURNAME":
+                        result.setSurName(kvalue);
+                        break;
+                    case "CN":
+                        result.setFullName(kvalue);
+                        String[] cns = kvalue.split(" ");
+                        if (cns.length == 4) {
+                            result.setFatherName(cns[2]);
+                        }
+                        break;
+                    case "OU":
+                        result.setVoen(kvalue.replaceAll("TIN:", ""));
+                        break;
+                    case "O":
+                        result.setOrganisation(kvalue);
+                        break;
+                    case "T":
+                        result.setTitle(kvalue);
+                        break;
+                }
+            }
+        }
 
-        key = "GIVENNAME";
-        keyStart = subject.indexOf(key);
-        keyEnd = subject.indexOf(",", keyStart);
-        String name = subject.substring(keyStart + key.length() + 1, keyEnd);
-
-        key = "SURNAME";
-        keyStart = subject.indexOf(key);
-        keyEnd = subject.indexOf(",", keyStart);
-        String surName = subject.substring(keyStart + key.length() + 1, keyEnd);
-
-        key = "CN";
-        keyStart = subject.indexOf(key);
-        keyEnd = subject.indexOf(",", keyStart);
-        String cn = subject.substring(keyStart + key.length() + 1, keyEnd);
-
-        String father = cn.replaceAll(name.concat(" ").concat(surName), "").replaceAll("OĞLU", "").replaceAll("QIZI", "").trim();
-
-        result.setFinCode(finCode);
-        result.setName(name);
-        result.setSurName(surName);
-        result.setFatherName(father);
         return result;
     }
 

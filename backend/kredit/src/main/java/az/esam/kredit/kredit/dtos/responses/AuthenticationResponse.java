@@ -27,4 +27,7 @@ public class AuthenticationResponse {
     private Date birthDate;
     private List<String> roles;
     private Set<Partner> partners;
+    private String organisation;
+    private String voen;
+    private String title;
 }
