@@ -12,6 +12,7 @@ import lombok.Data;
 public class CreditRequestSearchDto {
 
     private String creditType;
+    private String confirmStatus;
     private String search;
     private int pageSize;
     private int page;

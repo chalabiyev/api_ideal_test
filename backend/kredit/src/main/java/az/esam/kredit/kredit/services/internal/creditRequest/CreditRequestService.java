@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.services.internal.creditRequest;
 
 import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.entities.CreditRequest;
+import az.esam.kredit.kredit.entities.enums.CreditRequestStatusEnum;
 import az.esam.kredit.kredit.entities.enums.ECreditType;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
 import org.springframework.security.core.Authentication;
@@ -23,11 +24,13 @@ public interface CreditRequestService {
 
     List<CreditRequest> list();
 
-    Page<CreditRequest> search(CreditRequestSearchDto search);
+    Page<CreditRequest> search(CreditRequestSearchDto search, Authentication authentication);
 
-    Long countOf(ECreditType creditType);
+    Long countOf(ECreditType creditType, Authentication authentication);
 
-    Long count();
+    Long countOfConfirmStatus(CreditRequestStatusEnum confirmStatus, Authentication authentication);
+
+    Long count(Authentication authentication);
 
     CreditRequest acceptByAdmin(String creditRequestId, Authentication authentication);
 
