@@ -579,7 +579,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
-                .token(jwtToken)
+                .token(jwtToken)                
                 .tokenType(TokenType.BEARER)
                 .expired(false)
                 .revoked(false)
