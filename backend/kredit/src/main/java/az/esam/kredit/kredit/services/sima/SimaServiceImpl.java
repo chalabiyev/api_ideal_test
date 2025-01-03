@@ -548,8 +548,7 @@ public class SimaServiceImpl implements SimaService {
         String ipAddr = getClientIpAddress(request);
         Optional<SimaEncodedContract> findSimaContract = simaEncodedContractRepository.findByOperationId(simaTokenRequest.getOperationId());
         try {
-            //&& ipAddr.equals(findSimaContract.get().getSignerIP())
-            if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed && oTPService.validateOTPForSima(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(), EPlatform.PHONE)) {
+            if (findSimaContract.isPresent() && ipAddr.equals(findSimaContract.get().getSignerIP()) && findSimaContract.get().getStatus() == ContractStatusEnum.succesed && oTPService.validateOTPForSima(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(), EPlatform.PHONE)) {
                 SimaEncodedContract contract = findSimaContract.get();
                 SimaCertPersonInfo person = getPersonFromCertificate(contract.getSignerCert());
                 if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {
@@ -562,17 +561,10 @@ public class SimaServiceImpl implements SimaService {
                             return auth;
                         }
                     } catch (Exception e) {
-                        return null;
                     }
-                } else {
-                    // handle signable contract type
-                    return null;
                 }
-            } else {
-                return null;
             }
         } catch (BadRequestException ex) {
-            return null;
         }
         return null;
     }
