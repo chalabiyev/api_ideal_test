@@ -107,6 +107,8 @@ public class User extends BaseEntity {
 
     private String departmentId;
 
+    private String title;
+
     public Map<String, Object> toMap() {
         Map<String, Object> userMap = new HashMap<>();
 

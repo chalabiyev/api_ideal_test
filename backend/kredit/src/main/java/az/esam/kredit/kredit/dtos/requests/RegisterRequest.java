@@ -98,4 +98,8 @@ public class RegisterRequest {
     private String photo;
 
     private String departmentId;
+
+    private String organisation;
+    private String voen;
+    private String title;
 }

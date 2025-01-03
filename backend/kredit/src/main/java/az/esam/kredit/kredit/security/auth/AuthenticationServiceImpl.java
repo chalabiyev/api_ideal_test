@@ -187,8 +187,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)
                     // existingUser role==partner and request role==partner
                     && ((existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_PARTNER)) && request.getRoles().contains("partner"))
-                    || (existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_USER)) && request.getRoles() == null)
-            )) {
+                    || (existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_USER)) && request.getRoles() == null))) {
                 // TODO: check role
                 throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
             }
@@ -202,7 +201,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .username(request.getUsername())
                     .name(request.getName())
                     .surname(request.getSurName())
-                    .fullName(request.getName().concat(" ").concat(request.getSurName()))
+                    .fullName(request.getFullName())
                     .fatherName(request.getFatherName())
                     .gender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null)
                     .phoneNumber(request.getPhoneNumber())
@@ -214,8 +213,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .photo(request.getPhoto())
                     .departmentId(request.getDepartmentId())
                     .fullName(request.getFullName())
+                    .voen(request.getVoen())
+                    .organisationName(request.getOrganisation())
+                    .title(request.getTitle())
                     .build();
-
 
             Set<String> strRoles = request.getRoles() == null ? new HashSet<>() : request.getRoles();
             Set<Role> roles;
@@ -293,7 +294,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return AuthenticationResponse.builder()
                     .id(savedUser.getId())
-                    .fullName(savedUser.getName().concat(" ").concat(savedUser.getSurname()))
+                    .fullName(savedUser.getFullName())
                     .username(savedUser.getUsername())
                     .photo(savedUser.getPhoto())
                     .email(savedUser.getEmail())
@@ -304,6 +305,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
                     .partners(savedUser.getPartners())
+                    .voen(savedUser.getVoen())
+                    .organisation(savedUser.getOrganisationName())
+                    .title(savedUser.getTitle())
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -356,6 +360,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
                     .partners(user.getPartners())
+                    .voen(user.getVoen())
+                    .organisation(user.getOrganisationName())
+                    .title(user.getTitle())
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -400,6 +407,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .accessToken(accessToken)
                             .refreshToken(refreshToken)
                             .partners(user.getPartners())
+                            .voen(user.getVoen())
+                            .organisation(user.getOrganisationName())
+                            .title(user.getTitle())
                             .build();
 
                     new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
@@ -554,6 +564,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .accessToken(jwtToken)
                         .refreshToken(refreshToken)
                         .partners(user.getPartners())
+                        .voen(user.getVoen())
+                        .organisation(user.getOrganisationName())
+                        .title(user.getTitle())
                         .build();
             } else {
                 throw new BadRequestException("Passwords do not match");
@@ -599,7 +612,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 User existingUser = userRepository.findByUsername(person.getFinCode()).orElse(null);
                 if (existingUser != null) {
                     addRole(existingUser.getUsername(), ERole.ROLE_USER);
-                    return authenticate(LoginRequest.builder().username(existingUser.getUsername()).password(existingUser.getPassword()).build());
+                    return authenticate(LoginRequest.builder()
+                            .username(existingUser.getUsername())
+                            .password(existingUser.getPassword()).build());
                 } else {
                     RegisterRequest registerRequest = RegisterRequest.builder()
                             .fin(person.getFinCode())
@@ -608,10 +623,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .surName(person.getSurName())
                             .password(password)
                             .fatherName(person.getFatherName())
-                            .fullName(person.getName().concat(" ").concat(person.getSurName()))
+                            .fullName(person.getFullName())
                             .phoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""))
+                            .organisation(person.getOrganisation())
+                            .voen(person.getVoen())
+                            .title(person.getTitle())
                             .build();
                     if (idCard != null) {
+                        registerRequest.setSerialNumber(idCard.getDocumentNumber());
                         registerRequest.setAddress(idCard.getAddressDetail().getAddress());
                         registerRequest.setBirthDate(idCard.getBirthDate());
                         registerRequest.setCity(idCard.getAddressDetail().getRegionName());
@@ -631,7 +650,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
         } else {
             User savedUser = findUser.get();
+            if (person.getFinCode() != null) {
+                savedUser.setPin(person.getFinCode());
+            }
+            if (person.getTitle() != null) {
+                savedUser.setTitle(person.getTitle());
+            }
+            if (person.getVoen() != null) {
+                savedUser.setVoen(person.getVoen());
+            }
+            if (person.getOrganisation() != null) {
+                savedUser.setOrganisationName(person.getOrganisation());
+            }
+            if (person.getFullName() != null) {
+                savedUser.setFullName(person.getFullName());
+            }
             if (idCard != null) {
+                savedUser.setSeriaNo(idCard.getDocumentNumber());
                 savedUser.setAddress(idCard.getAddressDetail().getAddress());
                 savedUser.setBirthDate(idCard.getBirthDate());
                 savedUser.setBirthAddress(idCard.getBirthAddress());
@@ -640,8 +675,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 savedUser.setMaritalStatus(idCard.getMaritalStatus());
                 savedUser.setPhoto(idCard.getImage());
                 savedUser.setPhoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""));
-                userRepository.save(savedUser);
             }
+            userRepository.save(savedUser);
             UserDetails userDetails = UserDetailsImpl.build(savedUser);
             var jwtToken = jwtService.generateJwtToken(userDetails);
             var refreshToken = jwtService.generateRefreshToken(userDetails);
@@ -659,6 +694,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
                     .partners(savedUser.getPartners())
+                    .voen(savedUser.getVoen())
+                    .organisation(savedUser.getOrganisationName())
+                    .title(savedUser.getTitle())
                     .build();
         }
 
