@@ -1,10 +1,7 @@
 package az.esam.kredit.kredit.services.internal.otp;
 
-import az.esam.kredit.kredit.dtos.requests.ChangeEmailRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePasswordRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePhoneRequest;
-import az.esam.kredit.kredit.dtos.requests.OTPRequest;
-import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
+import az.esam.kredit.kredit.dtos.requests.*;
+import az.esam.kredit.kredit.dtos.responses.sms.SmsResponse;
 import az.esam.kredit.kredit.entities.enums.EPlatform;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import az.esam.kredit.kredit.services.external.email.EmailService;
@@ -81,7 +78,12 @@ public class OTPServiceImpl implements OTPService {
                 if (!request.getContact().substring(0, 3).equals("994")) {
                     request.setContact("994" + request.getContact());
                 }
-                boolean result = smsService.sendSMS(request.getContact(), otpCode);
+                List<SmsResponse> response = smsService.sendSMSOneToN(
+                        SendSmsRequest.builder()
+                                .message("Your OTP code is: " + otpCode)
+                                .numbers(List.of(request.getContact()))
+                                .build());
+                boolean result = response != null && !response.isEmpty() && response.get(0).getCharge() == 1;
                 if (result) {
                     otpRepository.insert(otpRecord);
                 }
@@ -179,9 +181,9 @@ public class OTPServiceImpl implements OTPService {
         try {
             User user = platform.equals(EPlatform.PHONE.name())
                     ? userRepository.findByPhoneNumber(request.getContact())
-                            .orElseThrow(() -> new UsernameNotFoundException("User not found"))
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"))
                     : userRepository.findByEmail(request.getContact())
-                            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (request.getNewPassword().equals(request.getPassword())) {
                 if (validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform))) {
