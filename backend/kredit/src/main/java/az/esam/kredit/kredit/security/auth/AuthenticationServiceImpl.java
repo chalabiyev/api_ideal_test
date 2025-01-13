@@ -1,10 +1,7 @@
 package az.esam.kredit.kredit.security.auth;
 
-import az.esam.kredit.kredit.dtos.requests.SetPasswordRequest;
+import az.esam.kredit.kredit.dtos.requests.*;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
-import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
-import az.esam.kredit.kredit.dtos.requests.LoginRequest;
-import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.dtos.responses.document.FullIDCardInfoResponse;
 import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.ERole;
@@ -641,9 +638,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     }
                     AuthenticationResponse response = register(registerRequest, null);
                     // TODO: sms gonder url?token=accessToken
-                    smsService.sendSMS(person.getPhoneNumber(), "Sizin hesabınız uğurla yaradıldı. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
-                            + "http://localhost:8081/setpassword??token=" + response.getAccessToken()
-                            + " Link 24 saat ərzində aktivdir.");
+                    smsService.sendSMSOneToN(SendSmsRequest.builder()
+                            .message("Sizin hesabınız uğurla yaradıldı. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
+                                    + "http://localhost:8081/setpassword??token=" + response.getAccessToken()
+                                    + " Link 24 saat ərzində aktivdir.")
+                            .numbers(List.of(person.getPhoneNumber()))
+                            .build());
                     return response;
                 }
             } catch (BadRequestException ex) {

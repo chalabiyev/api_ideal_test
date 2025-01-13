@@ -1,6 +1,7 @@
 package az.esam.kredit.kredit.services.internal.creditRequest;
 
 import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
+import az.esam.kredit.kredit.dtos.requests.SendSmsRequest;
 import az.esam.kredit.kredit.entities.Credit;
 import az.esam.kredit.kredit.entities.CreditRequest;
 import az.esam.kredit.kredit.entities.User;
@@ -86,8 +87,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         request.setConfirmStatus(CreditRequestStatusEnum.Requested);
 
         // muracite baxilir sms
-        smsService.sendSMS(request.getRequestedUser().getPhoneNumber(),
-                "Sizin kredit muracietiniz qebul olundu, tezliklə sizə status barədə məlumat veriləcək");
+        smsService.sendSMSOneToN(SendSmsRequest.builder()
+                .message("Sizin kredit muracietiniz qebul olundu, tezliklə sizə status barədə məlumat veriləcək")
+                .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
+                .build());
 
         creditRequestRepository.insert(request);
         if (request.getPartner() != null) {
@@ -125,9 +128,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 request.setActivateStatus(EActivateStatus.PENDING);
 
                 // muraciet tesdiqlendi sms
-                smsService.sendSMS(request.getRequestedUser().getPhoneNumber(),
-                        "Sizin kredit muracietiniz təsdiqləndi, mobil nömrə və şifrə vasitəsilə aşağıdakı linkdən hesabınıza daxil olub və krediti aktivləşdirin \nhttps://kreditminimal.studentall.az/");
-
+                smsService.sendSMSOneToN(SendSmsRequest.builder()
+                        .message("Sizin kredit muracietiniz təsdiqləndi, mobil nömrə və şifrə vasitəsilə aşağıdakı linkdən hesabınıza daxil olub və krediti aktivləşdirin \nhttps://kreditminimal.studentall.az/")
+                        .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
+                        .build());
                 creditRequestRepository.save(request);
             }
         }
@@ -155,8 +159,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             creditRepository.save(toCredit(creditRequest, simaQRResponse.getOperationId()));
 
             // send sms to user
-            smsService.sendSMS(creditRequest.getRequestedUser().getPhoneNumber(),
-                    "Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit aktivləşdirildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun");
+            smsService.sendSMSOneToN(SendSmsRequest.builder()
+                    .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit aktivləşdirildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun")
+                    .numbers(List.of(creditRequest.getRequestedUser().getPhoneNumber()))
+                    .build());
             return simaQRResponse;
         } else {
             return null;
@@ -311,8 +317,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         creditRequest.setConfirmStatus(CreditRequestStatusEnum.Accepted);
         creditRequest = creditRequestRepository.save(creditRequest);
         // send sms to user
-        smsService.sendSMS(creditRequest.getRequestedUser().getPhoneNumber(),
-                "Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit təsdiq edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun");
+        smsService.sendSMSOneToN(SendSmsRequest.builder()
+                .numbers(List.of(creditRequest.getRequestedUser().getPhoneNumber()))
+                .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit təsdiq edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun")
+                .build());
 
         return creditRequest;
     }
@@ -329,8 +337,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         creditRequest.setFinalStatus(EFinalStatus.REJECTED);
         creditRequest = creditRequestRepository.save(creditRequest);
         // send sms to user
-        smsService.sendSMS(creditRequest.getRequestedUser().getPhoneNumber(),
-                "Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit ləğv edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun");
+        smsService.sendSMSOneToN(SendSmsRequest.builder()
+                .numbers(List.of(creditRequest.getRequestedUser().getPhoneNumber()))
+                .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit ləğv edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun")
+                .build());
 
         return creditRequest;
     }

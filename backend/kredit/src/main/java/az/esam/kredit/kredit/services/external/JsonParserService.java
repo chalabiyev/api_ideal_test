@@ -12,10 +12,9 @@ import java.util.List;
 public class JsonParserService {
     private static final Logger log = LoggerFactory.getLogger(JsonParserService.class);
 
-    public <T> List<T> parseResponse(JsonNode jsonResponse, Class<T> clazz) {
+    public <T> List<T> parseResponse(JsonNode dataNode, Class<T> clazz) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            JsonNode dataNode = jsonResponse.get("data");
             if (dataNode != null) {
                 if (dataNode.isArray()) {
                     return objectMapper.readValue(

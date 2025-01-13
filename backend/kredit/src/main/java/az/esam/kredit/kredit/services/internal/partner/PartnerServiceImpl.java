@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.services.internal.partner;
 
 import az.esam.kredit.kredit.dtos.requests.PartnerFormRequest;
 import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
+import az.esam.kredit.kredit.dtos.requests.SendSmsRequest;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
 import az.esam.kredit.kredit.entities.Partner;
 import az.esam.kredit.kredit.entities.User;
@@ -136,9 +137,12 @@ public class PartnerServiceImpl implements PartnerService {
             if (existingUser != null) {
                 authenticationService.addRole(existingUser.getUsername(), ERole.ROLE_PARTNER);
                 // TODO: sms gonder partner role added
-                smsService.sendSMS(partner.getPhoneNumber(), "Sizin partnyorlugunuz uğurla təsdiqləndi. " +
-                        "Hesabınıza aşağıdakı url-dən pin və istifadəçi hesabınızın parolu ilə giriş edə bilərsiniz: \n" +
-                        "http://localhost:8081/auth/jwt/sign-in");
+                smsService.sendSMSOneToN(SendSmsRequest.builder()
+                        .numbers(List.of(partner.getPhoneNumber()))
+                        .message("Sizin partnyorlugunuz uğurla təsdiqləndi. " +
+                                "Hesabınıza aşağıdakı url-dən pin və istifadəçi hesabınızın parolu ilə giriş edə bilərsiniz: \n" +
+                                "http://localhost:8081/auth/jwt/sign-in")
+                        .build());
 
                 // set user's companys
                 if (existingUser.getPartners() == null) {
@@ -168,9 +172,12 @@ public class PartnerServiceImpl implements PartnerService {
                 existingUser.getPartners().add(partner);
 
                 // TODO: sms gonder url?token=accessToken
-                smsService.sendSMS(partner.getPhoneNumber(), "Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
-                        + "http://localhost:8081/setpassword??token=" + response.getAccessToken()
-                        + " Link 24 saat ərzində aktivdir.");
+                smsService.sendSMSOneToN(SendSmsRequest.builder()
+                        .numbers(List.of(partner.getPhoneNumber()))
+                        .message("Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
+                                + "http://localhost:8081/setpassword??token=" + response.getAccessToken()
+                                + " Link 24 saat ərzində aktivdir.")
+                        .build());
             }
             userRepository.save(existingUser);
         }

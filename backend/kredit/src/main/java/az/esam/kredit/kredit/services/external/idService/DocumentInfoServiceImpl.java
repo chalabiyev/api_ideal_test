@@ -53,7 +53,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (jsonResponse != null) {
                 try {
                     List<FullIDCardInfoResponse> idCardInfoList
-                            = parserService.parseResponse(jsonResponse, FullIDCardInfoResponse.class);
+                            = parserService.parseResponse(jsonResponse.get("data"), FullIDCardInfoResponse.class);
 
                     if (idCardInfoList != null && !idCardInfoList.isEmpty()) {
                         // check if person is on the blacklistedIndividuals
@@ -132,7 +132,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (jsonResponse != null) {
                 try {
                     List<MobileNumberResponse> mobileNumberResponseList
-                            = parserService.parseResponse(jsonResponse, MobileNumberResponse.class);
+                            = parserService.parseResponse(jsonResponse.get("data"), MobileNumberResponse.class);
 
                     if (mobileNumberResponseList != null && !mobileNumberResponseList.isEmpty()) {
                         return mobileNumberResponseList;
@@ -157,7 +157,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonNode != null) {
                 try {
-                    List<Integer> checkNumberWithPinResponseList = parserService.parseResponse(jsonNode, Integer.class);
+                    List<Integer> checkNumberWithPinResponseList = parserService.parseResponse(jsonNode.get("data"), Integer.class);
 
                     if (checkNumberWithPinResponseList != null && !checkNumberWithPinResponseList.isEmpty()) {
                         switch (checkNumberWithPinResponseList.get(0)) {
@@ -199,7 +199,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (jsonNode != null) {
                 try {
                     List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList
-                            = parserService.parseResponse(jsonNode, DocumentInfoByMobileNumberResponse.class);
+                            = parserService.parseResponse(jsonNode.get("data"), DocumentInfoByMobileNumberResponse.class);
 
                     if (documentInfoByMobileNumberResponseList != null && !documentInfoByMobileNumberResponseList.isEmpty()) {
                         return documentInfoByMobileNumberResponseList.get(0);
@@ -225,7 +225,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (jsonNode != null) {
                 try {
                     List<VehicleInfoResponse> vehicleInfoResponseList
-                            = parserService.parseResponse(jsonNode, VehicleInfoResponse.class);
+                            = parserService.parseResponse(jsonNode.get("data"), VehicleInfoResponse.class);
 
                     if (vehicleInfoResponseList != null && !vehicleInfoResponseList.isEmpty()) {
                         return vehicleInfoResponseList;
@@ -252,7 +252,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (jsonNode != null) {
                 try {
                     List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList
-                            = parserService.parseResponse(jsonNode, MigrationDocumentInfoResponse.class);
+                            = parserService.parseResponse(jsonNode.get("data"), MigrationDocumentInfoResponse.class);
 
                     if (migrationDocumentInfoResponseList != null && !migrationDocumentInfoResponseList.isEmpty()) {
                         return migrationDocumentInfoResponseList.get(0);
@@ -279,7 +279,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (jsonNode != null) {
                 try {
                     List<PassportDocumentInfoResponse> passportDocumentInfoResponseList
-                            = parserService.parseResponse(jsonNode, PassportDocumentInfoResponse.class);
+                            = parserService.parseResponse(jsonNode.get("data"), PassportDocumentInfoResponse.class);
 
                     if (passportDocumentInfoResponseList != null && !passportDocumentInfoResponseList.isEmpty()) {
                         return passportDocumentInfoResponseList.get(0);
@@ -305,7 +305,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             if (jsonNode != null) {
                 try {
                     List<VoenInfoResponse> voenInfoResponseList
-                            = parserService.parseResponse(jsonNode, VoenInfoResponse.class);
+                            = parserService.parseResponse(jsonNode.get("data"), VoenInfoResponse.class);
 
                     if (voenInfoResponseList != null && !voenInfoResponseList.isEmpty()) {
                         return voenInfoResponseList.get(0);
