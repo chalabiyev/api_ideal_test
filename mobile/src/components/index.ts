@@ -14,7 +14,6 @@ import CustomTabView from "./Fit/CustomTabView";
 import CardFolder from "./Fit/CardFolder";
 import OperationStick from "./Fit/OperationStick";
 import LastOperation from "./Fit/LastOperation";
-import WebCam from "./Fit/WebCam";
 
 //Modal
 import MonthModal from "./Modals/MonthModal";
@@ -26,8 +25,8 @@ import ContractModal from "./Modals/ContractModal";
 import BorderedButton from "./Fit/BorderedButton";
 import CancelCreditModal from "./Modals/CancelCreditModal";
 import CreditFilterModal from "./Modals/CreditFilterModal";
+
 export {
-  WebCam,
   CreditFilterModal,
   CancelCreditModal,
   BorderedButton,

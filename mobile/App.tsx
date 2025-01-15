@@ -9,6 +9,7 @@ function App(): React.JSX.Element {
       <StatusBar
         backgroundColor={colors.backgroundColor}
         barStyle="light-content"
+        hidden={true}
       />
       <MainStack />
     </NavigationContainer>
