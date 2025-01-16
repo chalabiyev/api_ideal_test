@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
-import { countries } from 'src/assets/data';
+import { countries } from 'src/assets/data/countries';
 
 import { SvgColor } from 'src/components/svg-color';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';

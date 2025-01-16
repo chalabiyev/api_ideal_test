@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+          rel="stylesheet"/>
+    <title>"İDEAL KREDİT" BOKT MMC - Kredit Sifarişi</title>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            line-height: 1.8;
+            margin: 40px auto;
+            max-width: 800px;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .section-title {
+            font-weight: bold;
+            margin: 20px 0 10px;
+            font-size: 1.1em;
+            text-transform: uppercase;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .content-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .label {
+            font-weight: 500;
+            color: #444;
+        }
+        .value {
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        p {
+            margin: 10px 0;
+        }
+        .signature {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature p {
+            display: inline-block;
+        }
+        .date {
+            text-align: right;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>"İDEAL KREDİT" BOKT MMC</h1>
+<h2>KREDİT SİFARİŞİ</h2>
+
+<!-- Sifarişçi məlumat -->
+<div class="section-title">Sifarişçi haqqında məlumat</div>
+<div class="content">
+    <div class="content-item">
+        <span class="label">1. Adı, S.A., A.A.:</span>
+        <span class="value" th:text="${requestedUser.fullName}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">2. Şəxsiyyət vəsiqəsinin seriyası:</span>
+        <span class="value" th:text="${requestedUser.seriaNo}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">3. Şəxsiyyət vəsiqəsinin verilmə tarixi:</span>
+        <span class="value" th:text="${requestedUser.eventDate}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">4. Kim tərəfindən verilib:</span>
+        <span class="value" th:text="${requestedUser.organisationName}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">5. Doğum yeri:</span>
+        <span class="value" th:text="${requestedUser.birthAddress} + ', ' + ${requestedUser.birthDate}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">6. Vətəndaşlığı:</span>
+        <span class="value" th:text="${requestedUser.nationality}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">7. Daimi qeydiyyat ünvanı:</span>
+        <span class="value" th:text="${requestedUser.address}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">8. Faktiki yaşadığı ünvan:</span>
+        <span class="value" th:text="${requestedUser.factAddress}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">9. Əlaqə telefonları:</span>
+        <div class="value">
+            <ul>
+                <!-- Iterate over the map -->
+                <li th:each="phoneNumber : ${otherPhoneNumbers}">
+                    <span th:text="${phoneNumber.key}">Key</span>:
+                    <span th:text="${phoneNumber.value}">Value</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="content-item">
+        <span class="label">10. Ailə vəziyyəti:</span>
+        <span class="value" th:text="${requestedUser.maritalStatus}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">11. Uşaqlarının sayı və təvəllüdü:</span>
+        <span class="value" th:text="${requestedUser.countOfChildren}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">12. Təhsili:</span>
+        <span class="value" th:text="${requestedUser.education}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">13. İşlədiyi yerin adı:</span>
+        <span class="value" th:text="${requestedUser.workPlace}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">14. İşlədiyi yerin ünvanı:</span>
+        <span class="value" th:text="${requestedUser.workAddress}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">15. Vəzifəsi və iş stajı:</span>
+        <span class="value" th:text="${requestedUser.position}"></span>
+    </div>
+    <div class="content-item">
+        <span class="label">16. Aylıq əmək haqqı məbləği:</span>
+        <span class="value" th:text="${requestedUser.salary}"> man</span>
+    </div>
+    <div class="content-item">
+        <span class="label">17. Digər gəlirlərin cəmi:</span>
+        <span class="value" th:text="${requestedUser.otherIncome}"> man</span>
+    </div>
+</div>
+
+<!-- Iterate through the spouses list -->
+<div th:each="spouse, iterStat : ${spouses}">
+    <div class="section-title" th:text="'ZAMİN ' + (iterStat.index + 1)"></div>
+    <div class="content">
+        <div class="content-item">
+            <span class="label">Adı, S.A., A.A.:</span>
+            <span th:text="${spouse.fullName}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Şəxsiyyət vəsiqəsinin seriyası:</span>
+            <span th:text="${spouse.serialNumber}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Şəxsiyyət vəsiqəsinin verilmə tarixi:</span>
+            <span th:text="${spouse.eventDate}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Kim tərəfindən verilib:</span>
+            <span th:text="${spouse.organisationName}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Doğum yeri:</span>
+            <span th:text="${spouse.birthAddress}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Vətəndaşlığı:</span>
+            <span th:text="${spouse.nationality}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Daimi qeydiyyat ünvanı:</span>
+            <span th:text="${spouse.address}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Faktiki yaşadığı ünvan:</span>
+            <span th:text="${spouse.factAddress}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">Əlaqə telefonları:</span>
+            <span th:text="${spouse.phoneNumbers}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">İşlədiyi yerin adı və vəzifəsi:</span>
+            <span th:text="${spouse.workPlace} + ' ' + ${spouse.position}"></span>
+        </div>
+        <div class="content-item">
+            <span class="label">İşlədiyi yerin ünvanı:</span>
+            <span th:text="${spouse.workAddress}"></span>
+        </div>
+    </div>
+</div>
+
+<!-- Gəlirlər və Xərclər -->
+<div class="section-title">19. Ötən il ərzində gəlirlər və xərclər barədə məlumatlar</div>
+<table>
+    <tr>
+        <th>Gəlirlərin təxmini cəmi</th>
+        <th>Xərclərin cəmi</th>
+        <th>Xalis mənfəət</th>
+    </tr>
+    <tr>
+        <td>6015 man</td>
+        <td>3500 man</td>
+        <td>2515 man</td>
+    </tr>
+</table>
+
+<!-- Digər Məlumatlar -->
+<div class="section-title">20. Kreditin alınması üçün zəruri olan digər məlumatlar</div>
+<p><strong><em>
+    Mən, aşağıda imza edən Sizdən mənə yuxarıda qeyd olunan məbləğdə kredit vəsaiti ayırmağınızı xahiş edirəm. Bu
+    sifarişdə göstərilən bütün məlumatların düzgünlüyünə və həqiqiliyinə zəmanət verir və istənilən mənbələrdən bu
+    barədə istənilən məlumatı yoxlamağa icazə verirəm.
+</em></strong></p>
+
+<!-- Signature Section -->
+<div class="signature">
+    <p>(Sifariş verən şəxsin adı, soyadı və ata adı): ____________________</p>
+    <p>(imzası): __________________________</p>
+</div>
+<p class="date">${requestDate}</p>
+</body>
+</html>

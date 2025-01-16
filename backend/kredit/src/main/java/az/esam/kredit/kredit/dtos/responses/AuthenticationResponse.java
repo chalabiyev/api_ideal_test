@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses;
 
+import az.esam.kredit.kredit.entities.Partner;
 import az.esam.kredit.kredit.entities.enums.TokenType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Getter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -24,4 +26,8 @@ public class AuthenticationResponse {
     private String phoneNumber;
     private Date birthDate;
     private List<String> roles;
+    private Set<Partner> partners;
+    private String organisation;
+    private String voen;
+    private String title;
 }

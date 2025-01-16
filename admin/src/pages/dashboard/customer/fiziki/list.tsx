@@ -6,7 +6,7 @@ import { FizikiCustomerListView } from 'src/sections/customer/fiziki/view/user-l
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `User list | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `İstifadəçi siyahısı | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (

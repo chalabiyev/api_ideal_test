@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useState } from 'react';
+import { useRef, useLayoutEffect, useState, useContext } from 'react';
 
 import { toast } from 'sonner';
 
@@ -14,6 +14,9 @@ import { addSecond, checkTime } from 'src/utils/helper';
 
 import MobileViewMessage from './MobileViewMessage';
 import VideoCameraIcon from '../../../../public/assets/icons/files/VideoCameraIcon';
+import { SignalType, WebsocketContext } from 'src/services/WebsocketProvider';
+import { AuthContext } from 'src/auth/context/auth-context';
+import { WebCam } from 'src/components/webcam/WebCam';
 
 const staticData = [
   {
@@ -153,10 +156,52 @@ function userClick() {
   });
 }
 
+
+var peerConnection: RTCPeerConnection;
+var localVideoStream: MediaStream;
+var localAudioStream: MediaStream;
+var webCamAndAudioStreamToSend: MediaStream;
+var remoteStreams: string[];
+var inCall = false;
+var clientVideoStream: MediaStream;
+var streamSendedClient = false;
+
 const VideoCallView = () => {
   const clockRef = useRef<HTMLSpanElement>(null);
   const initialTime = useRef(new Date());
   const [isMobileView] = useState(window.innerWidth < 777);
+  const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
+  const turnEnabled = import.meta.env.VITE_TURN_ENABLED;
+  const turnUser = import.meta.env.VITE_TURN_USER;
+  const turnPass = import.meta.env.VITE_TURN_PASSWORD;
+  const wsContext = useContext(WebsocketContext);
+  const userContext = useContext(AuthContext);
+  const clientUUID = localStorage.getItem('ClientIP');
+  const operatorUUID = localStorage.getItem('operatorUUID');
+  const meetingID = localStorage.getItem('meetingID');
+  const [operatorReady, setOperatorReady] = useState<boolean>(false);
+  const [clientConnected, setClientConnected] = useState<boolean>(false);
+  const [remoteVideoStreamAdded, setRemoteVideoStreamAdded] = useState<boolean>(false);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+
+  const sendSignal = async (signal: SignalType, receiver?: string) => {
+    if (wsContext.ready) {
+      signal.sender = operatorUUID ?? "";
+      signal.receiver = receiver ?? clientUUID!;
+      let strSignal = JSON.stringify(signal);
+      let checkSignal = JSON.parse(strSignal);
+      if (!checkSignal.sender) {
+        checkSignal.sender = signal.sender;
+      }
+      if (!checkSignal.receiver) {
+        checkSignal.receiver = signal.receiver;
+      }
+      checkSignal.meetingID = meetingID;
+      wsContext.send(checkSignal);
+      console.log("sendSignal", JSON.stringify(checkSignal));
+    }
+  }
 
   useLayoutEffect(() => {
     function startClock() {
@@ -174,6 +219,109 @@ const VideoCallView = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  const sendCamAndMicStreams = async () => {
+    try {
+      localAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      localVideoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = localVideoStream;
+      }
+
+      webCamAndAudioStreamToSend = new MediaStream();
+      localVideoStream.getTracks().forEach((track) => webCamAndAudioStreamToSend.addTrack(track));
+      localAudioStream.getTracks().forEach((track) => webCamAndAudioStreamToSend.addTrack(track));
+      webCamAndAudioStreamToSend.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, webCamAndAudioStreamToSend);
+      });
+    } catch (error) {
+      console.error('Error accessing webcam or microphone:', error);
+      alert('Could not access webcam or microphone.');
+    }
+  };
+
+  const displayRemoteStream = (e: RTCTrackEvent) => {
+    try {
+      console.log('displayRemoteStream', e);
+      let strm = e.streams[0];
+      if (strm) {
+        if (remoteStreams.indexOf(strm.id) == -1) {
+          remoteStreams.push(strm.id);
+        } else {
+          if (remoteStreams.length == 1 && !remoteVideoStreamAdded) {
+            clientVideoStream = strm;
+            remoteVideoRef.current!.srcObject = strm;
+            setRemoteVideoStreamAdded(true);
+            console.log('ops', clientVideoStream.id);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const preparePeerConnection = () => {
+    inCall = true;
+    // const configuration = {
+    //     sdpSemantics: 'plan-b',
+    //     iceServers: [{ 'url': 'stun:stun.l.google.com:19302' }]
+    // };
+
+    const turnConfiguration = {
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: true,
+      iceServers: [{
+        urls: turnServerURL,
+        username: turnUser,
+        credential: turnPass
+      }]
+    };
+
+    const configuration = {
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: true,
+      iceServers: []
+    };
+
+    peerConnection = new RTCPeerConnection(turnEnabled ? turnConfiguration : configuration);
+
+    // console.log("peerConnection", turnEnabled ? turnConfiguration : configuration);
+    if (peerConnection) {
+      setOperatorReady(true);
+
+      peerConnection.onicecandidate = (event) => {
+        console.log("onicecandidate", event.candidate, JSON.stringify(event.candidate));
+        if (event.candidate && clientConnected) {
+          sendSignal({ type: 'icecandidate', candidate: event.candidate });
+        }
+      };
+      peerConnection.ontrack = displayRemoteStream;
+
+      peerConnection.onconnectionstatechange = () => {
+        console.log('onconnectionstatechange', peerConnection.connectionState);
+        if (peerConnection.connectionState == 'connected' && clientConnected && !streamSendedClient) {
+          console.log("sendCamAndMicStreams", peerConnection);
+          sendCamAndMicStreams();
+          streamSendedClient = true;
+        }
+        if (peerConnection.connectionState == 'failed') {
+          console.log("Retrying connection...");
+          // Close the existing connection before reconnecting
+          peerConnection.close();
+          // Reconnect
+          preparePeerConnection();
+        }
+      }
+
+      sendSignal({ type: "acceptcall", operator: userContext?.user && userContext.user["fullName"] });
+      setTimeout(() => {
+        sendSignal({ type: "operatorReady", date: new Date() });
+      }, 1000);
+    }
+  }
+
+
   if (isMobileView) {
     return <MobileViewMessage />;
   }
@@ -185,22 +333,19 @@ const VideoCallView = () => {
         <Box className="h-[89%] rounded-md bg-[aqua]/0 shrink-0 overflow-auto flex flex-col gap-[2.5%]" >
           {staticData.map((item) => (
             <Box
-              className={`bg-yellow-500/0 flex items-center ${
-                item.sender === 'user' && 'justify-end'
-              }`}
+              className={`bg-yellow-500/0 flex items-center ${item.sender === 'user' && 'justify-end'
+                }`}
             >
               <Typography
-                className={`${
-                  item.sender === 'user'
-                    ? 'bg-[#3E3E3E] text-[#E1E1E1] rounded-br-none'
-                    : 'bg-[#D3D3D3] text-[#1F1F1F] rounded-bl-none'
-                } p-[2%] px-[3%] max-w-[83%] rounded-md flex items-end justify-between`}
+                className={`${item.sender === 'user'
+                  ? 'bg-[#3E3E3E] text-[#E1E1E1] rounded-br-none'
+                  : 'bg-[#D3D3D3] text-[#1F1F1F] rounded-bl-none'
+                  } p-[2%] px-[3%] max-w-[83%] rounded-md flex items-end justify-between`}
               >
                 <Typography className="bg-green-500/0 w-[80%] leading-[106%]"> {item.message}</Typography>
                 <Typography
-                  className={`${
-                    item.sender === 'user' ? 'text-[#E1E1E1]' : 'text-[#1F1F1F]'
-                  } text-xs font-extralight`}
+                  className={`${item.sender === 'user' ? 'text-[#E1E1E1]' : 'text-[#1F1F1F]'
+                    } text-xs font-extralight`}
                 >
                   {item.time}
                 </Typography>
@@ -238,23 +383,31 @@ const VideoCallView = () => {
         {/* right bottom (video call)  */}
         <Box className="w-full relative h-[83%] bg-yellow-400/0 overflow-hidden border-[2px] border-[#9EB3C7] rounded-[18px]">
           <video
-            src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            ref={remoteVideoRef}
             playsInline
             muted
             autoPlay
             className="h-full w-full object-cover"
             loop
-          />
+          ></video>
           {/* user camera  */}
           <Box className="absolute -translate-y-[95%] bottom-0 right-5 w-[30%] border-[2px] border-[#9EB3C7] rounded-[18px] overflow-hidden  aspect-video bg-black/0">
             {/*  */}
-            <video
-              src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-              playsInline
-              muted
-              autoPlay
+            <WebCam
               className="h-full w-full object-cover"
-              loop
+              width={200}
+              height={250}
+              backgroundOption={0}
+              left={0}
+              top={0}
+              showOriginal={false}
+              webCamDeviceId={undefined}
+              onStreamChanged={(strm: any) => {
+                localVideoStream = strm;
+              }}
+              cropWidth={0}
+              cropHeight={0}
+              mirrorEnabled={false}
             />
           </Box>
 

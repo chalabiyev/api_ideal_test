@@ -7,9 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "smsservice")
 public class SMSServiceProperties {
 
-    private String login;
+    private String username;
     private String password;
-    private String senderName;
     private String apiUrl;
     private String from;
 }

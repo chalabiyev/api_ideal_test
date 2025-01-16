@@ -48,7 +48,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (!checkApiKey(request)) {
+        if (!request.getRequestURI().contains("/api/sima") && !request.getRequestURI().contains("/signal") && !checkApiKey(request)) {
             if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Wrong API key or secret");
             }
@@ -59,7 +59,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if (request.getRequestURI().equals("/api/auth")
                 || request.getRequestURI().equals("/api/auth/register")
                 || request.getRequestURI().equals("/api/auth/login")
-                || request.getRequestURI().equals("/api/auth/reset-password")) {
+                || request.getRequestURI().equals("/api/auth/reset-password")
+                || request.getRequestURI().contains("/api/sima")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -116,9 +117,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private boolean isExcludedEndpoint(String requestURI) {
         return requestURI.startsWith("/swagger")
                 || requestURI.startsWith("/v3/api-docs")
-                || requestURI.startsWith("/swagger-ui.html")
-                || requestURI.startsWith("/api/file/getFile")
-                || requestURI.startsWith("/api/auth/getUserPhoto");
+                || requestURI.startsWith("/swagger-ui.html")                
+                || requestURI.startsWith("/api/auth/getUserPhoto")
+                || requestURI.startsWith("/api/file/getPublicFile");
     }
 
     private boolean checkApiKey(HttpServletRequest request) {

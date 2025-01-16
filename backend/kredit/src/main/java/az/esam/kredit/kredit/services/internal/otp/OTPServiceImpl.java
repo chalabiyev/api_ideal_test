@@ -1,10 +1,7 @@
 package az.esam.kredit.kredit.services.internal.otp;
 
-import az.esam.kredit.kredit.dtos.requests.ChangeEmailRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePasswordRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePhoneRequest;
-import az.esam.kredit.kredit.dtos.requests.OTPRequest;
-import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
+import az.esam.kredit.kredit.dtos.requests.*;
+import az.esam.kredit.kredit.dtos.responses.sms.SmsResponse;
 import az.esam.kredit.kredit.entities.enums.EPlatform;
 import az.esam.kredit.kredit.entities.enums.EUserStatus;
 import az.esam.kredit.kredit.services.external.email.EmailService;
@@ -18,14 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.BadAttributeValueExpException;
 import java.util.*;
 
 @Service
@@ -75,17 +69,21 @@ public class OTPServiceImpl implements OTPService {
                 if (smsService.getSMSBalance() <= 0) {
                     throw new BadRequestException("SMS balance is empty");
                 }
-                if (!request.getContact().substring(0, 3).equals("994")) {
-                    request.setContact("994" + request.getContact());
-                }
-
                 request.setContact(request.getContact()
                         .replace("(", "")
                         .replace(")", "")
                         .replace(" ", "")
                         .replace("-", "")
                         .replace("+", ""));
-                boolean result = smsService.sendSMS(request.getContact(), otpCode);
+                if (!request.getContact().substring(0, 3).equals("994")) {
+                    request.setContact("994" + request.getContact());
+                }
+                List<SmsResponse> response = smsService.sendSMSOneToN(
+                        SendSmsRequest.builder()
+                                .message("Your OTP code is: " + otpCode)
+                                .numbers(List.of(request.getContact()))
+                                .build());
+                boolean result = response != null && !response.isEmpty() && response.get(0).getCharge() == 1;
                 if (result) {
                     otpRepository.insert(otpRecord);
                 }
@@ -108,26 +106,56 @@ public class OTPServiceImpl implements OTPService {
     @Override
     public boolean validateOTP(String contact, String otpCode, EPlatform platform) throws BadRequestException {
         try {
-            List<OTPRecord> otpRecord = new ArrayList<>();
+            Optional<OTPRecord> otpRecord = Optional.empty();
             if (platform.equals(EPlatform.PHONE)) {
-                otpRecord = otpRepository.findByPhone(contact);
+                otpRecord = otpRepository.findFirstByPhoneOrderByExpirationDateDesc(contact);
             } else if (platform.equals(EPlatform.EMAIL)) {
-                otpRecord = otpRepository.findByEmail(contact);
+                otpRecord = otpRepository.findFirstByEmailOrderByExpirationDateDesc(contact);
             }
 
             if (otpRecord.isEmpty()) {
                 throw new BadRequestException("OTP record not found");
             }
 
-            if (otpRecord.get(otpRecord.size() - 1).getExpirationDate().before(new Date())
-                    || otpRecord.get(otpRecord.size() - 1).getValidationDate() != null) {
+            if (otpRecord.get().getExpirationDate().before(new Date())
+                    || otpRecord.get().getValidationDate() != null) {
                 throw new BadRequestException("OTP code is expired");
             }
 
-            boolean result = passwordEncoder.matches(otpCode, otpRecord.get(otpRecord.size() - 1).getOtpCode());
+            boolean result = passwordEncoder.matches(otpCode, otpRecord.get().getOtpCode());
             if (result) {
-                otpRecord.get(0).setValidationDate(new Date());
-                otpRepository.save(otpRecord.get(0));
+                otpRecord.get().setValidationDate(new Date());
+                otpRepository.save(otpRecord.get());
+            }
+            return result;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean validateOTPForSima(String contact, String otpCode, EPlatform platform) throws BadRequestException {
+        try {
+            Optional<OTPRecord> otpRecord = Optional.empty();
+            if (platform.equals(EPlatform.PHONE)) {
+                otpRecord = otpRepository.findFirstByPhoneOrderByExpirationDateDesc(contact);
+            } else if (platform.equals(EPlatform.EMAIL)) {
+                otpRecord = otpRepository.findFirstByEmailOrderByExpirationDateDesc(contact);
+            }
+
+            if (otpRecord.isEmpty()) {
+                throw new BadRequestException("OTP record not found");
+            }
+
+            if (otpRecord.get().getExpirationDate().before(new Date())) {
+                throw new BadRequestException("OTP code is expired");
+            }
+
+            boolean result = passwordEncoder.matches(otpCode, otpRecord.get().getOtpCode());
+            if (result) {
+                otpRecord.get().setValidationDate(new Date());
+                otpRepository.save(otpRecord.get());
             }
             return result;
         } catch (Exception e) {
@@ -151,11 +179,11 @@ public class OTPServiceImpl implements OTPService {
             }
         }
         try {
-            User user = platform.equals(EPlatform.PHONE.name()) ?
-                    userRepository.findByPhoneNumber(request.getContact())
-                            .orElseThrow(() -> new UsernameNotFoundException("User not found")) :
-                    userRepository.findByEmail(request.getContact())
-                            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            User user = platform.equals(EPlatform.PHONE.name())
+                    ? userRepository.findByPhoneNumber(request.getContact())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"))
+                    : userRepository.findByEmail(request.getContact())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (request.getNewPassword().equals(request.getPassword())) {
                 if (validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform))) {
@@ -252,7 +280,7 @@ public class OTPServiceImpl implements OTPService {
 
     private String createOtpCode() {
         Random random = new Random();
-        int fourDigit = 1000 + random.nextInt(9000);
+        int fourDigit = 100000 + random.nextInt(900000);
         return String.valueOf(fourDigit);
     }
 }

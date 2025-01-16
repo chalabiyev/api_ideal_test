@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
 
-import { CreditCreateView } from 'src/sections/request/view';
+import { CreditCreateView } from 'src/sections/credits/view';
 
 // ----------------------------------------------------------------------
 

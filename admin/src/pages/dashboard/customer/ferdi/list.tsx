@@ -6,7 +6,7 @@ import { FerdiCustomerListView } from 'src/sections/customer/ferdi/view/user-lis
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `User list | Dashboard - ${CONFIG.site.name}` };
+const metadata = { title: `İstifadəçi siyahısı | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
   return (

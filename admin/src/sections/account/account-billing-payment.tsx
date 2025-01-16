@@ -9,9 +9,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Iconify } from 'src/components/iconify';
 
-import { PaymentCardItem } from '../payment/payment-card-item';
-import { PaymentNewCardDialog } from '../payment/payment-new-card-dialog';
-
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -37,21 +34,7 @@ export function AccountBillingPayment({ cards }: Props) {
             </Button>
           }
         />
-
-        <Box
-          rowGap={2.5}
-          columnGap={2}
-          display="grid"
-          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-          sx={{ p: 3 }}
-        >
-          {cards.map((card) => (
-            <PaymentCardItem key={card.id} card={card} />
-          ))}
-        </Box>
       </Card>
-
-      <PaymentNewCardDialog open={newCard.value} onClose={newCard.onFalse} />
     </>
   );
 }

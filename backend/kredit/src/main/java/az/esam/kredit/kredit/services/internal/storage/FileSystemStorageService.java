@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.services.internal.storage;
 
 import az.esam.kredit.kredit.exceptions.StorageException;
 import az.esam.kredit.kredit.properties.StorageProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,7 @@ import java.util.stream.Stream;
 /**
  * @author cihan
  */
+@Slf4j
 @Service
 @EnableConfigurationProperties(StorageProperties.class)
 public class FileSystemStorageService implements StorageService {
@@ -46,7 +48,7 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException(FAILED_TO_STORE_EMPTY_FILE);
             }
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(file.getOriginalFilename()))
+                    Paths.get(file.getOriginalFilename()))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check
@@ -69,7 +71,7 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException(FAILED_TO_STORE_EMPTY_FILE);
             }
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(fileName))
+                    Paths.get(fileName))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check
@@ -92,7 +94,7 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException(FAILED_TO_STORE_EMPTY_FILE);
             }
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(fileName))
+                    Paths.get(fileName))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check
@@ -146,6 +148,29 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    public void deleteExistingImages(String fileName) throws IOException {
+        Path destinationFile = this.rootLocation.resolve(
+                Paths.get(fileName))
+                .normalize().toAbsolutePath();
+        Path dir = Paths.get(destinationFile.toString()).getParent(); // Get the directory where the images will be stored
+        String baseFileName = Paths.get(destinationFile.toString()).getFileName().toString();
+
+        try (Stream<Path> files = Files.list(dir)) {
+            files.filter(file -> file.getFileName().toString().startsWith(baseFileName))
+                    .forEach(file -> {
+                        try {
+                            Files.delete(file);
+                            log.info("Köhnə şəkil silindi: {}", file.toString());
+                        } catch (IOException e) {
+                            log.error("Şəkili silərkən error yarandı: {}, {}", file.toString(), e.getMessage());
+                        }
+                    });
+        } catch (Exception e) {
+            log.error("Şəkili silərkən error yarandı: {}", e.getMessage());
+        }
+    }
+
+    @Override
     public void init() {
         try {
             Logger.getLogger("Storage").log(Level.SEVERE, "File root location: {0}", rootLocation);
@@ -164,5 +189,13 @@ public class FileSystemStorageService implements StorageService {
         } catch (MalformedURLException ex) {
             return false;
         }
+    }
+
+    @Override
+    public boolean deleteFile(String filename) throws Exception {
+        Path destinationFile = this.rootLocation.resolve(
+                Paths.get(filename))
+                .normalize().toAbsolutePath();
+        return Files.deleteIfExists(destinationFile);
     }
 }

@@ -1,19 +1,13 @@
 package az.esam.kredit.kredit.controller;
 
+import az.esam.kredit.kredit.dtos.requests.*;
 import az.esam.kredit.kredit.dtos.responses.AuthenticationResponse;
-import az.esam.kredit.kredit.dtos.requests.ChangeEmailRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangeNameRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePasswordRequest;
-import az.esam.kredit.kredit.dtos.requests.ChangePhoneRequest;
-import az.esam.kredit.kredit.dtos.requests.LoginRequest;
 import az.esam.kredit.kredit.dtos.responses.MessageResponse;
-import az.esam.kredit.kredit.dtos.requests.OTPRequest;
-import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
-import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.entities.User;
-import az.esam.kredit.kredit.entities.enums.EGender;
 import az.esam.kredit.kredit.entities.enums.ERole;
 import az.esam.kredit.kredit.entities.Role;
+import az.esam.kredit.kredit.entities.enums.EPlatform;
+import az.esam.kredit.kredit.helper.Helper;
 import az.esam.kredit.kredit.services.internal.otp.OTPService;
 import az.esam.kredit.kredit.repositories.RoleRepository;
 import az.esam.kredit.kredit.repositories.UserRepository;
@@ -24,6 +18,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +32,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,6 +45,7 @@ import java.util.logging.Logger;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
+@Validated
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -83,15 +80,18 @@ public class AuthController {
             roleRepository.insert(new Role(ERole.ROLE_HR));
             roleRepository.insert(new Role(ERole.ROLE_CREDIT_MANAGER));
             roleRepository.insert(new Role(ERole.ROLE_ACCOUNTANT));
+            roleRepository.insert(new Role(ERole.ROLE_PARTNER));
         }
 
         if (userRepository.findAll().isEmpty()) {
             try {
-                authenticationService.register(RegisterRequest.builder()
+                authenticationService.registerAdmin(RegisterRequest.builder()
                         .password("123456")
                         .username(ADMIN_USER_NAME)
                         .email("admin@admin.com")
                         .fullName(ADMIN_USER_NAME)
+                        .name(ADMIN_USER_NAME)
+                        .surName(ADMIN_USER_NAME)
                         .gender("MALE")
                         .roles(new HashSet<>(List.of(ADMIN_USER_NAME)))
                         .phoneNumber("994504809988")
@@ -108,8 +108,10 @@ public class AuthController {
     @PostMapping("/create")
     public ResponseEntity<AuthenticationResponse> create(
             @Valid @RequestBody RegisterRequest registerRequest,
-            HttpServletRequest httpRequest) throws BadRequestException {
-        AuthenticationResponse response = authenticationService.register(registerRequest);
+            HttpServletRequest httpRequest,
+            Authentication authentication
+    ) throws BadRequestException {
+        AuthenticationResponse response = authenticationService.register(registerRequest, authentication);
         return ResponseEntity.ok(response);
     }
 
@@ -175,14 +177,31 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<Boolean> sendOtpCode(
             @Valid @RequestBody OTPRequest request,
-            @RequestParam String platform,
+            @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
             HttpServletRequest httpRequest) throws BadRequestException {
+        request.setIpAddress(Helper.getClientIpAddress(httpRequest));
         if (otpService.sendOtp(request, platform.toUpperCase())) {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(true);
         } else {
             throw new BadRequestException("OTP not sent");
+        }
+    }
+
+    @PostMapping("/validate-otp")
+    @SecurityRequirement(name = "X-API-KEY")
+    public ResponseEntity<Boolean> validateOtpCode(
+            @Valid @RequestBody OTPValidateRequest request,
+            @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
+            HttpServletRequest httpRequest) throws BadRequestException {
+        request.setIpAddress(Helper.getClientIpAddress(httpRequest));
+        if (otpService.validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform.toUpperCase()))) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(true);
+        } else {
+            throw new BadRequestException("OTP not valid");
         }
     }
 
@@ -202,6 +221,18 @@ public class AuthController {
         } else {
             throw new BadRequestException("Password not changed");
         }
+    }
+
+    @PostMapping("/set-password")
+    @SecurityRequirement(name = "authentication")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "X-API-KEY")
+    public ResponseEntity<AuthenticationResponse> setPassword(
+            @Valid @RequestBody SetPasswordRequest request,
+            Authentication authentication,
+            HttpServletRequest httpRequest
+    ) throws BadRequestException {
+        return ResponseEntity.ok(authenticationService.setPassword(request, httpRequest, authentication));
     }
 
     @PostMapping("/change-email")
@@ -260,7 +291,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<Boolean> resetPassword(
             @Valid @RequestBody PasswordResetRequest request,
-            @RequestParam String platform,
+            @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
             HttpServletRequest httpRequest
     ) throws BadRequestException {
         if (otpService.resetPassword(request, httpRequest, platform.toUpperCase())) {
@@ -295,7 +326,6 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(new MessageResponse(HttpStatus.OK, fileName));
     }
-
 
     @GetMapping("/getUserPhoto/{photoName}")
     @SecurityRequirement(name = "X-API-KEY")
@@ -337,5 +367,13 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<User> me(HttpServletRequest request) {
         return ResponseEntity.ok(authenticationService.me(request));
+    }
+
+    @GetMapping("/getUserByUserName/{userName}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    public ResponseEntity<User> getUserByUserName(@PathVariable("userName") String userName) {
+        return ResponseEntity.ok(authenticationService.getUserByUsername(userName));
     }
 }

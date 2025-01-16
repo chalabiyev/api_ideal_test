@@ -10,7 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 import { filledInputClasses } from '@mui/material/FilledInput';
 
-import { countries } from 'src/assets/data';
+import { countries } from 'src/assets/data/countries';
 
 import { FlagIcon, iconifyClasses } from 'src/components/iconify';
 
