@@ -1,28 +1,30 @@
-import React, {useCallback, useEffect} from 'react';
-import {Platform, SafeAreaView, View} from 'react-native';
-import {makeStyles} from './style';
-import {MainHeader, Text} from '../../../components';
-import colors from '../../../constants/colors/colors';
-import MainButton from '../../../components/Fit/Button/MainButton';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import SimaModule from '../../../components/Sima/SimaModule';
-import {PERMISSIONS, check, RESULTS, request} from 'react-native-permissions';
+import React, { useCallback, useEffect, useState } from "react";
+import { Platform, SafeAreaView, View, ToastAndroid } from "react-native";
+import { makeStyles } from "./style";
+import { MainHeader, Text } from "../../../components";
+import colors from "../../../constants/colors/colors";
+import MainButton from "../../../components/Fit/Button/MainButton";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import SimaModule from "../../../components/Sima/SimaModule";
+import { PERMISSIONS, check, RESULTS, request } from "react-native-permissions";
+import uuid from "react-native-uuid";
 
-// Ваш clientId и язык
 const clientId = 3144201;
-const language = 'az';
+const language = "az";
 
-// Параметры для аутентификации (получите их безопасно)
-const service = 'bio-imza'; //ESAM Kredit
-const key = '441DD043-328C-4FD3-9D2D-8B120106D0D8';
+const service = "ESAM Kredit";
+const key = "441DD043-328C-4FD3-9D2D-8B120106D0D8";
 
 const styles = makeStyles();
+
 export default function SimaSignature() {
   const navigation = useNavigation();
+  const [sdkInitialized, setSdkInitialized] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const requestCameraPermission = async () => {
     const permission =
-      Platform.OS === 'ios'
+      Platform.OS === "ios"
         ? PERMISSIONS.IOS.CAMERA
         : PERMISSIONS.ANDROID.CAMERA;
 
@@ -31,47 +33,74 @@ export default function SimaSignature() {
     if (result === RESULTS.DENIED) {
       const requestResult = await request(permission);
       if (requestResult === RESULTS.GRANTED) {
-        console.log('Доступ к камере предоставлен');
+        console.log("Kamera erişimi verildi");
       } else {
-        console.log('Доступ к камере отклонен');
+        console.log("Kamera erişimi reddedildi");
       }
     } else if (result === RESULTS.GRANTED) {
-      console.log('Доступ к камере уже предоставлен');
+      console.log("Kamera erişimi zaten verildi");
     } else {
-      console.log('Доступ к камере отклонен или ограничен');
+      console.log("Kamera erişimi reddedildi veya kısıtlandı");
     }
   };
+
   useEffect(() => {
     requestCameraPermission();
   }, []);
 
-  const username = 'esaminnovations_ios_sdk_v1';
-  const password = '^L5&xP7@qV9^T3#rY2!kD6%Z8*nW';
-  const language = 'az'; // или 'ru', 'az'
+  const username = "esaminnovations_ios_sdk_v1";
+  const password = "^L5&xP7@qV9^T3#rY2!kD6%Z8*nW";
+  const sdkLanguage = "az";
+
   const initializeAndRegisterSima = async () => {
     try {
-      // Инициализируем SDK
       const initResult = await SimaModule.initialize(
         username,
         password,
-        language,
+        clientId,
+        sdkLanguage
       );
-      console.log(initResult); // "SDK initialized successfully"
+      console.log("initResult", initResult);
+      setSdkInitialized(true);
 
-      // После успешной инициализации вызываем метод регистрации
       const registerResult = await SimaModule.register();
-      console.log(registerResult); // "Регистрация успешна"
+      console.log(registerResult);
+      setIsRegistered(true);
+
+      ToastAndroid.show(
+        "SİMA SDK Başarıyla Başlatıldı ve Kayıt Oldu",
+        ToastAndroid.SHORT
+      );
     } catch (error) {
-      console.error('Ошибка инициализации или регистрации:', error);
+      console.error("İnisiyalizasyon veya kayıt hatası:", error);
+      ToastAndroid.show(`Hata: ${error.message}`, ToastAndroid.LONG);
     }
   };
+
+
+  const signChallenge = async () => {
+    try {
+      const challenge = uuid.v4();
+      const result = await SimaModule.signChallenge(challenge, "");
+      if (result) {
+        console.log('Challenge signed successfully:', result.subject);
+      }
+    } catch (error: any) {
+      console.error('Error signing challenge:', error.message);
+    }
+  };
+
   return (
     <>
-      <SafeAreaView style={{backgroundColor: colors.backgroundColor}} />
-      <MainHeader />
+      <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
+      <MainHeader text="" />
       <View style={styles.container}>
         <Text text="SimaSignature" type="semiBold" size="12" />
-        <MainButton text="SimaSignature" onPress={initializeAndRegisterSima} />
+        <MainButton
+          text="SimaSignature"
+          onPress={signChallenge}
+          disabled={sdkInitialized && isRegistered}
+        />
       </View>
     </>
   );

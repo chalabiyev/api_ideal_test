@@ -1,9 +1,4 @@
-import {
-  CalculatorIcon,
-  PaymentIcon,
-  TransactionIcon,
-  VideoRequestIcon,
-} from "../assets";
+import { CalculatorIcon, PaymentIcon, TransactionIcon } from "../assets";
 
 export default [
   {
@@ -14,18 +9,12 @@ export default [
   },
   {
     id: "2",
-    icon: <VideoRequestIcon />,
-    title: "Müraciət",
-    navigateTo: "VideoCall",
-  },
-  {
-    id: "3",
     icon: <CalculatorIcon />,
     title: "Kalkulyator",
     navigateTo: "Calculator",
   },
   {
-    id: "4",
+    id: "3",
     icon: <PaymentIcon />,
     title: "Ödəniş",
     navigateTo: "Calculator",
