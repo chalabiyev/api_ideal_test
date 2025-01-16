@@ -7,6 +7,7 @@ import MainButton from "../../../components/Fit/Button/MainButton";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import SimaModule from "../../../components/Sima/SimaModule";
 import { PERMISSIONS, check, RESULTS, request } from "react-native-permissions";
+import uuid from "react-native-uuid";
 
 const clientId = 3144201;
 const language = "az";
@@ -59,7 +60,7 @@ export default function SimaSignature() {
         clientId,
         sdkLanguage
       );
-      console.log(initResult);
+      console.log("initResult", initResult);
       setSdkInitialized(true);
 
       const registerResult = await SimaModule.register();
@@ -76,6 +77,19 @@ export default function SimaSignature() {
     }
   };
 
+
+  const signChallenge = async () => {
+    try {
+      const challenge = uuid.v4();
+      const result = await SimaModule.signChallenge(challenge, "");
+      if (result) {
+        console.log('Challenge signed successfully:', result.subject);
+      }
+    } catch (error: any) {
+      console.error('Error signing challenge:', error.message);
+    }
+  };
+
   return (
     <>
       <SafeAreaView style={{ backgroundColor: colors.backgroundColor }} />
@@ -84,7 +98,7 @@ export default function SimaSignature() {
         <Text text="SimaSignature" type="semiBold" size="12" />
         <MainButton
           text="SimaSignature"
-          onPress={initializeAndRegisterSima}
+          onPress={signChallenge}
           disabled={sdkInitialized && isRegistered}
         />
       </View>
