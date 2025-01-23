@@ -4,7 +4,11 @@ import { Card, Button, Grid, TextField, Typography, Box, Divider } from '@mui/ma
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { CreditRequest } from 'src/types/CreditRequestDto';
-import { acceptCreditRequestByAdmin, getCreditRequest, rejectCreditRequestByAdmin } from 'src/api/CreditService';
+import {
+  acceptCreditRequestByAdmin,
+  getCreditRequest,
+  rejectCreditRequestByAdmin,
+} from 'src/api/CreditService';
 import { creditTypeMap } from 'src/components/Applications';
 import { toast } from 'sonner';
 import { Label } from 'recharts';
@@ -31,7 +35,7 @@ const Muraciet = () => {
     } else {
       toast.error('Müraciət təsdiq edilə bilmədi');
     }
-  }
+  };
 
   const handleReject = async () => {
     if (!id) return;
@@ -41,7 +45,7 @@ const Muraciet = () => {
     } else {
       toast.error('Müraciət ləğv edilə bilmədi');
     }
-  }
+  };
 
   const handleDownloadContract = () => {
     if (!data.contractFileName) return;
@@ -53,7 +57,7 @@ const Muraciet = () => {
       document.body.appendChild(link);
       link.click();
     });
-  }
+  };
 
   const handleDownloadVideoSign = () => {
     if (!data.videoSignFileName) return;
@@ -65,8 +69,7 @@ const Muraciet = () => {
       document.body.appendChild(link);
       link.click();
     });
-  }
-
+  };
 
   return (
     <>
@@ -76,12 +79,18 @@ const Muraciet = () => {
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Müraciət edənin adı soyadı"
-          links={[
-            { name: 'Bütün Müraciətlər', href: '/esassehife/statistika' },
-            { name: data.requestedUser?.name?.concat(' ').concat(data.requestedUser?.surname!) },
-            { name: data.creditType ? creditTypeMap[data.creditType] : '' },
-          ]}
+          heading={`${
+            data.requestedUser?.name
+              ? data.requestedUser.name.charAt(0).toUpperCase() +
+                data.requestedUser.name.slice(1).toLowerCase()
+              : ''
+          } ${
+            data.requestedUser?.surname
+              ? data.requestedUser.surname.charAt(0).toUpperCase() +
+                data.requestedUser.surname.slice(1).toLowerCase()
+              : ''
+          }`}
+          links={[{ name: 'Bütün Müraciətlər', href: '/esassehife/statistika' }]}
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -94,7 +103,22 @@ const Muraciet = () => {
           <Grid container spacing={3}>
             {/* Full Name */}
             <Grid item xs={12} md={6}>
-              <TextField fullWidth label="Ad Soyad" value={`${data.requestedUser?.name} ${data.requestedUser?.surname}`} variant="outlined" />
+              <TextField
+                fullWidth
+                label="Ad Soyad"
+                value={`${
+                  data.requestedUser?.name
+                    ? data.requestedUser.name.charAt(0).toUpperCase() +
+                      data.requestedUser.name.slice(1).toLowerCase()
+                    : ''
+                } ${
+                  data.requestedUser?.surname
+                    ? data.requestedUser.surname.charAt(0).toUpperCase() +
+                      data.requestedUser.surname.slice(1).toLowerCase()
+                    : ''
+                }`}
+                variant="outlined"
+              />
             </Grid>
 
             {/* Contact Numbers */}
@@ -102,7 +126,7 @@ const Muraciet = () => {
               <TextField
                 fullWidth
                 label="Əlaqə Nömrələri"
-                value={data.otherPhoneNumbers}
+                value={data.otherPhoneNumbers || ''}
                 variant="outlined"
               />
             </Grid>
@@ -111,8 +135,8 @@ const Muraciet = () => {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
+                value={data.phoneNumber || ''}
                 label="Əlaqəli Şəxsin Telefon Nömrəsi"
-                value={data.phoneNumber}
                 variant="outlined"
               />
             </Grid>
@@ -122,7 +146,7 @@ const Muraciet = () => {
               <TextField
                 fullWidth
                 label="Kreditin Məbləği"
-                value={data.creditAmount}
+                value={data.creditAmount || ''}
                 variant="outlined"
               />
             </Grid>
@@ -132,7 +156,7 @@ const Muraciet = () => {
               <TextField
                 fullWidth
                 label="Kreditin Müddəti (Ay)"
-                value={data.creditTerm}
+                value={data.creditTerm || ''}
                 variant="outlined"
               />
             </Grid>
@@ -142,7 +166,7 @@ const Muraciet = () => {
               <TextField
                 fullWidth
                 label="Status (Bank tərəfindən)"
-                value={data.confirmStatus}
+                value={data.confirmStatus || ''}
                 variant="outlined"
               />
             </Grid>
@@ -152,7 +176,7 @@ const Muraciet = () => {
               <TextField
                 fullWidth
                 label="Status (Müştəri tərəfindən)"
-                value={data.activateStatus}
+                value={data.activateStatus || ''}
                 variant="outlined"
               />
             </Grid>
@@ -168,7 +192,12 @@ const Muraciet = () => {
               { label: 'Təcrübə', value: `${data.requestedUser?.experience} il` },
             ].map((item, index) => (
               <Grid key={index} item xs={12} md={6}>
-                <TextField fullWidth label={item.label} value={item.value} variant="outlined" />
+                <TextField
+                  fullWidth
+                  label={item.label || ''}
+                  value={item.value || ''}
+                  variant="outlined"
+                />
               </Grid>
             ))}
 
@@ -183,7 +212,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Adı Soyadı"
-                      value={guarantor.personAz.name}
+                      value={guarantor.personAz.name || ''}
                       variant="outlined"
                     />
                   </Grid>
@@ -191,7 +220,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Seriya Nömrəsi"
-                      value={guarantor.documentNumber}
+                      value={guarantor.documentNumber || ''}
                       variant="outlined"
                     />
                   </Grid>
@@ -199,7 +228,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Əlaqə Telefonu"
-                      value={guarantor.phoneNumber}
+                      value={guarantor.phoneNumber || ''}
                       variant="outlined"
                     />
                   </Grid>
@@ -207,7 +236,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Ünvanı"
-                      value={guarantor.addressDetail.address}
+                      value={guarantor.addressDetail.address || ''}
                       variant="outlined"
                     />
                   </Grid>
@@ -215,7 +244,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin İş Yeri"
-                      value={guarantor.workPlace}
+                      value={guarantor.workPlace || ''}
                       variant="outlined"
                     />
                   </Grid>
@@ -223,7 +252,7 @@ const Muraciet = () => {
                     <TextField
                       fullWidth
                       label="Zaminin Vəzifəsi"
-                      value={guarantor.position}
+                      value={guarantor.position || ''}
                       variant="outlined"
                     />
                   </Grid>
@@ -241,23 +270,29 @@ const Muraciet = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}
+            >
               <Button
                 variant="contained"
                 color="primary"
-                title='Download PDF Contract'
-                startIcon={<Iconify icon="mdi:download" />}
+                title="Download PDF Contract"
+                startIcon={<Iconify icon="fa6-solid:file-pdf" />}
                 onClick={handleDownloadContract}
               >
-                Download PDF Contract
+                Müqaviləyə bax
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                title='Download VideoSign'
-                startIcon={<Iconify icon="mdi:download" />}
-                onClick={handleDownloadVideoSign}>
-                Download VideoSign
+                title="Download VideoSign"
+                startIcon={<Iconify icon="tabler:video-filled" />}
+                onClick={handleDownloadVideoSign}
+              >
+                Video qeydiyyata bax
               </Button>
             </Grid>
             {/* Actions */}
