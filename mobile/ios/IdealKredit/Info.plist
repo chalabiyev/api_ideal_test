@@ -14,6 +14,8 @@
 	<string>6.0</string>
 	<key>NSCameraUsageDescription</key>
 	<string>IdealKredit tətbiqin sənədləri skan etmək və üz tanıma funksiyasını yerinə yetirmək üçün kameraya giriş icazəsinə ehtiyacı var.</string>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>Mikrofon erişimi gerekli.</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>

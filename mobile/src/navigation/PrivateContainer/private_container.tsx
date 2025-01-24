@@ -5,6 +5,10 @@ import {
 } from "@react-navigation/stack";
 import {
   AccountSettings,
+  Activation,
+  ActivationAbove,
+  ActivationBelow,
+  ActivationBelowStep2,
   Calculator,
   Credits,
   CreditsInfo,
@@ -13,9 +17,13 @@ import {
   InsuranceInfo,
   Partners,
   Profile,
+  Scoring,
+  SelectPartners,
+  Signature,
   Transaction,
   VideoCall,
 } from "../../screens";
+import Chat from "../../screens/Main/Chat";
 
 export default function PrivateStack() {
   const { Navigator, Screen } = createStackNavigator();
@@ -39,6 +47,13 @@ export default function PrivateStack() {
       <Screen name="Profile" component={Profile} />
       <Screen name="AccountSettings" component={AccountSettings} />
       <Screen name="VideoCall" component={VideoCall} />
+      <Screen name="Signature" component={Signature} />
+      <Screen name="SelectPartners" component={SelectPartners} />
+      <Screen name="Scoring" component={Scoring} />
+      <Screen name="Chat" component={Chat} />
+      <Screen name="ActivationAbove" component={ActivationAbove} />
+      <Screen name="ActivationBelow" component={ActivationBelow} />
+      <Screen name="ActivationBelowStep2" component={ActivationBelowStep2} />
     </Navigator>
   );
 }

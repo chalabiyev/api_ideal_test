@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -7,26 +7,31 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-} from 'react-native';
-import {makeStyles} from './style';
-import {BottomNavigationContainer, Container, Text} from '../../../components';
-import colors from '../../../constants/colors/colors';
-import {globalSpacingStyle} from '../../../constants/space/style';
-import {TabBar, TabView} from 'react-native-tab-view';
-import CreditsData from '../../../mockupData/CreditsData';
-import CurrentCreditData from '../../../mockupData/CurrentCreditData';
-import {useNavigation} from '@react-navigation/native';
+} from "react-native";
+import { makeStyles } from "./style";
+import {
+  BottomNavigationContainer,
+  Container,
+  Text,
+} from "../../../components";
+import colors from "../../../constants/colors/colors";
+import { globalSpacingStyle } from "../../../constants/space/style";
+import { TabBar, TabView } from "react-native-tab-view";
+import CreditsData from "../../../mockupData/CreditsData";
+import CurrentCreditData from "../../../mockupData/CurrentCreditData";
+import { useNavigation } from "@react-navigation/native";
 const styles = makeStyles();
 const globalStyle = globalSpacingStyle();
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const FirstRoute = () => {
   const navigation = useNavigation();
 
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.box}
-      onPress={() => navigation.navigate('CreditsInfo', {CreditsData: item})}>
+      onPress={() => navigation.navigate("CreditsInfo", { CreditsData: item })}
+    >
       <View style={styles.top}>
         <Text
           text={item.title}
@@ -57,10 +62,11 @@ const FirstRoute = () => {
               activeOpacity={0.8}
               style={styles.firstBox}
               onPress={() =>
-                navigation.navigate('CreditsInfo', {
+                navigation.navigate("CreditsInfo", {
                   CreditsData: CreditsData[0],
                 })
-              }>
+              }
+            >
               <View style={styles.top}>
                 <Text
                   text={CreditsData[0].title}
@@ -83,17 +89,18 @@ const FirstRoute = () => {
         <FlatList
           data={filteredData}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           numColumns={numColumns}
-          columnWrapperStyle={{justifyContent: 'space-between'}}
-          contentContainerStyle={{paddingHorizontal: 16}}
+          columnWrapperStyle={{ justifyContent: "space-between" }}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
         />
       </ScrollView>
     </View>
   );
 };
 const SecondRoute = () => {
-  const renderItem = ({item}) => (
+  const navigation = useNavigation();
+  const renderItem = ({ item }) => (
     <View style={styles.currentCreditBox}>
       <View style={styles.secondRouteBoxLeft}>
         <View>
@@ -104,8 +111,17 @@ const SecondRoute = () => {
             position="left"
             isWhite
           />
+          <View style={globalStyle.space50VT} />
           <Text
-            text={item.price + ' ₼'}
+            text={
+              item.price +
+              " ₼" +
+              "      " +
+              item.mounth +
+              "  ay" +
+              "      " +
+              item.percent
+            }
             type="semiBold"
             size="14"
             position="left"
@@ -123,19 +139,41 @@ const SecondRoute = () => {
         </View>
       </View>
       <View style={styles.secondRouteBoxRight}>
-        <Text
-          text={item.status}
-          type="semiBold"
-          size="14"
-          position="left"
-          color={
-            item.status === 'İmtina'
-              ? 'red'
-              : item.status === 'Təsdiqlənib'
-              ? 'green'
-              : 'yellow'
-          }
-        />
+        <View
+          style={{
+            paddingVertical: 5,
+            width: "100%",
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor:
+              item.status === "Təsdiqlənib"
+                ? "#54FF6F"
+                : item.status === "İmtina olunub"
+                ? "#FF5454"
+                : "#FFD954",
+          }}
+        >
+          <Text text={item.status} type="regular" size="14" position="left" />
+        </View>
+        {item.activeCredit === "true" && (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(
+                item.type === "above" ? "ActivationAbove" : "ActivationBelow"
+              )
+            }
+            style={styles.activeButton}
+          >
+            <Text
+              text="Aktivləşdir"
+              type="regular"
+              size="16"
+              position="left"
+              isWhite
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -149,7 +187,7 @@ const SecondRoute = () => {
           showsVerticalScrollIndicator={false}
           data={CurrentCreditData}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.contentContainerStyle}
         />
       </Container>
@@ -160,14 +198,14 @@ const renderTabBar = (props: any) => {
   return (
     <TabBar
       {...props}
-      indicatorStyle={{backgroundColor: colors.tabBarColor}}
-      style={{backgroundColor: colors.greyBackground}}
-      renderLabel={({route, focused}) => (
+      indicatorStyle={{ backgroundColor: colors.tabBarColor }}
+      style={{ backgroundColor: colors.greyBackground }}
+      renderLabel={({ route, focused }) => (
         <Text
           text={route.title}
           size="14"
           type="semiBold"
-          color={focused ? colors.tabBarColor : 'gray'}
+          color={focused ? colors.tabBarColor : "gray"}
           textTransform="none"
         />
       )}
@@ -175,18 +213,18 @@ const renderTabBar = (props: any) => {
   );
 };
 export default function Credits() {
-  const initialLayout = {width: Dimensions.get('window').width};
+  const initialLayout = { width: Dimensions.get("window").width };
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'first', title: 'Müraciət et'},
-    {key: 'second', title: 'Cari kreditlər'},
+    { key: "first", title: "Müraciət et" },
+    { key: "second", title: "Cari kreditlər" },
   ]);
 
-  const renderScene = ({route}: any) => {
+  const renderScene = ({ route }: any) => {
     switch (route.key) {
-      case 'first':
+      case "first":
         return <FirstRoute />;
-      case 'second':
+      case "second":
         return <SecondRoute />;
       default:
         return null;
@@ -195,17 +233,17 @@ export default function Credits() {
 
   return (
     <>
-      <SafeAreaView style={{backgroundColor: colors.greyBackground}} />
+      <SafeAreaView style={{ backgroundColor: colors.greyBackground }} />
       <View style={styles.container}>
         <Text text="Kreditlər" type="semiBold" size="20" position="center" />
         <TabView
-          navigationState={{index, routes}}
+          navigationState={{ index, routes }}
           renderScene={renderScene}
           renderTabBar={renderTabBar}
           onIndexChange={setIndex}
           initialLayout={initialLayout}
         />
-        <View style={{width: '100%', alignItems: 'center'}}>
+        <View style={{ width: "100%", alignItems: "center" }}>
           <BottomNavigationContainer />
         </View>
       </View>

@@ -2,13 +2,11 @@
 import Splash from "./Auth/Splash";
 import Login from "./Auth/Login/Login";
 import Register from "./Auth/Register/Register";
-import Birthday from "./Auth/Birthday";
 import TelephoneNumber from "./Auth/TelephoneNumber";
 import Otp from "./Auth/Otp";
 import Agreements from "./Auth/Agreements";
 import Password from "./Auth/Password";
-import ProfileInformations from "./Auth/ProfileInformations";
-import BankInformations from "./Auth/BankInformations";
+import SecurityCode from "./Auth/SecurityCode";
 
 //Main
 import Home from "./Main/Home";
@@ -22,8 +20,20 @@ import Calculator from "./Main/Calculator";
 import Profile from "./Main/Profile";
 import AccountSettings from "./Main/AccountSettings";
 import VideoCall from "./Main/VideoCall";
-
+import Signature from "./Main/Signature";
+import SelectPartners from "./Main/SelectPartners";
+import Scoring from "./Main/Scoring";
+import ActivationAbove from "./Main/ActivationAbove";
+import ActivationBelow from "./Main/ActivationBelow";
+import ActivationBelowStep2 from "./Main/ActivationBelowStep2";
 export {
+  ActivationBelowStep2,
+  ActivationBelow,
+  ActivationAbove,
+  Scoring,
+  SelectPartners,
+  Signature,
+  SecurityCode,
   VideoCall,
   AccountSettings,
   Profile,
@@ -34,14 +44,11 @@ export {
   Credits,
   Partners,
   Transaction,
-  BankInformations,
-  ProfileInformations,
   Password,
   Splash,
   Login,
   Home,
   Register,
-  Birthday,
   TelephoneNumber,
   Otp,
   Agreements,
