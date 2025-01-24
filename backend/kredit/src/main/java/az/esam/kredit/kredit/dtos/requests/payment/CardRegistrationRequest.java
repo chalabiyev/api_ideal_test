@@ -1,16 +1,14 @@
 package az.esam.kredit.kredit.dtos.requests.payment;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @ToString
 @Document(collection = "cardRegistration_requests")
 public class CardRegistrationRequest {
@@ -25,7 +23,6 @@ public class CardRegistrationRequest {
  */
 
     private int refund;
-    private String order_id;
     private String description;
     private String success_redirect_url;
     private String error_redirect_url;
