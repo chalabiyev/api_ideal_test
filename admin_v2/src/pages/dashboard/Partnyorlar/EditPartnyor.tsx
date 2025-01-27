@@ -1,84 +1,206 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Tab } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, Tab } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import useApi from 'src/api/useApi';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { EmptyContent } from 'src/components/empty-content';
+import { LoadingScreen } from 'src/components/loading-screen';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { EOwnerType } from 'src/types/CreditRequestDto';
+import ProfileTab from './ProfileTab';
+import SubmitPartnerButton from './SubmitPartnerButton';
+import PageControl from './PageControl';
+import FizikiMuqavile from './FizikiMuqavile';
+import BankInfoTab from './BankInfoTab';
+import PatchPartnerButton from './PatchPartnerButton';
 
 const metadata = { title: `Partnyor | Düzəliş et` };
 
-enum PartnerType {
-  fiziki = 'FIZIKI',
-  huqiqi = 'HUQUQI',
-}
-
-const EditPartnyor = () => {
+export default function Page() {
   // bu sayfada path kismindaki id = editledigimiz partnerin id si
   const { id } = useParams();
 
-  //   const {  data: partnerData, hasData: hasPartnerData,   loading: partnerLoading,   error: partnerError,   refetch: partnerRefetch, } = useApi(`endpointgelecekburaya/${id}`);
-
-  // ILKIN burada partnerin huqiqi mi fiziki mi oldugunu kontrol etmemiz gerekli.
-  // buna uygun olarak bazı inputlar gösterilecek, bazıları gizli olacak
-
-  //   const { partnerType, setPartnerType } = useState<PartnerType>(PartnerType.fiziki);
-
-  //   useEffect(() => {
-  //     // partnerin fiziki mi huquqi mi oldugunu burada set ediyoruz
-  //     if (partnerData.formOfOwnership === 'FIZIKI') {
-  //       setPartnerType(PartnerType.fiziki);
-  //     } else {
-  //       setPartnerType(PartnerType.huqiqi);
-  //     }
-  //   }, [partnerData]);
+  const {
+    data: partnerDataFromBackend,
+    hasData: hasPartnerData,
+    loading: partnerLoading,
+    error: partnerError,
+    refetch: partnerRefetch,
+  } = useApi(`partner/get?id=${id}`);
 
   //   bunlar tablar
   const [value, setValue] = React.useState('1');
 
+  if (partnerLoading) {
+    <LoadingScreen />;
+  }
+  const [uploadedFile, setUploadedFile] = useState(null);
+  // partner type
+  const [partnerType, setPartnerType] = React.useState<EOwnerType>(EOwnerType.HUQUQI);
+
+  // tablar
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
+  // partner datalari
+  const [partnerData, setPartnerData] = useState<any>({
+    // 1
+    formOfOwnership: partnerType,
+    image: '1737973152068_Your_Logo_Here.png',
+    phoneNumber: '',
+    businessName: '', //
+    companyName: '',
+    directorName: '',
+    voen: null,
+    // ANCAQ HUQUQI
+    establishmentDocument: '',
+    // ANCAQ HUQUQI
+    identityCard: '',
+    rentContract: '',
+    companyImages: [],
+    monthlySales: 321,
+    startDate: '',
+    activityType: '',
+    country: '',
+    city: '',
+    address: '',
+    // 2
+
+    bank: '',
+    clientBankAccount: '',
+    reportBankAccount: '',
+    bankCode: null,
+    bankVoen: null,
+    swiftCode: '',
+    // 3
+    singableContract: '',
+  });
+
+  useEffect(() => {
+    console.log('changed : ', partnerData);
+  }, [partnerData]);
+
+  useEffect(() => {
+    if (hasPartnerData) {
+      console.log('data', partnerDataFromBackend);
+      setPartnerData(partnerDataFromBackend);
+      setPartnerType(partnerDataFromBackend.formOfOwnership);
+      setLogoPreview(partnerDataFromBackend.image);
+      setIdFilePreview(partnerDataFromBackend.identityCard);
+      setOtherFilesPreview({
+        rentContract: partnerDataFromBackend.rentContract,
+        establishmentDocument: partnerDataFromBackend.establishmentDocument,
+        companyImages: partnerDataFromBackend.companyImages,
+      });
+      setUploadedFile(partnerDataFromBackend.singableContract);
+    }
+  }, [hasPartnerData]);
+
+  // eger huqiquden fizikiye gecis yaparsa bu input sifirlanmali
+  useEffect(() => {
+    setPartnerData((prev: any) => ({
+      ...prev,
+      formOfOwnership: partnerType,
+    }));
+    if (partnerType === EOwnerType.FIZIKI) {
+      setOtherFilesPreview((prev: any) => ({
+        ...prev,
+        establishmentDocument: '',
+      }));
+
+      setPartnerData((prev: any) => ({
+        ...prev,
+        establishmentDocument: '',
+      }));
+    }
+  }, [partnerType]);
+
+  // tab1
+  const [logoPreview, setLogoPreview] = useState<string | null>(partnerData?.image || null);
+  const [idFilePreview, setIdFilePreview] = useState<string | null>(
+    partnerData?.identityCard || null
+  );
+  const [otherFilesPreview, setOtherFilesPreview] = useState({
+    rentContract: partnerData?.rentContract || null,
+    establishmentDocument: partnerData?.establishmentDocument || '',
+    companyImages: partnerData?.companyImages || [],
+  });
+
   return (
     <>
-      {' '}
       <Helmet>
         <title> {metadata.title}</title>
       </Helmet>
+
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Partnerin adı gelecek"
-          links={[{ name: 'Bütün Partnyor', href: '/partynorlar/list' }, { name: 'Düzəliş et' }]}
+          heading={`Düzəliş et: ${partnerDataFromBackend?.businessName}`}
+          links={[
+            { name: 'Bütün partnyorlar', href: '/partynorlar/list' },
+            { name: ' Düzəliş et' },
+          ]}
           sx={{ mb: { xs: 3, md: 5 } }}
         />
-
-        <Box sx={{ width: '100%', typography: 'body1' }}>
+        <Box className="">
+          <FormControl>
+            <InputLabel id="demo-simple-select-label">Partnyor tipi</InputLabel>
+            <Select
+              sx={{
+                borderRadius: 2,
+              }}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select-label"
+              value={partnerType}
+              label="Partnyor tipi"
+              onChange={(e) => setPartnerType(e.target.value as EOwnerType)}
+            >
+              <MenuItem value={EOwnerType.FIZIKI}>Fiziki partnyor</MenuItem>
+              <MenuItem value={EOwnerType.HUQUQI}>Hüquqi partnyor</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Box sx={{ width: '100%', typography: 'body1', p: 2 }}>
           <TabContext value={value}>
             <Box sx={{ borderColor: 'Background' }}>
               <TabList onChange={handleChange} aria-label="lab API tabs">
                 <Tab label="Profil" value="1" />
                 <Tab label="Bank məlumatları" value="2" />
-                {/* <Tab label="Müqavilə" value="3" /> */}
+                <Tab label="Müqavilə" value="3" />
               </TabList>
             </Box>
             <TabPanel sx={{ py: 3, px: 0 }} value="1">
-              {/* parner eger fiziki ise bu tab  */}
-              {/* <ProfileTab /> */}
-              {/* huquqi ise bu tab  */}
-              {/* <LegalProfileTab /> */}
+              <ProfileTab
+                otherFilesPreview={otherFilesPreview}
+                setOtherFilesPreview={setOtherFilesPreview}
+                idFilePreview={idFilePreview}
+                setIdFilePreview={setIdFilePreview}
+                partnerType={partnerType}
+                setPartnerType={setPartnerType}
+                partnerData={partnerData}
+                setPartnerData={setPartnerData}
+                logoPreview={logoPreview}
+                setLogoPreview={setLogoPreview}
+              />
             </TabPanel>
             <TabPanel sx={{ py: 3, px: 0 }} value="2">
-              {/* <BankInfoTab /> */}
+              <BankInfoTab partnerData={partnerData} setPartnerData={setPartnerData} />
             </TabPanel>
-            {/* <TabPanel sx={{ py: 3, px: 0 }} value="3">
-              <FizikiMuqavile />
-            </TabPanel> */}
+            <TabPanel sx={{ py: 3, px: 0 }} value="3">
+              <FizikiMuqavile
+                uploadedFile={uploadedFile}
+                setUploadedFile={setUploadedFile}
+                setPartnerData={setPartnerData}
+                setOtherFilesPreview={setOtherFilesPreview}
+              />
+            </TabPanel>
           </TabContext>
+          <PageControl value={value} setValue={setValue} />
+          <PatchPartnerButton id={id} partnerData={partnerData} />
         </Box>
       </DashboardContent>
     </>
   );
-};
-
-export default EditPartnyor;
+}

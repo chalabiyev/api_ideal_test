@@ -159,6 +159,7 @@ export enum EStatus {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
+  NEW = 'NEW',
 }
 
 export interface Partner {

@@ -23,9 +23,12 @@ import FizikiMuqavile from './FizikiMuqavile';
 import { ActivityType, EOwnerType } from 'src/types/CreditRequestDto';
 import SubmitPartnerButton from './SubmitPartnerButton';
 import PageControl from './PageControl';
+import { RouterLink } from 'src/routes/components';
+import { paths } from 'src/routes/paths';
 
 const metadata = { title: `Yeni partnyor` };
 export default function Page() {
+  const [uploadedFile, setUploadedFile] = useState(null);
   // partner type
   const [partnerType, setPartnerType] = React.useState<EOwnerType>(EOwnerType.HUQUQI);
 
@@ -39,47 +42,53 @@ export default function Page() {
   const [partnerData, setPartnerData] = useState<any>({
     // 1
     formOfOwnership: partnerType,
-    image: '1735127578079_1735112882144_SDGFFDS_Image.avif',
-    businessName: 'test', //
-    companyName: 'test',
-    directorName: 'test',
-    voen: 543242342,
+    image: '1737973152068_Your_Logo_Here.png',
+    phoneNumber: '',
+    businessName: '', //
+    companyName: '',
+    directorName: '',
+    voen: null,
     // ANCAQ HUQUQI
-    establishmentDocument: ['1735127578079_1735112882144_SDGFFDS_Image.avif'],
+    establishmentDocument: '',
     // ANCAQ HUQUQI
-    identityCard: '1735127578079_1735112882144_SDGFFDS_Image.avif',
-    rentContract: '1735127578079_1735112882144_SDGFFDS_Image.avif',
-    companyImages: ['1735127578079_1735112882144_SDGFFDS_Image.avif'],
-    monthlySales: 10,
+    identityCard: '',
+    rentContract: '',
+    companyImages: [],
+    monthlySales: 321,
     startDate: new Date().toISOString().split('T')[0],
-    activityType: 'SALES',
-    country: 'Azərbaycan',
-    city: 'Bakı',
-    address: 'test',
+    activityType: '',
+    country: '',
+    city: '',
+    address: '',
     // 2
 
-    bank: 'test',
-    clientBankAccount: 'test',
-    reportBankAccount: 'test',
-    bankCode: 123,
-    bankVoen: 5433,
-    swiftCode: 'test',
+    bank: '',
+    clientBankAccount: '',
+    reportBankAccount: '',
+    bankCode: null,
+    bankVoen: null,
+    swiftCode: '',
     // 3
-    signableContract: '',
+    singableContract: '',
   });
 
   // eger huqiquden fizikiye gecis yaparsa bu input sifirlanmali
   useEffect(() => {
     console.log('partnerData : ', partnerData);
+
+    setPartnerData((prev: any) => ({
+      ...prev,
+      formOfOwnership: partnerType,
+    }));
     if (partnerType === EOwnerType.FIZIKI) {
       setOtherFilesPreview((prev: any) => ({
         ...prev,
-        establishmentDocument: [],
+        establishmentDocument: '',
       }));
 
       setPartnerData((prev: any) => ({
         ...prev,
-        establishmentDocument: [],
+        establishmentDocument: '',
       }));
     }
   }, [partnerType]);
@@ -93,7 +102,7 @@ export default function Page() {
   );
   const [otherFilesPreview, setOtherFilesPreview] = useState({
     rentContract: partnerData?.rentContract || null,
-    establishmentDocument: partnerData?.establishmentDocument || [],
+    establishmentDocument: partnerData?.establishmentDocument || '',
     companyImages: partnerData?.companyImages || [],
   });
 
@@ -123,7 +132,13 @@ export default function Page() {
               id="demo-simple-select-label"
               value={partnerType}
               label="Partnyor tipi"
-              onChange={(e) => setPartnerType(e.target.value as EOwnerType)}
+              onChange={() => {
+                if (partnerType === EOwnerType.FIZIKI) {
+                  setPartnerType(EOwnerType.HUQUQI);
+                } else {
+                  setPartnerType(EOwnerType.FIZIKI);
+                }
+              }}
             >
               <MenuItem value={EOwnerType.FIZIKI}>Fiziki partnyor</MenuItem>
               <MenuItem value={EOwnerType.HUQUQI}>Hüquqi partnyor</MenuItem>
@@ -158,6 +173,8 @@ export default function Page() {
             </TabPanel>
             <TabPanel sx={{ py: 3, px: 0 }} value="3">
               <FizikiMuqavile
+                uploadedFile={uploadedFile}
+                setUploadedFile={setUploadedFile}
                 setPartnerData={setPartnerData}
                 setOtherFilesPreview={setOtherFilesPreview}
               />

@@ -19,7 +19,7 @@ export default function BankInfoTab({
           <TextField
             fullWidth
             label="VÖEN"
-            value={partnerData?.voen}
+            value={partnerData?.voen || ''}
             onChange={(e) => {
               const { value } = e.target;
               if (/^\d*$/.test(value)) {
@@ -35,7 +35,7 @@ export default function BankInfoTab({
             fullWidth
             label="Bank və filial"
             placeholder="Bank və filialını daxil edin"
-            value={partnerData?.bank}
+            value={partnerData?.bank || ''}
             onChange={(e) => handlePartnerDataChange('bank', e.target.value.toUpperCase())}
           />
         </Grid>
@@ -46,7 +46,7 @@ export default function BankInfoTab({
             fullWidth
             label="Müştəri Hesabı"
             placeholder="Müştəri Hesabını daxil edin"
-            value={partnerData?.clientBankAccount.toUpperCase()}
+            value={partnerData?.clientBankAccount.toUpperCase() || ''}
             onChange={(e) =>
               handlePartnerDataChange('clientBankAccount', e.target.value.toUpperCase())
             }
@@ -71,7 +71,7 @@ export default function BankInfoTab({
           <TextField
             fullWidth
             label="Kod"
-            value={partnerData?.bankCode}
+            value={partnerData?.bankCode || ''}
             onChange={(e) => {
               const { value } = e.target;
               if (/^\d*$/.test(value)) {
@@ -86,7 +86,7 @@ export default function BankInfoTab({
           <TextField
             fullWidth
             label="Bank VÖEN"
-            value={partnerData?.bankVoen}
+            value={partnerData?.bankVoen || ''}
             onChange={(e) => {
               const { value } = e.target;
               if (/^\d*$/.test(value)) {
