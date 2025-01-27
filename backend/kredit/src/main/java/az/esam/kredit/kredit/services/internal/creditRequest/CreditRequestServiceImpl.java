@@ -85,6 +85,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         request.setAmountToBePaid(amountToPay);
 
         request.setConfirmStatus(CreditRequestStatusEnum.Requested);
+        request.setActivateStatus(EActivateStatus.PENDING);
 
         // muracite baxilir sms
         smsService.sendSMSOneToN(SendSmsRequest.builder()
@@ -92,7 +93,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
                 .build());
 
-        creditRequestRepository.insert(request);
         if (request.getPartner() != null) {
             request.setCreditType(ECreditType.PARTNER_CREDIT);
         } else if (request.getCreditAmount() > 500d) {
@@ -100,6 +100,8 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         } else if (request.getCreditAmount() < 500d) {
             request.setCreditType(ECreditType.BELOW_500);
         }
+
+        creditRequestRepository.insert(request);
 
         boolean flag = false;
         if (request.getCreditType() != null && request.getCreditType().equals(ECreditType.BELOW_500)) {
@@ -125,7 +127,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             // TODO check if user has active credit
             if (!flag) {
                 request.setConfirmStatus(CreditRequestStatusEnum.Accepted);
-                request.setActivateStatus(EActivateStatus.PENDING);
 
                 // muraciet tesdiqlendi sms
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
