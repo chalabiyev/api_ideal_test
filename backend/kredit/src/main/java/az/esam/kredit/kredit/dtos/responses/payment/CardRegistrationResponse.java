@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.payment;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "cardRegistration_responses")
 public class CardRegistrationResponse {
 
@@ -35,4 +37,5 @@ public class CardRegistrationResponse {
     private String rrn;
     private String card_name;
     private String card_mask;
+    private String redirect_url;
 }
