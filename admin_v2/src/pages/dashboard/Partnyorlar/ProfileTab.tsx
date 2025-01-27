@@ -47,12 +47,12 @@ const ProfileTab = ({
 }) => {
   const faaliyetSahesiOptions = [
     { label: 'IT', value: 'IT' },
-    { label: 'MARKETING', value: 'MARKETING' },
-    { label: 'FINANCE', value: 'FINANCE' },
-    { label: 'SALES', value: 'SALES' },
+    { label: 'Marketinq', value: 'MARKETING' },
+    { label: 'Finans', value: 'FINANCE' },
+    { label: 'Satış', value: 'SALES' },
     { label: 'HR', value: 'HR' },
-    { label: 'LOGISTICS', value: 'LOGISTICS' },
-    { label: 'OTHER', value: 'OTHER' },
+    { label: 'Logistika', value: 'LOGISTICS' },
+    { label: 'Digər', value: 'OTHER' },
   ];
   const { postData: uploadFile, response: uploadFileResponse } = usePostFile('file/uploadFile');
   const { postData: uploadMultipleFile, response: uploadMultipleFileResponse } =
@@ -130,9 +130,9 @@ const ProfileTab = ({
               src={
                 logoPreview
                   ? `${BASE_URL}/file/getPublicFile/${logoPreview}`
-                  : 'https://via.placeholder.com/700x700?text=Sekil+yükləmək+ucun+kliklə'
+                  : 'https://via.placeholder.com/700x700?text=se%20se%20se%20se'
               }
-              alt="Selected"
+              alt="Şəkil əlavə etmək üçün kliklə"
               style={{ width: '100%', height: 'auto', borderRadius: 4 }}
             />
             <input
@@ -180,8 +180,16 @@ const ProfileTab = ({
       <Grid item xs={12} sm={6}>
         <TextField
           fullWidth
+          label="Telefon"
+          value={partnerData?.phoneNumber}
+          onChange={(e) => handlePartnerDataChange('phoneNumber', e.target.value)}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
           label="VÖEN"
-          value={partnerData?.voen}
+          value={partnerData?.voen || ''}
           onChange={(e) => handlePartnerDataChange('voen', e.target.value)}
         />
       </Grid>
@@ -189,12 +197,12 @@ const ProfileTab = ({
         <Grid item xs={12}>
           <Card sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
-              Şirkətin təsis sənədləri
+              Şirkətin təsis sənədi
             </Typography>
             <EstablishmentDocumentUI
               otherFilesPreview={otherFilesPreview}
               setOtherFilesPreview={setOtherFilesPreview}
-              uploadMultipleFile={uploadMultipleFile}
+              uploadFile={uploadFile}
               setPartnerData={setPartnerData}
             />
             <Typography sx={{ ml: 1 }} variant="caption" color="text.secondary">
@@ -259,7 +267,7 @@ const ProfileTab = ({
         <TextField
           fullWidth
           label="Aylıq Satış Həcmi"
-          value={partnerData?.monthlySales}
+          value={partnerData?.monthlySales || 100}
           onChange={(e) => {
             const { value } = e.target;
 
@@ -274,10 +282,9 @@ const ProfileTab = ({
           fullWidth
           label="Fəaliyyətə Başlama Tarixi"
           type="date"
-          defaultValue="2024-12-12"
           InputLabelProps={{ shrink: true }}
-          value={partnerData?.startDate}
-          onChange={(e) => handlePartnerDataChange('startDate', e.target.value)}
+          value={partnerData?.startDate.split('T')[0]}
+          onChange={(e) => handlePartnerDataChange('startDate', `${e.target.value}T00:00:00.000Z`)}
         />
       </Grid>
       <Grid item xs={12} sm={6}>

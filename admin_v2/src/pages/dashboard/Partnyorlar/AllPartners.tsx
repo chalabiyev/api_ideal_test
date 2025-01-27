@@ -22,18 +22,32 @@ import {
   DialogActions,
   SelectChangeEvent,
   Popover,
+  Tooltip,
 } from '@mui/material';
 import { ArrowRightIcon } from '@mui/x-date-pickers';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { toast } from 'sonner';
 import { postChangePartnerStatus } from 'src/api/PartnerService';
 import useApi from 'src/api/useApi';
+import useDelete from 'src/api/useDelete';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
 import { EOwnerType, EStatus, Partner } from 'src/types/CreditRequestDto';
+
+const faaliyetSahesiOptions = [
+  { label: 'IT', value: 'IT' },
+  { label: 'Marketinq', value: 'MARKETING' },
+  { label: 'Finans', value: 'FINANCE' },
+  { label: 'Satış', value: 'SALES' },
+  { label: 'HR', value: 'HR' },
+  { label: 'Logistika', value: 'LOGISTICS' },
+  { label: 'Digər', value: 'OTHER' },
+];
 
 // const getTabCounts = (data: Partner[]) => ({
 //   all: data?.length,
@@ -52,10 +66,12 @@ const getTabCounts = (data: Partner[] | null | undefined) => {
     active: data.filter((row) => row.status === EStatus.ACCEPTED).length,
     pending: data.filter((row) => row.status === EStatus.PENDING).length,
     deactive: data.filter((row) => row.status === EStatus.REJECTED).length,
+    new: data.filter((row) => row.status === EStatus.NEW).length,
   };
 };
 
 export default function Kredit() {
+  const { deleteData: deleteItem } = useDelete('/partner/delete?id=');
   const router = useRouter();
   const [tabValue, setTabValue] = useState('all');
   const [search, setSearch] = useState('');
@@ -63,7 +79,13 @@ export default function Kredit() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [activityFilter, setActivityFilter] = useState('all');
 
-  const { data: partnerList, hasData: partnerHasData, loading, error } = useApi('/partner/listAll');
+  const {
+    data: partnerList,
+    hasData: partnerHasData,
+    loading,
+    error,
+    refetch,
+  } = useApi('/partner/listAll');
 
   //   popup
   const [openPopup, setOpenPopup] = useState(false);
@@ -90,17 +112,12 @@ export default function Kredit() {
 
   const isPopupOpen = Boolean(anchorEl);
 
-  const handleActivateClick = (row: any) => {
-    setSelectedRow(row);
-    setOpenPopup(true);
-  };
-
   const handleActivityFilterChange = (event: any) => {
     setActivityFilter(event.target.value);
   };
   const tabCounts = partnerHasData
     ? getTabCounts(partnerList)
-    : { all: 0, active: 0, pending: 0, deactive: 0 };
+    : { all: 0, active: 0, pending: 0, deactive: 0, new: 0 };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
@@ -117,6 +134,12 @@ export default function Kredit() {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+  const handleDelete = (id: any) => {
+    deleteItem(id).then(() => {
+      refetch();
+      toast.success('Partnyor silindi');
+    });
   };
 
   const filteredData = partnerList
@@ -145,6 +168,17 @@ export default function Kredit() {
           heading="Partnyorların cədvəli"
           links={[{ name: 'Partnyorlar' }]}
           sx={{ mb: { xs: 3, md: 5 } }}
+          action={
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={() => {
+                router.push(paths.partners.yenipartnyor.fiziki);
+              }}
+            >
+              Yeni partnyor
+            </Button>
+          }
         />
 
         {/* Tabs */}
@@ -171,6 +205,12 @@ export default function Kredit() {
                     label: 'Gözlənilir',
                     count: tabCounts.pending,
                     color: 'warning',
+                  },
+                  {
+                    value: EStatus.NEW,
+                    label: 'Yeni',
+                    count: tabCounts.new,
+                    color: 'default',
                   },
                 ].map((tab) => (
                   <Tab
@@ -215,10 +255,11 @@ export default function Kredit() {
                   Şirkətin fəaliyyət sahəsi
                 </MenuItem>
                 <MenuItem value="all">Hamısı</MenuItem>
-                <MenuItem value="ticarət">Ticarət</MenuItem>
-                <MenuItem value="qida">Qida</MenuItem>
-                <MenuItem value="xidmət">Xidmət</MenuItem>
-                <MenuItem value="istehsal">İstehsal</MenuItem>
+                {faaliyetSahesiOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </Select>
             </Box>
 
@@ -229,7 +270,7 @@ export default function Kredit() {
                   <TableHead>
                     <TableRow>
                       <TableCell sx={{ minWidth: '100px' }}>N°</TableCell>
-                      <TableCell sx={{ minWidth: '160px' }}>Partnyorun adı</TableCell>
+                      <TableCell sx={{ minWidth: '260px' }}>Partnyorun adı</TableCell>
                       <TableCell sx={{ minWidth: '200px' }}>Direktor/Sahib</TableCell>
                       <TableCell sx={{ minWidth: '180px' }}>VÖEN</TableCell>
                       <TableCell sx={{ minWidth: '210px' }}>Şirkətin fəaliyyət sahəsi</TableCell>
@@ -268,14 +309,18 @@ export default function Kredit() {
                                 ? 'error'
                                 : row.status === EStatus.PENDING
                                   ? 'warning'
-                                  : 'success'
+                                  : row.status === EStatus.NEW
+                                    ? 'default'
+                                    : 'success'
                             }
                           >
                             {row.status === EStatus.REJECTED
                               ? 'Deaktiv'
                               : row.status === EStatus.PENDING
                                 ? 'Gözlənilir'
-                                : 'Aktiv'}
+                                : row.status === EStatus.NEW
+                                  ? 'Yeni'
+                                  : 'Aktiv'}
                           </Label>
                         </TableCell>
                         <TableCell
@@ -296,16 +341,30 @@ export default function Kredit() {
                           >
                             Status Dəyiş
                           </Button>
-                          <Button
-                            onClick={() => {
-                              router.push(`/partynorlar/duzeliset/${row.id}`);
-                            }}
-                            sx={{ borderRadius: 100 }}
-                            variant="text"
-                            size="small"
-                          >
-                            <Iconify icon="mdi:pencil" />
-                          </Button>
+                          <Tooltip title="Düzəliş et">
+                            <Button
+                              onClick={() => {
+                                router.push(`/partynorlar/duzeliset/${row.id}`);
+                              }}
+                              sx={{ borderRadius: 100 }}
+                              variant="text"
+                              size="small"
+                            >
+                              <Iconify icon="mdi:pencil" />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Sil">
+                            <Button
+                              onClick={() => {
+                                handleDelete(row.id);
+                              }}
+                              sx={{ borderRadius: 100 }}
+                              variant="text"
+                              size="small"
+                            >
+                              <Iconify color="red" icon="mingcute:delete-fill" />
+                            </Button>
+                          </Tooltip>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -337,6 +396,7 @@ export default function Kredit() {
                         </MenuItem>
                         <MenuItem value={EStatus.REJECTED}>Deaktiv</MenuItem>
                         <MenuItem value={EStatus.PENDING}>Gözlənilir</MenuItem>
+                        <MenuItem value={EStatus.NEW}>Yeni</MenuItem>
                       </Select>
                     </Box>
                   </Popover>

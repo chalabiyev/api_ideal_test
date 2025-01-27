@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography, Grid, IconButton, Stack, Card } from '@mui/material';
+import { Box, Button, Typography, Grid, IconButton, Stack, Card, Tooltip } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { toast } from 'sonner';
 import { usePostFile } from 'src/api/usePostFile';
+import { BASE_URL } from 'src/api/ContractService';
+import { callGetFile } from 'src/api/FileService';
 
 const FizikiMuqavile = ({
+  uploadedFile,
+  setUploadedFile,
   setOtherFilesPreview,
   setPartnerData,
 }: {
+  uploadedFile: any;
+  setUploadedFile: any;
   setOtherFilesPreview: any;
   setPartnerData: any;
 }) => {
-  const [uploadedFile, setUploadedFile] = useState(null);
   const { postData: uploadFile } = usePostFile('file/uploadFile');
 
+  const openFile = () => {
+    callGetFile(uploadedFile).then((response) => {
+      if (!response) return;
+      const link = document.createElement('a');
+      link.href = response;
+      link.setAttribute('download', uploadedFile!);
+      document.body.appendChild(link);
+      link.click();
+    });
+  };
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
@@ -29,12 +44,12 @@ const FizikiMuqavile = ({
               console.log('response varsa', response);
               setOtherFilesPreview((prev: any) => ({
                 ...prev,
-                signableContract: [response.message],
+                singableContract: [response.message],
               }));
               setUploadedFile(response.message);
               setPartnerData((prev: any) => ({
                 ...prev,
-                signableContract: response.message,
+                singableContract: response.message,
               }));
             }
           })(),
@@ -68,11 +83,11 @@ const FizikiMuqavile = ({
     setUploadedFile(null);
     setOtherFilesPreview((prev: any) => ({
       ...prev,
-      signableContract: '',
+      singableContract: '',
     }));
     setPartnerData((prev: any) => ({
       ...prev,
-      signableContract: '',
+      singableContract: '',
     }));
   };
 
@@ -123,11 +138,22 @@ const FizikiMuqavile = ({
           }}
         >
           <Icon icon="mdi:file-document" width={40} color="#4caf50" />
+
           <Box flex={1}>
-            <Typography variant="body2" noWrap>
-              {uploadedFile}
-            </Typography>
+            <Tooltip title="Faylı yüklə">
+              {/*  eslint-disable-next-line */}
+              <div
+                className="!text-[#2196f3] hover:scale-110 cursor-pointer inline-flex duration-200"
+                // href={`${BASE_URL}/file/getFile/${uploadedFile}`}
+                onClick={openFile}
+              >
+                <Typography variant="body2" noWrap>
+                  {uploadedFile}
+                </Typography>
+              </div>
+            </Tooltip>
           </Box>
+
           <IconButton
             color="primary"
             component="label"

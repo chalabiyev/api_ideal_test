@@ -5,46 +5,46 @@ import { Icon } from '@iconify/react';
 import { BASE_URL } from 'src/api/request';
 import { Label } from 'src/components/label';
 
+
 const EstablishmentDocumentUI = ({
   otherFilesPreview,
   setOtherFilesPreview,
-  uploadMultipleFile,
+  uploadFile,
   setPartnerData,
 }: {
   otherFilesPreview: any;
   setOtherFilesPreview: any;
-  uploadMultipleFile: (formData: FormData) => Promise<any>;
+  uploadFile: any;
   setPartnerData: (value: any) => void;
 }) => {
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles) {
+    const selectedFile = event.target.files?.[0]; // Tek bir dosya seçilir
+    if (selectedFile) {
       const formData = new FormData();
-      Array.from(selectedFiles).forEach((file) => {
-        formData.append('file', file);
-        formData.append('isPublic', 'true');
-      });
+      formData.append('file', selectedFile);
+      formData.append('isPublic', 'true');
 
       try {
-        const response = await uploadMultipleFile(formData);
-
-        if (response) {
-          const serverFiles = response;
-
-          const newUploadedFiles = [...otherFilesPreview.establishmentDocument, ...serverFiles];
-
-          setOtherFilesPreview((prev: any) => ({
-            ...prev,
-            establishmentDocument: newUploadedFiles,
-          }));
-
-          setPartnerData((prev: any) => ({
-            ...prev,
-            establishmentDocument: newUploadedFiles,
-          }));
-
-          toast.success('Dosya(lar) yüklendi!');
-        }
+        await toast.promise(
+          (async () => {
+            const response = await uploadFile(formData);
+            if (response) {
+              setOtherFilesPreview((prev: any) => ({
+                ...prev,
+                establishmentDocument: [response.message],
+              })); // Yüklenen dosyanın URL'si
+              setPartnerData((prev: any) => ({
+                ...prev,
+                establishmentDocument: response.message,
+              }));
+            }
+          })(),
+          {
+            loading: 'Yükleniyor...',
+            success: 'Dosya yüklendi!',
+            error: 'Yükleme sırasında  oluştu!',
+          }
+        );
       } catch (error) {
         console.error('Yükleme hatası:', error);
         toast.error('Yükleme sırasında hata oluştu!');
@@ -58,83 +58,78 @@ const EstablishmentDocumentUI = ({
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const droppedFiles = event.dataTransfer.files;
-    handleImageChange({ target: { files: droppedFiles } } as React.ChangeEvent<HTMLInputElement>);
+    const droppedFile = event.dataTransfer.files?.[0];
+    handleImageChange({
+      target: { files: [droppedFile] },
+    } as unknown as React.ChangeEvent<HTMLInputElement>);
   };
 
-  const handleDeleteFile = (fileUrl: string) => {
-    const updatedFiles = otherFilesPreview.establishmentDocument.filter(
-      (file: string) => file !== fileUrl
-    );
-    console.log('After Delete: ', updatedFiles);
-
-    setOtherFilesPreview((prev: any) => ({
-      ...prev,
-      establishmentDocument: updatedFiles,
-    }));
+  const handleDeleteFile = () => {
+    setOtherFilesPreview.establishmentDocument(null);
     setPartnerData((prev: any) => ({
       ...prev,
-      establishmentDocument: updatedFiles,
+      establishmentDocument: null,
     }));
-    toast.success('Dosya silindi.');
+    toast.success('Fayl silindi.');
   };
 
   return (
     <Box>
-      <Box
-        sx={{
-          border: '2px dashed #ccc',
-          borderRadius: 1,
-          p: 2,
-          cursor: 'pointer',
-          textAlign: 'center',
-          mb: 2,
-          width: '100%',
-          maxWidth: 400,
-        }}
-        onClick={() => document.getElementById('estab-input')?.click()}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      >
-        <Typography variant="body2" color="text.secondary">
-          Sürüşdürüb buraxın ya da fayl seçin
-        </Typography>
-        <input
-          type="file"
-          id="estab-input"
-          onChange={handleImageChange}
-          style={{ display: 'none' }}
-          accept="image/*,application/pdf"
-          multiple
-        />
-      </Box>
+      {/* Drag & Drop veya Tıklama */}
+      {!otherFilesPreview.establishmentDocument && (
+        <Box
+          sx={{
+            border: '2px dashed #ccc',
+            borderRadius: 1,
+            p: 2,
+            cursor: 'pointer',
+            textAlign: 'center',
+            mb: 2,
+            width: '100%',
+            maxWidth: 400,
+          }}
+          onClick={() => document.getElementById('estab-input')?.click()}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
+          <Typography variant="body2" color="text.secondary">
+            Sürüşdürüb buraxın ya da fayl seçin
+          </Typography>
+          <input
+            type="file"
+            id="estab-input"
+            onChange={handleImageChange}
+            style={{ display: 'none' }}
+            accept="image/*,application/pdf"
+          />
+        </Box>
+      )}
 
-      {otherFilesPreview.establishmentDocument.length > 0 && (
-        <Stack direction="column" spacing={2}>
-          {otherFilesPreview.establishmentDocument.map((fileUrl: string, index: number) => (
-            <Stack direction="row" alignItems="center" spacing={2} key={index}>
-              <a
-                href={`${BASE_URL}/file/getPublicFile/${fileUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none' }}
-              >
-                <Tooltip title={fileUrl}>
-                  <Typography color="primary" variant="body2">
-                    <Label sx={{ cursor: 'pointer' }}> {fileUrl}</Label>
-                  </Typography>
-                </Tooltip>
-              </a>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => handleDeleteFile(fileUrl)}
-                sx={{ color: 'error.main' }}
-              >
-                <Icon icon="mdi:delete" />
-              </IconButton>
-            </Stack>
-          ))}
+      {/* Yüklenen Dosya Önizlemesi */}
+      {otherFilesPreview.establishmentDocument && (
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+          <a
+            href={`${BASE_URL}/file/getPublicFile/${otherFilesPreview.establishmentDocument}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: 'none' }}
+          >
+            <Tooltip title={otherFilesPreview.establishmentDocument}>
+              <Typography color="primary" variant="body2">
+                <Label sx={{ cursor: 'pointer' }}> {otherFilesPreview.establishmentDocument}</Label>
+              </Typography>
+            </Tooltip>
+          </a>
+
+          {/* Sil butonu */}
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={handleDeleteFile}
+            sx={{ color: 'error.main' }}
+          >
+            <Icon icon="mdi:delete" />
+          </IconButton>
         </Stack>
       )}
     </Box>
