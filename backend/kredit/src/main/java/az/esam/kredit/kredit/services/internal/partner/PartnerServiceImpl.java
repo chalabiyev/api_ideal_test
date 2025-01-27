@@ -75,6 +75,7 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public Partner add(Partner partner) {
+        partner.setStatus(EFinalStatus.NEW);
         return partnerRepository.save(partner);
     }
 
