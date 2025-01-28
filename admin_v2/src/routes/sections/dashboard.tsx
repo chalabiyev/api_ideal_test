@@ -97,9 +97,7 @@ export const dashboardRoutes = [
           { path: 'list', element: <PartnyorlarList /> },
           {
             path: 'yeni-partnyor',
-            children: [
-              { path: 'create', element: <NewPartner /> },
-            ],
+            children: [{ path: 'create', element: <NewPartner /> }],
           },
           { path: 'duzeliset/:id', element: <EditPartnyor /> },
         ],

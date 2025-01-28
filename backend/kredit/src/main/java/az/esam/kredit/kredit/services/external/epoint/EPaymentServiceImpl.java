@@ -7,6 +7,7 @@ import az.esam.kredit.kredit.repositories.payment.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.underscore.lodash.U;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Slf4j
 @Service
 @EnableConfigurationProperties(EPointPaymentProperties.class)
 public class EPaymentServiceImpl implements EPaymentService {
@@ -65,6 +67,7 @@ public class EPaymentServiceImpl implements EPaymentService {
         paymentRequest.setLanguage(ePaymentProperties.getLanguage());
         paymentRequest.setPublic_key(ePaymentProperties.getPublicKey());
         paymentRequest.setCurrency(ePaymentProperties.getCurrency());
+        paymentRequest.setDescription("Payment for order");
         String jsonString = objectMapper.writeValueAsString(paymentRequest);
         String data = encodeBase64(jsonString.getBytes());
         String sgn_string = ePaymentProperties.getPrivateKey() + data + ePaymentProperties.getPrivateKey();
@@ -182,6 +185,9 @@ public class EPaymentServiceImpl implements EPaymentService {
     public CardRegistrationResponse registerCard(CardRegistrationRequest cardRegistrationRequest) throws Exception {
         cardRegistrationRequest.setPublic_key(ePaymentProperties.getPublicKey());
         cardRegistrationRequest.setLanguage(ePaymentProperties.getLanguage());
+        cardRegistrationRequest.setError_redirect_url(ePaymentProperties.getErrorUrl());
+        cardRegistrationRequest.setSuccess_redirect_url(ePaymentProperties.getSuccessURL());
+        cardRegistrationRequest.setDescription("Card registration");
 
         String jsonString = objectMapper.writeValueAsString(cardRegistrationRequest);
         String data = encodeBase64(jsonString.getBytes());
@@ -205,6 +211,7 @@ public class EPaymentServiceImpl implements EPaymentService {
     public CardRegistrationWithPayResponse registerCardWithPay(CardRegistrationWithPayRequest cardRegistrationRequest) throws Exception {
         cardRegistrationRequest.setPublic_key(ePaymentProperties.getPublicKey());
         cardRegistrationRequest.setLanguage(ePaymentProperties.getLanguage());
+        cardRegistrationRequest.setCurrency(ePaymentProperties.getCurrency());
 
         String jsonString = objectMapper.writeValueAsString(cardRegistrationRequest);
         String data = encodeBase64(jsonString.getBytes());
@@ -228,17 +235,21 @@ public class EPaymentServiceImpl implements EPaymentService {
     public TransferMoneyResponse transferAmount(TransferMoneyRequest transferAmountRequest) throws Exception {
         transferAmountRequest.setPublic_key(ePaymentProperties.getPublicKey());
         transferAmountRequest.setLanguage(ePaymentProperties.getLanguage());
+        transferAmountRequest.setCurrency(ePaymentProperties.getCurrency());
+        transferAmountRequest.setDescription("Transfer money");
+        transferAmountRequest.setCard_id(transferAmountRequest.getCard_id());
 
         String jsonString = objectMapper.writeValueAsString(transferAmountRequest);
         String data = encodeBase64(jsonString.getBytes());
         String sgn_string = ePaymentProperties.getPrivateKey() + data + ePaymentProperties.getPrivateKey();
         String signature = encodeBase64(encodeSHA1(sgn_string));
         try {
-            String response = sendRequest("/transfer", data, signature);
+            String response = sendRequest("/refund-request", data, signature);
             transferMoneyRequestRepository.insert(transferAmountRequest);
             logger.log(Level.SEVERE, "transferAmount request : {0}", transferAmountRequest.toString());
             logger.log(Level.SEVERE, "transferAmount response : {0}", response);
             TransferMoneyResponse transferMoneyResponse = objectMapper.readValue(response, TransferMoneyResponse.class);
+            logger.log(Level.SEVERE, "transferMoneyResponse : {0}", transferMoneyResponse.toString());
             transferMoneyResponseRepository.insert(transferMoneyResponse);
             return transferMoneyResponse;
         } catch (IOException e) {

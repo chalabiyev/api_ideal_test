@@ -8,7 +8,7 @@ const useDelete = (endpoint: string) => {
   const deleteData = async (id: string) => {
     setLoading(true);
     try {
-      const response = await request.get(`${endpoint}/${id}`);
+      const response = await request.delete(`${endpoint}${id}`);
       setLoading(false);
       return response.data;
     } catch (err) {
