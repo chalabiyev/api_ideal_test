@@ -28,6 +28,7 @@ import { ArrowRightIcon } from '@mui/x-date-pickers';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
+import { BASE_URL } from 'src/api/ContractService';
 import { postChangePartnerStatus } from 'src/api/PartnerService';
 import useApi from 'src/api/useApi';
 import useDelete from 'src/api/useDelete';
@@ -269,12 +270,12 @@ export default function Kredit() {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell sx={{ minWidth: '100px' }}>N°</TableCell>
+                      <TableCell sx={{ minWidth: '110px' }}>Şəkil</TableCell>
                       <TableCell sx={{ minWidth: '260px' }}>Partnyorun adı</TableCell>
                       <TableCell sx={{ minWidth: '200px' }}>Direktor/Sahib</TableCell>
                       <TableCell sx={{ minWidth: '180px' }}>VÖEN</TableCell>
-                      <TableCell sx={{ minWidth: '210px' }}>Şirkətin fəaliyyət sahəsi</TableCell>
-                      <TableCell sx={{ minWidth: '210px' }}>Sahibkarlıq forması</TableCell>
+                      <TableCell sx={{ minWidth: '200px' }}>Şirkətin fəaliyyət sahəsi</TableCell>
+                      <TableCell sx={{ minWidth: '170px' }}>Sahibkarlıq forması</TableCell>
                       <TableCell>Status</TableCell>
                       <TableCell sx={{ minWidth: '150px' }}> </TableCell>
                     </TableRow>
@@ -282,7 +283,15 @@ export default function Kredit() {
                   <TableBody>
                     {paginatedData.map((row: Partner) => (
                       <TableRow key={row.id}>
-                        <TableCell>{row.id}</TableCell>
+                        <TableCell>
+                          <Card className="bg-[khaki] h-[50px] !rounded-sm w-[60px] overflow-hidden !border !border-red-500 ">
+                            <img
+                              alt="title"
+                              src={`${BASE_URL}/file/getPublicFile/${row.image}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </Card>
+                        </TableCell>
                         <TableCell>{row.companyName}</TableCell>
                         <TableCell>{row.directorName}</TableCell>
                         <TableCell>{row.voen}</TableCell>
@@ -325,10 +334,12 @@ export default function Kredit() {
                         </TableCell>
                         <TableCell
                           sx={{
-                            display: 'flex',
+                            minWidth: '290px',
                             justifyContent: 'center',
                             alignItems: 'center',
                             gap: 2,
+                            minHeight: '100%',
+                            flexShrink: 0,
                           }}
                         >
                           {/* Status Değiştir ve Düzenle Butonu */}
@@ -362,7 +373,7 @@ export default function Kredit() {
                               variant="text"
                               size="small"
                             >
-                              <Iconify color="red" icon="mingcute:delete-fill" />
+                              <Iconify color="#C70039" icon="mingcute:delete-fill" />
                             </Button>
                           </Tooltip>
                         </TableCell>
