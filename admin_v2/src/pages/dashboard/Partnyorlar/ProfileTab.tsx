@@ -283,7 +283,7 @@ const ProfileTab = ({
           label="Fəaliyyətə Başlama Tarixi"
           type="date"
           InputLabelProps={{ shrink: true }}
-          value={partnerData?.startDate.split('T')[0]}
+          value={partnerData?.startDate?.split('T')[0]}
           onChange={(e) => handlePartnerDataChange('startDate', `${e.target.value}T00:00:00.000Z`)}
         />
       </Grid>

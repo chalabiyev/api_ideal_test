@@ -46,7 +46,7 @@ export default function BankInfoTab({
             fullWidth
             label="Müştəri Hesabı"
             placeholder="Müştəri Hesabını daxil edin"
-            value={partnerData?.clientBankAccount.toUpperCase() || ''}
+            value={partnerData?.clientBankAccount?.toUpperCase() || ''}
             onChange={(e) =>
               handlePartnerDataChange('clientBankAccount', e.target.value.toUpperCase())
             }
@@ -59,7 +59,7 @@ export default function BankInfoTab({
             fullWidth
             label="Müxbir Hesab"
             placeholder="Müxbir Hesabını daxil edin"
-            value={partnerData?.reportBankAccount.toUpperCase()}
+            value={partnerData?.reportBankAccount?.toUpperCase()}
             onChange={(e) =>
               handlePartnerDataChange('reportBankAccount', e.target.value.toUpperCase())
             }
@@ -102,7 +102,7 @@ export default function BankInfoTab({
             fullWidth
             label="S.W.I.F.T."
             placeholder="S.W.I.F.T. kodunu daxil edin"
-            value={partnerData?.swiftCode.toUpperCase()}
+            value={partnerData?.swiftCode?.toUpperCase()}
             onChange={(e) => handlePartnerDataChange('swiftCode', e.target.value.toUpperCase())}
           />
         </Grid>
