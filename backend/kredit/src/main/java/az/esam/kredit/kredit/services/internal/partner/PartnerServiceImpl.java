@@ -24,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -81,6 +82,13 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public Partner update(Partner partner) {
+        Partner existingPartner = partnerRepository.findById(partner.getId())
+                .orElseThrow(() -> new RuntimeException("Partner tapılmadı"));
+
+        if (partner.getStatus() != null && !partner.getStatus().equals(existingPartner.getStatus())) {
+            partner.setStatusUpdatedDate(new Date());
+        }
+
         return partnerRepository.save(partner);
     }
 
@@ -183,6 +191,7 @@ public class PartnerServiceImpl implements PartnerService {
             userRepository.save(existingUser);
         }
         partner.setStatus(EFinalStatus.valueOf(status));
+        partner.setStatusUpdatedDate(new Date());
 
         return partnerRepository.save(partner);
     }
@@ -190,6 +199,6 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public List<Partner> list() {
         // order by update dat
-        return partnerRepository.findByStatusAndOrderByUpdatedDateDesc(EFinalStatus.ACCEPTED);
+        return partnerRepository.findByStatusOrderByStatusUpdatedDateDesc(EFinalStatus.ACCEPTED);
     }
 }

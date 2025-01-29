@@ -40,7 +40,7 @@ public class Partner extends BaseEntity {
     private String pin;
     private String image;
     private String url;
-    private double monthlySales;
+    private Double monthlySales;
     private EActivityType activityType;
     private EOwnerType formOfOwnership;
     private List<String> companyImages;
@@ -48,4 +48,5 @@ public class Partner extends BaseEntity {
     private String city;
     private String address;
     private EFinalStatus status;
+    private Date statusUpdatedDate;
 }
