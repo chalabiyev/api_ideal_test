@@ -119,7 +119,7 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public List<Partner> listAll() {
-        return partnerRepository.findAll();
+        return partnerRepository.findAllByOrderByCreatedDateDesc();
     }
 
     @Override
@@ -189,6 +189,7 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public List<Partner> list() {
-        return partnerRepository.findByStatus(EFinalStatus.ACCEPTED);
+        // order by update dat
+        return partnerRepository.findByStatusAndOrderByUpdatedDateDesc(EFinalStatus.ACCEPTED);
     }
 }
