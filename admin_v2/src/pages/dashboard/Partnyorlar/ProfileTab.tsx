@@ -267,12 +267,17 @@ const ProfileTab = ({
         <TextField
           fullWidth
           label="Aylıq Satış Həcmi"
-          value={partnerData?.monthlySales || 100}
+          type="number"
+          value={partnerData?.monthlySales || ''}
           onChange={(e) => {
-            const { value } = e.target;
-
-            if (/^\d*$/.test(value)) {
-              handlePartnerDataChange('monthlySales', value);
+            // eslint-disable-next-line
+            const value = e.target.value;
+            if (value === '') {
+              // @ts-ignore
+              handlePartnerDataChange('monthlySales', null);
+            } else if (/^\d+$/.test(value)) {
+              // @ts-ignore
+              handlePartnerDataChange('monthlySales', parseInt(value, 10));
             }
           }}
         />
