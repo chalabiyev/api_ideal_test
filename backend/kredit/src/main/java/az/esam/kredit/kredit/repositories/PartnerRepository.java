@@ -15,5 +15,7 @@ public interface PartnerRepository extends MongoRepository<Partner, String> {
 
     List<Partner> findByStatusAndOrderByUpdatedDateDesc(EFinalStatus eFinalStatus);
 
+    List<Partner> findByStatusAndOrderByStatusUpdatedDateDesc(EFinalStatus eFinalStatus);
+
     List<Partner> findAllByOrderByCreatedDateDesc();
 }
