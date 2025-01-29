@@ -48,4 +48,5 @@ public class Partner extends BaseEntity {
     private String city;
     private String address;
     private EFinalStatus status;
+    private Date statusUpdatedDate;
 }
