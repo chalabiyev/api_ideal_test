@@ -199,6 +199,6 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public List<Partner> list() {
         // order by update dat
-        return partnerRepository.findByStatusAndOrderByStatusUpdatedDateDesc(EFinalStatus.ACCEPTED);
+        return partnerRepository.findByStatusOrderByStatusUpdatedDateDesc(EFinalStatus.ACCEPTED);
     }
 }

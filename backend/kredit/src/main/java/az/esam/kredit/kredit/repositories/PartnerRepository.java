@@ -13,9 +13,9 @@ public interface PartnerRepository extends MongoRepository<Partner, String> {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    List<Partner> findByStatusAndOrderByUpdatedDateDesc(EFinalStatus eFinalStatus);
+    List<Partner> findByStatusOrderByUpdatedDateDesc(EFinalStatus eFinalStatus);
 
-    List<Partner> findByStatusAndOrderByStatusUpdatedDateDesc(EFinalStatus eFinalStatus);
+    List<Partner> findByStatusOrderByStatusUpdatedDateDesc(EFinalStatus eFinalStatus);
 
     List<Partner> findAllByOrderByCreatedDateDesc();
 }
