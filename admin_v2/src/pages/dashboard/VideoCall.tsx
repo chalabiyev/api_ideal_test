@@ -482,9 +482,9 @@ const VideoCall = () => {
             >
               <WebCam
                 onStreamChanged={handleLocalStream}
-                width={320}
-                height={210}
-                className="w-full h-full object-cover"
+                width={200}
+                height={110}
+                className="w-full h-full left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 absolute object-cover"
                 showSettings={showWebCamSettings}
               />
             </m.div>
