@@ -212,7 +212,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             }
         } catch (Exception ex) {
             log.error(null, ex);
-            throw ex;
+            return null;
         }
         return null;
     }
