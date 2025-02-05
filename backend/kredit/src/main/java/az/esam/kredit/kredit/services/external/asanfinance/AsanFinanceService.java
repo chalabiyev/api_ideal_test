@@ -1,11 +1,17 @@
 package az.esam.kredit.kredit.services.external.asanfinance;
 
+import az.esam.kredit.kredit.dtos.requests.asanfinance.AsanFinanceRequest;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.AsanFinanceResponse;
+import az.esam.kredit.kredit.dtos.responses.asanfinance.balance.BalanceInfoResponse;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.employee.EmployeeInfoResponse;
+import az.esam.kredit.kredit.dtos.responses.asanfinance.expenses.ExpensesResponse;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.farm.FarmInfoResponse;
+import az.esam.kredit.kredit.dtos.responses.asanfinance.passport.PassportInfoResponse;
+import az.esam.kredit.kredit.dtos.responses.asanfinance.payment.PaymentInfoResponse;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.pensioner.PensionerInfoResponse;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.personal.PersonalInfoAllResponse;
-import com.fasterxml.jackson.databind.JsonNode;
+import az.esam.kredit.kredit.dtos.responses.asanfinance.vin.VinInfoResponse;
+import az.esam.kredit.kredit.dtos.responses.asanfinance.voen.VoenInfoResponse;
 
 public interface AsanFinanceService {
 
@@ -21,18 +27,18 @@ public interface AsanFinanceService {
 
     AsanFinanceResponse<PensionerInfoResponse> getPensionerInfoByPin(String pin);
 
-    JsonNode getForeignPassportInfoByPin(String pin);
+    AsanFinanceResponse<PassportInfoResponse> getForeignPassportInfoByPin(String pin);
 
-    JsonNode getVinInfoByVin(String vin);
+    AsanFinanceResponse<VinInfoResponse> getVinInfoByVin(String vin);
 
-    JsonNode getVoenInfoByVoen(String voen);
+    AsanFinanceResponse<VoenInfoResponse> getVoenInfoByVoen(String voen);
 
-    JsonNode getPersonalInfoByPinAndDocument(String pin, String documentNumber);
+    AsanFinanceResponse<PersonalInfoAllResponse> getPersonalInfoByPinAndDocument(String pin, String documentNumber);
 
-    JsonNode getExpensesInfo();
+    AsanFinanceResponse<ExpensesResponse> getExpensesInfo(AsanFinanceRequest asanFinanceRequest);
 
-    JsonNode getPaymentsInfo();
+    AsanFinanceResponse<PaymentInfoResponse> getPaymentsInfo(AsanFinanceRequest asanFinanceRequest);
 
-    JsonNode getBalanceInfo();
+    AsanFinanceResponse<BalanceInfoResponse> getBalanceInfo(AsanFinanceRequest asanFinanceRequest);
 
 }

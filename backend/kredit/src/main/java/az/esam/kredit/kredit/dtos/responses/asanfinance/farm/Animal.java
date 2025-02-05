@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Animal {
-    private String sort;
-    private Integer count;
+    private String Sort;
+    private Integer Count;
 }

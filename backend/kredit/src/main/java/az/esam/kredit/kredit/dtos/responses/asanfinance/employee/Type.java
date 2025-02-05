@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Type {
-    private String label;
-    private String description;
-    private Integer id;
+    private String Label;
+    private String Type;
+    private String Description;
+    private Long Id;
 }

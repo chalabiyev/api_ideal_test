@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Contract {
-    private String beginDate;
-    private String signDate;
-    private String insertDate;
-    private String endDate;
-    private String nextEndDate;
-    private String terminateDate;
-    private Type periodType;
-    private String number;
-    private Type status;
-    private Type invalidation;
+    private String BeginDate;
+    private String SignDate;
+    private String InsertDate;
+    private String EndDate;
+    private String NextEndDate;
+    private String TerminateDate;
+    private Type PeriodType;
+    private String Number;
+    private Type Status;
+    private Type Invalidation;
 }

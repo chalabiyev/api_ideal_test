@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Allowance {
-    private String beginDate;
-    private String endDate;
-    private Type type;
-    private Type group;
-    private Double amount;
+    private String BeginDate;
+    private String EndDate;
+    private Type Type;
+    private Type Group;
+    private Double Amount;
 }

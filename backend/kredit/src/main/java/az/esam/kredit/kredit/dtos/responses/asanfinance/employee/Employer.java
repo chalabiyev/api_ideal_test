@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Employer {
-    private String voen;
-    private String name;
-    private Integer workerCount;
-    private String phone;
-    private String legalAddress;
-    private Type propertyType;
+    private String Voen;
+    private String Name;
+    private Integer WorkerCount;
+    private String Phone;
+    private String LegalAddress;
+    private Type PropertyType;
 }

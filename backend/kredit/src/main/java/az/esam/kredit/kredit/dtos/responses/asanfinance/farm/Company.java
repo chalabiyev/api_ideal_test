@@ -15,9 +15,8 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Company {
-
-    private String voen;
-    private String name;
-    private String personType;
-    private List<Person> persons;
+    private String Voen;
+    private String Name;
+    private String PersonType;
+    private List<Person> Persons;
 }

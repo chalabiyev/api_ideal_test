@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Plant {
-    private String name;
-    private Double fieldAmount;
-    private String unit;
+    private String Name;
+    private Double FieldAmount;
+    private String Unit;
 }

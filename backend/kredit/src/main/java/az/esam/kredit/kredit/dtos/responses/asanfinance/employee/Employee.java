@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Employee {
-    private String name;
-    private String surname;
-    private String patronymic;
-    private String phone;
-    private Type workPlaceType;
-    private String workPlace;
-    private String position;
-    private String positionLabourContract;
-    private Double salary;
-    private Type workCasualType;
-    private String ssn;
+    private String Name;
+    private String Surname;
+    private String Patronymic;
+    private String Phone;
+    private Type WorkPlaceType;
+    private String WorkPlace;
+    private String Position;
+    private String PositionLabourContract;
+    private Double Salary;
+    private Type WorkCasualType;
+    private String SSN;
 }

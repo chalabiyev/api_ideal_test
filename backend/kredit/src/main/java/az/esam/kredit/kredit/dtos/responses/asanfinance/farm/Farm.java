@@ -14,9 +14,9 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Farm {
-    private Integer id;
-    private String name;
-    private List<Field> fields;
-    private List<Animal> animals;
-    private List<Animal> bees;
+    private Long Id;
+    private String Name;
+    private List<Field> Fields;
+    private List<Animal> Animals;
+    private List<Animal> Bees;
 }

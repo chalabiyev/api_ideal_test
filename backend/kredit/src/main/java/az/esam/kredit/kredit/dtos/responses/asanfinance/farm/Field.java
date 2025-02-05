@@ -14,10 +14,9 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Field {
-
-    private String villageName;
-    private String docType;
-    private Double fieldAmount;
-    private String unit;
-    private List<Plant> plants;
+    private String VillageName;
+    private String DocType;
+    private Double FieldAmount;
+    private String Unit;
+    private List<Plant> Plants;
 }

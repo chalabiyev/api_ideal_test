@@ -16,10 +16,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FarmInfoResponse {
 
-    private Person person;
+    private Person Person;
 
-    private Company company;
+    private Company Company;
 
-    private List<Farm> farms;
+    private List<Farm> Farms;
 
 }

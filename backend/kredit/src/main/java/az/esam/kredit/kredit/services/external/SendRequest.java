@@ -50,9 +50,11 @@ public class SendRequest {
 
             if ("GET".equalsIgnoreCase(method)) {
                 builder = builder.method("GET", null);
-            } else if ("POST".equalsIgnoreCase(method) && bodyStr != null && !bodyStr.isEmpty()) {
+            } else if ("POST".equalsIgnoreCase(method)) {
                 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(bodyStr, mediaType);
+                RequestBody body = (bodyStr != null && !bodyStr.isEmpty())
+                        ? RequestBody.create(bodyStr, mediaType)
+                        : RequestBody.create("{}", mediaType);
                 builder = builder.method("POST", body);
                 log.info("Service body: {}", bodyStr);
             }
@@ -60,20 +62,14 @@ public class SendRequest {
             Request request = builder.build();
             try (Response response = client.newCall(request).execute()) {
                 int statusCode = response.code();
+                String responseStr = response.body() != null ? response.body().string() : null;
+                log.info("Service response: {} {}", responseStr, statusCode);
 
-                if (response.body() != null) {
-                    String responseStr = response.body().string();
-                    log.info("Service response: {} {}", responseStr, statusCode);
-
-                    if (response.isSuccessful()) {
-                        result = objectMapper.readTree(responseStr);
-                    } else {
-                        log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
-                        throw new RuntimeException("Request failed with status code: " + statusCode + " and message " + responseStr);
-                    }
+                if (responseStr != null && response.isSuccessful()) {
+                    result = objectMapper.readTree(responseStr);
                 } else {
-                    log.error("Response body is null");
-                    throw new RuntimeException("Response body is null with status code " + statusCode);
+                    log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
+                    throw new RuntimeException("Request failed with status code: " + statusCode + " and message " + responseStr);
                 }
             } catch (Exception e) {
                 log.error("Network or I/O error occurred: {}", e.getMessage());

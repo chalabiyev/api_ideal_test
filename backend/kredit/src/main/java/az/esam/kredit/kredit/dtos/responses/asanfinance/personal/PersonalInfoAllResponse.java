@@ -12,29 +12,31 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PersonalInfoAllResponse {
-    private String pin;
-    private String documentSeria;
-    private String documentNumber;
-    private String name;
-    private String surname;
-    private String nameEn;
-    private String surnameEn;
-    private String patronymic;
-    private String birthDate;
-    private String birthAddress;
-    private String gender;
-    private String registrationAddress;
-    private String givenDate;
-    private String activationDate;
-    private String expireDate;
-    private String maritalStatus;
-    private String givenOrganization;
-    private String citizenship;
-    private String image;
-    private String militaryStatus;
-    private String bloodType;
-    private String eyeColor;
-    private String sign;
-    private Integer height;
-    private Boolean status;
+    private String PIN;
+    private String DocumentSeria;
+    private String DocumentNumber;
+    private String Name;
+    private String Surname;
+    private String NameEn;
+    private String SurnameEn;
+    private String Patronymic;
+    private String BirthDate;
+    private String BirthAddress;
+    private String Gender;
+    private String RegistrationAddress;
+    private String GivenDate;
+    private String ActivationDate;
+    private String ExpireDate;
+    private String MaritalStatus;
+    private String GivenOrganization;
+    private String Citizenship;
+    private String Image;
+    private String MilitaryStatus;
+    private String BloodType;
+    private String EyeColor;
+    private String Sign;
+    private String Height;
+    private String Status;
+
+
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeInfoResponse {
 
-    private List<Job> active;
+    private List<Job> Active;
 
-    private List<Job> deactive;
+    private List<Job> Deactive;
 }

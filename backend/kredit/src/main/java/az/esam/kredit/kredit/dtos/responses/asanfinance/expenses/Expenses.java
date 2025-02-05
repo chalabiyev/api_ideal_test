@@ -1,6 +1,5 @@
-package az.esam.kredit.kredit.dtos.responses.asanfinance.pensioner;
+package az.esam.kredit.kredit.dtos.responses.asanfinance.expenses;
 
-import az.esam.kredit.kredit.dtos.responses.asanfinance.employee.Type;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,10 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Pension {
-    private Type Type;
-    private String StartDate;
-    private String EndDate;
-    private Type Group;
+public class Expenses {
+    private String Value;
+    private String Date;
+    private String Service;
     private Double Amount;
+    private String RequestIdentifier;
+    private String IpAddress;
 }
