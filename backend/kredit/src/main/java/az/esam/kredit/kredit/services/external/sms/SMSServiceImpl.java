@@ -5,7 +5,6 @@ import az.esam.kredit.kredit.dtos.requests.SendSmsRequest;
 import az.esam.kredit.kredit.dtos.responses.sms.SmsResponse;
 import az.esam.kredit.kredit.dtos.responses.sms.SmsStatusResponse;
 import az.esam.kredit.kredit.properties.SMSServiceProperties;
-import az.esam.kredit.kredit.services.external.JsonParserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
@@ -32,9 +31,6 @@ public class SMSServiceImpl implements SMSService {
 
     @Autowired
     SMSServiceProperties prop;
-
-    @Autowired
-    JsonParserService parserService;
 
     @Override
     public int getSMSBalance() {
@@ -69,7 +65,10 @@ public class SMSServiceImpl implements SMSService {
             String url = prop.getApiUrl().concat("/Send_1_N ");
             JsonNode root = executeRequest(jsonObj.toJSONString(), url);
             if (root != null) {
-                return parserService.parseResponse(root.get("Result"), SmsResponse.class);
+                return objectMapper.readValue(
+                        root.get("Result").toString(),
+                        objectMapper.getTypeFactory().constructParametricType(List.class, SmsResponse.class)
+                );
             } else {
                 throw new RuntimeException("Error while sending SMS");
             }
@@ -100,7 +99,10 @@ public class SMSServiceImpl implements SMSService {
             String url = prop.getApiUrl().concat("/Send_N_N ");
             JsonNode root = executeRequest(jsonObj.toJSONString(), url);
             if (root != null) {
-                return parserService.parseResponse(root.get("Result"), SmsResponse.class);
+                return objectMapper.readValue(
+                        root.get("Result").toString(),
+                        objectMapper.getTypeFactory().constructParametricType(List.class, SmsResponse.class)
+                );
             } else {
                 throw new RuntimeException("Error while sending SMS");
             }
@@ -122,7 +124,10 @@ public class SMSServiceImpl implements SMSService {
             String url = prop.getApiUrl().concat("/Status ");
             JsonNode root = executeRequest(jsonObj.toJSONString(), url);
             if (root != null) {
-                return parserService.parseResponse(root.get("Result"), SmsStatusResponse.class);
+                return objectMapper.readValue(
+                        root.get("Result").toString(),
+                        objectMapper.getTypeFactory().constructParametricType(List.class, SmsStatusResponse.class)
+                );
             } else {
                 throw new RuntimeException("Error while sending SMS");
             }

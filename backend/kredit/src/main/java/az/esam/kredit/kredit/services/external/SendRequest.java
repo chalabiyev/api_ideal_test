@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,71 +34,52 @@ public class SendRequest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public JsonNode executeRequest(String url, String authName, String authKey, String host) throws IOException {
+    public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey) {
         JsonNode result = null;
-        Response response = null;
-        log.info("authKey : {} ", authKey);
-        log.info("host : {} ", host);
         try {
-            url = host + url;
-            // Create an OkHttpClient instance
-            OkHttpClient client = new OkHttpClient();
-
-            // Build the request with headers
-            Request request = new Request.Builder()
+            OkHttpClient client = new OkHttpClient().newBuilder().build();
+            Request.Builder builder = new Request.Builder()
                     .url(url)
-                    .get() // HTTP GET method
-                    .addHeader(authName, authKey)
-                    .build();
+                    .addHeader("Accept", "application/json")
+                    .addHeader("Content-Type", "application/json; charset=utf-8");
 
-            log.info("Service url : {} ", url);
-            log.info("Service request : {} ", request);
+            if (authName != null && authKey != null) {
+                builder = builder.addHeader(authName, authKey);
+            }
+            log.info("Service URL: {}", url);
 
-            try {
-                // Execute the request
-                response = client.newCall(request).execute();
+            if ("GET".equalsIgnoreCase(method)) {
+                builder = builder.method("GET", null);
+            } else if ("POST".equalsIgnoreCase(method) && bodyStr != null && !bodyStr.isEmpty()) {
+                okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(bodyStr, mediaType);
+                builder = builder.method("POST", body);
+                log.info("Service body: {}", bodyStr);
+            }
 
-                // Print the response
-                if (response.isSuccessful() && response.body() != null) {
+            Request request = builder.build();
+            try (Response response = client.newCall(request).execute()) {
+                int statusCode = response.code();
+
+                if (response.body() != null) {
                     String responseStr = response.body().string();
-                    log.info("Service resp : {} ", responseStr);
-                    result = objectMapper.readTree(responseStr);
+                    log.info("Service response: {} {}", responseStr, statusCode);
 
-                    // Check the status.code field
-                    if (result.has("status") && result.get("status").has("code")) {
-                        int statusCode = result.get("status").get("code").asInt();
-                        if (statusCode == 200) {
-                            log.info("Service result is successful: {}", result);
-                        } else {
-                            log.error("Service returned error status code: {}", statusCode);
-                            throw new IOException("Service returned error status code: " + statusCode);
-                        }
+                    if (response.isSuccessful()) {
+                        result = objectMapper.readTree(responseStr);
                     } else {
-                        log.error("Response does not contain a valid status.code field");
-                        throw new IOException("Invalid response structure: missing status.code field");
+                        log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
+                        throw new RuntimeException("Request failed with status code: " + statusCode + " and message " + responseStr);
                     }
-
-                    log.info("Service result : {} ", result);
                 } else {
-                    log.error("Request failed with status code: {}", response.code());
-                    throw new IOException("Request failed with status code: " + response.code());
+                    log.error("Response body is null");
+                    throw new RuntimeException("Response body is null with status code " + statusCode);
                 }
-            } catch (IOException e) {
-                log.error(e.getMessage());
-                throw e;
-            } finally {
-                // Close the response to avoid connection leaks
-                if (response != null) {
-                    response.close();
-                }
+            } catch (Exception e) {
+                log.error("Network or I/O error occurred: {}", e.getMessage());
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw e;
-        } finally {
-            if (response != null) {
-                response.close();
-            }
+            log.error("Unexpected error occurred: {}", e.getMessage());
         }
         return result;
     }
