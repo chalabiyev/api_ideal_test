@@ -68,7 +68,7 @@ public class AKBUploadInfoServiceImpl implements AKBUploadInfoService {
 
         try {
             // Send the request
-            return sendRequest.sendRequest(fullUrl, null);
+            return sendRequest.sendRequest(fullUrl, null, properties.getUpload_username(), properties.getUpload_password());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -93,7 +93,7 @@ public class AKBUploadInfoServiceImpl implements AKBUploadInfoService {
 
         try {
             // Send the request
-            return sendRequest.sendRequest(fullUrl, null);
+            return sendRequest.sendRequest(fullUrl, null, properties.getUpload_username(), properties.getUpload_password());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -120,7 +120,7 @@ public class AKBUploadInfoServiceImpl implements AKBUploadInfoService {
 
         try {
             // Send the request
-            return sendRequest.sendRequest(fullUrl, null);
+            return sendRequest.sendRequest(fullUrl, null, properties.getUpload_username(), properties.getUpload_password());
         } catch (Exception e) {
             log.error(e.getMessage());
         }

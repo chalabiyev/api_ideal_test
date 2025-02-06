@@ -24,13 +24,6 @@ import java.util.Base64;
 @Service
 public class SendRequest {
 
-
-    @Value("${akb.id}")
-    private String id;
-
-    @Value("${akb.password}")
-    private String password;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -80,10 +73,10 @@ public class SendRequest {
         return result;
     }
 
-    public JsonNode sendRequest(String url, String data) throws IOException, InterruptedException {
+    public JsonNode sendRequest(String url, String data, String username, String password) throws IOException, InterruptedException {
         JsonNode result = null;
         // Encode credentials to Base64
-        String credentials = id + ":" + password;
+        String credentials = username + ":" + password;
         String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
         HttpClient client = HttpClient.newHttpClient();
