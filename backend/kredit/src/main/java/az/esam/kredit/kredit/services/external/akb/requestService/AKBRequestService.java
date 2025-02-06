@@ -1,20 +1,20 @@
 package az.esam.kredit.kredit.services.external.akb.requestService;
 
-import az.esam.kredit.kredit.services.external.akb.requests.AKBRequest;
-import az.esam.kredit.kredit.services.external.akb.requests.UploadedInfoListRequest;
-import az.esam.kredit.kredit.services.external.akb.requests.WrongInfoListRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByIdCardRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface AKBRequestService {
 
-    JsonNode inquireByIdCard(AKBRequest akbRequest);
+    JsonNode inquireByIdCard(InquireByIdCardRequest akbRequest);
 
-    JsonNode inquireByPassport(AKBRequest akbRequest);
+    JsonNode inquireByPassport(InquireByPassportRequest akbRequest);
 
-    JsonNode inquireByServiceCard(AKBRequest akbRequest);
+    JsonNode inquireByServiceCard(InquireByServiceCardRequest akbRequest);
 
-    JsonNode inquireByTaxNo(AKBRequest akbRequest);
+    JsonNode inquireByTaxNo(InquireByTaxNoRequest akbRequest);
 
     JsonNode inquireUtilityServices(String reportId);
 
@@ -22,25 +22,20 @@ public interface AKBRequestService {
 
     JsonNode getBalance();
 
-    JsonNode getAppTransactionsByUsers();
-
-    JsonNode getWsTransactionsByUsers();
-
-    JsonNode inquireBakcellByIdCard();
-
-    JsonNode getAzerisiqData();
-
-    JsonNode inquireAzerisiqByIdCard();
-
     JsonNode lkpBorrInquiryPurposes();
 
     JsonNode lkpCollateralTypes();
 
-    JsonNode getAppTransactionsByBranches();
+    JsonNode lkpCountries();
 
-    JsonNode getWsTransactionsByBranches();
+    JsonNode lkpCreditClassTypes();
+
+    JsonNode lkpCreditPurposeTypes();
+
+    JsonNode lkpCreditStatusTypes();
 
     JsonNode lkpCreditTypes();
 
+    JsonNode lkpCurrencies();
 
 }
