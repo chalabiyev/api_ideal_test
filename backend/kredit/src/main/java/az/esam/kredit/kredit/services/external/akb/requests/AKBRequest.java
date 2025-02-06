@@ -14,11 +14,13 @@ import java.util.Date;
 @Data
 public class AKBRequest {
     private String purposeCode;
-    private String accept;
+    private Boolean accept;
+    private String taxNo;
     private String documentSerial;
     private String documentNo;
+    private String countryISO3Code;
     private String pinCode;
-    private Date birthDate;
+    private String birthDate;
     private String org_id;
     private String branchId;
     private String userId;

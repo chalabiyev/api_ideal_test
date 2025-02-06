@@ -1,13 +1,13 @@
-package az.esam.kredit.kredit.services.external.akb;
+package az.esam.kredit.kredit.services.external.akb.uploadService;
 
+import az.esam.kredit.kredit.properties.AkbProperties;
 import az.esam.kredit.kredit.services.external.SendRequest;
-import az.esam.kredit.kredit.services.external.akb.requests.AKBRequest;
 import az.esam.kredit.kredit.services.external.akb.requests.UploadedInfoListRequest;
 import az.esam.kredit.kredit.services.external.akb.requests.WrongInfoListRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,10 +16,11 @@ import java.nio.file.Path;
 
 @Slf4j
 @Service
-public class AKBServiceImpl implements AKBService {
+@EnableConfigurationProperties(AkbProperties.class)
+public class AKBUploadInfoServiceImpl implements AKBUploadInfoService {
 
-    @Value("${akb.host}")
-    private String host;
+    @Autowired
+    AkbProperties properties;
 
     @Autowired
     SendRequest sendRequest;
@@ -27,115 +28,10 @@ public class AKBServiceImpl implements AKBService {
     private String authName = "Authorization";
 
     @Override
-    public JsonNode inquireByIdCard(AKBRequest akbRequest) {
-        String queryParams = "services/BorrowerInquiryWS?wsdl";
-        // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
-
-        try {
-            // Send the request
-            return sendRequest.sendRequest(fullUrl, String.valueOf(akbRequest));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public JsonNode inquireByPassport(AKBRequest akbRequest) {
-        String queryParams = "services/BorrowerInquiryWS?wsdl";
-        // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
-
-        try {
-            // Send the request
-            return sendRequest.sendRequest(fullUrl, String.valueOf(akbRequest));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public JsonNode inquireByServiceCard(AKBRequest akbRequest) {
-        String queryParams = "services/BorrowerInquiryWS?wsdl";
-        // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
-
-        try {
-            // Send the request
-            return sendRequest.sendRequest(fullUrl, String.valueOf(akbRequest));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public JsonNode inquireByTaxNo(AKBRequest akbRequest) {
-        String queryParams = "services/BorrowerInquiryWS?wsdl";
-        // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
-
-        try {
-            // Send the request
-            return sendRequest.sendRequest(fullUrl, String.valueOf(akbRequest));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public JsonNode inquireUtilityServices(String reportId) {
-        String queryParams = "services/BorrowerInquiryWS?wsdl";
-        // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
-
-        try {
-            // Send the request
-            return sendRequest.sendRequest(fullUrl, reportId);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public JsonNode getBorrowerScore(String reportId) {
-        String queryParams = "services/BorrowerInquiryWS?wsdl";
-        // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
-
-        try {
-            // Send the request
-            return sendRequest.sendRequest(fullUrl, reportId);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public JsonNode getBalance() {
-        String queryParams = "services/BorrowerInquiryWS?wsdl";
-        // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
-
-        try {
-            // Send the request
-            return sendRequest.sendRequest(fullUrl, null);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
     public JsonNode uploadArchivedXMLInfoZip(MultipartFile file) {
         // Ensure the endpoint is correct
         final String uploadEndpoint = "api/v1/bcpm/batch/upload";
-        String fullUrl = host + uploadEndpoint;
+        String fullUrl = properties.getHost() + uploadEndpoint;
 
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Uploaded file cannot be null or empty");
@@ -168,7 +64,7 @@ public class AKBServiceImpl implements AKBService {
         // api/v1/bcpm/batch/{batchId}
         String queryParams = "api/v1/bcpm/batch/" + reportId;
         // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
+        String fullUrl = properties.getHost() + queryParams;
 
         try {
             // Send the request
@@ -193,7 +89,7 @@ public class AKBServiceImpl implements AKBService {
                 + "&sort=" + uploadedInfoListRequest.getSort();
 
         // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
+        String fullUrl = properties.getHost() + queryParams;
 
         try {
             // Send the request
@@ -220,7 +116,7 @@ public class AKBServiceImpl implements AKBService {
                 + "&vlr=" + wrongInfoListRequest.getVlr();
 
         // Combine the base URL with query parameters
-        String fullUrl = host + queryParams;
+        String fullUrl = properties.getHost() + queryParams;
 
         try {
             // Send the request
