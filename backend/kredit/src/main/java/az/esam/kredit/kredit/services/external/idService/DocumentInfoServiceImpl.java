@@ -1,7 +1,6 @@
 package az.esam.kredit.kredit.services.external.idService;
 
 import az.esam.kredit.kredit.dtos.responses.document.*;
-import az.esam.kredit.kredit.services.external.JsonParserService;
 import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,9 +35,6 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     private String authName = "X-Bridge-AuthorizationKey";
 
     @Autowired
-    JsonParserService parserService;
-
-    @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
@@ -47,13 +43,15 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) throws IOException {
         try {
-            String url = "iamas/document/getIdCardInfo?Pin=" + pin + "&DocumentNumber=" + documentNumber;
+            String url = host + "iamas/document/getIdCardInfo?Pin=" + pin + "&DocumentNumber=" + documentNumber;
             log.info("Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(url, authName, authKey, host);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonResponse != null) {
                 try {
-                    List<FullIDCardInfoResponse> idCardInfoList
-                            = parserService.parseResponse(jsonResponse.get("data"), FullIDCardInfoResponse.class);
+                    List<FullIDCardInfoResponse> idCardInfoList = objectMapper.readValue(
+                            jsonResponse.get("data").toString(),
+                            objectMapper.getTypeFactory().constructParametricType(List.class, FullIDCardInfoResponse.class)
+                    );
 
                     if (idCardInfoList != null && !idCardInfoList.isEmpty()) {
                         // check if person is on the blacklistedIndividuals
@@ -126,13 +124,16 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public List<MobileNumberResponse> getMobileNumbersWithPin(String pin) {
         try {
-            String url = "mobile/numbers/getmobileNumbersWithPin?Pin=" + pin;
+            String url = host + "mobile/numbers/getmobileNumbersWithPin?Pin=" + pin;
             log.info("Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(url, authName, authKey, host);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonResponse != null) {
                 try {
-                    List<MobileNumberResponse> mobileNumberResponseList
-                            = parserService.parseResponse(jsonResponse.get("data"), MobileNumberResponse.class);
+
+                    List<MobileNumberResponse> mobileNumberResponseList = objectMapper.readValue(
+                            jsonResponse.get("data").toString(),
+                            objectMapper.getTypeFactory().constructParametricType(List.class, MobileNumberResponse.class)
+                    );
 
                     if (mobileNumberResponseList != null && !mobileNumberResponseList.isEmpty()) {
                         return mobileNumberResponseList;
@@ -153,11 +154,14 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public CheckNumberWithPinResponse getCheckNumberWithPin(String pin, String number) {
         try {
-            String url = "mobile/numbers/getCheckNumberWithPin?phone=" + number + "&Pin=" + pin;
-            JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
+            String url = host + "mobile/numbers/getCheckNumberWithPin?phone=" + number + "&Pin=" + pin;
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonNode != null) {
                 try {
-                    List<Integer> checkNumberWithPinResponseList = parserService.parseResponse(jsonNode.get("data"), Integer.class);
+                    List<Integer> checkNumberWithPinResponseList = objectMapper.readValue(
+                            jsonNode.get("data").toString(),
+                            objectMapper.getTypeFactory().constructParametricType(List.class, Integer.class)
+                    );
 
                     if (checkNumberWithPinResponseList != null && !checkNumberWithPinResponseList.isEmpty()) {
                         switch (checkNumberWithPinResponseList.get(0)) {
@@ -194,13 +198,15 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public DocumentInfoByMobileNumberResponse getDocumentInfoByPhone(String phoneNumber) throws IOException {
         try {
-            String url = "mobile/numbers/getDocumentInfoByPhone?phone=" + phoneNumber;
-            JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
+            String url = host + "mobile/numbers/getDocumentInfoByPhone?phone=" + phoneNumber;
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonNode != null) {
                 try {
-                    List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList
-                            = parserService.parseResponse(jsonNode.get("data"), DocumentInfoByMobileNumberResponse.class);
-
+                    List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList =
+                            objectMapper.readValue(
+                                    jsonNode.get("data").toString(),
+                                    objectMapper.getTypeFactory().constructParametricType(List.class, DocumentInfoByMobileNumberResponse.class)
+                            );
                     if (documentInfoByMobileNumberResponseList != null && !documentInfoByMobileNumberResponseList.isEmpty()) {
                         return documentInfoByMobileNumberResponseList.get(0);
                     }
@@ -212,7 +218,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             }
         } catch (Exception ex) {
             log.error(null, ex);
-            throw ex;
+            return null;
         }
         return null;
     }
@@ -220,12 +226,15 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public List<VehicleInfoResponse> getVehicleInfoByPin(String pin) throws IOException {
         try {
-            String url = "general/vehicle/getVehicleInfoByPin?Pin=" + pin;
-            JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
+            String url = host + "general/vehicle/getVehicleInfoByPin?Pin=" + pin;
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonNode != null) {
                 try {
-                    List<VehicleInfoResponse> vehicleInfoResponseList
-                            = parserService.parseResponse(jsonNode.get("data"), VehicleInfoResponse.class);
+                    List<VehicleInfoResponse> vehicleInfoResponseList =
+                            objectMapper.readValue(
+                                    jsonNode.get("data").toString(),
+                                    objectMapper.getTypeFactory().constructParametricType(List.class, VehicleInfoResponse.class)
+                            );
 
                     if (vehicleInfoResponseList != null && !vehicleInfoResponseList.isEmpty()) {
                         return vehicleInfoResponseList;
@@ -246,13 +255,16 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public MigrationDocumentInfoResponse getMigrationInfo(String migrationDocNumber, String migrationPin) {
         try {
-            String url = "iamas/document/getMigrationInfo?MigrationDocNumber=" + migrationDocNumber
+            String url = host + "iamas/document/getMigrationInfo?MigrationDocNumber=" + migrationDocNumber
                     + "&MigrationPin=" + migrationPin;
-            JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonNode != null) {
                 try {
-                    List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList
-                            = parserService.parseResponse(jsonNode.get("data"), MigrationDocumentInfoResponse.class);
+                    List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList =
+                            objectMapper.readValue(
+                                    jsonNode.get("data").toString(),
+                                    objectMapper.getTypeFactory().constructParametricType(List.class, MigrationDocumentInfoResponse.class)
+                            );
 
                     if (migrationDocumentInfoResponseList != null && !migrationDocumentInfoResponseList.isEmpty()) {
                         return migrationDocumentInfoResponseList.get(0);
@@ -273,14 +285,16 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public PassportDocumentInfoResponse getPassportInfo(String foreignDocNumber, String foreignPin) {
         try {
-            String url = "iamas/document/getPassportInfo?ForeignDocNumber=" + foreignDocNumber
+            String url = host + "iamas/document/getPassportInfo?ForeignDocNumber=" + foreignDocNumber
                     + "&ForeignPin=" + foreignPin;
-            JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonNode != null) {
                 try {
-                    List<PassportDocumentInfoResponse> passportDocumentInfoResponseList
-                            = parserService.parseResponse(jsonNode.get("data"), PassportDocumentInfoResponse.class);
-
+                    List<PassportDocumentInfoResponse> passportDocumentInfoResponseList =
+                            objectMapper.readValue(
+                                    jsonNode.get("data").toString(),
+                                    objectMapper.getTypeFactory().constructParametricType(List.class, PassportDocumentInfoResponse.class)
+                            );
                     if (passportDocumentInfoResponseList != null && !passportDocumentInfoResponseList.isEmpty()) {
                         return passportDocumentInfoResponseList.get(0);
                     }
@@ -300,12 +314,15 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public VoenInfoResponse getInfoByVoen(String voen) {
         try {
-            String url = "general/etaxes/getInfoByVoen?Voen=" + voen;
-            JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
+            String url = host + "general/etaxes/getInfoByVoen?Voen=" + voen;
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
             if (jsonNode != null) {
                 try {
-                    List<VoenInfoResponse> voenInfoResponseList
-                            = parserService.parseResponse(jsonNode.get("data"), VoenInfoResponse.class);
+                    List<VoenInfoResponse> voenInfoResponseList =
+                            objectMapper.readValue(
+                                    jsonNode.get("data").toString(),
+                                    objectMapper.getTypeFactory().constructParametricType(List.class, VoenInfoResponse.class)
+                            );
 
                     if (voenInfoResponseList != null && !voenInfoResponseList.isEmpty()) {
                         return voenInfoResponseList.get(0);
