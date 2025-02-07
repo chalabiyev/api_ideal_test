@@ -45,7 +45,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = host + "iamas/document/getIdCardInfo?Pin=" + pin + "&DocumentNumber=" + documentNumber;
             log.info("Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonResponse != null) {
                 try {
                     List<FullIDCardInfoResponse> idCardInfoList = objectMapper.readValue(
@@ -126,7 +126,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = host + "mobile/numbers/getmobileNumbersWithPin?Pin=" + pin;
             log.info("Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonResponse != null) {
                 try {
 
@@ -155,7 +155,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public CheckNumberWithPinResponse getCheckNumberWithPin(String pin, String number) {
         try {
             String url = host + "mobile/numbers/getCheckNumberWithPin?phone=" + number + "&Pin=" + pin;
-            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
                     List<Integer> checkNumberWithPinResponseList = objectMapper.readValue(
@@ -199,7 +199,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public DocumentInfoByMobileNumberResponse getDocumentInfoByPhone(String phoneNumber) throws IOException {
         try {
             String url = host + "mobile/numbers/getDocumentInfoByPhone?phone=" + phoneNumber;
-            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
                     List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList =
@@ -227,7 +227,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public List<VehicleInfoResponse> getVehicleInfoByPin(String pin) throws IOException {
         try {
             String url = host + "general/vehicle/getVehicleInfoByPin?Pin=" + pin;
-            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
                     List<VehicleInfoResponse> vehicleInfoResponseList =
@@ -257,7 +257,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = host + "iamas/document/getMigrationInfo?MigrationDocNumber=" + migrationDocNumber
                     + "&MigrationPin=" + migrationPin;
-            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
                     List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList =
@@ -287,7 +287,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = host + "iamas/document/getPassportInfo?ForeignDocNumber=" + foreignDocNumber
                     + "&ForeignPin=" + foreignPin;
-            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
                     List<PassportDocumentInfoResponse> passportDocumentInfoResponseList =
@@ -315,7 +315,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     public VoenInfoResponse getInfoByVoen(String voen) {
         try {
             String url = host + "general/etaxes/getInfoByVoen?Voen=" + voen;
-            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey);
+            JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
                     List<VoenInfoResponse> voenInfoResponseList =

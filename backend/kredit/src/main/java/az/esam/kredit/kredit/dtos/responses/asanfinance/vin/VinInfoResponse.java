@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -13,10 +15,15 @@ import java.util.List;
 @Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(collection = "asan-finance_vin_info")
 public class VinInfoResponse {
+
+    @Id
+    private String vin;
+
     private String AppNumber;
     private String AttorneyNumber;
     private String AttorneyIssuingDate;
     private Person Person;
-    private List<Document> Documents;
+    private List<AsanFinanceDocument> Documents;
 }

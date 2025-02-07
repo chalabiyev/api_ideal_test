@@ -1,7 +1,7 @@
 package az.esam.kredit.kredit.services.external.akb.uploadService;
 
-import az.esam.kredit.kredit.services.external.akb.requests.UploadedInfoListRequest;
-import az.esam.kredit.kredit.services.external.akb.requests.WrongInfoListRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.uploads.UploadedInfoListRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.uploads.WrongInfoListRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.multipart.MultipartFile;
 

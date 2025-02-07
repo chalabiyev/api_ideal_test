@@ -2,13 +2,12 @@ package az.esam.kredit.kredit.services.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,17 +23,23 @@ import java.util.Base64;
 @Service
 public class SendRequest {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final XmlMapper xmlMapper = new XmlMapper();
 
-    public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey) {
+    public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey, boolean isXml) {
         JsonNode result = null;
         try {
             OkHttpClient client = new OkHttpClient().newBuilder().build();
             Request.Builder builder = new Request.Builder()
-                    .url(url)
-                    .addHeader("Accept", "application/json")
-                    .addHeader("Content-Type", "application/json; charset=utf-8");
+                    .url(url);
+
+            if (isXml) {
+                builder.addHeader("Accept", "application/xml")
+                        .addHeader("Content-Type", "application/xml; charset=utf-8");
+            } else {
+                builder.addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json; charset=utf-8");
+            }
 
             if (authName != null && authKey != null) {
                 builder = builder.addHeader(authName, authKey);
@@ -44,10 +49,10 @@ public class SendRequest {
             if ("GET".equalsIgnoreCase(method)) {
                 builder = builder.method("GET", null);
             } else if ("POST".equalsIgnoreCase(method)) {
-                okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+                okhttp3.MediaType mediaType = okhttp3.MediaType.parse(isXml ? "application/xml" : "application/json");
                 RequestBody body = (bodyStr != null && !bodyStr.isEmpty())
                         ? RequestBody.create(bodyStr, mediaType)
-                        : RequestBody.create("{}", mediaType);
+                        : RequestBody.create(isXml ? "<empty/>" : "{}", mediaType);
                 builder = builder.method("POST", body);
                 log.info("Service body: {}", bodyStr);
             }
@@ -55,20 +60,29 @@ public class SendRequest {
             Request request = builder.build();
             try (Response response = client.newCall(request).execute()) {
                 int statusCode = response.code();
-                String responseStr = response.body() != null ? response.body().string() : null;
+                if (response.body() == null) {
+                    log.error("Response body is null with status code {}", statusCode);
+                    throw new RuntimeException("Response body is null with status code " + statusCode);
+                }
+                String responseStr = response.body().string();
                 log.info("Service response: {} {}", responseStr, statusCode);
 
-                if (responseStr != null && response.isSuccessful()) {
-                    result = objectMapper.readTree(responseStr);
-                } else {
+                if (!response.isSuccessful()) {
                     log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
                     throw new RuntimeException("Request failed with status code: " + statusCode + " and message " + responseStr);
                 }
-            } catch (Exception e) {
-                log.error("Network or I/O error occurred: {}", e.getMessage());
+
+                if (isXml) {
+                    JsonNode xmlNode = xmlMapper.readTree(responseStr);
+                    String jsonString = objectMapper.writeValueAsString(xmlNode);
+                    result = objectMapper.readTree(jsonString);
+                } else {
+                    result = objectMapper.readTree(responseStr);
+                }
             }
         } catch (Exception e) {
             log.error("Unexpected error occurred: {}", e.getMessage());
+            throw new RuntimeException("Request execution failed", e);
         }
         return result;
     }
