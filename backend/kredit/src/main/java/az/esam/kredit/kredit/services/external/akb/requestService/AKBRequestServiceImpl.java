@@ -32,21 +32,21 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <inquireByIdCard xmlns=\"http://inquiryws.mkr.risk.az/\">\n" +
-                    "      <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n" +
-                    "      <accept>" + akbRequest.getAccept() + "</accept>\n" +
-                    "      <documentSerial>" + akbRequest.getDocumentSerial() + "</documentSerial>\n" +
-                    "      <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n" +
-                    "      <pinCode>" + akbRequest.getPinCode() + "</pinCode>\n" +
-                    "      <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
-                    "      <branchId>" + akbRequest.getBranchId() + "</branchId>\n" +
-                    "      <userId>" + akbRequest.getUserId() + "</userId>\n" +
-                    "    </inquireByIdCard>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:inq=\"http://inquiryws.mkr.risk.az/\">\n" +
+                    "    <soapenv:Header/>\n" +
+                    "    <soapenv:Body>\n" +
+                    "        <inq:inquireByIdCard>\n" +
+                    "           <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n" +
+                    "           <accept>" + akbRequest.getAccept() + "</accept>\n" +
+                    "           <documentSerial>AZE</documentSerial>\n" +
+                    "           <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n" +
+                    "           <pinCode>" + akbRequest.getPinCode() + "</pinCode>\n" +
+                    "           <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
+                    "           <branchId>" + akbRequest.getBranchId() + "</branchId>\n" +
+                    "           <userId>" + akbRequest.getUserId() + "</userId>\n" +
+                    "        </inq:inquireByIdCard>\n" +
+                    "    </soapenv:Body>\n" +
+                    "</soapenv:Envelope>";
 
             log.info("inquireByIdCard Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
