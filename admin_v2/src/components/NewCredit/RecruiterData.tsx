@@ -10,29 +10,62 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Checkbox,
+  Tooltip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { CreditRequestDto } from 'src/types/CreditRequestDto';
-import { RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
+import { EmployeeInfoResponse, RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
+import { GetEmployeeInfoByPin } from 'src/api/AsanFinanceService';
 
 const RecruiterData = ({
+  setCreditRequest,
+  pin,
   setValue,
   creditRequest,
 }: {
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+  pin: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   creditRequest: CreditRequestDto;
 }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [fetchFromService, setFetchFromService] = useState<boolean>(false);
 
   const handleAccordionChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
-  console.log(creditRequest.recruiter.active);
+  const GetEmployeeInfoByPinFunc = async () => {
+    const _EMPLOYEE_DATA = await GetEmployeeInfoByPin(pin, fetchFromService);
+
+    if (typeof _EMPLOYEE_DATA === 'object' && _EMPLOYEE_DATA !== null) {
+      setCreditRequest((prev) => ({
+        ...prev,
+        recruiter: _EMPLOYEE_DATA as EmployeeInfoResponse,
+      }));
+    } else {
+      console.error('Invalid employee data:', _EMPLOYEE_DATA);
+    }
+  };
 
   return (
     <Box sx={{ py: 4 }}>
+      <Card sx={{ m: 4, p: 2, display: 'flex', alignItems: 'center', backgroundColor: '#F9f' }}>
+        <Button onClick={GetEmployeeInfoByPinFunc} variant="contained" color="secondary">
+          Axtar
+        </Button>
+        <Typography color="white" sx={{ ml: 2 }}>
+          Bunu check etdiyiniz zaman məlumatlar ASAN Finans servisdən gələcək
+        </Typography>
+        <Checkbox
+          onChange={() => {
+            setFetchFromService(!fetchFromService);
+          }}
+          checked={fetchFromService}
+        />
+      </Card>
       <Typography
         variant="h5"
         sx={{ display: creditRequest.recruiter.active.length > 0 ? 'block' : 'none' }}
@@ -40,7 +73,6 @@ const RecruiterData = ({
       >
         Hazırki iş yer(lər)i
       </Typography>
-
       {/* hazirki  yeri məlumatları */}
       {creditRequest?.recruiter?.active?.map((item, index) => (
         <Card sx={{ mb: 4 }} key={index}>
@@ -179,7 +211,7 @@ const RecruiterData = ({
 
       {creditRequest?.recruiter?.deactive?.map((item, index) => (
         <Card sx={{ mb: 4 }}>
-          <Typography variant="h6" sx={{ mt: 2, px: 2 }} color='error' gutterBottom>
+          <Typography variant="h6" sx={{ mt: 2, px: 2 }} color="error" gutterBottom>
             {item.employer.name}
           </Typography>
           <Accordion

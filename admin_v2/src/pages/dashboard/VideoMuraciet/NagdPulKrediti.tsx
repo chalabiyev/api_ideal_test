@@ -35,7 +35,7 @@ export default function Page() {
   const operatorId: string = queryParams.get('operatorId') ?? '';
 
   // tab changes
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState('3');
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
@@ -194,13 +194,7 @@ export default function Page() {
   });
 
   // -------------------recurit---------------------------recurit------------------------------recurit--------------
-  const {
-    data: _EMPLOYEE_DATA,
-    hasData: _EMPLOYEE_HAS_DATA,
-    loading: _EMPLOYEE_LOADING,
-    refetch: _EMPLOYEE_REFETCH,
-    // } = useApi(`/auth/getUserByUserName/${pin}`);
-  } = useApi(`/asan-finance/getEmployeeInfoByPin?pin=${pin}`);
+
   const {
     data: _PENSIONER_DATA,
     hasData: _PENSIONER_HAS_DATA,
@@ -209,21 +203,15 @@ export default function Page() {
     // } = useApi(`/auth/getUserByUserName/${pin}`);
   } = useApi(`/asan-finance/getPensionerInfoByPin?pin=${pin}`);
 
-  useEffect(() => {
-    if (_EMPLOYEE_HAS_DATA) {
-      setCreditRequest((prev) => ({
-        ...prev,
-        recruiter: _EMPLOYEE_DATA,
-      }));
-    }
+  // useEffect(() => {
+  //   if (_PENSIONER_HAS_DATA) {
+  //     setCreditRequest((prev) => ({
+  //       ...prev,
+  //       pensioner: _PENSIONER_DATA,
+  //     }));
+  //   }
+  // }, [_EMPLOYEE_DATA, _EMPLOYEE_HAS_DATA]);
 
-    if (_PENSIONER_HAS_DATA) {
-      setCreditRequest((prev) => ({
-        ...prev,
-        pensioner: _PENSIONER_DATA,
-      }));
-    }
-  }, [_EMPLOYEE_DATA, _EMPLOYEE_HAS_DATA]);
   // ----------------recurit------------------------------recurit------------------------------recurit--------------
   const [newSignal, setNewSignal] = useState<SignalType>();
   const [videoData, setVideoData] = useState('');
@@ -375,10 +363,16 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="2">
-              <RecruiterData creditRequest={creditRequest} setValue={setValue} />
+              <RecruiterData
+                setCreditRequest={setCreditRequest}
+                pin={pin}
+                creditRequest={creditRequest}
+                setValue={setValue}
+              />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="3">
               <PensionerTab
+                pin={pin}
                 creditRequest={creditRequest}
                 setCreditRequest={setCreditRequest}
                 setValue={setValue}
