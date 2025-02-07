@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Document {
+public class AsanFinanceDocument {
     private Long ID;
     private String Type;
     private String TypeDescription;

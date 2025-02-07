@@ -7,13 +7,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(collection = "asan-finance_voen_info")
 public class VoenInfoResponse {
+    @Id
+    private String voen;
+
     private Type payerType;
     private NaturalPerson naturalPerson;
     private LegalEntity legalEntity;

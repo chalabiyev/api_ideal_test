@@ -15,25 +15,25 @@ import az.esam.kredit.kredit.dtos.responses.asanfinance.voen.VoenInfoResponse;
 
 public interface AsanFinanceService {
 
-    AsanFinanceResponse<FarmInfoResponse> getFarmInfoByPin(String pin);
+    FarmInfoResponse getFarmInfoByPin(String pin, boolean fetchFromService);
 
-    AsanFinanceResponse<FarmInfoResponse> getFarmInfoByVoen(String voen);
+    FarmInfoResponse getFarmInfoByVoen(String voen, boolean fetchFromService);
 
-    AsanFinanceResponse<PersonalInfoAllResponse> getPersonalInfoAllByPin(String pin);
+    PersonalInfoAllResponse getPersonalInfoAllByPin(String pin, boolean fetchFromService);
 
-    AsanFinanceResponse<PersonalInfoAllResponse> getPersonalInfoByPin(String pin);
+    PersonalInfoAllResponse getPersonalInfoByPin(String pin, boolean fetchFromService);
 
-    AsanFinanceResponse<EmployeeInfoResponse> getEmployeeInfoByPin(String pin);
+    EmployeeInfoResponse getEmployeeInfoByPin(String pin, boolean fetchFromService);
 
-    AsanFinanceResponse<PensionerInfoResponse> getPensionerInfoByPin(String pin);
+    PensionerInfoResponse getPensionerInfoByPin(String pin, boolean fetchFromService);
 
-    AsanFinanceResponse<PassportInfoResponse> getForeignPassportInfoByPin(String pin);
+    PassportInfoResponse getForeignPassportInfoByPin(String pin, boolean fetchFromService);
 
-    AsanFinanceResponse<VinInfoResponse> getVinInfoByVin(String vin);
+    VinInfoResponse getVinInfoByVin(String vin, boolean fetchFromService);
 
-    AsanFinanceResponse<VoenInfoResponse> getVoenInfoByVoen(String voen);
+    VoenInfoResponse getVoenInfoByVoen(String voen, boolean fetchFromService);
 
-    AsanFinanceResponse<PersonalInfoAllResponse> getPersonalInfoByPinAndDocument(String pin, String documentNumber);
+    PersonalInfoAllResponse getPersonalInfoByPinAndDocument(String pin, String documentNumber, boolean fetchFromService);
 
     AsanFinanceResponse<ExpensesResponse> getExpensesInfo(AsanFinanceRequest asanFinanceRequest);
 

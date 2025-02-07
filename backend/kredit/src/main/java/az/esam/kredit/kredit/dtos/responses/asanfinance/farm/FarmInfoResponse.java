@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -14,7 +17,14 @@ import java.util.List;
 @Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(collection = "asan_FarmInfoResponse")
 public class FarmInfoResponse {
+
+    @Id
+    private String pin;
+
+    @Indexed(unique = true)
+    private String voen;
 
     private Person Person;
 
