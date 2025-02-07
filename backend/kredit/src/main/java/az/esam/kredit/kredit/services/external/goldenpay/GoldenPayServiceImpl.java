@@ -38,7 +38,7 @@ public class GoldenPayServiceImpl implements GoldenPayService {
             String url = properties.getApiUrl() + "/web/service/merchant/getPaymentKey";
             log.info("getPaymentKey Request URL: {}", url);
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", null, null, false);
-            if (jsonResponse != null) {
+            if (jsonResponse.has("paymentKey") && !jsonResponse.get("paymentKey").isNull()) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
                         GetPaymentKeyResponse.class
@@ -54,9 +54,10 @@ public class GoldenPayServiceImpl implements GoldenPayService {
     }
 
     @Override
-    public GetPaymentResultResponse getPaymentRequest(String paymentKey, String hashCode) {
+    public GetPaymentResultResponse getPaymentResult(String paymentKey) {
         try {
 //            URL: https://rest.goldenpay.az/web/service/merchant/getPaymentResult
+            String hashCode = crypt(properties.getAuthKey() + paymentKey);
 
             String url = properties.getApiUrl() + "/web/service/merchant/getPaymentResult?payment_key="
                     + paymentKey + "&hash_code=" + hashCode;

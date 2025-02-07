@@ -26,10 +26,9 @@ public class GoldenPayController {
         return ResponseEntity.ok(goldenPayService.getPaymentKey(request));
     }
 
-    @GetMapping("/getPaymentRequest")
-    public ResponseEntity<GetPaymentResultResponse> getPaymentRequest(
-            @RequestParam @NotBlank(message = "Payment Key boş ola bilməz") String paymentKey,
-            @RequestParam @NotBlank(message = "Hash Code boş ola bilməz") String hashCode) {
-        return ResponseEntity.ok(goldenPayService.getPaymentRequest(paymentKey, hashCode));
+    @GetMapping("/getPaymentResult")
+    public ResponseEntity<GetPaymentResultResponse> getPaymentResult(
+            @RequestParam @NotBlank(message = "Payment Key boş ola bilməz") String paymentKey) {
+        return ResponseEntity.ok(goldenPayService.getPaymentResult(paymentKey));
     }
 }

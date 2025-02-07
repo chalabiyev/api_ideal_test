@@ -8,5 +8,5 @@ public interface GoldenPayService {
 
     GetPaymentKeyResponse getPaymentKey(GetPaymentKeyRequest request);
 
-    GetPaymentResultResponse getPaymentRequest(String paymentKey, String hashCode);
+    GetPaymentResultResponse getPaymentResult(String paymentKey);
 }
