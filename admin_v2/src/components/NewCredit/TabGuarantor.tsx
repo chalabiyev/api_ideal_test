@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Card, CardContent, Grid, TextField, Typography, Avatar } from '@mui/material';
 import { Guarantor } from 'src/pages/dashboard/VideoMuraciet/types';
- 
 
 const TabGuarantor = ({
   setValue,
@@ -260,34 +259,6 @@ const TabGuarantor = ({
       <Box textAlign="center" sx={{ mt: 4 }}>
         <Button variant="contained" color="primary" onClick={handleAddZamin}>
           Yeni Zamin Əlavə Et
-        </Button>
-      </Box>
-
-      <Box textAlign="center" sx={{ mt: 4 }}>
-        <Button
-          onClick={() => {
-            window.scrollTo(0, 0);
-            setValue('2');
-          }}
-          variant="contained"
-          color="error"
-          sx={{ mr: 2 }}
-        >
-          Geri
-        </Button>
-        <Button
-          onClick={() => {
-            window.scrollTo(0, 0);
-            setValue('5');
-          }}
-          variant="contained"
-          color="primary"
-          sx={{ mr: 2 }}
-        >
-          İrəli
-        </Button>
-        <Button variant="contained" color="success">
-          Təstiqlə
         </Button>
       </Box>
     </Box>
