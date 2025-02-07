@@ -1,0 +1,132 @@
+import React, { useState } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Typography,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { CreditRequestDto } from 'src/types/CreditRequestDto';
+import { RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
+
+const PensionerTab = ({
+  setValue,
+  creditRequest,
+  setCreditRequest,
+}: {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  creditRequest: CreditRequestDto;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+}) => {
+  const handleChange = (key: keyof RecruiterDataType, value: any) => {
+    setCreditRequest((prev) => ({ ...prev, recruiter: { ...prev.recruiter, [key]: value } }));
+  };
+
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  const handleAccordionChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+
+  console.log(creditRequest.recruiter.active);
+
+  return (
+    <Box sx={{ py: 4 }}>
+      <Typography
+        variant="h5"
+        sx={{ display: creditRequest.recruiter.active.length > 0 ? 'block' : 'none' }}
+        gutterBottom
+      >
+        Təyin olunmuş müavinətlər
+      </Typography>
+
+      {/* hazirki  yeri məlumatları */}
+      {creditRequest?.pensioner?.allowance?.map((item, index) => (
+        <Card sx={{ mb: 1 }} key={index}>
+          <Accordion
+            expanded={expanded === `panel${index + 43123}`}
+            onChange={handleAccordionChange(`panel${index + 43123}`)}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="subtitle1">{item?.type?.description}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Başlanğıc tarixi" value={item.beginDate || ''} fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Bitmə tarixi" value={item.endDate || ''} fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Identifikasiyaya uyğun izah (QRUP)"
+                    value={item?.group?.description || ''}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Məbləğ" value={item?.amount || ''} fullWidth />
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+      ))}
+
+      {/* kohne yeri məlumatları */}
+      <Typography sx={{ mt: 4 }} variant="h5" gutterBottom>
+        Təqaüd məlumatları
+      </Typography>
+
+      {creditRequest?.pensioner?.pension?.map((item, index) => (
+        <Card sx={{ mb: 1 }} key={index}>
+          <Accordion
+            expanded={expanded === `panel${index + 4323123}`}
+            onChange={handleAccordionChange(`panel${index + 4323123}`)}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="subtitle1">{item?.type?.label}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Identifikasiyaya uyğun izah (Tip)"
+                    value={item.type.description || ''}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Identifikasiyaya uyğun izah (QRUP)"
+                    value={item.group.description || ''}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Başlanğıc tarixi" value={item.startDate || ''} fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Bitmə tarixi" value={item.endDate || ''} fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Məbləğ" value={item.amount || ''} fullWidth />
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+        </Card>
+      ))}
+    </Box>
+  );
+};
+
+export default PensionerTab;
