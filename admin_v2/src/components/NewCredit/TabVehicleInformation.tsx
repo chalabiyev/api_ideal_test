@@ -79,34 +79,6 @@ const TabVehicleInformation = ({
           </CardContent>
         </Card>
       ))}
-
-      <Box textAlign="center" sx={{ mt: 4 }}>
-        <Button
-          onClick={() => {
-            window.scrollTo(0, 0);
-            setValue('3');
-          }}
-          variant="contained"
-          color="error"
-          sx={{ mr: 2 }}
-        >
-          Geri
-        </Button>
-        <Button
-          onClick={() => {
-            window.scrollTo(0, 0);
-            setValue('6');
-          }}
-          variant="contained"
-          color="primary"
-          sx={{ mr: 2 }}
-        >
-          İrəli
-        </Button>
-        <Button variant="contained" color="success">
-          Təstiqlə
-        </Button>
-      </Box>
     </Box>
   );
 };
