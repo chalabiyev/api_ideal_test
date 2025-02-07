@@ -40,7 +40,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
         try {
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/FarmInfo/Pin/" + pin;
             log.info("getFarmInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -62,7 +62,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //            http://base-url/api/v1/FarmInfo/Voen/{voen}
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/FarmInfo/Voen/" + voen;
             log.info("getFarmInfoByVoen Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -84,7 +84,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //            http://base-url/api/v1/PersonalInfo/All/{PIN}
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/All/" + pin;
             log.info("getPersonalInfoAllByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -106,7 +106,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //            http://base-url/api/v1/PersonalInfo/{pin}
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/" + pin;
             log.info("getPersonalInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -128,7 +128,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //           http://base-url/api/v2/EmployeeInfo/{pin}
             String url = asanFinanceProperties.getApiUrl() + "/api/v2/EmployeeInfo/" + pin;
             log.info("getEmployeeInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -150,7 +150,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //          http://base-url/api/v2/PensionInfo/{pin}
             String url = asanFinanceProperties.getApiUrl() + "/api/v2/PensionInfo/" + pin;
             log.info("getPensionerInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -172,7 +172,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //         http://base-url/api/v1/ForeignPassportInfo/{pin}
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/ForeignPassportInfo/" + pin;
             log.info("getForeignPassportInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -194,7 +194,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //         http://base-url/api/v1/VINInfo/{VIN}
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/VINInfo/" + vin;
             log.info("getVinInfoByVin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -216,7 +216,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //          http://base-url/api/v1/VoenInfo/{VOEN}
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/VoenInfo/" + voen;
             log.info("getVoenInfoByVoen Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -238,7 +238,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 //          http://base-url/api/v1/PersonalInfo/PinAndDocNumber?pin={pin}&docNumber={docNumber}
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/PinAndDocNumber?pin=" + pin + "&docNumber=" + documentNumber;
             log.info("getPersonalInfoByPinAndDocument Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -261,7 +261,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             String bodyStr = objectMapper.writeValueAsString(asanFinanceRequest);
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/Info/Expenses";
             log.info("getExpensesInfo Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -284,7 +284,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             String bodyStr = objectMapper.writeValueAsString(asanFinanceRequest);
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/Info/Payments";
             log.info("getPaymentsInfo Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
@@ -307,7 +307,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             String bodyStr = objectMapper.writeValueAsString(asanFinanceRequest);
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/Info/Balance";
             log.info("getBalanceInfo Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey());
+            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
