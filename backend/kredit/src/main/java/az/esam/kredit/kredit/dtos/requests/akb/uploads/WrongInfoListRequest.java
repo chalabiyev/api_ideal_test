@@ -1,4 +1,4 @@
-package az.esam.kredit.kredit.services.external.akb.requests;
+package az.esam.kredit.kredit.dtos.requests.akb.uploads;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

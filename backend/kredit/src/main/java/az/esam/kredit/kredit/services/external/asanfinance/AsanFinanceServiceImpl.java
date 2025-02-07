@@ -32,8 +32,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     @Autowired
     SendRequest sendRequest;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public AsanFinanceResponse<FarmInfoResponse> getFarmInfoByPin(String pin) {

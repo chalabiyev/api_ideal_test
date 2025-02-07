@@ -2,8 +2,8 @@ package az.esam.kredit.kredit.services.external.akb.uploadService;
 
 import az.esam.kredit.kredit.properties.AkbProperties;
 import az.esam.kredit.kredit.services.external.SendRequest;
-import az.esam.kredit.kredit.services.external.akb.requests.UploadedInfoListRequest;
-import az.esam.kredit.kredit.services.external.akb.requests.WrongInfoListRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.uploads.UploadedInfoListRequest;
+import az.esam.kredit.kredit.dtos.requests.akb.uploads.WrongInfoListRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
