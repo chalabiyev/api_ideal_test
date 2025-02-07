@@ -128,21 +128,6 @@ export default function Page() {
             salary: 0,
           },
           employer: {
-            name: 'AI Lab',
-            voen: '4312213',
-          },
-          contract: {
-            terminateDate: '',
-            beginDate: '',
-            endDate: '',
-          },
-        },
-        {
-          employee: {
-            position: '',
-            salary: 0,
-          },
-          employer: {
             name: 'Claradix',
             voen: '4312213',
           },
@@ -153,24 +138,6 @@ export default function Page() {
           },
         },
       ],
-      // ------------------
-      // buraya ilave et
-      // ------------------
-      // education: '',
-      // companyName: '',
-      // salary: 0,
-      // address: '',
-      // position: '',
-      // workExperience: 0,
-      // contractStartDate: '',
-      // contractEndDate: '',
-      // toplamodenis: 0,
-      // akbmelumatlari: '',
-      // daxilirisk: '',
-      // ayliqemekhaqqi: 0,
-      // ayliqcemigelir: 0,
-      // xerclerincemi: 0,
-      // xalisgelir: 0,
     },
     // --------------------pension---------------------------pension------------------------------pension--------------
     pensioner: {
@@ -233,17 +200,30 @@ export default function Page() {
     loading: _EMPLOYEE_LOADING,
     refetch: _EMPLOYEE_REFETCH,
     // } = useApi(`/auth/getUserByUserName/${pin}`);
-  } = useApi(`/asan-finance/getEmployeeInfoByPin?pin=1S5SYXY`);
+  } = useApi(`/asan-finance/getEmployeeInfoByPin?pin=${pin}`);
+  const {
+    data: _PENSIONER_DATA,
+    hasData: _PENSIONER_HAS_DATA,
+    loading: _PENSIONER_LOADING,
+    refetch: _PENSIONER_REFETCH,
+    // } = useApi(`/auth/getUserByUserName/${pin}`);
+  } = useApi(`/asan-finance/getPensionerInfoByPin?pin=${pin}`);
 
   useEffect(() => {
     if (_EMPLOYEE_HAS_DATA) {
-      // setCreditRequest({
-      //   ...creditRequest,
-      //   recruiter: _EMPLOYEE_DATA,
-      // });
-      console.log('recruiter', _EMPLOYEE_DATA);
+      setCreditRequest((prev) => ({
+        ...prev,
+        recruiter: _EMPLOYEE_DATA,
+      }));
     }
-  }, [_EMPLOYEE_DATA]);
+
+    if (_PENSIONER_HAS_DATA) {
+      setCreditRequest((prev) => ({
+        ...prev,
+        pensioner: _PENSIONER_DATA,
+      }));
+    }
+  }, [_EMPLOYEE_DATA, _EMPLOYEE_HAS_DATA]);
   // ----------------recurit------------------------------recurit------------------------------recurit--------------
   const [newSignal, setNewSignal] = useState<SignalType>();
   const [videoData, setVideoData] = useState('');
