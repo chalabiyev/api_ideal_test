@@ -1,5 +1,6 @@
-package az.esam.kredit.kredit.entities;
+package az.esam.kredit.kredit.entities.content_management;
 
+import az.esam.kredit.kredit.entities.BaseEntity;
 import az.esam.kredit.kredit.entities.enums.EInsuranceType;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,6 @@ public class Insurance extends BaseEntity {
     private String id;
     private EInsuranceType insuranceType;
     private String image;
-    private String bannerImage;
     private String title;
     private String description;
 }
