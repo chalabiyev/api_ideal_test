@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.asanfinance.pensioner;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,4 +28,6 @@ public class PensionerInfoResponse {
     private String BirthDate;
     private List<Allowance> Allowance;
     private List<Pension> Pension;
+
+    private ESource source;
 }

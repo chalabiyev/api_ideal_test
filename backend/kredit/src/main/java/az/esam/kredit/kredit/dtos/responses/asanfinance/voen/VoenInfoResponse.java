@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.asanfinance.voen;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.employee.Type;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.vin.Person;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,4 +26,6 @@ public class VoenInfoResponse {
     private LegalEntity legalEntity;
     private VoenInfo voenInfo;
     private Person chief;
+
+    private ESource source;
 }

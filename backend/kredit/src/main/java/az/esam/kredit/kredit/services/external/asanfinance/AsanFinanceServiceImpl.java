@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.services.external.asanfinance;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import az.esam.kredit.kredit.dtos.requests.asanfinance.AsanFinanceRequest;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.AsanFinanceResponse;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.balance.BalanceInfoResponse;
@@ -60,7 +61,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public FarmInfoResponse getFarmInfoByPin(String pin, boolean fetchFromService) {
         try {
             if (!fetchFromService && farmInfoResponseRepository.findByPin(pin).isPresent()) {
-                return farmInfoResponseRepository.findByPin(pin).get();
+                FarmInfoResponse farmInfoResponse = farmInfoResponseRepository.findByPin(pin).get();
+                farmInfoResponse.setSource(ESource.DB);
+                return farmInfoResponse;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/FarmInfo/Pin/" + pin;
             log.info("getFarmInfoByPin Request URL: {}", url);
@@ -74,6 +77,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (farmInfo != null) {
                     farmInfo.setPin(pin);
                     farmInfoResponseRepository.save(farmInfo);
+                    farmInfo.setSource(ESource.SERVICE);
                     return farmInfo;
                 } else {
                     log.error("getFarmInfoByPin farmInfoResponse Response is null or empty");
@@ -92,7 +96,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public FarmInfoResponse getFarmInfoByVoen(String voen, boolean fetchFromService) {
         try {
             if (!fetchFromService && farmInfoResponseRepository.findByVoen(voen).isPresent()) {
-                return farmInfoResponseRepository.findByVoen(voen).get();
+                FarmInfoResponse farmInfoResponse = farmInfoResponseRepository.findByVoen(voen).get();
+                farmInfoResponse.setSource(ESource.DB);
+                return farmInfoResponse;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/FarmInfo/Voen/" + voen;
             log.info("getFarmInfoByVoen Request URL: {}", url);
@@ -107,6 +113,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (farmInfo != null) {
                     farmInfo.setVoen(voen);
                     farmInfoResponseRepository.save(farmInfo);
+                    farmInfo.setSource(ESource.SERVICE);
                     return farmInfo;
                 } else {
                     log.error("getFarmInfoByVoen farmInfoResponse Response is null or empty");
@@ -125,7 +132,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public PersonalInfoAllResponse getPersonalInfoAllByPin(String pin, boolean fetchFromService) {
         try {
             if (!fetchFromService && personalInfoAllResponseRepository.findByPIN(pin).isPresent()) {
-                return personalInfoAllResponseRepository.findByPIN(pin).get();
+                PersonalInfoAllResponse response = personalInfoAllResponseRepository.findByPIN(pin).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/All/" + pin;
             log.info("getPersonalInfoAllByPin Request URL: {}", url);
@@ -139,6 +148,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (personInfo != null) {
                     personInfo.setPIN(pin);
                     personalInfoAllResponseRepository.save(personInfo);
+                    personInfo.setSource(ESource.SERVICE);
                     return personInfo;
                 } else {
                     log.error("getPersonalInfoAllByPin personInfoResponse Response is null or empty");
@@ -157,7 +167,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public PersonalInfoAllResponse getPersonalInfoByPin(String pin, boolean fetchFromService) {
         try {
             if (!fetchFromService && personalInfoAllResponseRepository.findByPIN(pin).isPresent()) {
-                return personalInfoAllResponseRepository.findByPIN(pin).get();
+                PersonalInfoAllResponse response = personalInfoAllResponseRepository.findByPIN(pin).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/" + pin;
             log.info("getPersonalInfoByPin Request URL: {}", url);
@@ -171,6 +183,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (personInfo != null) {
                     personInfo.setPIN(pin);
                     personalInfoAllResponseRepository.save(personInfo);
+                    personInfo.setSource(ESource.SERVICE);
                     return personInfo;
                 } else {
                     log.error("getPersonalInfoByPin personInfoResponse Response is null or empty");
@@ -189,7 +202,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public EmployeeInfoResponse getEmployeeInfoByPin(String pin, boolean fetchFromService) {
         try {
             if (!fetchFromService && employeeInfoAllResponseRepository.findByPin(pin).isPresent()) {
-                return employeeInfoAllResponseRepository.findByPin(pin).get();
+                EmployeeInfoResponse response = employeeInfoAllResponseRepository.findByPin(pin).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v2/EmployeeInfo/" + pin;
             log.info("getEmployeeInfoByPin Request URL: {}", url);
@@ -203,6 +218,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (employee != null) {
                     employee.setPin(pin);
                     employeeInfoAllResponseRepository.save(employee);
+                    employee.setSource(ESource.SERVICE);
                     return employee;
                 } else {
                     log.error("getEmployeeInfoByPin personInfoResponse Response is null or empty");
@@ -221,7 +237,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public PensionerInfoResponse getPensionerInfoByPin(String pin, boolean fetchFromService) {
         try {
             if (!fetchFromService && pensionerInfoAllResponseRepository.findByPin(pin).isPresent()) {
-                return pensionerInfoAllResponseRepository.findByPin(pin).get();
+                PensionerInfoResponse response = pensionerInfoAllResponseRepository.findByPin(pin).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v2/PensionInfo/" + pin;
             log.info("getPensionerInfoByPin Request URL: {}", url);
@@ -235,6 +253,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (pensionerInfo != null) {
                     pensionerInfo.setPin(pin);
                     pensionerInfoAllResponseRepository.save(pensionerInfo);
+                    pensionerInfo.setSource(ESource.SERVICE);
                     return pensionerInfo;
                 } else {
                     log.error("getPensionerInfoByPin personInfoResponse Response is null or empty");
@@ -253,7 +272,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public PassportInfoResponse getForeignPassportInfoByPin(String pin, boolean fetchFromService) {
         try {
             if (!fetchFromService && asanFinancePassportInfoResponseRepository.findByPIN(pin).isPresent()) {
-                return asanFinancePassportInfoResponseRepository.findByPIN(pin).get();
+                PassportInfoResponse response = asanFinancePassportInfoResponseRepository.findByPIN(pin).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/ForeignPassportInfo/" + pin;
             log.info("getForeignPassportInfoByPin Request URL: {}", url);
@@ -267,6 +288,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (passportInfo != null) {
                     passportInfo.setPIN(pin);
                     asanFinancePassportInfoResponseRepository.save(passportInfo);
+                    passportInfo.setSource(ESource.SERVICE);
                     return passportInfo;
                 } else {
                     log.error("getForeignPassportInfoByPin personInfoResponse Response is null or empty");
@@ -285,7 +307,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public VinInfoResponse getVinInfoByVin(String vin, boolean fetchFromService) {
         try {
             if (!fetchFromService && vinInfoResponseRepository.findByVin(vin).isPresent()) {
-                return vinInfoResponseRepository.findByVin(vin).get();
+                VinInfoResponse response = vinInfoResponseRepository.findByVin(vin).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/VINInfo/" + vin;
             log.info("getVinInfoByVin Request URL: {}", url);
@@ -299,6 +323,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (vinInfo != null) {
                     vinInfo.setVin(vin);
                     vinInfoResponseRepository.save(vinInfo);
+                    vinInfo.setSource(ESource.SERVICE);
                     return vinInfo;
                 } else {
                     log.error("getVinInfoByVin personInfoResponse Response is null or empty");
@@ -317,7 +342,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public VoenInfoResponse getVoenInfoByVoen(String voen, boolean fetchFromService) {
         try {
             if (!fetchFromService && voenInfoResponseRepository.findByVoen(voen).isPresent()) {
-                return voenInfoResponseRepository.findByVoen(voen).get();
+                VoenInfoResponse response = voenInfoResponseRepository.findByVoen(voen).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/VoenInfo/" + voen;
             log.info("getVoenInfoByVoen Request URL: {}", url);
@@ -331,6 +358,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (voenInfo != null) {
                     voenInfo.setVoen(voen);
                     voenInfoResponseRepository.save(voenInfo);
+                    voenInfo.setSource(ESource.SERVICE);
                     return voenInfo;
                 } else {
                     log.error("getVoenInfoByVoen personInfoResponse Response is null or empty");
@@ -349,7 +377,9 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     public PersonalInfoAllResponse getPersonalInfoByPinAndDocument(String pin, String documentNumber, boolean fetchFromService) {
         try {
             if (!fetchFromService && personalInfoAllResponseRepository.findByPIN(pin).isPresent()) {
-                return personalInfoAllResponseRepository.findByPIN(pin).get();
+                PersonalInfoAllResponse response = personalInfoAllResponseRepository.findByPIN(pin).get();
+                response.setSource(ESource.DB);
+                return response;
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/PinAndDocNumber?pin=" + pin + "&docNumber=" + documentNumber;
             log.info("getPersonalInfoByPinAndDocument Request URL: {}", url);
@@ -363,6 +393,7 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
                 if (personInfo != null) {
                     personInfo.setPIN(pin);
                     personalInfoAllResponseRepository.save(personInfo);
+                    personInfo.setSource(ESource.SERVICE);
                     return personInfo;
                 } else {
                     log.error("getPersonalInfoByPinAndDocument personInfoResponse Response is null or empty");

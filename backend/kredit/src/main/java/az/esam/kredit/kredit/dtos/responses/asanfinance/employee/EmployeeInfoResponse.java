@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.asanfinance.employee;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,6 @@ public class EmployeeInfoResponse {
     private List<Job> Active;
 
     private List<Job> Deactive;
+
+    private ESource source;
 }
