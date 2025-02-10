@@ -1,8 +1,6 @@
-package az.esam.kredit.kredit.dtos.responses.akbRequestReponses;
-
+package az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GetBalanceResponse {
-
-    @JsonProperty("return")
-    private Double balance;
+public class AKBTypeResponse {
+    private String code;
+    private String name;
 }

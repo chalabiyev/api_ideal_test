@@ -4,7 +4,11 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByIdCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.GetBalanceResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBCreditTypeResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBCurrencyResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBStatusResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBTypeResponse;
 import az.esam.kredit.kredit.services.external.akb.requestService.AKBRequestService;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
@@ -25,7 +31,7 @@ public class AKBRequestServiceController {
     private AKBRequestService akbRequestService;
 
     @PostMapping("/inquireByIdCard")
-    public ResponseEntity<JsonNode> inquireByIdCard(@RequestBody InquireByIdCardRequest akbRequest) {
+    public ResponseEntity<InquireByIdCardResponse> inquireByIdCard(@RequestBody InquireByIdCardRequest akbRequest) {
         return ResponseEntity.ok(akbRequestService.inquireByIdCard(akbRequest));
     }
 
@@ -57,47 +63,47 @@ public class AKBRequestServiceController {
     }
 
     @GetMapping("/getBalance")
-    public ResponseEntity<GetBalanceResponse> getBalance() {
+    public ResponseEntity<Double> getBalance() {
         return ResponseEntity.ok(akbRequestService.getBalance());
     }
 
     @GetMapping("/lkpBorrInquiryPurposes")
-    public ResponseEntity<JsonNode> lkpBorrInquiryPurposes() {
+    public ResponseEntity<List<AKBTypeResponse>> lkpBorrInquiryPurposes() {
         return ResponseEntity.ok(akbRequestService.lkpBorrInquiryPurposes());
     }
 
     @GetMapping("/lkpCollateralTypes")
-    public ResponseEntity<JsonNode> lkpCollateralTypes() {
+    public ResponseEntity<List<AKBTypeResponse>> lkpCollateralTypes() {
         return ResponseEntity.ok(akbRequestService.lkpCollateralTypes());
     }
 
     @GetMapping("/lkpCountries")
-    public ResponseEntity<JsonNode> lkpCountries() {
+    public ResponseEntity<List<AKBTypeResponse>> lkpCountries() {
         return ResponseEntity.ok(akbRequestService.lkpCountries());
     }
 
     @GetMapping("/lkpCreditClassTypes")
-    public ResponseEntity<JsonNode> lkpCreditClassTypes() {
+    public ResponseEntity<List<AKBTypeResponse>> lkpCreditClassTypes() {
         return ResponseEntity.ok(akbRequestService.lkpCreditClassTypes());
     }
 
     @GetMapping("/lkpCreditPurposeTypes")
-    public ResponseEntity<JsonNode> lkpCreditPurposeTypes() {
+    public ResponseEntity<List<AKBTypeResponse>> lkpCreditPurposeTypes() {
         return ResponseEntity.ok(akbRequestService.lkpCreditPurposeTypes());
     }
 
     @GetMapping("/lkpCreditStatusTypes")
-    public ResponseEntity<JsonNode> lkpCreditStatusTypes() {
+    public ResponseEntity<List<AKBStatusResponse>> lkpCreditStatusTypes() {
         return ResponseEntity.ok(akbRequestService.lkpCreditStatusTypes());
     }
 
     @GetMapping("/lkpCreditTypes")
-    public ResponseEntity<JsonNode> lkpCreditTypes() {
+    public ResponseEntity<List<AKBCreditTypeResponse>> lkpCreditTypes() {
         return ResponseEntity.ok(akbRequestService.lkpCreditTypes());
     }
 
     @GetMapping("/lkpCurrencies")
-    public ResponseEntity<JsonNode> lkpCurrencies() {
+    public ResponseEntity<List<AKBCurrencyResponse>> lkpCurrencies() {
         return ResponseEntity.ok(akbRequestService.lkpCurrencies());
     }
 }
