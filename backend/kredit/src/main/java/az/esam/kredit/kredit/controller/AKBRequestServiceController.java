@@ -4,6 +4,7 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByIdCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.GetBalanceResponse;
 import az.esam.kredit.kredit.services.external.akb.requestService.AKBRequestService;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotBlank;
@@ -56,7 +57,7 @@ public class AKBRequestServiceController {
     }
 
     @GetMapping("/getBalance")
-    public ResponseEntity<JsonNode> getBalance() {
+    public ResponseEntity<GetBalanceResponse> getBalance() {
         return ResponseEntity.ok(akbRequestService.getBalance());
     }
 

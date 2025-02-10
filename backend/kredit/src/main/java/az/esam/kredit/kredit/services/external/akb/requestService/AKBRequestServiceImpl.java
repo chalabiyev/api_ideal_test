@@ -4,6 +4,7 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByIdCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.GetBalanceResponse;
 import az.esam.kredit.kredit.properties.AkbProperties;
 import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,6 +14,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+
+import static az.esam.kredit.kredit.services.external.SendRequest.objectMapper;
 
 @Slf4j
 @Service
@@ -233,7 +236,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     }
 
     @Override
-    public JsonNode getBalance() {
+    public GetBalanceResponse getBalance() {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
@@ -249,7 +252,8 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
-                return jsonResponse;
+                String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("getBalanceResponse"));
+                return  objectMapper.readValue(jsonString, GetBalanceResponse.class);
             } else {
                 log.error("getBalanceInfo Response is null or empty");
             }
