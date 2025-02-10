@@ -80,4 +80,19 @@ export const paths = {
     partnyorlarlist: `/partynorlar/list`,
     duzeliset: (id: string) => `/partynorlar/duzeliset/${id}`,
   },
+
+  //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
+
+  webesassehife: {
+    root: `/webesassehife`,
+    slayder: `/webesassehife/slayder`,
+    slayderduzeliset: (id: string) => `/webesassehife/slayderduzeliset/${id}`,
+    slayderelaveet: `/webesassehife/slayderelaveet`,
+    haqqimizda: `/webesassehife/haqqimizda`,
+  },
+  webkredit: {
+    root: `/webkredit`,
+    kreditler: `/webkredit/kreditler`,
+    kreditelaveet: `/webkredit/kreditelaveet`,
+  },
 };

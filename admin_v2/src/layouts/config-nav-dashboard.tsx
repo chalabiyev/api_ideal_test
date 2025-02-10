@@ -121,26 +121,7 @@ export const navData = [
       },
     ],
   },
-  // {
-  //   items: [
-  //     {
-  //       title: 'Partynor',
-  //       path: paths.partners.root,
-  //       icon: ICONS.partner,
-  //       children: [
-  //         {
-  //           title: 'Yeni partnyor',
-  //           path: paths.partners.yenipartnyor.root,
-  //           children: [
-  //             { title: 'Fiziki şəxs', path: paths.partners.yenipartnyor.fiziki },
-  //             { title: 'Hüquqi şəxs', path: paths.partners.yenipartnyor.huquqi },
-  //           ],
-  //         },
-  //         { title: 'Bütün partynorlar', path: paths.partners.partnyorlarlist },
-  //       ],
-  //     },
-  //   ],
-  // },
+
   {
     items: [
       {
@@ -151,9 +132,40 @@ export const navData = [
           {
             title: 'Yeni partnyor',
             path: paths.partners.yenipartnyor.fiziki,
-            
           },
           { title: 'Bütün partynorlar', path: paths.partners.partnyorlarlist },
+        ],
+      },
+    ],
+  },
+  //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
+  {
+    subheader: 'Veb saytın İDARƏ PANELİ',
+    items: [
+      {
+        title: 'Əsas səhifə',
+        path: paths.webesassehife.root,
+        icon: ICONS.blog,
+        children: [
+          {
+            title: 'Slayder',
+            path: paths.webesassehife.slayder,
+          },
+          {
+            title: 'Haqqımızda',
+            path: paths.webesassehife.haqqimizda,
+          },
+        ],
+      },
+      {
+        title: 'Kredit',
+        path: paths.webkredit.root,
+        icon: ICONS.banking,
+        children: [
+          {
+            title: 'Kreditlər',
+            path: paths.webkredit.kreditler,
+          },
         ],
       },
     ],

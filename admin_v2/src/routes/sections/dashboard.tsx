@@ -43,7 +43,14 @@ const NewPartner = lazy(() => import('src/pages/dashboard/Partnyorlar/NewPartner
 
 // muraciet
 const Muraciet = lazy(() => import('src/pages/dashboard/Muracietler/Muraciet'));
-// ----------------------------------------------------------------------
+
+//  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
+const Slayder = lazy(() => import('src/pages/dashboard/WebPanelPages/Slayder'));
+const SlayderDuzelisEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SlayderDuzelisEt'));
+const SlayderElaveEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SlayderElaveEt'));
+const Haqqimizda = lazy(() => import('src/pages/dashboard/WebPanelPages/Haqqimizda'));
+const Kreditler = lazy(() => import('src/pages/dashboard/WebPanelPages/Kreditler'));
+const KreditElaveEt = lazy(() => import('src/pages/dashboard/WebPanelPages/KreditElaveEt'));
 
 const layoutContent = (
   <DashboardLayout>
@@ -101,6 +108,22 @@ export const dashboardRoutes = [
           },
           { path: 'duzeliset/:id', element: <EditPartnyor /> },
         ],
+      },
+
+      //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
+
+      {
+        path: 'webesassehife',
+        children: [
+          { path: 'slayder', element: <Slayder /> },
+          { path: 'slayderduzeliset/:id', element: <SlayderDuzelisEt /> },
+          { path: 'slayderelaveet', element: <SlayderElaveEt /> },
+          { path: 'haqqimizda', element: <Haqqimizda /> },
+        ],
+      },
+      {
+        path: 'webkredit',
+        children: [{ path: 'kreditler', element: <Kreditler /> },{ path: 'kreditelaveet', element: <KreditElaveEt /> }],
       },
     ],
   },
