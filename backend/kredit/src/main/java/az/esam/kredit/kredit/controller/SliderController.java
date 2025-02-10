@@ -3,6 +3,7 @@ package az.esam.kredit.kredit.controller;
 import az.esam.kredit.kredit.entities.content_management.Slider;
 import az.esam.kredit.kredit.services.internal.slider.SliderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
+@CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
 @RequestMapping("/api/slider")
 public class SliderController {

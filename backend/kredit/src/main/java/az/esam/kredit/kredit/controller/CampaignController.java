@@ -1,7 +1,7 @@
 package az.esam.kredit.kredit.controller;
 
-import az.esam.kredit.kredit.entities.content_management.Info;
-import az.esam.kredit.kredit.services.internal.info.InfoService;
+import az.esam.kredit.kredit.entities.content_management.Campaign;
+import az.esam.kredit.kredit.services.internal.campaign.CampaignService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,36 +14,36 @@ import java.util.List;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
-@RequestMapping("/api/info")
-public class InfoController {
+@RequestMapping("/api/campaign")
+class CampaignController {
 
     @Autowired
-    InfoService infoService;
+    CampaignService campaignService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/create")
-    public ResponseEntity<Info> create(@RequestBody Info request) {
-        return ResponseEntity.ok(infoService.add(request));
+    public ResponseEntity<Campaign> create(@RequestBody Campaign request) {
+        return ResponseEntity.ok(campaignService.add(request));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/update")
-    public ResponseEntity<Info> update(@RequestBody Info request) {
-        return ResponseEntity.ok(infoService.update(request));
+    public ResponseEntity<Campaign> update(@RequestBody Campaign request) {
+        return ResponseEntity.ok(campaignService.update(request));
     }
 
     @GetMapping("/get")
-    public ResponseEntity<Info> getById(@RequestParam String id) {
-        return ResponseEntity.ok(infoService.get(id));
+    public ResponseEntity<Campaign> getById(@RequestParam String id) {
+        return ResponseEntity.ok(campaignService.get(id));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Info>> list() {
-        return ResponseEntity.ok(infoService.list());
+    public ResponseEntity<List<Campaign>> list() {
+        return ResponseEntity.ok(campaignService.list());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -51,7 +51,7 @@ public class InfoController {
     @SecurityRequirement(name = "X-API-KEY")
     @DeleteMapping("/delete")
     public ResponseEntity<Boolean> delete(@RequestParam String id) {
-        return ResponseEntity.ok(infoService.delete(id));
+        return ResponseEntity.ok(campaignService.delete(id));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -59,6 +59,6 @@ public class InfoController {
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(infoService.count());
+        return ResponseEntity.ok(campaignService.count());
     }
 }

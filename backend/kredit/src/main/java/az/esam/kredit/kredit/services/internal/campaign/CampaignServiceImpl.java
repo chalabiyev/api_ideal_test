@@ -1,0 +1,63 @@
+package az.esam.kredit.kredit.services.internal.campaign;
+
+import az.esam.kredit.kredit.entities.content_management.Campaign;
+import az.esam.kredit.kredit.repositories.content_management.CampaignRepository;
+import az.esam.kredit.kredit.services.internal.storage.StorageService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Slf4j
+@Service
+public class CampaignServiceImpl implements CampaignService {
+
+    @Autowired
+    CampaignRepository campaignRepository;
+
+    @Autowired
+    StorageService storageService;
+
+    @Override
+    public Campaign add(Campaign campaign) {
+        return campaignRepository.save(campaign);
+    }
+
+    @Override
+    public Campaign update(Campaign campaign) {
+        return campaignRepository.save(campaign);
+    }
+
+    @Override
+    public Campaign get(String id) {
+        return campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Kampaniya tapılmadı"));
+    }
+
+    @Override
+    public boolean delete(String id) {
+        try {
+            Campaign campaign = campaignRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Kampaniya tapılmadı"));
+            if (campaign.getImage() != null && !campaign.getImage().isEmpty()) {
+                storageService.deleteExistingImages(campaign.getImage());
+            }
+            campaignRepository.delete(campaign);
+            return true;
+        } catch (Exception e) {
+            log.error("Kampaniya silinmədi {}", e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public List<Campaign> list() {
+        return campaignRepository.findAll();
+    }
+
+    @Override
+    public Long count() {
+        return campaignRepository.count();
+    }
+}

@@ -10,8 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
-@Document(collection = "infos")
-public class Info extends BaseEntity {
+@Document(collection = "campaigns")
+public class Campaign extends BaseEntity {
     @Id
     private String id;
 
