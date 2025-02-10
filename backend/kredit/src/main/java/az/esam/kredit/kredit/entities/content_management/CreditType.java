@@ -1,5 +1,6 @@
-package az.esam.kredit.kredit.entities;
+package az.esam.kredit.kredit.entities.content_management;
 
+import az.esam.kredit.kredit.entities.BaseEntity;
 import az.esam.kredit.kredit.entities.objects.Condition;
 import az.esam.kredit.kredit.entities.objects.Requirement;
 import az.esam.kredit.kredit.entities.objects.VideoDescription;
