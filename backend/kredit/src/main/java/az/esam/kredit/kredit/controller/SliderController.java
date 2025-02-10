@@ -1,6 +1,8 @@
 package az.esam.kredit.kredit.controller;
 
 import az.esam.kredit.kredit.entities.content_management.Slider;
+import az.esam.kredit.kredit.patch.Patcher;
+import az.esam.kredit.kredit.repositories.content_management.SliderRepository;
 import az.esam.kredit.kredit.services.internal.slider.SliderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
@@ -20,12 +23,28 @@ public class SliderController {
     @Autowired
     SliderService sliderService;
 
+    @Autowired
+    SliderRepository sliderRepository;
+
+    @Autowired
+    Patcher patcher;
+
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/create")
     public ResponseEntity<Slider> create(@RequestBody Slider request) {
         return ResponseEntity.ok(sliderService.add(request));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
+    public ResponseEntity<Slider> patch(@PathVariable String id, @RequestBody Map<String, Object> patch) throws IllegalAccessException {
+        Slider slider = sliderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Slider tapılmadı"));
+        patcher.patcher(slider, patch);
+        return ResponseEntity.ok(sliderService.update(slider));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

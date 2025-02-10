@@ -21,11 +21,17 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public Campaign add(Campaign campaign) {
+        validateDisplayOnHome(campaign, campaign.isShowOnMainPage());
+
         return campaignRepository.save(campaign);
     }
 
     @Override
     public Campaign update(Campaign campaign) {
+        if (!campaignRepository.existsById(campaign.getId())) {
+            throw new RuntimeException("Kampaniya tapılmadı");
+        }
+        validateDisplayOnHome(campaign, campaign.isShowOnMainPage());
         return campaignRepository.save(campaign);
     }
 
@@ -53,11 +59,38 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public List<Campaign> list() {
-        return campaignRepository.findAll();
+        return campaignRepository.findAllByOrderByCreatedDate();
     }
 
     @Override
     public Long count() {
         return campaignRepository.count();
+    }
+
+    @Override
+    public Campaign changeDisplayOnHome(String id) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Kampaniya tapılmadı"));
+
+        validateDisplayOnHome(campaign, !campaign.isShowOnMainPage());
+        campaign.setShowOnMainPage(!campaign.isShowOnMainPage());
+        return campaignRepository.save(campaign);
+    }
+
+    @Override
+    public List<Campaign> listHomeCampaigns() {
+        return campaignRepository.findAllByShowOnMainPageTrue();
+    }
+
+    private void validateDisplayOnHome(Campaign request, boolean showOnMainPage) {
+        long count = campaignRepository.countByShowOnMainPageTrue();
+        List<Campaign> campaigns = campaignRepository.findAllByShowOnMainPageTrue();
+        boolean isExist = false;
+        if (request.getId() != null) {
+            isExist = campaigns.stream().anyMatch(campaign -> campaign.getId().equals(request.getId()));
+        }
+        if (count >= 2 && showOnMainPage && !isExist) {
+            throw new RuntimeException("Əsas səhifədə yalnız 2 kampaniya göstərilə bilər");
+        }
     }
 }

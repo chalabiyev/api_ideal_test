@@ -19,4 +19,5 @@ public class Campaign extends BaseEntity {
     private String title;
     private String description;
     private String image;
+    private boolean showOnMainPage;
 }

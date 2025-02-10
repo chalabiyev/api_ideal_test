@@ -16,5 +16,9 @@ public interface CampaignService {
     List<Campaign> list();
 
     Long count();
+
+    Campaign changeDisplayOnHome(String id);
+
+    List<Campaign> listHomeCampaigns();
 }
 
