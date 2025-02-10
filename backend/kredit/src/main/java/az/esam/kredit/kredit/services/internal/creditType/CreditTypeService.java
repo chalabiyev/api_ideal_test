@@ -1,6 +1,6 @@
 package az.esam.kredit.kredit.services.internal.creditType;
 
-import az.esam.kredit.kredit.entities.CreditType;
+import az.esam.kredit.kredit.entities.content_management.CreditType;
 
 import java.util.List;
 
