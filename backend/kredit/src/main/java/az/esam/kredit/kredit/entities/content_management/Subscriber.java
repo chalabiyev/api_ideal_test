@@ -7,16 +7,16 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
-@Document(collection = "campaigns")
-public class Campaign extends BaseEntity {
+@Document(collection = "subscribers")
+public class Subscriber extends BaseEntity {
     @Id
     private String id;
-
-    private boolean subscriptionMailSent;
-    private String title;
-    private String description;
-    private String image;
+    private String email;
+    private Date subscribedAt;
+    private boolean active;
 }
