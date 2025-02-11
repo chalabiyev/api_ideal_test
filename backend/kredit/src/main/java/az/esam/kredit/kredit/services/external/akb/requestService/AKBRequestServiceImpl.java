@@ -4,10 +4,12 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByIdCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.EAKBTYPES;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
 import az.esam.kredit.kredit.properties.AkbProperties;
+import az.esam.kredit.kredit.repositories.akb.*;
 import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,27 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     SendRequest sendRequest;
 
     private String authName = "Authorization";
+
+    @Autowired
+    InquireByIdCardResponseRepository inquireByIdCardResponseRepository;
+
+    @Autowired
+    AKBUtilityServiceResponseRepository utilityServiceResponseRepository;
+
+    @Autowired
+    AKBBorrowerScoreResponseRepository borrowerScoreResponseRepository;
+
+    @Autowired
+    AKBTypeResponseRepository typeResponseRepository;
+
+    @Autowired
+    AKBStatusResponseRepository statusResponseRepository;
+
+    @Autowired
+    AKBCreditTypeResponseRepository creditTypeResponseRepository;
+
+    @Autowired
+    AKBCurrencyResponseRepository currencyResponseRepository;
 
     @Override
     public InquireByIdCardResponse inquireByIdCard(InquireByIdCardRequest akbRequest) {
@@ -60,7 +83,9 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("inquireByIdCardResponse").get("return"));
-                return objectMapper.readValue(jsonString, InquireByIdCardResponse.class);
+                InquireByIdCardResponse response = objectMapper.readValue(jsonString, InquireByIdCardResponse.class);
+                inquireByIdCardResponseRepository.save(response);
+                return response;
             } else {
                 log.error("inquireByIdCard Response is null or empty");
             }
@@ -199,7 +224,9 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("inquireUtilityServicesResponse").get("return"));
-                return objectMapper.readValue(jsonString, AKBUtilityServiceResponse.class);
+                AKBUtilityServiceResponse response = objectMapper.readValue(jsonString, AKBUtilityServiceResponse.class);
+                utilityServiceResponseRepository.save(response);
+                return response;
             } else {
                 log.error("inquireUtilityServices Response is null or empty");
             }
@@ -230,7 +257,10 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("getBorrowerScoreResponse").get("return"));
-                return objectMapper.readValue(jsonString, AKBBorrowerScoreResponse.class);
+                AKBBorrowerScoreResponse response = objectMapper.readValue(jsonString, AKBBorrowerScoreResponse.class);
+                response.setReportId(reportId);
+                borrowerScoreResponseRepository.save(response);
+                return response;
             } else {
                 log.error("getBorrowerScore Response is null or empty");
             }
@@ -288,10 +318,15 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpBorrInquiryPurposesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBTypeResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBTypeResponse.class)
                 );
+                responses.forEach(response -> {
+                    response.setType(EAKBTYPES.BORROWER_INQUIRY_PURPOSES);
+                });
+                typeResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpBorrInquiryPurposes Response is null or empty");
             }
@@ -320,10 +355,15 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpCollateralTypesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBTypeResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBTypeResponse.class)
                 );
+                responses.forEach(response -> {
+                    response.setType(EAKBTYPES.COLLATERAL_TYPES);
+                });
+                typeResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpCollateralTypes Response is null or empty");
             }
@@ -352,10 +392,15 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpCountriesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBTypeResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBTypeResponse.class)
                 );
+                responses.forEach(response -> {
+                    response.setType(EAKBTYPES.COUNTRIES);
+                });
+                typeResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpCountries Response is null or empty");
             }
@@ -384,10 +429,15 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpCreditClassTypesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBTypeResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBTypeResponse.class)
                 );
+                responses.forEach(response -> {
+                    response.setType(EAKBTYPES.CREDIT_CLASS_TYPES);
+                });
+                typeResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpCreditClassTypes Response is null or empty");
             }
@@ -416,10 +466,15 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpCreditPurposeTypesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBTypeResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBTypeResponse.class)
                 );
+                responses.forEach(response -> {
+                    response.setType(EAKBTYPES.CREDIT_PURPOSE_TYPES);
+                });
+                typeResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpCreditPurposeTypes Response is null or empty");
             }
@@ -448,10 +503,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpCreditStatusTypesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBStatusResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBStatusResponse.class)
                 );
+                statusResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpCreditStatusTypes Response is null or empty");
             }
@@ -480,10 +537,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpCreditTypesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBCreditTypeResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBCreditTypeResponse.class)
                 );
+                creditTypeResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpCreditTypes Response is null or empty");
             }
@@ -512,10 +571,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("lkpCurrenciesResponse").get("return"));
-                return objectMapper.readValue(
+                List<AKBCurrencyResponse> responses = objectMapper.readValue(
                         jsonString,
                         objectMapper.getTypeFactory().constructParametricType(List.class, AKBCurrencyResponse.class)
                 );
+                currencyResponseRepository.saveAll(responses);
+                return responses;
             } else {
                 log.error("lkpCurrencies Response is null or empty");
             }
