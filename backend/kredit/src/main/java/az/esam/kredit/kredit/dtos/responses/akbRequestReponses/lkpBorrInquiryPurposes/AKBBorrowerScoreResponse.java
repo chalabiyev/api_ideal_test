@@ -1,4 +1,4 @@
-package az.esam.kredit.kredit.dtos.responses.goldenpay;
+package az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GetPaymentKeyResponse {
-    private Status status;
-    private String paymentKey;
-    private String paymentUrl;
+public class AKBBorrowerScoreResponse {
+    private String response;
+    private Integer point;
+    private Integer pdRate;
 }

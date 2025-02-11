@@ -8,4 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class GoldenPayProperties {
     private String apiUrl;
     private String authKey;
+    private String merchantName;
+    private String paymentUrl;
 }

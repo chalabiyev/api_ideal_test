@@ -5,10 +5,8 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBCreditTypeResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBCurrencyResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBStatusResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBTypeResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
 import az.esam.kredit.kredit.services.external.akb.requestService.AKBRequestService;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotBlank;
@@ -51,13 +49,13 @@ public class AKBRequestServiceController {
     }
 
     @GetMapping("/inquireUtilityServices")
-    public ResponseEntity<JsonNode> inquireUtilityServices(
+    public ResponseEntity<AKBUtilityServiceResponse> inquireUtilityServices(
             @RequestParam @NotBlank(message = "ReportId boş ola bilməz") String reportId) {
         return ResponseEntity.ok(akbRequestService.inquireUtilityServices(reportId));
     }
 
     @GetMapping("/getBorrowerScore")
-    public ResponseEntity<JsonNode> getBorrowerScore(
+    public ResponseEntity<AKBBorrowerScoreResponse> getBorrowerScore(
             @RequestParam @NotBlank(message = "ReportId boş ola bilməz") String reportId) {
         return ResponseEntity.ok(akbRequestService.getBorrowerScore(reportId));
     }

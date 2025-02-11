@@ -5,10 +5,8 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBCreditTypeResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBCurrencyResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBStatusResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBTypeResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
 import az.esam.kredit.kredit.properties.AkbProperties;
 import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -182,25 +180,26 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     }
 
     @Override
-    public JsonNode inquireUtilityServices(String reportId) {
+    public AKBUtilityServiceResponse inquireUtilityServices(String reportId) {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <inquireUtilityServices xmlns=\"http://inquiryws.mkr.risk.az/\">\n" +
-                    "      <reportId>" + reportId + "</reportId>\n" +
-                    "    </inquireUtilityServices>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:inq=\"http://inquiryws.mkr.risk.az/\">\n" +
+                    "   <soapenv:Header/>\n" +
+                    "   <soapenv:Body>\n" +
+                    "      <inq:inquireUtilityServices>\n" +
+                    "         <reportId>" + reportId + "</reportId>\n" +
+                    "      </inq:inquireUtilityServices>\n" +
+                    "   </soapenv:Body>\n" +
+                    "</soapenv:Envelope>";
 
             log.info("inquireUtilityServices Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
-                return jsonResponse;
+                String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("inquireUtilityServicesResponse").get("return"));
+                return objectMapper.readValue(jsonString, AKBUtilityServiceResponse.class);
             } else {
                 log.error("inquireUtilityServices Response is null or empty");
             }
@@ -212,25 +211,26 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     }
 
     @Override
-    public JsonNode getBorrowerScore(String reportId) {
+    public AKBBorrowerScoreResponse getBorrowerScore(String reportId) {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <getBorrowerScore xmlns=\"http://inquiryws.mkr.risk.az/\">\n" +
-                    "      <reportId>" + reportId + "</reportId>\n" +
-                    "    </getBorrowerScore>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:inq=\"http://inquiryws.mkr.risk.az/\">\n" +
+                    "   <soapenv:Header/>\n" +
+                    "   <soapenv:Body>\n" +
+                    "      <inq:getBorrowerScore>\n" +
+                    "         <reportId>" + reportId + "</reportId>\n" +
+                    "      </inq:getBorrowerScore>\n" +
+                    "   </soapenv:Body>\n" +
+                    "</soapenv:Envelope>\n";
 
             log.info("getBorrowerScore Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials, true);
             if (jsonResponse != null) {
-                return jsonResponse;
+                String jsonString = objectMapper.writeValueAsString(jsonResponse.get("Body").get("getBorrowerScoreResponse").get("return"));
+                return objectMapper.readValue(jsonString, AKBBorrowerScoreResponse.class);
             } else {
                 log.error("getBorrowerScore Response is null or empty");
             }
