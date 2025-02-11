@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class GetPaymentKeyResponse {
     private Status status;
     private String paymentKey;
+    private String paymentUrl;
 }

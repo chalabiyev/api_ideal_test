@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.asanfinance.farm;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import az.esam.kredit.kredit.dtos.responses.asanfinance.personal.Person;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,7 @@ public class FarmInfoResponse {
     private Company Company;
 
     private List<Farm> Farms;
+
+    private ESource source;
 
 }

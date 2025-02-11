@@ -23,8 +23,8 @@ import java.util.Base64;
 @Service
 public class SendRequest {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final XmlMapper xmlMapper = new XmlMapper();
+    public static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final XmlMapper xmlMapper = new XmlMapper();
 
     public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey, boolean isXml) {
         JsonNode result = null;

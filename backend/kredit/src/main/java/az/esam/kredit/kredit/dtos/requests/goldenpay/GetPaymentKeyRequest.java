@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "goldenpay_get_payment_key_request")
 public class GetPaymentKeyRequest {
-    private String mecrhantName;
+    private String merchantName;
     private Integer amount; // 1AZN = 100, 12.5AZN = 1250
     private String lang; // Azercell - lv, Bakcell - ru, Nar - en
     private String cardType; // visa -v, mastercard - m

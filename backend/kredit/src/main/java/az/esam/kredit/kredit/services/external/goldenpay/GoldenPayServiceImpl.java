@@ -32,17 +32,20 @@ public class GoldenPayServiceImpl implements GoldenPayService {
     public GetPaymentKeyResponse getPaymentKey(GetPaymentKeyRequest request) {
         try {
 //            url =  "https://rest.goldenpay.az/web/service/merchant/getPaymentKey"
-            String md5 = crypt(properties.getAuthKey() + request.getMecrhantName() + request.getCardType() + request.getAmount() + request.getDescription());
+            request.setMerchantName(properties.getMerchantName());
+            String md5 = crypt(properties.getAuthKey() + properties.getMerchantName() + request.getCardType() + request.getAmount() + request.getDescription());
             request.setHashCode(md5);
             String bodyStr = objectMapper.writeValueAsString(request);
             String url = properties.getApiUrl() + "/web/service/merchant/getPaymentKey";
             log.info("getPaymentKey Request URL: {}", url);
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", null, null, false);
             if (jsonResponse.has("paymentKey") && !jsonResponse.get("paymentKey").isNull()) {
-                return objectMapper.readValue(
+                GetPaymentKeyResponse paymentKeyResponse = objectMapper.readValue(
                         jsonResponse.toString(),
                         GetPaymentKeyResponse.class
                 );
+                paymentKeyResponse.setPaymentUrl(properties.getPaymentUrl() + paymentKeyResponse.getPaymentKey());
+                return paymentKeyResponse;
             } else {
                 log.error("getPaymentKey Response is null or empty");
             }

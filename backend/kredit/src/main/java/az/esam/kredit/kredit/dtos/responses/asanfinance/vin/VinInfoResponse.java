@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.asanfinance.vin;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,6 @@ public class VinInfoResponse {
     private String AttorneyIssuingDate;
     private Person Person;
     private List<AsanFinanceDocument> Documents;
+
+    private ESource source;
 }
