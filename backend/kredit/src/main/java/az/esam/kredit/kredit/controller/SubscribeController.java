@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
-@RequestMapping("/api/subscribe")
+@RequestMapping("/api/content/subscribe")
 class SubscribeController {
 
     @Autowired

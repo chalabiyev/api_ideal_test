@@ -17,7 +17,7 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
-@RequestMapping("/api/info")
+@RequestMapping("/api/content/info")
 public class InfoController {
 
     @Autowired
