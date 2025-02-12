@@ -16,5 +16,5 @@ public class Condition {
     private double maxFIFD;
     private String currency;
     private double commissionRate;
-    private double requiredDocuments;
+    private String requiredDocuments;
 }
