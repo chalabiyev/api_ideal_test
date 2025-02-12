@@ -4,6 +4,8 @@ import az.esam.kredit.kredit.dtos.requests.goldenpay.GetPaymentKeyRequest;
 import az.esam.kredit.kredit.dtos.responses.goldenpay.GetPaymentKeyResponse;
 import az.esam.kredit.kredit.dtos.responses.goldenpay.GetPaymentResultResponse;
 import az.esam.kredit.kredit.properties.GoldenPayProperties;
+import az.esam.kredit.kredit.repositories.goldenpay.GetPaymentKeyResponseRepository;
+import az.esam.kredit.kredit.repositories.goldenpay.GetPaymentResultResponseRepository;
 import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +28,12 @@ public class GoldenPayServiceImpl implements GoldenPayService {
     @Autowired
     SendRequest sendRequest;
 
+    @Autowired
+    GetPaymentKeyResponseRepository paymentKeyResponseRepository;
+
+    @Autowired
+    GetPaymentResultResponseRepository paymentResultResponseRepository;
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -45,6 +53,7 @@ public class GoldenPayServiceImpl implements GoldenPayService {
                         GetPaymentKeyResponse.class
                 );
                 paymentKeyResponse.setPaymentUrl(properties.getPaymentUrl() + paymentKeyResponse.getPaymentKey());
+                paymentKeyResponseRepository.save(paymentKeyResponse);
                 return paymentKeyResponse;
             } else {
                 log.error("getPaymentKey Response is null or empty");
@@ -67,10 +76,12 @@ public class GoldenPayServiceImpl implements GoldenPayService {
             log.info("getPaymentRequest Request URL: {}", url);
             JsonNode jsonResponse = sendRequest.executeRequest(null, url, "POST", null, null, false);
             if (jsonResponse != null) {
-                return objectMapper.readValue(
+                GetPaymentResultResponse response = objectMapper.readValue(
                         jsonResponse.toString(),
                         GetPaymentResultResponse.class
                 );
+                paymentResultResponseRepository.save(response);
+                return response;
             } else {
                 log.error("getPaymentRequest Response is null or empty");
             }
