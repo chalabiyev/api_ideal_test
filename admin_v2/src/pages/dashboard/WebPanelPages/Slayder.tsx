@@ -94,7 +94,7 @@ const Slayder = () => {
           }
         />
 
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
           {data.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
               <Card>

@@ -168,6 +168,17 @@ export const navData = [
           },
         ],
       },
+      {
+        title: 'Sığorta',
+        path: paths.websigorta.root,
+        icon: ICONS.banking,
+        children: [
+          {
+            title: 'Sığortalar',
+            path: paths.websigorta.sigortalar,
+          },
+        ],
+      },
     ],
   },
 ];

@@ -20,10 +20,11 @@ import { toast } from 'sonner';
 import { Image } from 'src/components/image';
 import { BASE_URL } from 'src/api/request';
 import usePost from 'src/api/usePost';
-import { useRouter } from 'src/routes/hooks';
+import { useParams, useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 
-const KreditElaveEt = () => {
+const KreditDuzelisEt = () => {
+  const { id } = useParams();
   const router = useRouter();
   const { postData: createCredit, loading, error } = usePost('/content/credit-type/create');
   const [creditFormData, setCreditFormData] = useState<CreditFormData>({
@@ -127,20 +128,15 @@ const KreditElaveEt = () => {
     }
   };
 
-   const handleCreateCredit = async () => {
-      toast.promise(createCredit(creditFormData), {
-        loading: 'Yeni kredit yaradılır...',
-        // eslint-disable-next-line
-        success: (response) => {
-          router.push(paths.webkredit.kreditler);
-          return `Məlumat yaradıldı!`;
-        },
-        error: (err) => {
-          const errorMessage = err.response?.data?.message || 'Olmadığı üçün xəta';
-          return `Xəta: ${errorMessage}`;
-        },
-      });
-    };
+  const handleCreateCredit = async () => {
+    toast.promise(createCredit(creditFormData), {
+      loading: 'Kredit yaradılır...',
+      success: 'Kredit yaradıldı!',
+      error: 'Bir xəta baş verdi!',
+    });
+
+    router.push(paths.webkredit.kreditler);
+  };
 
   return (
     <>
@@ -150,11 +146,11 @@ const KreditElaveEt = () => {
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Yeni Kredit"
+          heading="Burda adi olacaq x"
           links={[
             { name: 'Veb sayt idarə paneli' },
             { name: 'Bütün kreditler', href: '/webkredit/kreditler' },
-            { name: 'Yeni kredit' },
+            { name: 'Düzəliş et' },
           ]}
         />
 
@@ -440,4 +436,4 @@ const KreditElaveEt = () => {
   );
 };
 
-export default KreditElaveEt;
+export default KreditDuzelisEt;

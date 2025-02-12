@@ -25,22 +25,19 @@ const data = [
     id: 1,
     title: 'Sürətli pul krediti',
     description: 'lorem ipsum fdsf s dolor sit amet',
-    image:
-      'https://t4.ftcdn.net/jpg/09/20/66/15/360_F_920661586_utQVLmBJdjfs9EUsyYAHfjt20YhvmwFK.jpg',
+    image: 'https://pngimg.com/d/volkswagen_PNG1777.png',
   },
   {
     id: 2,
     title: 'Ev krediti',
     description: 'Faizsiz ilkin ödəniş',
-    image:
-      'https://t4.ftcdn.net/jpg/09/20/66/15/360_F_920661586_utQVLmBJdjfs9EUsyYAHfjt20YhvmwFK.jpg',
+    image: 'https://pngimg.com/d/volkswagen_PNG1777.png',
   },
   {
     id: 3,
     title: 'İpoteka krediti',
     description: 'Uzunmüddətli ödəmə',
-    image:
-      'https://t4.ftcdn.net/jpg/09/20/66/15/360_F_920661586_utQVLmBJdjfs9EUsyYAHfjt20YhvmwFK.jpg',
+    image: 'https://pngimg.com/d/volkswagen_PNG1777.png',
   },
 ];
 
@@ -60,11 +57,6 @@ const Kreditler = () => {
     setSelectedIndex(null);
   };
 
-  const handleEdit = () => {
-    handleMenuClose();
-    router.push(`/webesassehife/slayderduzeliset?id=`);
-  };
-
   const handleDelete = () => {
     toast.success('Silindi');
     handleMenuClose();
@@ -73,7 +65,7 @@ const Kreditler = () => {
   return (
     <>
       <Helmet>
-        <title>İdeal Kredit | Slayder</title>
+        <title>İdeal Kredit | Kreditlər</title>
       </Helmet>
 
       <DashboardContent maxWidth="xl">
@@ -94,12 +86,21 @@ const Kreditler = () => {
           }
         />
 
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
           {data.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <Card>
-                <CardMedia component="img" height="200" image={item.image} alt={item.title} />
-                <CardContent sx={{ p: 1, pl: 2 }}>
+              <Card sx={{ p: 2 }}>
+                <CardMedia
+                  sx={{
+                    background: 'linear-gradient(to right, #110792, #0B0C6A, #123566)',
+                    borderRadius: '8px',
+                  }}
+                  component="img"
+                  height="200"
+                  image={item.image}
+                  alt={item.title}
+                ></CardMedia>
+                <CardContent sx={{ p: 0, pt: 1 }}>
                   <Box
                     sx={{
                       width: '100%',
@@ -141,7 +142,7 @@ const Kreditler = () => {
           <MenuItem
             onClick={() => {
               handleMenuClose();
-              router.push(`/webesassehife/slayderduzeliset/${selectedIndex}`);
+              router.push(`/webkredit/kreditduzeliset/${selectedIndex}`);
             }}
           >
             Düzəliş et

@@ -94,5 +94,12 @@ export const paths = {
     root: `/webkredit`,
     kreditler: `/webkredit/kreditler`,
     kreditelaveet: `/webkredit/kreditelaveet`,
+    kreditduzeliset: (id: string) => `/webkredit/kreditduzeliset/${id}`,
+  },
+  websigorta: {
+    root: `/websigorta`,
+    sigortalar: `/websigorta/sigortalar`,
+    sigortaelaveet: `/websigorta/sigortaelaveet`,
+    sigortaduzeliset: (id: string) => `/websigorta/sigortaduzeliset/${id}`,
   },
 };
