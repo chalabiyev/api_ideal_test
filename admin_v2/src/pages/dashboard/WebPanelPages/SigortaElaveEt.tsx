@@ -79,7 +79,7 @@ const SigortaElaveEt = () => {
           heading="Yeni Sığorta"
           links={[
             { name: 'Veb sayt idarə paneli' },
-            { name: 'Bütün sığortalar', href: '/webksigorta/sigortalar' },
+            { name: 'Bütün sığortalar', href: '/websigorta/sigortalar' },
             { name: 'Yeni sığorta' },
           ]}
         />

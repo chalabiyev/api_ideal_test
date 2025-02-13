@@ -102,4 +102,9 @@ export const paths = {
     sigortaelaveet: `/websigorta/sigortaelaveet`,
     sigortaduzeliset: (id: string) => `/websigorta/sigortaduzeliset/${id}`,
   },
+  websirket: {
+    root: `/websirket`,
+    haqqimizda: `/websirket/haqqimizda`,
+    haqqimizdaduzeliset: (id: string) => `/websirket/haqqimizdaduzeliset/${id}`,
+  },
 };

@@ -188,6 +188,7 @@ const KreditDuzelisEt = () => {
                 )}
                 <Button
                   fullWidth
+                  sx={{ mt: 1 }}
                   variant="contained"
                   color={creditFormData.bannerImage ? 'secondary' : 'primary'}
                   component="label"
@@ -212,6 +213,7 @@ const KreditDuzelisEt = () => {
                   ''
                 )}
                 <Button
+                  sx={{ mt: 1 }}
                   fullWidth
                   variant="contained"
                   color={creditFormData.image ? 'secondary' : 'primary'}

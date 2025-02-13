@@ -31,14 +31,14 @@ export interface CreditFormData {
 }
 
 // insurence
-
 export interface InsuranceFormData {
+  id?: string;
   insuranceType: EInsuranceType;
   image: string;
   title: string;
   description: string;
 }
 export enum EInsuranceType {
-  INDIVIDUAL,
-  COOPERATIVE,
+  INDIVIDUAL = 'INDIVIDUAL',
+  COOPERATIVE = 'COOPERATIVE',
 }

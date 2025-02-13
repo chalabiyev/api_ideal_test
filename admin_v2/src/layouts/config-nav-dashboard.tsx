@@ -171,11 +171,23 @@ export const navData = [
       {
         title: 'Sığorta',
         path: paths.websigorta.root,
-        icon: ICONS.banking,
+        icon: ICONS.lock,
         children: [
           {
             title: 'Sığortalar',
             path: paths.websigorta.sigortalar,
+          },
+        ],
+      },
+      {
+        title: 'Şirkət',
+        path: paths.websirket.root,
+        icon: ICONS.job,
+        children: [
+          {
+            title: 'Haqqımızda',
+            path: paths.websirket.haqqimizda,
+            icon: ICONS.menuItem,
           },
         ],
       },

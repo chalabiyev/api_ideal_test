@@ -55,6 +55,8 @@ const KreditDuzelisEt = lazy(() => import('src/pages/dashboard/WebPanelPages/Kre
 const Sigortalar = lazy(() => import('src/pages/dashboard/WebPanelPages/Sigortalar'));
 const SigortaElaveEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SigortaElaveEt'));
 const SigortaDuzelisEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SigortaDuzelisEt'));
+const HaqqimizdaPage = lazy(() => import('src/pages/dashboard/WebPanelPages/HaqqimizdaPage'));
+const HaqqimizdaDuzelisEt = lazy(() => import('src/pages/dashboard/WebPanelPages/HaqqimizdaDuzelisEt'));
 
 const layoutContent = (
   <DashboardLayout>
@@ -141,6 +143,13 @@ export const dashboardRoutes = [
           { path: 'sigortaduzeliset/:id', element: <SigortaDuzelisEt /> },
         ],
       },
+      {
+        path: 'websirket',
+        children: [
+          { path: 'haqqimizda', element: <HaqqimizdaPage /> },
+          { path: 'haqqimizdaduzeliset/:id', element: <HaqqimizdaDuzelisEt /> },
+        ],
+      }
     ],
   },
 ];

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Grid,
   Card,
@@ -19,6 +19,12 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import { toast } from 'sonner';
+import useApi from 'src/api/useApi';
+import { LoadingScreen } from 'src/components/loading-screen';
+import { EmptyContent } from 'src/components/empty-content';
+import { EInsuranceType, InsuranceFormData } from './types';
+import { BASE_URL } from 'src/api/request';
+import useDelete from 'src/api/useDelete';
 
 const data = [
   {
@@ -49,14 +55,28 @@ const data = [
 ];
 
 const Sigortalar = () => {
+  const {
+    data: insuranceData,
+    hasData: insuranceHasData,
+    loading: insuranceDataLoading,
+  } = useApi(`/content/insurance/listAll`);
+
+  const { deleteData: deleteInsurance } = useDelete('/content/insurance/delete?id=');
+
+  useEffect(() => {
+    if (insuranceHasData) {
+      console.log('insuranceData', insuranceData);
+    }
+  }, [insuranceHasData]);
   const router = useRouter();
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-  const handleMenuOpen = (event: any, index: any) => {
+  const handleMenuOpen = (event: any, id: string) => {
     setMenuAnchor(event.currentTarget);
-    setSelectedIndex(index);
+    // @ts-ignore
+    setSelectedIndex(id);
   };
 
   const handleMenuClose = () => {
@@ -64,10 +84,42 @@ const Sigortalar = () => {
     setSelectedIndex(null);
   };
 
-  const handleDelete = () => {
-    toast.success('Silindi');
-    handleMenuClose();
+  const handleDelete = async () => {
+    const selected = insuranceData.find((item: any) => item.id === selectedIndex);
+    try {
+      await toast.promise(deleteInsurance(selected.id), {
+        loading: 'Silinir...',
+        success: 'Sığorta silindi!',
+        error: 'Silmə zamanı xəta baş verdi!',
+      });
+      handleMenuClose();
+    } catch (error) {
+      console.error('Silmə xətası:', error);
+    }
   };
+
+  if (insuranceDataLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!insuranceHasData) {
+    return (
+      <EmptyContent
+        action={
+          <Button
+            sx={{ mt: 1 }}
+            variant="soft"
+            onClick={() => {
+              router.push(paths.websigorta.sigortaelaveet);
+            }}
+          >
+            Yenisini əlavə et
+          </Button>
+        }
+        title="Sığorta məlumatları yoxdur"
+      />
+    );
+  }
 
   return (
     <>
@@ -96,9 +148,9 @@ const Sigortalar = () => {
           Fərdi sığortalar
         </Typography>
         <Grid container spacing={2}>
-          {data
-            .filter((a) => a.type === 'Fərdi sığorta')
-            .map((item, index) => (
+          {insuranceData
+            .filter((insur: InsuranceFormData) => insur.insuranceType === EInsuranceType.INDIVIDUAL)
+            .map((item: InsuranceFormData, index: number) => (
               <Grid item xs={12} sm={6} md={4} key={item.id}>
                 <Card sx={{ p: 2 }}>
                   <CardMedia
@@ -108,7 +160,11 @@ const Sigortalar = () => {
                     }}
                     component="img"
                     height="200"
-                    image={item.image}
+                    image={
+                      item.image
+                        ? `${BASE_URL}/file/getPublicFile/${item.image}`
+                        : 'https://e7.pngegg.com/pngimages/709/358/png-clipart-price-toyservice-soil-business-no-till-farming-no-rectangle-pie.png'
+                    }
                     alt={item.title}
                   ></CardMedia>
                   <CardContent sx={{ p: 0, pt: 1 }}>
@@ -122,7 +178,7 @@ const Sigortalar = () => {
                     >
                       <Typography variant="h6">{item.title}</Typography>
 
-                      <IconButton onClick={(event) => handleMenuOpen(event, index)}>
+                      <IconButton onClick={(event) => handleMenuOpen(event, item.id ?? '')}>
                         <MoreVertIcon />
                       </IconButton>
                     </Box>
@@ -139,9 +195,11 @@ const Sigortalar = () => {
           Korporativ sığortalar
         </Typography>
         <Grid container spacing={2}>
-          {data
-            .filter((a) => a.type === 'Korporativ sığorta')
-            .map((item, index) => (
+          {insuranceData
+            .filter(
+              (insur: InsuranceFormData) => insur.insuranceType === EInsuranceType.COOPERATIVE
+            )
+            .map((item: InsuranceFormData, index: number) => (
               <Grid item xs={12} sm={6} md={4} key={item.id}>
                 <Card sx={{ p: 2 }}>
                   <CardMedia
@@ -151,7 +209,11 @@ const Sigortalar = () => {
                     }}
                     component="img"
                     height="200"
-                    image={item.image}
+                    image={
+                      item.image
+                        ? `${BASE_URL}/file/getPublicFile/${item.image}`
+                        : 'https://e7.pngegg.com/pngimages/709/358/png-clipart-price-toyservice-soil-business-no-till-farming-no-rectangle-pie.png'
+                    }
                     alt={item.title}
                   ></CardMedia>
                   <CardContent sx={{ p: 0, pt: 1 }}>
@@ -165,7 +227,7 @@ const Sigortalar = () => {
                     >
                       <Typography variant="h6">{item.title}</Typography>
 
-                      <IconButton onClick={(event) => handleMenuOpen(event, index)}>
+                      <IconButton onClick={(event) => handleMenuOpen(event, item.id ?? '')}>
                         <MoreVertIcon />
                       </IconButton>
                     </Box>
