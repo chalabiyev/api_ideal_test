@@ -59,7 +59,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     @Override
     public boolean unsubscribe(SubscribeRequest request) throws BadRequestException {
         String email = request.getEmail();
-        Subscriber subscriber = subscriberRepository.findByEmail(email);
+        Subscriber subscriber = subscriberRepository.findByEmail(email).orElse(null);
         if (subscriber == null) {
             log.info("Subscriber with email {} does not exist", email);
             throw new RuntimeException("Subscriber with email " + email + " does not exist");
@@ -149,5 +149,18 @@ public class SubscribeServiceImpl implements SubscribeService {
     @Override
     public List<Subscriber> list() {
         return subscriberRepository.findAll();
+    }
+
+    @Override
+    public Boolean changeStatus(String email) {
+        Subscriber subscriber = subscriberRepository.findByEmail(email).orElse(null);
+        if (subscriber == null) {
+            log.info("Subscriber with email {} does not exist", email);
+            throw new RuntimeException("Subscriber with email " + email + " does not exist");
+        }
+
+        subscriber.setActive(!subscriber.isActive());
+        subscriberRepository.save(subscriber);
+        return subscriber.isActive();
     }
 }

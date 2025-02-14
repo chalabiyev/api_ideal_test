@@ -35,11 +35,22 @@ class SubscribeController {
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/change-status")
+    public ResponseEntity<Boolean> changeStatus(@RequestParam String email) {
+        return ResponseEntity.ok(subscribeService.changeStatus(email));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/send-campaign")
     public ResponseEntity<Boolean> sendCampaignEmail(@RequestParam String campaignId) {
         return ResponseEntity.ok(subscribeService.sendCampaignEmail(campaignId));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/list")
     public ResponseEntity<List<Subscriber>> list() {
         return ResponseEntity.ok(subscribeService.list());
