@@ -15,4 +15,6 @@ public interface SubscribeService {
     boolean sendCampaignEmail(String campaignId);
 
     List<Subscriber> list();
+
+    Boolean changeStatus(String email);
 }
