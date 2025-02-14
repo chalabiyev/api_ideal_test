@@ -42,3 +42,60 @@ export enum EInsuranceType {
   INDIVIDUAL = 'INDIVIDUAL',
   COOPERATIVE = 'COOPERATIVE',
 }
+
+// campaign
+export interface CampaignFormData {
+  createdBy?: string;
+  updatedBy?: string;
+  createdDate?: Date;
+  id?: string;
+  subscriptionMailSent?: boolean;
+  title: string;
+  description: string;
+  image: string;
+  showOnMainPage: boolean;
+}
+
+// contact
+export interface ContactInfoFormData {
+  phoneNumber: string;
+  insurancePhoneNumber: string;
+  email: string;
+  locationUrl: string;
+  location: string;
+  socials: {
+    instagram: string;
+    facebook: string;
+    twitter: string;
+    linkedin: string;
+    youtube: string;
+    tiktok: string;
+    telegram: string;
+    whatsapp: string;
+  };
+  businessHours: [
+    {
+      day: string;
+      openTime: string;
+      closeTime: string;
+    },
+    {
+      day: string;
+      openTime: string;
+      closeTime: string;
+    },
+  ];
+}
+
+// subcribe lise
+
+export interface SubscribersListI {
+  createdBy: string;
+  updatedBy: string;
+  createdDate: Date;
+  updatedDate: Date;
+  id: string;
+  email: string;
+  subscribedAt: Date;
+  active: true;
+}

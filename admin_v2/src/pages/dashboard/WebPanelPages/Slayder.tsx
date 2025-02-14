@@ -97,8 +97,17 @@ const Slayder = () => {
         <Grid container spacing={2}>
           {data.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <Card>
-                <CardMedia component="img" height="200" image={item.image} alt={item.title} />
+              <Card sx={{ p: 2 }}>
+                <CardMedia
+                  sx={{
+                    background: 'linear-gradient(to right, #110792, #0B0C6A, #123566)',
+                    borderRadius: '8px',
+                  }}
+                  component="img"
+                  height="200"
+                  image={item.image}
+                  alt={item.title}
+                ></CardMedia>
                 <CardContent sx={{ p: 1, pl: 2 }}>
                   <Box
                     sx={{

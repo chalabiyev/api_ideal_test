@@ -106,5 +106,16 @@ export const paths = {
     root: `/websirket`,
     haqqimizda: `/websirket/haqqimizda`,
     haqqimizdaduzeliset: (id: string) => `/websirket/haqqimizdaduzeliset/${id}`,
+    kampaniyalar: `/websirket/kampaniyalar`,
+    kampaniyaelaveet: `/websirket/kampaniyaelaveet`,
+    kampaniyaduzeliset: (id: string) => `/websirket/kampaniyaduzeliset/${id}`,
+  },
+  webelaqe: {
+    root: `/webelaqe`,
+    elaqe: `/webelaqe/elaqe`,
+  },
+  webabune: {
+    root: `/webabune`,
+    abune: `/webabune/abune`,
   },
 };

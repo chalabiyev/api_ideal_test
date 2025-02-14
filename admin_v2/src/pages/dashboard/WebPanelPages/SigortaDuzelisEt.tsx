@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -21,11 +21,29 @@ import { BASE_URL } from 'src/api/request';
 import usePost from 'src/api/usePost';
 import { useParams, useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import useApi from 'src/api/useApi';
+import { LoadingScreen } from 'src/components/loading-screen';
+import { EmptyContent } from 'src/components/empty-content';
+import usePatch from 'src/api/usePatch';
 
 const SigortaDuzelisEt = () => {
   const { id } = useParams();
   const router = useRouter();
-  const { postData: createInsurance, loading, error } = usePost('/content/insurance/create');
+  const {
+    data: insuranceData,
+    hasData: insuranceHasData,
+    loading: insuranceDataLoading,
+    refetch: insuranceDataRefetch,
+  } = useApi(`/content/insurance/get?id=${id}`);
+
+  const { patchData: updateInsuranceData } = usePatch(`content/insurance/${id}`);
+
+  useEffect(() => {
+    if (insuranceHasData) {
+      setInsuranceFormData(insuranceData);
+    }
+  }, [insuranceHasData]);
+
   const [insuranceFormData, setInsuranceFormData] = useState<InsuranceFormData>({
     insuranceType: EInsuranceType.INDIVIDUAL,
     image: '',
@@ -54,20 +72,40 @@ const SigortaDuzelisEt = () => {
     }
   };
 
-  // const handleModifyInsurance = async () => {
-  //   toast.promise(createInsurance(insuranceFormData), {
-  //     loading: 'Sığorta yaradılır...',
-  //     // eslint-disable-next-line
-  //     success: (response) => {
-  //       router.push(paths.websigorta.sigortalar);
-  //       return `Məlumat yaradıldı!`;
-  //     },
-  //     error: (err) => {
-  //       const errorMessage = err.response?.data?.message || 'Olmadığı üçün xəta';
-  //       return `Xəta: ${errorMessage}`;
-  //     },
-  //   });
-  // };
+  const handleModifyInsurance = async () => {
+    if (id) {
+      try {
+        await updateInsuranceData(insuranceFormData);
+        toast.success('Məlumatlar yeniləndi');
+        router.push(paths.websigorta.sigortalar);
+      } catch (err) {
+        toast.warning('Xəta baş verdi');
+      }
+    }
+  };
+
+  if (insuranceDataLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!insuranceHasData) {
+    return (
+      <EmptyContent
+        action={
+          <Button
+            sx={{ mt: 1 }}
+            variant="soft"
+            onClick={() => {
+              router.push(paths.websigorta.sigortaelaveet);
+            }}
+          >
+            Yenisini əlavə et
+          </Button>
+        }
+        title="Sığorta məlumatları yoxdur"
+      />
+    );
+  }
 
   return (
     <>
@@ -77,7 +115,7 @@ const SigortaDuzelisEt = () => {
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Burda adi olacaq"
+          heading={insuranceFormData.title}
           links={[
             { name: 'Veb sayt idarə paneli' },
             { name: 'Bütün sığortalar', href: '/websigorta/sigortalar' },
@@ -151,7 +189,7 @@ const SigortaDuzelisEt = () => {
                 insuranceFormData.title === '' ||
                 insuranceFormData.description === ''
               }
-              // onClick={handleModifyInsurance}
+               onClick={handleModifyInsurance}
               type="submit"
               color="success"
               variant="contained"

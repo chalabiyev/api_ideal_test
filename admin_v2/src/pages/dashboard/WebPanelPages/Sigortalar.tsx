@@ -26,73 +26,51 @@ import { EInsuranceType, InsuranceFormData } from './types';
 import { BASE_URL } from 'src/api/request';
 import useDelete from 'src/api/useDelete';
 
-const data = [
-  {
-    type: 'Fərdi sığorta',
-    id: 1,
-    title: 'Sürətli pul krediti',
-    description: 'lorem ipsum fdsf s dolor sit amet',
-    image:
-      'https://wallpapers.com/images/hd/chevrolet-cruze-hatchback-png-06232024-q5g01hqgocoeoxlv.jpg',
-  },
-  {
-    type: 'Fərdi sığorta',
-    id: 2,
-    title: 'Ev krediti',
-    description: 'Faizsiz ilkin ödəniş',
-    image:
-      'https://wallpapers.com/images/hd/chevrolet-cruze-hatchback-png-06232024-q5g01hqgocoeoxlv.jpg',
-  },
-
-  {
-    type: 'Korporativ sığorta',
-    id: 4,
-    title: 'İpoteka krediti',
-    description: 'Uzunmüddətli ödəmə',
-    image:
-      'https://wallpapers.com/images/hd/chevrolet-cruze-hatchback-png-06232024-q5g01hqgocoeoxlv.jpg',
-  },
-];
-
 const Sigortalar = () => {
   const {
     data: insuranceData,
     hasData: insuranceHasData,
     loading: insuranceDataLoading,
+    refetch: insuranceDataRefetch,
   } = useApi(`/content/insurance/listAll`);
 
   const { deleteData: deleteInsurance } = useDelete('/content/insurance/delete?id=');
 
-  useEffect(() => {
-    if (insuranceHasData) {
-      console.log('insuranceData', insuranceData);
-    }
-  }, [insuranceHasData]);
   const router = useRouter();
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-  const handleMenuOpen = (event: any, id: string) => {
-    setMenuAnchor(event.currentTarget);
-    // @ts-ignore
-    setSelectedIndex(id);
+  const [menuState, setMenuState] = useState<{
+    anchorEl: null | HTMLElement;
+    item: InsuranceFormData | null;
+  }>({
+    anchorEl: null,
+    item: null,
+  });
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, item: InsuranceFormData) => {
+    setMenuState({ anchorEl: event.currentTarget, item });
   };
 
   const handleMenuClose = () => {
-    setMenuAnchor(null);
-    setSelectedIndex(null);
+    setMenuState({ anchorEl: null, item: null });
   };
 
   const handleDelete = async () => {
-    const selected = insuranceData.find((item: any) => item.id === selectedIndex);
+    if (!menuState.item) return;
     try {
-      await toast.promise(deleteInsurance(selected.id), {
+      // @ts-ignore
+      await toast.promise(deleteInsurance(menuState.item.id), {
         loading: 'Silinir...',
         success: 'Sığorta silindi!',
         error: 'Silmə zamanı xəta baş verdi!',
       });
+
       handleMenuClose();
+      setTimeout(() => {
+        insuranceDataRefetch();
+      }, 300);
     } catch (error) {
       console.error('Silmə xətası:', error);
     }
@@ -178,7 +156,7 @@ const Sigortalar = () => {
                     >
                       <Typography variant="h6">{item.title}</Typography>
 
-                      <IconButton onClick={(event) => handleMenuOpen(event, item.id ?? '')}>
+                      <IconButton onClick={(event) => handleMenuOpen(event, item)}>
                         <MoreVertIcon />
                       </IconButton>
                     </Box>
@@ -227,7 +205,7 @@ const Sigortalar = () => {
                     >
                       <Typography variant="h6">{item.title}</Typography>
 
-                      <IconButton onClick={(event) => handleMenuOpen(event, item.id ?? '')}>
+                      <IconButton onClick={(event) => handleMenuOpen(event, item)}>
                         <MoreVertIcon />
                       </IconButton>
                     </Box>
@@ -243,8 +221,8 @@ const Sigortalar = () => {
 
         {/* Açılan menyu */}
         <Menu
-          anchorEl={menuAnchor}
-          open={Boolean(menuAnchor)}
+          anchorEl={menuState.anchorEl}
+          open={Boolean(menuState.anchorEl)}
           onClose={handleMenuClose}
           anchorOrigin={{
             vertical: 'top',
@@ -258,7 +236,7 @@ const Sigortalar = () => {
           <MenuItem
             onClick={() => {
               handleMenuClose();
-              router.push(`/websigorta/sigortaduzeliset/${selectedIndex}`);
+              router.push(`/websigorta/sigortaduzeliset/${menuState.item?.id}`);
             }}
           >
             Düzəliş et

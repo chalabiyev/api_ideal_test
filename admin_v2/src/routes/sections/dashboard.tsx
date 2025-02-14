@@ -56,7 +56,16 @@ const Sigortalar = lazy(() => import('src/pages/dashboard/WebPanelPages/Sigortal
 const SigortaElaveEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SigortaElaveEt'));
 const SigortaDuzelisEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SigortaDuzelisEt'));
 const HaqqimizdaPage = lazy(() => import('src/pages/dashboard/WebPanelPages/HaqqimizdaPage'));
-const HaqqimizdaDuzelisEt = lazy(() => import('src/pages/dashboard/WebPanelPages/HaqqimizdaDuzelisEt'));
+const HaqqimizdaDuzelisEt = lazy(
+  () => import('src/pages/dashboard/WebPanelPages/HaqqimizdaDuzelisEt')
+);
+const Kampaniyalar = lazy(() => import('src/pages/dashboard/WebPanelPages/Kampaniyalar'));
+const KampaniyaElaveEt = lazy(() => import('src/pages/dashboard/WebPanelPages/KampaniyaElaveEt'));
+const KampaniyaDuzelisEt = lazy(
+  () => import('src/pages/dashboard/WebPanelPages/KampaniyaDuzelisEt')
+);
+const Elaqe = lazy(() => import('src/pages/dashboard/WebPanelPages/Elaqe'));
+const Abuneler = lazy(() => import('src/pages/dashboard/WebPanelPages/Abuneler'));
 
 const layoutContent = (
   <DashboardLayout>
@@ -148,8 +157,19 @@ export const dashboardRoutes = [
         children: [
           { path: 'haqqimizda', element: <HaqqimizdaPage /> },
           { path: 'haqqimizdaduzeliset/:id', element: <HaqqimizdaDuzelisEt /> },
+          { path: 'kampaniyalar', element: <Kampaniyalar /> },
+          { path: 'kampaniyaelaveet', element: <KampaniyaElaveEt /> },
+          { path: 'kampaniyaduzeliset/:id', element: <KampaniyaDuzelisEt /> },
         ],
-      }
+      },
+      {
+        path: 'webelaqe',
+        children: [{ path: 'elaqe', element: <Elaqe /> }],
+      },
+      {
+        path: 'webabune',
+        children: [{ path: 'abune', element: <Abuneler /> }],
+      },
     ],
   },
 ];

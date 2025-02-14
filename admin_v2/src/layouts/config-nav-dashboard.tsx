@@ -51,6 +51,8 @@ const ICONS = {
   parameter: icon('ic-parameter'),
   abouticon: icon('ic-about-icon'),
   partner: icon('ic-partner'),
+  smile: icon('ic-smile'),
+  qifil: icon('ic-qifil'),
 };
 
 // ----------------------------------------------------------------------
@@ -187,9 +189,22 @@ export const navData = [
           {
             title: 'Haqqımızda',
             path: paths.websirket.haqqimizda,
-            icon: ICONS.menuItem,
+          },
+          {
+            title: 'Kampaniyalar',
+            path: paths.websirket.kampaniyalar,
           },
         ],
+      },
+      {
+        title: 'Əlaqə',
+        path: paths.webelaqe.elaqe,
+        icon: ICONS.smile,
+      },
+      {
+        title: 'Abunələr',
+        path: paths.webabune.abune,
+        icon: ICONS.qifil,
       },
     ],
   },
