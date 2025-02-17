@@ -152,7 +152,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     }
 
     @Override
-    public Boolean changeStatus(String email) {
+    public boolean changeStatus(String email) {
         Subscriber subscriber = subscriberRepository.findByEmail(email).orElse(null);
         if (subscriber == null) {
             log.info("Subscriber with email {} does not exist", email);
