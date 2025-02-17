@@ -80,4 +80,42 @@ export const paths = {
     partnyorlarlist: `/partynorlar/list`,
     duzeliset: (id: string) => `/partynorlar/duzeliset/${id}`,
   },
+
+  //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
+
+  webesassehife: {
+    root: `/webesassehife`,
+    slayder: `/webesassehife/slayder`,
+    slayderduzeliset: (id: string) => `/webesassehife/slayderduzeliset/${id}`,
+    slayderelaveet: `/webesassehife/slayderelaveet`,
+    haqqimizda: `/webesassehife/haqqimizda`,
+  },
+  webkredit: {
+    root: `/webkredit`,
+    kreditler: `/webkredit/kreditler`,
+    kreditelaveet: `/webkredit/kreditelaveet`,
+    kreditduzeliset: (id: string) => `/webkredit/kreditduzeliset/${id}`,
+  },
+  websigorta: {
+    root: `/websigorta`,
+    sigortalar: `/websigorta/sigortalar`,
+    sigortaelaveet: `/websigorta/sigortaelaveet`,
+    sigortaduzeliset: (id: string) => `/websigorta/sigortaduzeliset/${id}`,
+  },
+  websirket: {
+    root: `/websirket`,
+    haqqimizda: `/websirket/haqqimizda`,
+    haqqimizdaduzeliset: (id: string) => `/websirket/haqqimizdaduzeliset/${id}`,
+    kampaniyalar: `/websirket/kampaniyalar`,
+    kampaniyaelaveet: `/websirket/kampaniyaelaveet`,
+    kampaniyaduzeliset: (id: string) => `/websirket/kampaniyaduzeliset/${id}`,
+  },
+  webelaqe: {
+    root: `/webelaqe`,
+    elaqe: `/webelaqe/elaqe`,
+  },
+  webabune: {
+    root: `/webabune`,
+    abune: `/webabune/abune`,
+  },
 };
