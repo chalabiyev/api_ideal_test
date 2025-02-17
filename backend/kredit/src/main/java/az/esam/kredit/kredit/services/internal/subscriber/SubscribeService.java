@@ -16,5 +16,5 @@ public interface SubscribeService {
 
     List<Subscriber> list();
 
-    Boolean changeStatus(String email);
+    boolean changeStatus(String email);
 }
