@@ -27,7 +27,29 @@ export const callGetFile = async (fileName: string) => {
 export const uploadFile = async (file: Blob) => {
   let fdata = new FormData();
   fdata.append('file', file);
-  fdata.append('isPublic', "false");
+  fdata.append('isPublic', 'false');
+  const response = await fetch(`${BASE_URL}/file/uploadFile`, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${token}`,
+      'X-API-KEY': API_KEY,
+    },
+    body: fdata,
+    method: 'POST',
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return { ok: true, data: data };
+    // eslint-disable-next-line
+  } else {
+    return { ok: false, data: null };
+  }
+};
+export const uploadPublicFile = async (file: Blob) => {
+  let fdata = new FormData();
+  fdata.append('file', file);
+  fdata.append('isPublic', 'true');
   const response = await fetch(`${BASE_URL}/file/uploadFile`, {
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -57,7 +79,7 @@ export const callDeleteFile = async (fileName: string) => {
     method: 'DELETE',
   });
   if (response.ok) {
-    const result = await response.json() as boolean;
+    const result = (await response.json()) as boolean;
     return result;
     // eslint-disable-next-line
   } else {
