@@ -56,7 +56,7 @@ public class CreditTypeServiceImpl implements CreditTypeService {
 
     @Override
     public List<CreditType> list() {
-        return creditTypeRepository.findAll();
+        return creditTypeRepository.findAllByOrderByCreatedDateDesc();
     }
 
     @Override
