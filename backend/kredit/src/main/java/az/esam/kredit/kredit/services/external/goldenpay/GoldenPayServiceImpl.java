@@ -4,6 +4,8 @@ import az.esam.kredit.kredit.dtos.requests.goldenpay.GetPaymentKeyRequest;
 import az.esam.kredit.kredit.dtos.responses.goldenpay.GetPaymentKeyResponse;
 import az.esam.kredit.kredit.dtos.responses.goldenpay.GetPaymentResultResponse;
 import az.esam.kredit.kredit.properties.GoldenPayProperties;
+import az.esam.kredit.kredit.repositories.goldenpay.GetPaymentKeyResponseRepository;
+import az.esam.kredit.kredit.repositories.goldenpay.GetPaymentResultResponseRepository;
 import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,23 +28,33 @@ public class GoldenPayServiceImpl implements GoldenPayService {
     @Autowired
     SendRequest sendRequest;
 
+    @Autowired
+    GetPaymentKeyResponseRepository paymentKeyResponseRepository;
+
+    @Autowired
+    GetPaymentResultResponseRepository paymentResultResponseRepository;
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public GetPaymentKeyResponse getPaymentKey(GetPaymentKeyRequest request) {
         try {
 //            url =  "https://rest.goldenpay.az/web/service/merchant/getPaymentKey"
-            String md5 = crypt(properties.getAuthKey() + request.getMecrhantName() + request.getCardType() + request.getAmount() + request.getDescription());
+            request.setMerchantName(properties.getMerchantName());
+            String md5 = crypt(properties.getAuthKey() + properties.getMerchantName() + request.getCardType() + request.getAmount() + request.getDescription());
             request.setHashCode(md5);
             String bodyStr = objectMapper.writeValueAsString(request);
             String url = properties.getApiUrl() + "/web/service/merchant/getPaymentKey";
             log.info("getPaymentKey Request URL: {}", url);
             JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", null, null, false);
             if (jsonResponse.has("paymentKey") && !jsonResponse.get("paymentKey").isNull()) {
-                return objectMapper.readValue(
+                GetPaymentKeyResponse paymentKeyResponse = objectMapper.readValue(
                         jsonResponse.toString(),
                         GetPaymentKeyResponse.class
                 );
+                paymentKeyResponse.setPaymentUrl(properties.getPaymentUrl() + paymentKeyResponse.getPaymentKey());
+                paymentKeyResponseRepository.save(paymentKeyResponse);
+                return paymentKeyResponse;
             } else {
                 log.error("getPaymentKey Response is null or empty");
             }
@@ -64,10 +76,12 @@ public class GoldenPayServiceImpl implements GoldenPayService {
             log.info("getPaymentRequest Request URL: {}", url);
             JsonNode jsonResponse = sendRequest.executeRequest(null, url, "POST", null, null, false);
             if (jsonResponse != null) {
-                return objectMapper.readValue(
+                GetPaymentResultResponse response = objectMapper.readValue(
                         jsonResponse.toString(),
                         GetPaymentResultResponse.class
                 );
+                paymentResultResponseRepository.save(response);
+                return response;
             } else {
                 log.error("getPaymentRequest Response is null or empty");
             }

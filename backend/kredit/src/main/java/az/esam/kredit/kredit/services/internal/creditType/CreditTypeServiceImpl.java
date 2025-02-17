@@ -1,7 +1,7 @@
 package az.esam.kredit.kredit.services.internal.creditType;
 
-import az.esam.kredit.kredit.entities.CreditType;
-import az.esam.kredit.kredit.repositories.CreditTypeRepository;
+import az.esam.kredit.kredit.entities.content_management.CreditType;
+import az.esam.kredit.kredit.repositories.content_management.CreditTypeRepository;
 import az.esam.kredit.kredit.services.internal.storage.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

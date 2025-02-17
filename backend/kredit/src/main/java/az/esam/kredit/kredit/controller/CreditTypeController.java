@@ -1,8 +1,8 @@
 package az.esam.kredit.kredit.controller;
 
-import az.esam.kredit.kredit.entities.CreditType;
+import az.esam.kredit.kredit.entities.content_management.CreditType;
 import az.esam.kredit.kredit.patch.Patcher;
-import az.esam.kredit.kredit.repositories.CreditTypeRepository;
+import az.esam.kredit.kredit.repositories.content_management.CreditTypeRepository;
 import az.esam.kredit.kredit.services.internal.creditType.CreditTypeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
-@RequestMapping("/api/credit-type")
+@RequestMapping("/api/content/credit-type")
 public class CreditTypeController {
 
     @Autowired

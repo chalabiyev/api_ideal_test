@@ -4,38 +4,43 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByIdCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.List;
 
 public interface AKBRequestService {
 
-    JsonNode inquireByIdCard(InquireByIdCardRequest akbRequest);
+    InquireByIdCardResponse inquireByIdCard(InquireByIdCardRequest akbRequest);
 
-    JsonNode inquireByPassport(InquireByPassportRequest akbRequest);
+    JsonNode inquireByPassport(InquireByPassportRequest akbRequest); // we will not use this service
 
     JsonNode inquireByServiceCard(InquireByServiceCardRequest akbRequest);
 
     JsonNode inquireByTaxNo(InquireByTaxNoRequest akbRequest);
 
-    JsonNode inquireUtilityServices(String reportId);
+    AKBUtilityServiceResponse inquireUtilityServices(String reportId);
 
-    JsonNode getBorrowerScore(String reportId);
+    AKBBorrowerScoreResponse getBorrowerScore(String reportId);
 
-    JsonNode getBalance();
+    Double getBalance();
 
-    JsonNode lkpBorrInquiryPurposes();
+    List<AKBTypeResponse> lkpBorrInquiryPurposes();
 
-    JsonNode lkpCollateralTypes();
+    List<AKBTypeResponse> lkpCollateralTypes();
 
-    JsonNode lkpCountries();
+    List<AKBTypeResponse> lkpCountries();
 
-    JsonNode lkpCreditClassTypes();
+    List<AKBTypeResponse> lkpCreditClassTypes();
 
-    JsonNode lkpCreditPurposeTypes();
+    List<AKBTypeResponse> lkpCreditPurposeTypes();
 
-    JsonNode lkpCreditStatusTypes();
+    List<AKBStatusResponse> lkpCreditStatusTypes();
 
-    JsonNode lkpCreditTypes();
+    List<AKBCreditTypeResponse> lkpCreditTypes();
 
-    JsonNode lkpCurrencies();
+    List<AKBCurrencyResponse> lkpCurrencies();
 
 }

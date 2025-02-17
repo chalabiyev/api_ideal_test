@@ -1,0 +1,7 @@
+package az.esam.kredit.kredit.repositories.akb;
+
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.AKBStatusResponse;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface AKBStatusResponseRepository extends MongoRepository<AKBStatusResponse, String> {
+}

@@ -1,7 +1,7 @@
 package az.esam.kredit.kredit.services.internal.insurance;
 
-import az.esam.kredit.kredit.entities.Insurance;
-import az.esam.kredit.kredit.repositories.InsuranceRepository;
+import az.esam.kredit.kredit.entities.content_management.Insurance;
+import az.esam.kredit.kredit.repositories.content_management.InsuranceRepository;
 import az.esam.kredit.kredit.services.internal.storage.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +49,6 @@ public class InsuranceServiceImpl implements InsuranceService {
                     .orElseThrow(() -> new RuntimeException("Sığorta tapılmadı"));
             if (insurance.getImage() != null && !insurance.getImage().isEmpty()) {
                 storageService.deleteExistingImages(insurance.getImage());
-            }
-            if (insurance.getBannerImage() != null && !insurance.getBannerImage().isEmpty()) {
-                storageService.deleteExistingImages(insurance.getBannerImage());
             }
             insuranceRepository.delete(insurance);
             return true;

@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.asanfinance.passport;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +31,6 @@ public class PassportInfoResponse {
     private String BirthCountry;
     private String GivenOrganization;
     private String PassportType;
+
+    private ESource source;
 }

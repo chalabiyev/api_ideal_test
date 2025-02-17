@@ -1,8 +1,8 @@
 package az.esam.kredit.kredit.controller;
 
-import az.esam.kredit.kredit.entities.Insurance;
+import az.esam.kredit.kredit.entities.content_management.Insurance;
 import az.esam.kredit.kredit.patch.Patcher;
-import az.esam.kredit.kredit.repositories.InsuranceRepository;
+import az.esam.kredit.kredit.repositories.content_management.InsuranceRepository;
 import az.esam.kredit.kredit.services.internal.insurance.InsuranceService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin(origins = {"*"}, maxAge = 3600)
 @RestController
-@RequestMapping("/api/insurance")
+@RequestMapping("/api/content/insurance")
 public class InsuranceController {
 
     @Autowired

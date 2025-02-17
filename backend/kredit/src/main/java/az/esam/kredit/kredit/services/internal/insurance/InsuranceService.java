@@ -1,6 +1,6 @@
 package az.esam.kredit.kredit.services.internal.insurance;
 
-import az.esam.kredit.kredit.entities.Insurance;
+import az.esam.kredit.kredit.entities.content_management.Insurance;
 
 import java.util.List;
 
