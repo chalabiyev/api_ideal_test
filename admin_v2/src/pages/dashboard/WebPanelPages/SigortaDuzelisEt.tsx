@@ -110,7 +110,7 @@ const SigortaDuzelisEt = () => {
   return (
     <>
       <Helmet>
-        <title>İdeal Kredit | Yeni Sığorta</title>
+        <title>İdeal Kredit | Düzəliş et</title>
       </Helmet>
 
       <DashboardContent maxWidth="xl">
@@ -189,7 +189,7 @@ const SigortaDuzelisEt = () => {
                 insuranceFormData.title === '' ||
                 insuranceFormData.description === ''
               }
-               onClick={handleModifyInsurance}
+              onClick={handleModifyInsurance}
               type="submit"
               color="success"
               variant="contained"

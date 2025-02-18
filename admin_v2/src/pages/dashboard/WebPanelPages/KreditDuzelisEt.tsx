@@ -141,7 +141,7 @@ const KreditDuzelisEt = () => {
   return (
     <>
       <Helmet>
-        <title>İdeal Kredit | Yeni Kredit</title>
+        <title>İdeal Kredit | Düzəliş et</title>
       </Helmet>
 
       <DashboardContent maxWidth="xl">

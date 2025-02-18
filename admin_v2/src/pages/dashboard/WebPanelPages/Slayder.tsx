@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Grid,
   Card,
@@ -19,66 +19,92 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import { toast } from 'sonner';
-
-const data = [
-  {
-    id: 1,
-    title: 'Sürətli pul krediti',
-    description: 'lorem ipsum fdsf s dolor sit amet',
-    image:
-      'https://images.unsplash.com/photo-1738447429433-69e3ecd0bdd0?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 2,
-    title: 'Ev krediti',
-    description: 'Faizsiz ilkin ödəniş',
-    image:
-      'https://images.unsplash.com/photo-1738447429433-69e3ecd0bdd0?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 3,
-    title: 'İpoteka krediti',
-    description: 'Uzunmüddətli ödəmə',
-    image:
-      'https://images.unsplash.com/photo-1738447429433-69e3ecd0bdd0?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-];
+import useApi from 'src/api/useApi';
+import { LoadingScreen } from 'src/components/loading-screen';
+import { EmptyContent } from 'src/components/empty-content';
+import { BASE_URL } from 'src/api/request';
+import useDelete from 'src/api/useDelete';
+import { SliderListI } from './types';
 
 const Slayder = () => {
+  const {
+    data: sliderData,
+    hasData: sliderHasData,
+    loading: sliderDataLoading,
+    refetch: sliderDataRefetch,
+  } = useApi(`/content/slider/list`);
+
+  const { deleteData: deleteSlide } = useDelete('/content/slider/delete?id=');
+
   const router = useRouter();
 
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [menuState, setMenuState] = useState<{
+    anchorEl: null | HTMLElement;
+    item: SliderListI | null;
+  }>({
+    anchorEl: null,
+    item: null,
+  });
 
-  const handleMenuOpen = (event: any, index: any) => {
-    setMenuAnchor(event.currentTarget);
-    setSelectedIndex(index);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, item: SliderListI) => {
+    setMenuState({ anchorEl: event.currentTarget, item });
   };
 
   const handleMenuClose = () => {
-    setMenuAnchor(null);
-    setSelectedIndex(null);
+    setMenuState({ anchorEl: null, item: null });
   };
 
-  const handleEdit = () => {
-    handleMenuClose();
-    router.push(`/webesassehife/slayderduzeliset?id=`);
+  const handleDelete = async () => {
+    if (!menuState.item) return;
+    try {
+      // @ts-ignore
+      await toast.promise(deleteSlide(menuState.item.id), {
+        loading: 'Silinir...',
+        success: 'Slayd silindi!',
+        error: 'Silmə zamanı xəta baş verdi!',
+      });
+
+      handleMenuClose();
+      setTimeout(() => {
+        sliderDataRefetch();
+      }, 300);
+    } catch (error) {
+      console.error('Silmə xətası:', error);
+    }
   };
 
-  const handleDelete = () => {
-    toast.success('Silindi');
-    handleMenuClose();
-  };
+  if (sliderDataLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!sliderHasData) {
+    return (
+      <EmptyContent
+        action={
+          <Button
+            sx={{ mt: 1 }}
+            variant="soft"
+            onClick={() => {
+              router.push(paths.webesassehife.slayderelaveet);
+            }}
+          >
+            Əlavə et
+          </Button>
+        }
+        title="Slayder məlumatları yoxdur"
+      />
+    );
+  }
 
   return (
     <>
       <Helmet>
-        <title>İdeal Kredit | Slayder</title>
+        <title>İdeal Kredit | Slaydler</title>
       </Helmet>
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Slayder"
+          heading="Slaydler"
           links={[{ name: 'Veb sayt idarə paneli' }, { name: 'Slayder' }]}
           sx={{ mb: { xs: 3, md: 5 } }}
           action={
@@ -95,20 +121,24 @@ const Slayder = () => {
         />
 
         <Grid container spacing={2}>
-          {data.map((item, index) => (
+          {sliderData.map((item: SliderListI, index: number) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
               <Card sx={{ p: 2 }}>
                 <CardMedia
                   sx={{
-                    background: 'linear-gradient(to right, #110792, #0B0C6A, #123566)',
+                    background: 'linear-gradient(to right, #FF512F,  #F09819)',
                     borderRadius: '8px',
                   }}
                   component="img"
                   height="200"
-                  image={item.image}
+                  image={
+                    item.image
+                      ? `${BASE_URL}/file/getPublicFile/${item.image}`
+                      : 'https://e7.pngegg.com/pngimages/709/358/png-clipart-price-toyservice-soil-business-no-till-farming-no-rectangle-pie.png'
+                  }
                   alt={item.title}
                 ></CardMedia>
-                <CardContent sx={{ p: 1, pl: 2 }}>
+                <CardContent sx={{ p: 0, pt: 1 }}>
                   <Box
                     sx={{
                       width: '100%',
@@ -119,13 +149,13 @@ const Slayder = () => {
                   >
                     <Typography variant="h6">{item.title}</Typography>
 
-                    <IconButton onClick={(event) => handleMenuOpen(event, index)}>
+                    <IconButton onClick={(event) => handleMenuOpen(event, item)}>
                       <MoreVertIcon />
                     </IconButton>
                   </Box>
 
                   <Typography variant="body2" color="text.secondary">
-                    {item.description}
+                    {item.subTitle}
                   </Typography>
                 </CardContent>
               </Card>
@@ -135,8 +165,8 @@ const Slayder = () => {
 
         {/* Açılan menyu */}
         <Menu
-          anchorEl={menuAnchor}
-          open={Boolean(menuAnchor)}
+          anchorEl={menuState.anchorEl}
+          open={Boolean(menuState.anchorEl)}
           onClose={handleMenuClose}
           anchorOrigin={{
             vertical: 'top',
@@ -150,7 +180,7 @@ const Slayder = () => {
           <MenuItem
             onClick={() => {
               handleMenuClose();
-              router.push(`/webesassehife/slayderduzeliset/${selectedIndex}`);
+              router.push(`/webesassehife/slayderduzeliset/${menuState.item?.id}`);
             }}
           >
             Düzəliş et

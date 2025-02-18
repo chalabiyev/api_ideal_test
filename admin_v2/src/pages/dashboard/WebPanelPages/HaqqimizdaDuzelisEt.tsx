@@ -39,25 +39,25 @@ const HaqqimizdaDuzelisEt = () => {
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-  
-      try {
-        const response = await uploadPublicFile(file);
-        if (response) {
-          console.log('res', response);
-          setAboutCardInfo((prev) => ({ ...prev, image: response.data.message }));
-          toast.success('Şəkil yükləndi!');
-        }
-      } catch (error) {
-        toast.error('Şəkil yüklənərkən xəta baş verdi!');
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const response = await uploadPublicFile(file);
+      if (response) {
+        console.log('res', response);
+        setAboutCardInfo((prev) => ({ ...prev, image: response.data.message }));
+        toast.success('Şəkil yükləndi!');
       }
-    };
+    } catch (error) {
+      toast.error('Şəkil yüklənərkən xəta baş verdi!');
+    }
+  };
 
   return (
     <>
       <Helmet>
-        <title>İdeal Kredit | Haqqımızda</title>
+        <title>İdeal Kredit | Düzəliş et</title>
       </Helmet>
 
       <DashboardContent maxWidth="xl">

@@ -154,7 +154,7 @@ export const navData = [
             path: paths.webesassehife.slayder,
           },
           {
-            title: 'Haqqımızda',
+            title: 'Haqqımızda (Əsas səhifədəki)',
             path: paths.webesassehife.haqqimizda,
           },
         ],
@@ -187,7 +187,7 @@ export const navData = [
         icon: ICONS.job,
         children: [
           {
-            title: 'Haqqımızda',
+            title: 'Haqqımızda (Səhifə olan)',
             path: paths.websirket.haqqimizda,
           },
           {
