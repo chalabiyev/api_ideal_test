@@ -38,9 +38,6 @@ const Sigortalar = () => {
 
   const router = useRouter();
 
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
-
   const [menuState, setMenuState] = useState<{
     anchorEl: null | HTMLElement;
     item: InsuranceFormData | null;

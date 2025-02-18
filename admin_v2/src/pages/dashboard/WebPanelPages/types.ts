@@ -1,4 +1,5 @@
 export interface CreditFormData {
+  id?: string;
   title: string;
   description: string;
   image: string;
@@ -88,7 +89,6 @@ export interface ContactInfoFormData {
 }
 
 // subcribe lise
-
 export interface SubscribersListI {
   createdBy: string;
   updatedBy: string;
@@ -98,4 +98,33 @@ export interface SubscribersListI {
   email: string;
   subscribedAt: Date;
   active: true;
+}
+
+// slider
+export interface SliderListI {
+  createdBy?: string;
+  updatedBy?: string;
+  createdDate?: Date;
+  updatedDate?: Date;
+  id?: string;
+  title: string;
+  subTitle: string;
+  link: string;
+  image: string;
+}
+
+// aboutus
+export interface AboutUsI {
+  title: string;
+  description: string;
+  appleStoreLink: string;
+  googlePlayLink: string;
+}
+
+// info
+export interface InfoI {
+  id?: string;
+  title: string;
+  description: string;
+  image: string;
 }

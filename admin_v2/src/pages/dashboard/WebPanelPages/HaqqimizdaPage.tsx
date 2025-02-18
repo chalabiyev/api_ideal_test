@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Grid,
   Card,
@@ -19,54 +19,82 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import { toast } from 'sonner';
-
-const data = [
-  {
-    id: 1,
-    title: 'İdeal Kredit',
-    description:
-      'Bank Olmayan Kredit Təşkilatı "İdeal Kredit” Məhdud Məsuliyyətli Cəmiyyəti "İdeal Kredit” adı ilə 11.11.2014-cü il tarixdən fəaliyyətə başlayıb və  öz fəaliyyətini bir neçə fundamental istiqamətdə davam...',
-    image:
-      'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 2,
-    title: 'Müştərilərlə qarşılıqlı əlaqələr',
-    description:
-      'Kredit bazarında aparıcı təşkilatlardan olan "İdeal Kredit” müştərilərlə qarşılıqlı əlaqələrə xüsusi önəm verir. BOKT müştərilərlə əlaqəni çoxsaylı kommunikasiya vasitələri ilə saxlayır...',
-    image:
-      'https://images.unsplash.com/photo-1603201667141-5a2d4c673378?q=80&w=1792&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 3,
-    title: 'Bizim inkişaf strategiyamız',
-    description:
-      '2014-cü ildə "İdeal Kredit”-in Müşahidə Şurası BOKT-un yeni strateji inkişaf proqramını təsdiq etdi. Proqramın əsas cəhətlərindən bir neçəsini filial şəbəkəsinin genişləndirilməsi, risklərin və maliyyə göstəricilərin strateji tənzimlənməsi,xidmət keyfiyyətinin yaxşılaşdırılması təşkil edir. Proqram çərçivəsində "İdeal Kredit”-in paytaxt və regionlarda yeni filialları açılır. Bundan başqa, müştəri xidmətlərində texnoloji yeniliklərin, yeni kredit məhsul və xidmətlərinin tətbiqi, kadr potensialının təkmilləşdirilməsinə xüsusi diqqət yetirilir.. Müştərilərin gözləntilərini qarşılamaq və "İdeal Seçim” şüarını doğrultmaqda davam etmək üçün "İdeal Kredit” özünün dinamik inkişafına davam edəcək.',
-    image:
-      'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-];
+import useApi from 'src/api/useApi';
+import { LoadingScreen } from 'src/components/loading-screen';
+import { EmptyContent } from 'src/components/empty-content';
+import { InfoI } from './types';
+import { BASE_URL } from 'src/api/request';
+import useDelete from 'src/api/useDelete';
 
 const HaqqimizdaPage = () => {
+  const {
+    data: infoData,
+    hasData: infoHasData,
+    loading: infoDataLoading,
+    refetch: infoDataRefetch,
+  } = useApi(`/content/info/list`);
+
+  const { deleteData: deleteInfo } = useDelete('/content/info/delete?id=');
+
   const router = useRouter();
 
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [menuState, setMenuState] = useState<{
+    anchorEl: null | HTMLElement;
+    item: InfoI | null;
+  }>({
+    anchorEl: null,
+    item: null,
+  });
 
-  const handleMenuOpen = (event: any, index: any) => {
-    setMenuAnchor(event.currentTarget);
-    setSelectedIndex(index);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, item: InfoI) => {
+    setMenuState({ anchorEl: event.currentTarget, item });
   };
 
   const handleMenuClose = () => {
-    setMenuAnchor(null);
-    setSelectedIndex(null);
+    setMenuState({ anchorEl: null, item: null });
   };
 
-  const handleDelete = () => {
-    toast.success('Silindi');
-    handleMenuClose();
+  const handleDelete = async () => {
+    if (!menuState.item) return;
+    try {
+      // @ts-ignore
+      await toast.promise(deleteInfo(menuState.item.id), {
+        loading: 'Silinir...',
+        success: 'Sığorta silindi!',
+        error: 'Silmə zamanı xəta baş verdi!',
+      });
+
+      handleMenuClose();
+      setTimeout(() => {
+        infoDataRefetch();
+      }, 300);
+    } catch (error) {
+      console.error('Silmə xətası:', error);
+    }
   };
+
+  if (infoDataLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!infoHasData) {
+    return (
+      <EmptyContent
+        action={
+          <Button
+            sx={{ mt: 1 }}
+            variant="soft"
+            onClick={() => {
+              router.push(paths.websirket.haqqimizdaelaveet);
+            }}
+          >
+            Yenisini əlavə et
+          </Button>
+        }
+        title="Haqqımızda məlumatları yoxdur"
+      />
+    );
+  }
 
   return (
     <>
@@ -77,22 +105,37 @@ const HaqqimizdaPage = () => {
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
           heading="Haqqımızda"
-          links={[{ name: 'Veb sayt idarə paneli' }, { name: 'Haqqımızda səhifəsi' }]}
+          links={[{ name: 'Veb sayt idarə paneli' }, { name: 'Haqqımızda' }]}
           sx={{ mb: { xs: 3, md: 5 } }}
+          action={
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={() => {
+                router.push(paths.websirket.haqqimizdaelaveet);
+              }}
+            >
+              Əlavə et
+            </Button>
+          }
         />
 
         <Grid container spacing={2}>
-          {data.map((item, index) => (
+          {infoData?.map((item: InfoI, index: number) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <Card sx={{ p: 2, maxHeight: 390 }}>
+              <Card sx={{ p: 2 }}>
                 <CardMedia
                   sx={{
-                    background: 'linear-gradient(to right, #110792, #0B0C6A, #123566)',
+                    background: 'linear-gradient(to right, #a8ff78, #78ffd6)',
                     borderRadius: '8px',
                   }}
                   component="img"
                   height="200"
-                  image={item.image}
+                  image={
+                    item.image
+                      ? `${BASE_URL}/file/getPublicFile/${item.image}`
+                      : 'https://e7.pngegg.com/pngimages/709/358/png-clipart-price-toyservice-soil-business-no-till-farming-no-rectangle-pie.png'
+                  }
                   alt={item.title}
                 ></CardMedia>
                 <CardContent sx={{ p: 0, pt: 1 }}>
@@ -104,18 +147,15 @@ const HaqqimizdaPage = () => {
                       justifyContent: 'space-between',
                     }}
                   >
-                    <Typography variant="h6">
-                      {item.title.slice(0, 20)}
-                      {item.title.length > 20 ? '...' : ''}
-                    </Typography>
+                    <Typography variant="h6">{item.title}</Typography>
 
-                    <IconButton onClick={(event) => handleMenuOpen(event, index)}>
+                    <IconButton onClick={(event) => handleMenuOpen(event, item)}>
                       <MoreVertIcon />
                     </IconButton>
                   </Box>
 
                   <Typography variant="body2" color="text.secondary">
-                    {item.description.slice(0, 150)}...
+                    {item.description}
                   </Typography>
                 </CardContent>
               </Card>
@@ -125,8 +165,8 @@ const HaqqimizdaPage = () => {
 
         {/* Açılan menyu */}
         <Menu
-          anchorEl={menuAnchor}
-          open={Boolean(menuAnchor)}
+          anchorEl={menuState.anchorEl}
+          open={Boolean(menuState.anchorEl)}
           onClose={handleMenuClose}
           anchorOrigin={{
             vertical: 'top',
@@ -140,10 +180,13 @@ const HaqqimizdaPage = () => {
           <MenuItem
             onClick={() => {
               handleMenuClose();
-              router.push(`/websirket/haqqimizdaduzeliset/${selectedIndex}`);
+              router.push(`/websirket/haqqimizdaduzeliset/${menuState.item?.id}`);
             }}
           >
             Düzəliş et
+          </MenuItem>
+          <MenuItem onClick={handleDelete} sx={{ color: 'red' }}>
+            Sil
           </MenuItem>
         </Menu>
       </DashboardContent>

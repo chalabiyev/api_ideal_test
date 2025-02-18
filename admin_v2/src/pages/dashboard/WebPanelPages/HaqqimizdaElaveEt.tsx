@@ -1,5 +1,16 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, CardContent, Divider, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import {
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -8,32 +19,11 @@ import { uploadPublicFile } from 'src/api/FileService';
 import { toast } from 'sonner';
 import { BASE_URL } from 'src/api/request';
 import usePost from 'src/api/usePost';
-import { useParams, useRouter } from 'src/routes/hooks';
+import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
-import { LoadingScreen } from 'src/components/loading-screen';
-import { EmptyContent } from 'src/components/empty-content';
-import useApi from 'src/api/useApi';
-import usePatch from 'src/api/usePatch';
 
-const HaqqimizdaDuzelisEt = () => {
-  const { id } = useParams();
+const HaqqimizdaElaveEt = () => {
   const router = useRouter();
-
-  const {
-    data: infoData,
-    hasData: infoHasData,
-    loading: infoDataLoading,
-    refetch: infoDataRefetch,
-  } = useApi(`/content/info/get?id=${id}`);
-
-  const { patchData: updateInfoData } = usePatch(`content/info/${id}`);
-
-  useEffect(() => {
-    if (infoHasData) {
-      setInfoFormData(infoData);
-    }
-  }, [infoHasData]);
-
   const { postData: createInfo, loading, error } = usePost('/content/info/create');
   const [infoFormData, setInfoFormData] = useState<InfoI>({
     title: '',
@@ -77,54 +67,19 @@ const HaqqimizdaDuzelisEt = () => {
     });
   };
 
-  const handleModifyInfo = async () => {
-    if (id) {
-      try {
-        await updateInfoData(infoFormData);
-        toast.success('Məlumatlar yeniləndi');
-        router.push(paths.websirket.haqqimizda);
-      } catch (err) {
-        toast.warning('Xəta baş verdi');
-      }
-    }
-  };
-
-  if (infoDataLoading) {
-    return <LoadingScreen />;
-  }
-
-  if (!infoHasData) {
-    return (
-      <EmptyContent
-        action={
-          <Button
-            sx={{ mt: 1 }}
-            variant="soft"
-            onClick={() => {
-              router.push(paths.websirket.haqqimizda);
-            }}
-          >
-            Yenisini əlavə et
-          </Button>
-        }
-        title="Haqqımızda məlumatları yoxdur"
-      />
-    );
-  }
-
   return (
     <>
       <Helmet>
-        <title>İdeal Kredit | Düzəliş et</title>
+        <title>İdeal Kredit | Yeni kart</title>
       </Helmet>
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Düzəliş et"
+          heading="Yeni kart"
           links={[
             { name: 'Veb sayt idarə paneli' },
             { name: 'Haqqımızda kartları', href: `/websirket/haqqimizda` },
-            { name: 'Düzəliş et' },
+            { name: 'Yeni kart' },
           ]}
         />
 
@@ -174,7 +129,7 @@ const HaqqimizdaDuzelisEt = () => {
                 infoFormData.title === '' ||
                 infoFormData.description === ''
               }
-              onClick={handleModifyInfo}
+              onClick={handleCreateInfo}
               type="submit"
               color="success"
               variant="contained"
@@ -188,4 +143,4 @@ const HaqqimizdaDuzelisEt = () => {
   );
 };
 
-export default HaqqimizdaDuzelisEt;
+export default HaqqimizdaElaveEt;

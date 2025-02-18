@@ -56,6 +56,7 @@ const Sigortalar = lazy(() => import('src/pages/dashboard/WebPanelPages/Sigortal
 const SigortaElaveEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SigortaElaveEt'));
 const SigortaDuzelisEt = lazy(() => import('src/pages/dashboard/WebPanelPages/SigortaDuzelisEt'));
 const HaqqimizdaPage = lazy(() => import('src/pages/dashboard/WebPanelPages/HaqqimizdaPage'));
+const HaqqimizdaElaveEt = lazy(() => import('src/pages/dashboard/WebPanelPages/HaqqimizdaElaveEt'));
 const HaqqimizdaDuzelisEt = lazy(
   () => import('src/pages/dashboard/WebPanelPages/HaqqimizdaDuzelisEt')
 );
@@ -156,6 +157,7 @@ export const dashboardRoutes = [
         path: 'websirket',
         children: [
           { path: 'haqqimizda', element: <HaqqimizdaPage /> },
+          { path: 'haqqimizdaelaveet', element: <HaqqimizdaElaveEt /> },
           { path: 'haqqimizdaduzeliset/:id', element: <HaqqimizdaDuzelisEt /> },
           { path: 'kampaniyalar', element: <Kampaniyalar /> },
           { path: 'kampaniyaelaveet', element: <KampaniyaElaveEt /> },
