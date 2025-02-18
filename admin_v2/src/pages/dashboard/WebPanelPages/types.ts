@@ -120,3 +120,11 @@ export interface AboutUsI {
   appleStoreLink: string;
   googlePlayLink: string;
 }
+
+// info
+export interface InfoI {
+  id?: string;
+  title: string;
+  description: string;
+  image: string;
+}

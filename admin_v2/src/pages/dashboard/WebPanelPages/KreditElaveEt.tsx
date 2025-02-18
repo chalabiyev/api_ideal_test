@@ -127,20 +127,37 @@ const KreditElaveEt = () => {
     }
   };
 
-   const handleCreateCredit = async () => {
-      toast.promise(createCredit(creditFormData), {
-        loading: 'Yeni kredit yaradılır...',
-        // eslint-disable-next-line
-        success: (response) => {
-          router.push(paths.webkredit.kreditler);
-          return `Məlumat yaradıldı!`;
-        },
-        error: (err) => {
-          const errorMessage = err.response?.data?.message || 'Olmadığı üçün xəta';
-          return `Xəta: ${errorMessage}`;
-        },
-      });
-    };
+  const handleCreateCredit = async () => {
+    toast.promise(createCredit(creditFormData), {
+      loading: 'Yeni kredit yaradılır...',
+      // eslint-disable-next-line
+      success: (response) => {
+        router.push(paths.webkredit.kreditler);
+        return `Məlumat yaradıldı!`;
+      },
+      error: (err) => {
+        const errorMessage = err.response?.data?.message || 'Olmadığı üçün xəta';
+        return `Xəta: ${errorMessage}`;
+      },
+    });
+  };
+
+  function isValid() {
+    if (
+      creditFormData.conditions.commissionRate === 0 ||
+      creditFormData.conditions.maxAmount === 0 ||
+      creditFormData.conditions.maxFIFD === 0 ||
+      creditFormData.conditions.maxPeriod === 0 ||
+      creditFormData.conditions.maxRate === 0 ||
+      creditFormData.conditions.minAmount === 0 ||
+      creditFormData.conditions.minFIFD === 0 ||
+      creditFormData.conditions.minPeriod === 0 ||
+      creditFormData.conditions.minRate === 0
+    ) {
+      return false;
+    }
+    return true;
+  }
 
   return (
     <>
@@ -153,7 +170,7 @@ const KreditElaveEt = () => {
           heading="Yeni Kredit"
           links={[
             { name: 'Veb sayt idarə paneli' },
-            { name: 'Bütün kreditler', href: '/webkredit/kreditler' },
+            { name: 'Bütün kreditlər', href: '/webkredit/kreditler' },
             { name: 'Yeni kredit' },
           ]}
         />
@@ -192,6 +209,7 @@ const KreditElaveEt = () => {
                 )}
                 <Button
                   fullWidth
+                  sx={{ mt: 2 }}
                   variant="contained"
                   color={creditFormData.bannerImage ? 'secondary' : 'primary'}
                   component="label"
@@ -217,6 +235,7 @@ const KreditElaveEt = () => {
                 )}
                 <Button
                   fullWidth
+                  sx={{ mt: 2 }}
                   variant="contained"
                   color={creditFormData.image ? 'secondary' : 'primary'}
                   component="label"
@@ -424,15 +443,21 @@ const KreditElaveEt = () => {
               </Grid>
             </Grid>
 
-            <Button
-              onClick={handleCreateCredit}
-              size="large"
-              type="submit"
-              color="success"
-              variant="contained"
-            >
-              Yadda Saxla
-            </Button>
+            <Tooltip title={`${isValid() === false ? 'Bütün məlumatlar doldurulmalıdır' : ''}`}>
+              <Box sx={{ cursor: isValid() == false ? 'not-allowed' : 'pointer' }}>
+                <Button
+                  fullWidth
+                  disabled={isValid() === false}
+                  onClick={handleCreateCredit}
+                  size="large"
+                  type="submit"
+                  color="success"
+                  variant="contained"
+                >
+                  Yadda Saxla
+                </Button>
+              </Box>
+            </Tooltip>
           </CardContent>
         </Card>
       </DashboardContent>

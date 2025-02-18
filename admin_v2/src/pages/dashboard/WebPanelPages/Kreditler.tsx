@@ -126,7 +126,7 @@ const Kreditler = () => {
               <Card sx={{ p: 2 }}>
                 <CardMedia
                   sx={{
-                    background: 'linear-gradient(to right, #157FBB, #2375b0, #0C6495)',
+                    background: 'linear-gradient(to right, #110792, #0B0C6A, #123566)',
                     borderRadius: '8px',
                   }}
                   component="img"
