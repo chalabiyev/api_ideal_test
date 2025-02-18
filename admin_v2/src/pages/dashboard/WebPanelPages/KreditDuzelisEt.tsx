@@ -22,11 +22,30 @@ import { BASE_URL } from 'src/api/request';
 import usePost from 'src/api/usePost';
 import { useParams, useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import useApi from 'src/api/useApi';
+import usePatch from 'src/api/usePatch';
+import { EmptyContent } from 'src/components/empty-content';
+import { LoadingScreen } from 'src/components/loading-screen';
 
-const KreditDuzelisEt = () => {
+const KreditElaveEt = () => {
   const { id } = useParams();
+
+  const {
+    data: creditData,
+    hasData: creditHasData,
+    loading: creditDataLoading,
+    refetch: creditDataRefetch,
+  } = useApi(`/content/credit-type/get?id=${id}`);
+
+  const { patchData: updateCreditData } = usePatch(`content/credit-type/${id}`);
+
+  useEffect(() => {
+    if (creditHasData) {
+      setCreditFormData(creditData);
+    }
+  }, [creditHasData]);
+
   const router = useRouter();
-  const { postData: createCredit, loading, error } = usePost('/content/credit-type/create');
   const [creditFormData, setCreditFormData] = useState<CreditFormData>({
     title: '',
     description: '',
@@ -128,15 +147,57 @@ const KreditDuzelisEt = () => {
     }
   };
 
-  const handleCreateCredit = async () => {
-    toast.promise(createCredit(creditFormData), {
-      loading: 'Kredit yaradılır...',
-      success: 'Kredit yaradıldı!',
-      error: 'Bir xəta baş verdi!',
-    });
-
-    router.push(paths.webkredit.kreditler);
+  const handleModifyCredit = async () => {
+    if (id) {
+      try {
+        await updateCreditData(creditFormData);
+        toast.success('Məlumatlar yeniləndi');
+        router.push(paths.webkredit.kreditler);
+      } catch (err) {
+        toast.warning('Xəta baş verdi');
+      }
+    }
   };
+
+  function isValid() {
+    if (
+      creditFormData.conditions.commissionRate === 0 ||
+      creditFormData.conditions.maxAmount === 0 ||
+      creditFormData.conditions.maxFIFD === 0 ||
+      creditFormData.conditions.maxPeriod === 0 ||
+      creditFormData.conditions.maxRate === 0 ||
+      creditFormData.conditions.minAmount === 0 ||
+      creditFormData.conditions.minFIFD === 0 ||
+      creditFormData.conditions.minPeriod === 0 ||
+      creditFormData.conditions.minRate === 0
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  if (creditDataLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!creditHasData) {
+    return (
+      <EmptyContent
+        action={
+          <Button
+            sx={{ mt: 1 }}
+            variant="soft"
+            onClick={() => {
+              router.push(paths.webkredit.kreditelaveet);
+            }}
+          >
+            Yenisini əlavə et
+          </Button>
+        }
+        title="Kredit məlumatları yoxdur"
+      />
+    );
+  }
 
   return (
     <>
@@ -146,10 +207,10 @@ const KreditDuzelisEt = () => {
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Burda adi olacaq x"
+          heading={creditFormData.title}
           links={[
             { name: 'Veb sayt idarə paneli' },
-            { name: 'Bütün kreditler', href: '/webkredit/kreditler' },
+            { name: 'Bütün kreditlər', href: '/webkredit/kreditler' },
             { name: 'Düzəliş et' },
           ]}
         />
@@ -188,7 +249,7 @@ const KreditDuzelisEt = () => {
                 )}
                 <Button
                   fullWidth
-                  sx={{ mt: 1 }}
+                  sx={{ mt: 2 }}
                   variant="contained"
                   color={creditFormData.bannerImage ? 'secondary' : 'primary'}
                   component="label"
@@ -213,8 +274,8 @@ const KreditDuzelisEt = () => {
                   ''
                 )}
                 <Button
-                  sx={{ mt: 1 }}
                   fullWidth
+                  sx={{ mt: 2 }}
                   variant="contained"
                   color={creditFormData.image ? 'secondary' : 'primary'}
                   component="label"
@@ -248,7 +309,7 @@ const KreditDuzelisEt = () => {
                   fullWidth
                   label="Tələb olunan sənəd"
                   name="documents"
-                  value={creditFormData.requirements.documents}
+                  value={creditFormData.requirements.documents || ''}
                   onChange={handleRequirementsChange}
                 />
               </Grid>
@@ -257,7 +318,7 @@ const KreditDuzelisEt = () => {
                   fullWidth
                   label="Zamin"
                   name="guarantor"
-                  value={creditFormData.requirements.guarantor}
+                  value={creditFormData.requirements.guarantor || ''}
                   onChange={handleRequirementsChange}
                 />
               </Grid>
@@ -266,7 +327,7 @@ const KreditDuzelisEt = () => {
                   fullWidth
                   label="Girov"
                   name="mortgage"
-                  value={creditFormData.requirements.mortgage}
+                  value={creditFormData.requirements.mortgage || ''}
                   onChange={handleRequirementsChange}
                 />
               </Grid>
@@ -287,7 +348,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Minimum məbləğ"
                   name="minAmount"
-                  value={creditFormData.conditions.minAmount || null}
+                  value={creditFormData.conditions.minAmount || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -297,7 +358,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Maksimum məbləğ"
                   name="maxAmount"
-                  value={creditFormData.conditions.maxAmount || null}
+                  value={creditFormData.conditions.maxAmount || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -307,7 +368,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Minimum faiz"
                   name="minRate"
-                  value={creditFormData.conditions.minRate || null}
+                  value={creditFormData.conditions.minRate || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -317,7 +378,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Maksimum faiz"
                   name="maxRate"
-                  value={creditFormData.conditions.maxRate || null}
+                  value={creditFormData.conditions.maxRate || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -327,7 +388,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Maksimum kredit müddəti"
                   name="maxPeriod"
-                  value={creditFormData.conditions.maxPeriod || null}
+                  value={creditFormData.conditions.maxPeriod || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -337,7 +398,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Minimum kredit müddəti"
                   name="minPeriod"
-                  value={creditFormData.conditions.minPeriod || null}
+                  value={creditFormData.conditions.minPeriod || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -348,7 +409,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Maksimum faktiki illik faiz dərəcəsi (FİFD)"
                   name="maxFIFD"
-                  value={creditFormData.conditions.maxFIFD || null}
+                  value={creditFormData.conditions.maxFIFD || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -358,7 +419,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Minimum faktiki illik faiz dərəcəsi (FİFD)"
                   name="minFIFD"
-                  value={creditFormData.conditions.minFIFD || null}
+                  value={creditFormData.conditions.minFIFD || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -377,7 +438,7 @@ const KreditDuzelisEt = () => {
                   type="number"
                   label="Komissiya xərci"
                   name="commissionRate"
-                  value={creditFormData.conditions.commissionRate || null}
+                  value={creditFormData.conditions.commissionRate || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -422,15 +483,21 @@ const KreditDuzelisEt = () => {
               </Grid>
             </Grid>
 
-            <Button
-              onClick={handleCreateCredit}
-              size="large"
-              type="submit"
-              color="success"
-              variant="contained"
-            >
-              Yadda Saxla
-            </Button>
+            <Tooltip title={`${isValid() === false ? 'Bütün məlumatlar doldurulmalıdır' : ''}`}>
+              <Box sx={{ cursor: isValid() == false ? 'not-allowed' : 'pointer' }}>
+                <Button
+                  fullWidth
+                  disabled={isValid() === false}
+                  onClick={handleModifyCredit}
+                  size="large"
+                  type="submit"
+                  color="success"
+                  variant="contained"
+                >
+                  Yadda Saxla
+                </Button>
+              </Box>
+            </Tooltip>
           </CardContent>
         </Card>
       </DashboardContent>
@@ -438,4 +505,4 @@ const KreditDuzelisEt = () => {
   );
 };
 
-export default KreditDuzelisEt;
+export default KreditElaveEt;

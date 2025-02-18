@@ -88,7 +88,7 @@ const KampaniyaDuzelisEt = () => {
   return (
     <>
       <Helmet>
-        <title>İdeal Kredit | Yeni Sığorta</title>
+        <title>İdeal Kredit | Düzəliş et</title>
       </Helmet>
 
       <DashboardContent maxWidth="xl">

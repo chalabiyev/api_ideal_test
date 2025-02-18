@@ -105,6 +105,7 @@ export const paths = {
   websirket: {
     root: `/websirket`,
     haqqimizda: `/websirket/haqqimizda`,
+    haqqimizdaelaveet: `/websirket/haqqimizdaelaveet`,
     haqqimizdaduzeliset: (id: string) => `/websirket/haqqimizdaduzeliset/${id}`,
     kampaniyalar: `/websirket/kampaniyalar`,
     kampaniyaelaveet: `/websirket/kampaniyaelaveet`,
