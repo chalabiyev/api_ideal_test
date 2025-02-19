@@ -80,8 +80,6 @@ class CampaignController {
         return ResponseEntity.ok(campaignService.changeDisplayOnHome(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @SecurityRequirement(name = "authentication")
     @GetMapping("/listHomeCampaigns")
     public ResponseEntity<List<Campaign>> listHomeCampaigns() {
         return ResponseEntity.ok(campaignService.listHomeCampaigns());
