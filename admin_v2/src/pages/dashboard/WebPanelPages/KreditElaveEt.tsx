@@ -196,7 +196,7 @@ const KreditElaveEt = () => {
               {/* For Banner Image Section */}
               <Grid item xs={12} md={6}>
                 <Typography sx={{ mt: 2 }} variant="button">
-                  Əsas şəkil
+                  Kreditin örtük şəkli
                 </Typography>
                 {creditFormData.bannerImage ? (
                   <img
@@ -222,7 +222,7 @@ const KreditElaveEt = () => {
               {/* For Cover Image Section */}
               <Grid item xs={12} md={6}>
                 <Typography sx={{ mt: 2 }} variant="button">
-                  Örtük şəkil
+                  Əsas şəkil
                 </Typography>
                 {creditFormData.image ? (
                   <img

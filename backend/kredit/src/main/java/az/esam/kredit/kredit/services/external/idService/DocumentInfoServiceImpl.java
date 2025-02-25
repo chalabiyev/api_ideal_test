@@ -202,16 +202,27 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
-                    List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList =
-                            objectMapper.readValue(
+                    DocumentInfoByMobileNumberResponse response
+                            = objectMapper.readValue(
                                     jsonNode.get("data").toString(),
-                                    objectMapper.getTypeFactory().constructParametricType(List.class, DocumentInfoByMobileNumberResponse.class)
+                                    DocumentInfoByMobileNumberResponse.class
                             );
-                    if (documentInfoByMobileNumberResponseList != null && !documentInfoByMobileNumberResponseList.isEmpty()) {
-                        return documentInfoByMobileNumberResponseList.get(0);
+                    if (response != null) {
+                        return response;
                     }
                 } catch (Exception e) {
-                    log.error("Error parsing JSON response: {}", e.getMessage(), e);
+                    try {
+                        List<DocumentInfoByMobileNumberResponse> response
+                                = objectMapper.readValue(
+                                        jsonNode.get("data").toString(),
+                                        objectMapper.getTypeFactory().constructParametricType(List.class, DocumentInfoByMobileNumberResponse.class)
+                                );
+                        if (response != null && !response.isEmpty()) {
+                            return response.get(0);
+                        }
+                    } catch (Exception ex) {
+                        log.error("Error parsing JSON response: {}", ex.getMessage(), ex);
+                    }
                 }
             } else {
                 log.error("Response is null or empty");
@@ -230,8 +241,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
-                    List<VehicleInfoResponse> vehicleInfoResponseList =
-                            objectMapper.readValue(
+                    List<VehicleInfoResponse> vehicleInfoResponseList
+                            = objectMapper.readValue(
                                     jsonNode.get("data").toString(),
                                     objectMapper.getTypeFactory().constructParametricType(List.class, VehicleInfoResponse.class)
                             );
@@ -260,8 +271,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
-                    List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList =
-                            objectMapper.readValue(
+                    List<MigrationDocumentInfoResponse> migrationDocumentInfoResponseList
+                            = objectMapper.readValue(
                                     jsonNode.get("data").toString(),
                                     objectMapper.getTypeFactory().constructParametricType(List.class, MigrationDocumentInfoResponse.class)
                             );
@@ -290,8 +301,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
-                    List<PassportDocumentInfoResponse> passportDocumentInfoResponseList =
-                            objectMapper.readValue(
+                    List<PassportDocumentInfoResponse> passportDocumentInfoResponseList
+                            = objectMapper.readValue(
                                     jsonNode.get("data").toString(),
                                     objectMapper.getTypeFactory().constructParametricType(List.class, PassportDocumentInfoResponse.class)
                             );
@@ -318,8 +329,8 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
             if (jsonNode != null) {
                 try {
-                    List<VoenInfoResponse> voenInfoResponseList =
-                            objectMapper.readValue(
+                    List<VoenInfoResponse> voenInfoResponseList
+                            = objectMapper.readValue(
                                     jsonNode.get("data").toString(),
                                     objectMapper.getTypeFactory().constructParametricType(List.class, VoenInfoResponse.class)
                             );
