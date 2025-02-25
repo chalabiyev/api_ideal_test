@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "document_info_by_mobile_number")
 public class DocumentInfoByMobileNumberResponse {
+
     private String type;
     private String pasportNumber;
     private String pin;
