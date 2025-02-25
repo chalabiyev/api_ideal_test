@@ -51,6 +51,8 @@ const ICONS = {
   parameter: icon('ic-parameter'),
   abouticon: icon('ic-about-icon'),
   partner: icon('ic-partner'),
+  smile: icon('ic-smile'),
+  qifil: icon('ic-qifil'),
 };
 
 // ----------------------------------------------------------------------
@@ -121,26 +123,7 @@ export const navData = [
       },
     ],
   },
-  // {
-  //   items: [
-  //     {
-  //       title: 'Partynor',
-  //       path: paths.partners.root,
-  //       icon: ICONS.partner,
-  //       children: [
-  //         {
-  //           title: 'Yeni partnyor',
-  //           path: paths.partners.yenipartnyor.root,
-  //           children: [
-  //             { title: 'Fiziki şəxs', path: paths.partners.yenipartnyor.fiziki },
-  //             { title: 'Hüquqi şəxs', path: paths.partners.yenipartnyor.huquqi },
-  //           ],
-  //         },
-  //         { title: 'Bütün partynorlar', path: paths.partners.partnyorlarlist },
-  //       ],
-  //     },
-  //   ],
-  // },
+
   {
     items: [
       {
@@ -151,10 +134,77 @@ export const navData = [
           {
             title: 'Yeni partnyor',
             path: paths.partners.yenipartnyor.fiziki,
-            
           },
           { title: 'Bütün partynorlar', path: paths.partners.partnyorlarlist },
         ],
+      },
+    ],
+  },
+  //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
+  {
+    subheader: 'Veb saytın İDARƏ PANELİ',
+    items: [
+      {
+        title: 'Əsas səhifə',
+        path: paths.webesassehife.root,
+        icon: ICONS.blog,
+        children: [
+          {
+            title: 'Slayder',
+            path: paths.webesassehife.slayder,
+          },
+          {
+            title: 'Haqqımızda (Əsas səhifədəki)',
+            path: paths.webesassehife.haqqimizda,
+          },
+        ],
+      },
+      {
+        title: 'Kredit',
+        path: paths.webkredit.root,
+        icon: ICONS.banking,
+        children: [
+          {
+            title: 'Kreditlər',
+            path: paths.webkredit.kreditler,
+          },
+        ],
+      },
+      {
+        title: 'Sığorta',
+        path: paths.websigorta.root,
+        icon: ICONS.lock,
+        children: [
+          {
+            title: 'Sığortalar',
+            path: paths.websigorta.sigortalar,
+          },
+        ],
+      },
+      {
+        title: 'Şirkət',
+        path: paths.websirket.root,
+        icon: ICONS.job,
+        children: [
+          {
+            title: 'Haqqımızda (Səhifə olan)',
+            path: paths.websirket.haqqimizda,
+          },
+          {
+            title: 'Kampaniyalar',
+            path: paths.websirket.kampaniyalar,
+          },
+        ],
+      },
+      {
+        title: 'Əlaqə',
+        path: paths.webelaqe.elaqe,
+        icon: ICONS.smile,
+      },
+      {
+        title: 'Abunələr',
+        path: paths.webabune.abune,
+        icon: ICONS.qifil,
       },
     ],
   },

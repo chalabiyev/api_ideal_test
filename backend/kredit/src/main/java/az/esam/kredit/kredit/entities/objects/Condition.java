@@ -1,10 +1,14 @@
 package az.esam.kredit.kredit.entities.objects;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Condition {
     private double minAmount;
     private double maxAmount;
@@ -16,5 +20,5 @@ public class Condition {
     private double maxFIFD;
     private String currency;
     private double commissionRate;
-    private double requiredDocuments;
+    private String requiredDocuments;
 }

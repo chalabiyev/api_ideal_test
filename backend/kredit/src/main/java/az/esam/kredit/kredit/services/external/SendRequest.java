@@ -2,12 +2,12 @@ package az.esam.kredit.kredit.services.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,89 +23,74 @@ import java.util.Base64;
 @Service
 public class SendRequest {
 
+    public static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final XmlMapper xmlMapper = new XmlMapper();
 
-    @Value("${akb.id}")
-    private String id;
-
-    @Value("${akb.password}")
-    private String password;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    public JsonNode executeRequest(String url, String authName, String authKey, String host) throws IOException {
+    public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey, boolean isXml) {
         JsonNode result = null;
-        Response response = null;
-        log.info("authKey : {} ", authKey);
-        log.info("host : {} ", host);
         try {
-            url = host + url;
-            // Create an OkHttpClient instance
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient().newBuilder().build();
+            Request.Builder builder = new Request.Builder()
+                    .url(url);
 
-            // Build the request with headers
-            Request request = new Request.Builder()
-                    .url(url)
-                    .get() // HTTP GET method
-                    .addHeader(authName, authKey)
-                    .build();
+            if (isXml) {
+                builder.addHeader("Accept", "application/xml")
+                        .addHeader("Content-Type", "application/xml; charset=utf-8");
+            } else {
+                builder.addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json; charset=utf-8");
+            }
 
-            log.info("Service url : {} ", url);
-            log.info("Service request : {} ", request);
+            if (authName != null && authKey != null) {
+                builder = builder.addHeader(authName, authKey);
+            }
+            log.info("Service URL: {}", url);
 
-            try {
-                // Execute the request
-                response = client.newCall(request).execute();
+            if ("GET".equalsIgnoreCase(method)) {
+                builder = builder.method("GET", null);
+            } else if ("POST".equalsIgnoreCase(method)) {
+                okhttp3.MediaType mediaType = okhttp3.MediaType.parse(isXml ? "application/xml" : "application/json");
+                RequestBody body = (bodyStr != null && !bodyStr.isEmpty())
+                        ? RequestBody.create(bodyStr, mediaType)
+                        : RequestBody.create(isXml ? "<empty/>" : "{}", mediaType);
+                builder = builder.method("POST", body);
+                log.info("Service body: {}", bodyStr);
+            }
 
-                // Print the response
-                if (response.isSuccessful() && response.body() != null) {
-                    String responseStr = response.body().string();
-                    log.info("Service resp : {} ", responseStr);
-                    result = objectMapper.readTree(responseStr);
-
-                    // Check the status.code field
-                    if (result.has("status") && result.get("status").has("code")) {
-                        int statusCode = result.get("status").get("code").asInt();
-                        if (statusCode == 200) {
-                            log.info("Service result is successful: {}", result);
-                        } else {
-                            log.error("Service returned error status code: {}", statusCode);
-                            throw new IOException("Service returned error status code: " + statusCode);
-                        }
-                    } else {
-                        log.error("Response does not contain a valid status.code field");
-                        throw new IOException("Invalid response structure: missing status.code field");
-                    }
-
-                    log.info("Service result : {} ", result);
-                } else {
-                    log.error("Request failed with status code: {}", response.code());
-                    throw new IOException("Request failed with status code: " + response.code());
+            Request request = builder.build();
+            try (Response response = client.newCall(request).execute()) {
+                int statusCode = response.code();
+                if (response.body() == null) {
+                    log.error("Response body is null with status code {}", statusCode);
+                    throw new RuntimeException("Response body is null with status code " + statusCode);
                 }
-            } catch (IOException e) {
-                log.error(e.getMessage());
-                throw e;
-            } finally {
-                // Close the response to avoid connection leaks
-                if (response != null) {
-                    response.close();
+                String responseStr = response.body().string();
+                log.info("Service response: {} {}", responseStr, statusCode);
+
+                if (!response.isSuccessful()) {
+                    log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
+                    throw new RuntimeException("Request failed with status code: " + statusCode + " and message " + responseStr);
+                }
+
+                if (isXml) {
+                    JsonNode xmlNode = xmlMapper.readTree(responseStr);
+                    String jsonString = objectMapper.writeValueAsString(xmlNode);
+                    result = objectMapper.readTree(jsonString);
+                } else {
+                    result = objectMapper.readTree(responseStr);
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw e;
-        } finally {
-            if (response != null) {
-                response.close();
-            }
+            log.error("Unexpected error occurred: {}", e.getMessage());
+            throw new RuntimeException("Request execution failed", e);
         }
         return result;
     }
 
-    public JsonNode sendRequest(String url, String data) throws IOException, InterruptedException {
+    public JsonNode sendRequest(String url, String data, String username, String password) throws IOException, InterruptedException {
         JsonNode result = null;
         // Encode credentials to Base64
-        String credentials = id + ":" + password;
+        String credentials = username + ":" + password;
         String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
         HttpClient client = HttpClient.newHttpClient();

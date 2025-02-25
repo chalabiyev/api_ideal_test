@@ -1,6 +1,17 @@
-import { RecruiterDataType, Guarantor } from "src/pages/dashboard/VideoMuraciet/types";
+import {
+  RecruiterDataType,
+  Guarantor,
+  EmployeeInfoResponse,
+  PensionerInfoResponse,
+} from 'src/pages/dashboard/VideoMuraciet/types';
 
-export type ECreditType = 'ABOVE_500' | 'BELOW_500' | 'PARTNER_CREDIT' | 'BUSINESS_CREDIT' | undefined | '';
+export type ECreditType =
+  | 'ABOVE_500'
+  | 'BELOW_500'
+  | 'PARTNER_CREDIT'
+  | 'BUSINESS_CREDIT'
+  | undefined
+  | '';
 
 export type EFinalStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined;
 
@@ -48,7 +59,6 @@ export interface CreditRequest {
   recruiter?: RecruiterDataType;
 }
 
-
 export interface CreditRequestDto {
   createdBy?: string;
   updatedBy?: string;
@@ -89,7 +99,8 @@ export interface CreditRequestDto {
   decisionQueryEnabled?: boolean;
   videoSignText?: string;
   guarantors: Guarantor[];
-  recruiter: RecruiterDataType;
+  recruiter: EmployeeInfoResponse;
+  pensioner: PensionerInfoResponse;
 }
 
 export interface User {
@@ -224,7 +235,6 @@ export interface Spouse {
   workAddress?: string;
   position?: string;
 }
-
 
 export interface CreditRequestSearchDto {
   creditType?: ECreditType;

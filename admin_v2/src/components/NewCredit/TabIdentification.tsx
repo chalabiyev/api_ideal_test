@@ -24,7 +24,7 @@ const TabIdentification = ({
   setSeriaNo,
   pinValue,
   seriaNoValue,
-  setUserInfo
+  setUserInfo,
 }: {
   hasData: boolean;
   loading: boolean;
@@ -38,7 +38,6 @@ const TabIdentification = ({
   setUserInfo: React.Dispatch<React.SetStateAction<any>>;
   // eslint-disable-next-line
 }) => {
-
   const handleSearch = () => {
     setPin(pinValue);
     setSeriaNo(seriaNoValue);
@@ -48,8 +47,7 @@ const TabIdentification = ({
   useEffect(() => {
     if (userInfo) {
       console.log('User info loaded:', userInfo);
-      if (!seriaNoValue)
-        setSeriaNo(userInfo.documentNumber);
+      if (!seriaNoValue) setSeriaNo(userInfo.documentNumber);
     }
   }, [userInfo]);
   return (
@@ -232,31 +230,18 @@ const TabIdentification = ({
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Telefon Nömrəsi" fullWidth value={userInfo?.phoneNumber} onChange={(e) => setUserInfo({ ...userInfo, phoneNumber: e.target.value })} />
+                  <TextField
+                    label="Telefon Nömrəsi"
+                    fullWidth
+                    value={userInfo?.phoneNumber}
+                    onChange={(e) => setUserInfo({ ...userInfo, phoneNumber: e.target.value })}
+                  />
                 </Grid>
               </Grid>
             </CardContent>
-
-
           </Card>
 
           {/* İrəli ve Təstiqlə Butonları */}
-          <Box textAlign="center" sx={{ mt: 4 }}>
-            <Button
-              onClick={() => {
-                window.scrollTo(0, 0);
-                setValue('2');
-              }}
-              variant="contained"
-              color="primary"
-              sx={{ mr: 2 }}
-            >
-              İrəli
-            </Button>
-            <Button variant="contained" color="success">
-              Təstiqlə
-            </Button>
-          </Box>
         </>
       ) : (
         <></>

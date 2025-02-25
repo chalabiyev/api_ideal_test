@@ -16,11 +16,14 @@ import TabContract from 'src/components/NewCredit/TabContract';
 import { CreditRequestDto } from 'src/types/CreditRequestDto';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
+import PensionerTab from './PensionerTab';
 
 // ----------------------------------------------------------------------
 
 const metadata = { title: `Video müraciət | Nağd ` };
 // FIXME : Cihan : sadece video imza tabında değil diğer tablarda da web socket lazım  olabilir o yüzden bu sayfaya taşıdım.
+
+// FIXME : ILKIN : Tamam
 let wsNK: WebSocket;
 
 export default function Page() {
@@ -32,7 +35,7 @@ export default function Page() {
   const operatorId: string = queryParams.get('operatorId') ?? '';
 
   // tab changes
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState('3');
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
@@ -70,28 +73,149 @@ export default function Page() {
     requestDate: new Date(),
     decisionQueryEnabled: false,
     guarantors: [],
+    // --------------------recurit ---------------------------recurit ------------------------------recurit --------------
     recruiter: {
-      education: '',
-      companyName: '',
-      salary: 0,
-      address: '',
-      position: '',
-      workExperience: 0,
-      contractStartDate: '',
-      contractEndDate: '',
-      toplamodenis: 0,
-      akbmelumatlari: '',
-      daxilirisk: '',
-      ayliqemekhaqqi: 0,
-      ayliqcemigelir: 0,
-      xerclerincemi: 0,
-      xalisgelir: 0,
+      active: [
+        {
+          employer: {
+            legalAddress: 'ESAM Innovations',
+            workerCount: 12,
+            name: 'Qurumun adı',
+            propertyType: {
+              label: '',
+              id: 0,
+              type: '',
+              description: 'Mülkiyyətin növü',
+            },
+            voen: '645234236324',
+            phone: '+994 50 123 45 67',
+          },
+          employee: {
+            positionLabourContract: 'Aparıcı',
+            ssn: '54213321321',
+            workPlaceType: {
+              label: '',
+              id: 0,
+              type: '',
+              description: '',
+            },
+            position: 'Aparıcı',
+            salary: 1000,
+            workPlace: 'Kapital bank',
+          },
+          contract: {
+            number: '',
+            insertDate: '12.12.2021',
+            nextEndDate: '12.12.2022',
+            periodType: {
+              label: '',
+              id: 0,
+              type: '',
+              description: '',
+            },
+
+            beginDate: '12.12.2023',
+            signDate: '12.12.2024',
+
+            endDate: '12.12.2025',
+          },
+        },
+      ],
+      deactive: [
+        {
+          employee: {
+            position: '',
+            salary: 0,
+          },
+          employer: {
+            name: 'Claradix',
+            voen: '4312213',
+          },
+          contract: {
+            terminateDate: '',
+            beginDate: '',
+            endDate: '',
+          },
+        },
+      ],
+    },
+    // --------------------pension---------------------------pension------------------------------pension--------------
+    pensioner: {
+      name: 'Ad',
+      patronymic: 'Ata adı',
+      birthDate: 'Doğum tarixi',
+      surname: 'Soyad',
+
+      allowance: [
+        {
+          beginDate: 'Başlanğıc tarixi',
+          type: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          group: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          amount: 100,
+          endDate: 'Bitmə tarixi',
+        },
+        {
+          beginDate: 'Başlanğıc tarixi',
+          type: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah 2',
+          },
+          group: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          amount: 0,
+          endDate: 'Bitmə tarixi',
+        },
+      ],
+      pension: [
+        {
+          type: {
+            label: 'Qısa adı',
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          group: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          amount: 1000,
+          startDate: 'Başlanğıc tarixi',
+          endDate: '24.32.1223',
+        },
+      ],
     },
   });
+
+  // -------------------recurit---------------------------recurit------------------------------recurit--------------
+
+  const {
+    data: _PENSIONER_DATA,
+    hasData: _PENSIONER_HAS_DATA,
+    loading: _PENSIONER_LOADING,
+    refetch: _PENSIONER_REFETCH,
+    // } = useApi(`/auth/getUserByUserName/${pin}`);
+  } = useApi(`/asan-finance/getPensionerInfoByPin?pin=${pin}`);
+
+  // useEffect(() => {
+  //   if (_PENSIONER_HAS_DATA) {
+  //     setCreditRequest((prev) => ({
+  //       ...prev,
+  //       pensioner: _PENSIONER_DATA,
+  //     }));
+  //   }
+  // }, [_EMPLOYEE_DATA, _EMPLOYEE_HAS_DATA]);
+
+  // ----------------recurit------------------------------recurit------------------------------recurit--------------
   const [newSignal, setNewSignal] = useState<SignalType>();
   const [videoData, setVideoData] = useState('');
-  const [contractPdf, setContractPdf] = useState("");
-
+  const [contractPdf, setContractPdf] = useState('');
 
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = () => {
@@ -113,7 +237,7 @@ export default function Page() {
       setGuarantorInfo(guarantorData);
       setCreditRequest({
         ...creditRequest,
-        guarantors: [guarantorData]
+        guarantors: [guarantorData],
       });
     }
   };
@@ -150,13 +274,13 @@ export default function Page() {
   const sendSignal = (data: SignalType) => {
     if (wsNK && wsNK.readyState == WebSocket.OPEN) {
       let msg = { ...data, clientUUID: operatorId, sender: operatorId, receiver: clientId };
-      console.log("sendSignal", msg);
+      console.log('sendSignal', msg);
       wsNK.send(JSON.stringify(msg));
     }
   };
 
   const listenSignals = (s: SignalType) => {
-    console.log("listenSignals", s);
+    console.log('listenSignals', s);
     if (s.receiver == operatorId) {
       setNewSignal({ ...s, msgid: uuidv4() });
     }
@@ -167,7 +291,7 @@ export default function Page() {
       try {
         let msg = JSON.parse(event.data) as SignalType;
         listenSignals(msg);
-      } catch (error) { }
+      } catch (error) {}
     }
   };
 
@@ -183,7 +307,6 @@ export default function Page() {
       }, 30000);
     }
   }, []);
-
 
   return (
     <>
@@ -214,12 +337,13 @@ export default function Page() {
               <TabList onChange={handleChange} aria-label="lab API tabs example">
                 <Tab label="Ş/V" value="1" />
                 <Tab label="İş yeri" value="2" />
-                <Tab label="Zaminlik haqqında məlumat" value="3" />
-                <Tab label="Əlaqəli şəxlər" value="4" />
-                <Tab label="Nəqliyyat vasitələri" value="5" />
-                <Tab label="Kredit ver" value="6" />
-                <Tab label="Video qeydiyyat" value="7" />
-                <Tab label="Müqavilə" value="8" />
+                <Tab label="Təqaüd məlumatları" value="3" />
+                <Tab label="Zaminlik haqqında məlumat" value="4" />
+                <Tab label="Əlaqəli şəxlər" value="5" />
+                <Tab label="Nəqliyyat vasitələri" value="6" />
+                <Tab label="Kredit ver" value="7" />
+                <Tab label="Video qeydiyyat" value="8" />
+                <Tab label="Müqavilə" value="9" />
               </TabList>
             </Box>
 
@@ -240,13 +364,22 @@ export default function Page() {
 
             <TabPanel sx={{ p: 0 }} value="2">
               <RecruiterData
+                setCreditRequest={setCreditRequest}
+                pin={pin}
+                creditRequest={creditRequest}
+                setValue={setValue}
+              />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="3">
+              <PensionerTab
+                pin={pin}
                 creditRequest={creditRequest}
                 setCreditRequest={setCreditRequest}
                 setValue={setValue}
               />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="3">
+            <TabPanel sx={{ p: 0 }} value="4">
               <TabGuarantor
                 setValue={setValue}
                 loading={guarantorLoading}
@@ -258,15 +391,15 @@ export default function Page() {
               />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="4">
+            <TabPanel sx={{ p: 0 }} value="5">
               <TabFamilyInformation />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="5">
+            <TabPanel sx={{ p: 0 }} value="6">
               <TabVehicleInformation setValue={setValue} />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="6">
+            <TabPanel sx={{ p: 0 }} value="7">
               <TabCreditDataPage
                 setValue={setValue}
                 creditRequest={creditRequest}
@@ -274,7 +407,7 @@ export default function Page() {
               />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="7">
+            <TabPanel sx={{ p: 0 }} value="8">
               <TabVideoRecord
                 setValue={setValue}
                 userInfo={userInfo}
@@ -287,10 +420,14 @@ export default function Page() {
               />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="8">
-              <TabContract creditRequest={creditRequest}
-                contractPdf={contractPdf} setContractPdf={setContractPdf}
-                newSignal={newSignal} sendSignal={sendSignal} setCreditRequest={setCreditRequest}
+            <TabPanel sx={{ p: 0 }} value="9">
+              <TabContract
+                creditRequest={creditRequest}
+                contractPdf={contractPdf}
+                setContractPdf={setContractPdf}
+                newSignal={newSignal}
+                sendSignal={sendSignal}
+                setCreditRequest={setCreditRequest}
               />
             </TabPanel>
           </TabContext>
