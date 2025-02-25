@@ -200,7 +200,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
         try {
             String url = host + "mobile/numbers/getDocumentInfoByPhone?phone=" + phoneNumber;
             JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
-            if (jsonNode != null) {
+            if (jsonNode != null && jsonNode.get("data") != null) {
                 try {
                     DocumentInfoByMobileNumberResponse response
                             = objectMapper.readValue(
@@ -354,20 +354,23 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public FullIDCardInfoResponse getIdCardInfoByPin(String pin) throws IOException {
         try {
+            FullIDCardInfoResponse result = null;
             List<MobileNumberResponse> numbers = getMobileNumbersWithPin(pin);
             if (numbers == null || numbers.isEmpty()) {
                 return null;
             }
             for (MobileNumberResponse number : numbers) {
-                try {
-                    DocumentInfoByMobileNumberResponse result = getDocumentInfoByPhone(number.getPhone());
-                    if (result != null) {
-                        return getIdCardInfo(result.getPasportNumber(), pin);
+                if (result == null) {
+                    try {
+                        DocumentInfoByMobileNumberResponse response = getDocumentInfoByPhone(number.getPhone());
+                        if (response != null) {
+                            result = getIdCardInfo(response.getPasportNumber(), pin);
+                        }
+                    } catch (Exception e) {
                     }
-                } catch (Exception e) {
                 }
             }
-            return null;
+            return result;
         } catch (Exception e) {
             return null;
         }
