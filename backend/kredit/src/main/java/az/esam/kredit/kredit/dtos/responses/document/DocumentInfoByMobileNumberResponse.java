@@ -12,6 +12,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "document_info_by_mobile_number")
 public class DocumentInfoByMobileNumberResponse {
+    
+    /*
+    
+    :{"type":"Azercell","pasportNumber":"AA1138466",
+    "pin":"5RWXAGV",
+    "firstName":"ELŞƏN",
+    "lastName":"QULİYEV",
+    "patronymic":"BALAZAYİD OĞLU",
+    "address":"BAKI ŞƏHƏRİ, SƏBAİL RAYONU, İBRAHİM MƏMMƏDOV KÜÇƏSİ, EV 2A, MƏNZİL 18",
+    "sex":"M",
+    "birthDate":"1994-05-27"}}
+
+*/
     private String type;
     private String pasportNumber;
     private String pin;

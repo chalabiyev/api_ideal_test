@@ -198,11 +198,18 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             JsonNode jsonNode = sendRequest.executeRequest(url, authName, authKey, host);
             if (jsonNode != null) {
                 try {
-                    List<DocumentInfoByMobileNumberResponse> documentInfoByMobileNumberResponseList
+                    Object response
                             = parserService.parseResponse(jsonNode.get("data"), DocumentInfoByMobileNumberResponse.class);
 
-                    if (documentInfoByMobileNumberResponseList != null && !documentInfoByMobileNumberResponseList.isEmpty()) {
-                        return documentInfoByMobileNumberResponseList.get(0);
+                    if (response != null) {
+                        if (response instanceof DocumentInfoByMobileNumberResponse) {
+                            return (DocumentInfoByMobileNumberResponse) response;
+                        }
+                    } else {
+                        List<DocumentInfoByMobileNumberResponse> list = (List<DocumentInfoByMobileNumberResponse>) response;
+                        if (list != null && !list.isEmpty()) {
+                            return list.get(0);
+                        }
                     }
                 } catch (Exception e) {
                     log.error("Error parsing JSON response: {}", e.getMessage(), e);
