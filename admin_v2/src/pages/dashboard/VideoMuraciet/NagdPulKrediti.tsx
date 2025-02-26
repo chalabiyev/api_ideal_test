@@ -17,6 +17,8 @@ import { CreditRequestDto } from 'src/types/CreditRequestDto';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 import PensionerTab from './PensionerTab';
+import TabAKB from 'src/components/NewCredit/TabAKB';
+import { AKB_STATE_TYPE } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +29,153 @@ const metadata = { title: `Video müraciət | Nağd ` };
 let wsNK: WebSocket;
 
 export default function Page() {
+  const [AKB_STATE, setAKB_STATE] = useState<AKB_STATE_TYPE>({
+    reportId: 'RP-202502261234',
+    reportingDate: '2025-02-26',
+    borrower: {
+      documentNo: 'AZE1234567',
+      name: 'Əli Əliyev',
+      fin: 'ABC1234',
+      dateOfBirth: '1990-05-15',
+      placeOfBirth: 'Bakı',
+      personType: 'Fiziki şəxs',
+      fileDate: '2020-01-10',
+      locationCity: 'Bakı',
+      registeredAddress: 'Bakı şəhəri, Nəsimi rayonu, Azadlıq prospekti 45',
+      status: 'Aktiv',
+      participantOfPatrioticWar: true,
+    },
+    liabilities: {
+      liability: [
+        {
+          id: 'CRD-20240001',
+          bankId: 'BA001',
+          bankName: 'Kapital Bank',
+          accountNo: 'AZ23KB0000001234567890',
+          creditType: 'İstehlak krediti',
+          orgIDType: 'Bank',
+          grantedOn: '2023-06-10',
+          initialAmount: 15000,
+          lineAmount: 15000,
+          daysInterestOverdue: 5,
+          daysMainSumOverdue: 20,
+          contractDueOn: '2026-06-10',
+          firstContractDueOn: '2023-06-10',
+          interestRate: '14%',
+          lastUpdatedDate: '2025-02-20',
+          lastPaymentDate: '2025-01-15',
+          outstandingDebtMain: 9000,
+          outstandingDebtInterest: 450,
+          monthlyPaymentAmount: 750,
+          prolongations: 0,
+          creditStatus: 'Ödənilir',
+          creditPurpose: 'Məişət avadanlığı alacaq',
+          currency: 'AZN',
+          mkrId: 'MK12345',
+          coBorrowerCount: '0',
+          frameworkContractId: 'FRC-98765',
+          collateralCode: 'CLT-0001',
+          collateralRegistryAgency: 'Əmlak Məsələləri Dövlət Xidməti',
+          collateralRegistryNo: 'CL-2023-456',
+          collateralAnyInfo: 'Əlavə təminat yoxdur',
+          collateralMarketValue: '17000 AZN',
+          creditStatusCloseDate: '',
+          history: {
+            historyItem: [
+              {
+                overdueDays: '2',
+                reportingPeriod: '2024-12-12',
+                creditStatus: 'Tam ödənilmiş',
+              },
+              {
+                overdueDays: '0',
+                reportingPeriod: '2025-01-01',
+                creditStatus: 'Balansdan silinmiş',
+              },
+            ],
+          },
+          initialAmountHistory: '15000',
+        },
+        {
+          id: 'CRD-20240001',
+          bankId: 'BA001',
+          bankName: 'Paşa Bank',
+          accountNo: 'AZ23KB0000001234567890',
+          creditType: 'Avtokredit',
+          orgIDType: 'Bank',
+          grantedOn: '2023-06-10',
+          initialAmount: 15000,
+          lineAmount: 15000,
+          daysInterestOverdue: 5,
+          daysMainSumOverdue: 20,
+          contractDueOn: '2026-06-10',
+          firstContractDueOn: '2023-06-10',
+          interestRate: '14%',
+          lastUpdatedDate: '2025-02-20',
+          lastPaymentDate: '2025-01-15',
+          outstandingDebtMain: 9000,
+          outstandingDebtInterest: 450,
+          monthlyPaymentAmount: 750,
+          prolongations: 0,
+          creditStatus: 'Ödənilir',
+          creditPurpose: 'Məişət avadanlığı alacaq',
+          currency: 'AZN',
+          mkrId: 'MK12345',
+          coBorrowerCount: '0',
+          frameworkContractId: 'FRC-98765',
+          collateralCode: 'CLT-0001',
+          collateralRegistryAgency: 'Əmlak Məsələləri Dövlət Xidməti',
+          collateralRegistryNo: 'CL-2023-456',
+          collateralAnyInfo: 'Əlavə təminat yoxdur',
+          collateralMarketValue: '17000 AZN',
+          creditStatusCloseDate: '',
+          history: {
+            historyItem: [
+              {
+                overdueDays: '2',
+                reportingPeriod: '2024-12-12',
+                creditStatus: 'Tam ödənilmiş',
+              },
+              {
+                overdueDays: '0',
+                reportingPeriod: '2025-01-01',
+                creditStatus: 'Balansdan silinmiş',
+              },
+            ],
+          },
+          initialAmountHistory: '15000',
+        },
+      ],
+    },
+    coBorrowers: 'Yoxdur',
+    guarantee: 'Yoxdur',
+    inquiryHistory: {
+      inquiryHistoryItem: [
+        {
+          inqOrgIDType: 'Bank',
+          inqBankId: 'PA001',
+          inqBankName: 'ABB',
+          inqDate: '2024-10-20',
+          inqPurposeId: 'Kredit müraciəti',
+          inqType: 'Fiziki şəxs',
+        },
+        {
+          inqOrgIDType: 'Bank',
+          inqBankId: 'PA001',
+          inqBankName: 'ABB',
+          inqDate: '2024-10-20',
+          inqPurposeId: 'Kredit müraciəti',
+          inqType: 'Fiziki şəxs',
+        },
+      ],
+    },
+    score: {
+      calculated: '40',
+    },
+    balance: 100,
+    comments: 'Borcalan vaxtında ödəniş etməyə çalışır, lakin kiçik gecikmələr olub.',
+  });
+
   // eslint-disable-next-line
   const location = window.location;
   const queryParams = new URLSearchParams(location.search);
@@ -35,7 +184,7 @@ export default function Page() {
   const operatorId: string = queryParams.get('operatorId') ?? '';
 
   // tab changes
-  const [value, setValue] = React.useState('3');
+  const [value, setValue] = React.useState('2');
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
@@ -336,14 +485,15 @@ export default function Page() {
             <Box sx={{ borderBottom: 1, borderColor: 'transparent' }}>
               <TabList onChange={handleChange} aria-label="lab API tabs example">
                 <Tab label="Ş/V" value="1" />
-                <Tab label="İş yeri" value="2" />
-                <Tab label="Təqaüd məlumatları" value="3" />
-                <Tab label="Zaminlik haqqında məlumat" value="4" />
-                <Tab label="Əlaqəli şəxlər" value="5" />
-                <Tab label="Nəqliyyat vasitələri" value="6" />
-                <Tab label="Kredit ver" value="7" />
-                <Tab label="Video qeydiyyat" value="8" />
-                <Tab label="Müqavilə" value="9" />
+                <Tab label="AKB" value="2" />
+                <Tab label="İş yeri" value="3" />
+                <Tab label="Təqaüd məlumatları" value="4" />
+                <Tab label="Zaminlik haqqında məlumat" value="5" />
+                <Tab label="Əlaqəli şəxlər" value="6" />
+                <Tab label="Nəqliyyat vasitələri" value="7" />
+                <Tab label="Kredit ver" value="8" />
+                <Tab label="Video qeydiyyat" value="9" />
+                <Tab label="Müqavilə" value="10" />
               </TabList>
             </Box>
 
@@ -363,6 +513,9 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="2">
+              <TabAKB AKB_STATE={AKB_STATE} setAKB_STATE={setAKB_STATE} />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="3">
               <RecruiterData
                 setCreditRequest={setCreditRequest}
                 pin={pin}
@@ -370,7 +523,8 @@ export default function Page() {
                 setValue={setValue}
               />
             </TabPanel>
-            <TabPanel sx={{ p: 0 }} value="3">
+
+            <TabPanel sx={{ p: 0 }} value="4">
               <PensionerTab
                 pin={pin}
                 creditRequest={creditRequest}
@@ -378,8 +532,7 @@ export default function Page() {
                 setValue={setValue}
               />
             </TabPanel>
-
-            <TabPanel sx={{ p: 0 }} value="4">
+            <TabPanel sx={{ p: 0 }} value="5">
               <TabGuarantor
                 setValue={setValue}
                 loading={guarantorLoading}
@@ -391,15 +544,15 @@ export default function Page() {
               />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="5">
+            <TabPanel sx={{ p: 0 }} value="6">
               <TabFamilyInformation />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="6">
+            <TabPanel sx={{ p: 0 }} value="7">
               <TabVehicleInformation setValue={setValue} />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="7">
+            <TabPanel sx={{ p: 0 }} value="8">
               <TabCreditDataPage
                 setValue={setValue}
                 creditRequest={creditRequest}
@@ -407,7 +560,7 @@ export default function Page() {
               />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="8">
+            <TabPanel sx={{ p: 0 }} value="9">
               <TabVideoRecord
                 setValue={setValue}
                 userInfo={userInfo}
@@ -420,7 +573,7 @@ export default function Page() {
               />
             </TabPanel>
 
-            <TabPanel sx={{ p: 0 }} value="9">
+            <TabPanel sx={{ p: 0 }} value="10">
               <TabContract
                 creditRequest={creditRequest}
                 contractPdf={contractPdf}
