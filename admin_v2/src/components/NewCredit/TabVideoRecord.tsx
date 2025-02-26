@@ -203,7 +203,7 @@ const TabVideoRecord = ({
         <Button
           onClick={() => {
             window.scrollTo(0, 0);
-            setValue('7');
+            setValue('8');
           }}
           variant="contained"
           color="error"
@@ -214,7 +214,7 @@ const TabVideoRecord = ({
         <Button
           onClick={() => {
             window.scrollTo(0, 0);
-            setValue('9');
+            setValue('10');
           }}
           variant="contained"
           color="primary"

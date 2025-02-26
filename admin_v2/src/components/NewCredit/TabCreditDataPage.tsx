@@ -292,7 +292,7 @@ const TabCreditDataPage = ({
                 insuranceCost: parseFloat(calculateTotalInterest()),
                 cartCost: parseFloat(calculateCardAmount()),
               });
-              setValue('8');
+              setValue('9');
             }}
             variant="contained"
             color="primary"

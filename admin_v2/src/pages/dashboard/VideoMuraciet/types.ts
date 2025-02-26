@@ -119,3 +119,83 @@ export type MultiType = {
   id: number;
   description: string;
 };
+
+// ------------------- akb ---------------------
+export type AKB_STATE_TYPE = {
+  reportId: string;
+  reportingDate: string;
+  borrower: {
+    documentNo: string;
+    name: string;
+    fin: string;
+    dateOfBirth: string;
+    placeOfBirth: string;
+    personType: string;
+    fileDate: string;
+    locationCity: string;
+    registeredAddress: string;
+    status: string;
+    participantOfPatrioticWar: boolean;
+  };
+  liabilities: {
+    liability: {
+      id: string;
+      bankId: string;
+      bankName: string;
+      accountNo: string;
+      creditType: string;
+      orgIDType: string;
+      grantedOn: string;
+      initialAmount: number;
+      lineAmount: number;
+      daysInterestOverdue: number;
+      daysMainSumOverdue: number;
+      contractDueOn: string;
+      firstContractDueOn: string;
+      interestRate: string;
+      lastUpdatedDate: string;
+      lastPaymentDate: string;
+      outstandingDebtMain: number;
+      outstandingDebtInterest: number;
+      monthlyPaymentAmount: number;
+      prolongations: number;
+      creditStatus: string;
+      creditPurpose: string;
+      currency: string;
+      mkrId: string;
+      coBorrowerCount: string;
+      frameworkContractId: string;
+      collateralCode: string;
+      collateralRegistryAgency: string;
+      collateralRegistryNo: string;
+      collateralAnyInfo: string;
+      collateralMarketValue: string;
+      creditStatusCloseDate: string;
+      history: {
+        historyItem: {
+          overdueDays: string;
+          reportingPeriod: string;
+          creditStatus: string;
+        }[];
+      };
+      initialAmountHistory: string;
+    }[];
+  };
+  coBorrowers: string;
+  guarantee: string;
+  inquiryHistory: {
+    inquiryHistoryItem: {
+      inqOrgIDType: string;
+      inqBankId: string;
+      inqBankName: string;
+      inqDate: string;
+      inqPurposeId: string;
+      inqType: string;
+    }[];
+  };
+  score: {
+    calculated: string;
+  };
+  balance: number;
+  comments: string;
+};
