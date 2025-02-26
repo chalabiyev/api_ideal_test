@@ -184,7 +184,7 @@ export default function Page() {
   const operatorId: string = queryParams.get('operatorId') ?? '';
 
   // tab changes
-  const [value, setValue] = React.useState('2');
+  const [value, setValue] = React.useState('1');
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const [pin, setPin] = React.useState<string>('');
   const [seriaNo, setSeriaNo] = React.useState<string>('');
