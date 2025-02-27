@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
@@ -29,4 +31,10 @@ public class Transaction extends BaseEntity {
     private String paymentId;
 
     private EPayment paymentType;
+
+    private String operationId;
+
+    private String operationName;
+
+    private Date operationDate;
 }
