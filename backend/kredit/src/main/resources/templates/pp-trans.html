@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -127,12 +127,13 @@
     </h1>
 </div>
 <div>
-    <p><strong>Tarix:</strong> ${confirmDate}</p>
-    <p><strong>Məbləğ:</strong> ${creditAmount} AZN</p>
-    <p><strong>İllik faiz:</strong> ${annualPercent}%</p>
-    <p><strong>Müddət:</strong> ${creditTerm} ay</p>
+    <p><strong>Tarix:</strong>
+        <span th:text="${date}"></span></p>
+    <p><strong>Məbləğ:</strong> <span th:text="${creditAmount}"></span> AZN</p>
+    <p><strong>İllik faiz:</strong> <span th:text="${interestRate}"></span>%</p>
+    <p><strong>Müddət:</strong> <span th:text="${creditTerm}"></span> ay</p>
     <p><strong>Güzəşt müddəti:</strong> AZN</p>
-    <p><strong>Aylıq annuitet:</strong> ${monthlyPayment} AZN</p>
+    <p><strong>Aylıq annuitet:</strong> <span th:text="${monthlyPayment}"></span> AZN</p>
 </div>
 
 <!-- Main Content -->
@@ -148,21 +149,21 @@
                 <th>Faiz</th>
                 <th>Qalıq</th>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+            <tr th:each="payment, iterStat : ${paymentTable}">
+                <td th:text="${payment.date}"></td>
+                <td th:text="${payment.monthCount}"></td>
+                <td th:text="${payment.payment}"></td>
+                <td th:text="${payment.principal}"></td>
+                <td th:text="${payment.interest}"></td>
+                <td th:text="${payment.remainingDebt}"></td>
             </tr>
             <tr>
-                <td class="red-triangle">▲</td>
-                <td>001</td>
-                <td>233</td>
-                <td class="red-triangle">▲</td>
-                <td class="red-triangle">▲</td>
-                <td class="red-triangle">▲</td>
+                <td></td>
+                <td></td>
+                <td th:text="${totalPayment}"></td>
+                <td th:text="${creditAmount}"></td>
+                <td th:text="${totalInterest}"></td>
+                <td></td>
             </tr>
             <!-- Repeat rows as needed -->
         </table>
@@ -180,11 +181,15 @@
                 <table class="info-table">
                     <tr>
                         <th>FİN kod:</th>
-                        <td>${requestedUser.pin}</td>
+                        <td>
+                            <span th:text="${userPin}"></span>
+                        </td>
                     </tr>
                     <tr>
                         <th>Doğum tarixi:</th>
-                        <td>${requestedUser.birthDate}</td>
+                        <td>
+                            <span th:text="${birthDate}"></span>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -266,8 +271,10 @@
     </div>
     <div>
         <strong>BORCALAN</strong><br/>
-        Ş/V №: <span class="bold">${requestedUser.seriaNo}</span><br/>
-        <span class="bold">${requestedUser.fullName}</span>
+        Ş/V №: <span class="bold">
+        <span th:text="${userSerialNumber}"></span>
+    </span><br/>
+        <span class="bold" th:text="${userFullName}"></span>
         <div class="signature-line">____________________</div>
     </div>
 </div>

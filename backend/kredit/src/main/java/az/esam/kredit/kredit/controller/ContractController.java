@@ -1,13 +1,10 @@
 package az.esam.kredit.kredit.controller;
 
-import az.esam.kredit.kredit.entities.CreditRequest;
-import az.esam.kredit.kredit.entities.CreditRequestDto;
-import az.esam.kredit.kredit.entities.Spouse;
-import az.esam.kredit.kredit.entities.UploadedFile;
-import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.*;
 import az.esam.kredit.kredit.repositories.UploadedFileRepository;
 import az.esam.kredit.kredit.security.auth.AuthenticationService;
 import az.esam.kredit.kredit.services.external.pdf.PdfService;
+import az.esam.kredit.kredit.utility.CreditCalculation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,9 @@ public class ContractController {
     @Autowired
     UploadedFileRepository uploadedFileRepository;
 
+    @Autowired
+    CreditCalculation creditCalculation;
+
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
@@ -64,6 +64,35 @@ public class ContractController {
                 request.setRequestedUser(user);
             }
         }
+        double monthlyPayment = creditCalculation.calculateMonthlyPayment(
+                request.getCreditAmount(),
+                request.getAnnualPercent(),
+                request.getCreditTerm()
+        );
+        request.setMonthlyPayment(monthlyPayment);
+        List<PaymentTableContent> creditPayment = creditCalculation.calculatePaymentTable(
+                request.getId(),
+                request.getCreditAmount(),
+                request.getAnnualPercent(),
+                request.getCreditTerm()
+        );
+        double totalPayment = monthlyPayment * request.getCreditTerm();
+        double totalInterest = totalPayment - request.getCreditAmount();
+
+        PPTransEntity ppTransEntity = PPTransEntity.builder()
+                .date(request.getConfirmDate())
+                .creditAmount(request.getCreditAmount())
+                .interestRate(request.getAnnualPercent())
+                .creditTerm(request.getCreditTerm())
+                .monthlyPayment(request.getMonthlyPayment())
+                .userPin(user != null ? user.getPin() : null)
+                .userSerialNumber(user != null ? user.getSeriaNo() : null)
+                .userFullName(user != null ? user.getFullName() : null)
+                .birthDate(user != null ? user.getBirthDate() : null)
+                .totalPayment(totalPayment)
+                .totalInterest(totalInterest)
+                .paymentTableContents(creditPayment)
+                .build();
 
         List<String> htmlContents = new ArrayList<>(List.of(
                 pdfService.loadHtmlContent("m-formasi", request.toMap()),
@@ -73,6 +102,7 @@ public class ContractController {
                 pdfService.loadHtmlContent("trans", request.toMap()),
                 pdfService.loadHtmlContent("erize-trans", request.toMap()),
                 pdfService.loadHtmlContent("tehlil-trans", request.toMap()),
+                pdfService.loadHtmlContent("pp-trans", ppTransEntity.toMap()),
                 pdfService.loadHtmlContent("tt-kart", request.toMap())
         ));
 
