@@ -140,6 +140,15 @@ export const navData = [
       },
     ],
   },
+  {
+    items: [
+      {
+        title: 'Müştərilər',
+        path: paths.clients.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
   //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
   {
     subheader: 'Veb saytın İDARƏ PANELİ',
