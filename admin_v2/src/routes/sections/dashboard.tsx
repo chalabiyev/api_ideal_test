@@ -40,6 +40,7 @@ const FizikiMelumat = lazy(() => import('src/pages/dashboard/FizikiMuraciet/Melu
 const PartnyorlarList = lazy(() => import('src/pages/dashboard/Partnyorlar/AllPartners'));
 const EditPartnyor = lazy(() => import('src/pages/dashboard/Partnyorlar/EditPartnyor'));
 const NewPartner = lazy(() => import('src/pages/dashboard/Partnyorlar/NewPartner'));
+const Clients = lazy(() => import('src/pages/dashboard/Clients/Clients'));
 
 // muraciet
 const Muraciet = lazy(() => import('src/pages/dashboard/Muracietler/Muraciet'));
@@ -124,6 +125,10 @@ export const dashboardRoutes = [
           },
           { path: 'duzeliset/:id', element: <EditPartnyor /> },
         ],
+      },
+      {
+        path: 'musteriler',
+        element: <Clients />,
       },
 
       //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------

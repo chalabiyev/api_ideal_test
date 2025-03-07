@@ -32,6 +32,7 @@ const TabAKB = ({
 }) => {
   useEffect(() => {
     const fetchData = async () => {
+      // eslint-disable-next-line
       const data = await usePost(`/akb/inquireByIdCard`);
       if (data !== null) {
         // @ts-ignore

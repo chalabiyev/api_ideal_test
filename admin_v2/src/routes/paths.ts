@@ -80,6 +80,9 @@ export const paths = {
     partnyorlarlist: `/partynorlar/list`,
     duzeliset: (id: string) => `/partynorlar/duzeliset/${id}`,
   },
+  clients: {
+    root: `/musteriler`,
+  },
 
   //  -------------------------------------   Veb saytın İDARƏ PANELİ   -------------------------------------
 
