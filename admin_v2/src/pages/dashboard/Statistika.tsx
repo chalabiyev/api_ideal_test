@@ -36,7 +36,7 @@ export default function Page() {
         <Applications />
 
         <Typography variant="h4" sx={{ mt: 5, mb: 3 }}>
-          Bilet satışı
+          Hesabat
         </Typography>
 
         <DownloadStatistics />

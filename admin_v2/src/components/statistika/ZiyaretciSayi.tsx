@@ -8,7 +8,7 @@ const ZiyaretciSayi = () => {
     <div className="grid grid-cols-3 gap-5 max-md:grid-cols-2 max-sm:grid-cols-1">
       <Grid sx={{ mt: 5 }} item xs={12} sm={6} md={3}>
         <AnalyticsCurrentVisits
-          title="Film üzrə bilet satışı"
+          title="Statisticss"
           
           
           chart={{
