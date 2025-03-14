@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
@@ -47,4 +48,13 @@ public interface AuthenticationService {
     boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException;
 
     AuthenticationResponse setPassword(@Valid SetPasswordRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException;
+
+    Page<User> findAllUsers(int page, int size);
+
+    Page<User> findManagementUsers(int page, int size);
+
+    Page<User> findAllPartnerUsers(int page, int size);
+
+    Page<User> filterUsers(String search, String role, int page, int size);
+
 }

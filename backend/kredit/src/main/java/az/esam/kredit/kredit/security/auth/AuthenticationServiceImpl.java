@@ -22,6 +22,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,12 +40,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -64,6 +67,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     SMSService smsService;
+
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     private static final String ERROR_ROLE_IS_NOT_FOUND = "Error: Role is not found.";
     private static final String ROLE_ADMIN_STR = "ROLE_ADMIN";
@@ -574,9 +580,115 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+    @Override
+    public Page<User> findAllUsers(int page, int size) {
+        Role role = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+
+        return findUsersByRoleIds(List.of(role.getId()), page, size);
+    }
+
+    @Override
+    public Page<User> findManagementUsers(int page, int size) {
+        List<Role> roles = roleRepository.findByNameIn(Arrays.asList(
+                ERole.ROLE_ADMIN,
+                ERole.ROLE_HR,
+                ERole.ROLE_CREDIT_MANAGER,
+                ERole.ROLE_ACCOUNTANT
+        ));
+        if (roles.isEmpty()) {
+            throw new IllegalArgumentException("Error: Roles are not found.");
+        }
+        List<String> roleIds = roles.stream()
+                .map(Role::getId)
+                .collect(Collectors.toList());
+        return findUsersByRoleIds(roleIds, page, size);
+    }
+
+    @Override
+    public Page<User> findAllPartnerUsers(int page, int size) {
+        Role role = roleRepository.findByName(ERole.ROLE_PARTNER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+
+        return findUsersByRoleIds(List.of(role.getId()), page, size);
+    }
+
+    @Override
+    public Page<User> filterUsers(String search, String role, int page, int size) {
+        Criteria criteria = new Criteria();
+
+        if (search != null && !search.isEmpty()) {
+            criteria.orOperator(
+                    Criteria.where("name").regex(search, "i"),
+                    Criteria.where("surname").regex(search, "i"),
+                    Criteria.where("username").regex(search, "i"),
+                    Criteria.where("phoneNumber").regex(search, "i"),
+                    Criteria.where("email").regex(search, "i"),
+                    Criteria.where("voen").regex(search, "i"),
+                    Criteria.where("organisationName").regex(search, "i"),
+                    Criteria.where("title").regex(search, "i")
+            );
+        }
+
+        if (role != null && role.equalsIgnoreCase("users")) {
+            Role r = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+
+            criteria.and("roles").in(r.getId());
+        } else if (role != null && role.equalsIgnoreCase("management")) {
+            List<Role> roles = roleRepository.findByNameIn(Arrays.asList(
+                    ERole.ROLE_ADMIN,
+                    ERole.ROLE_HR,
+                    ERole.ROLE_CREDIT_MANAGER,
+                    ERole.ROLE_ACCOUNTANT
+            ));
+            if (roles.isEmpty()) {
+                throw new IllegalArgumentException("Error: Roles are not found.");
+            }
+            List<String> roleIds = roles.stream()
+                    .map(Role::getId)
+                    .collect(Collectors.toList());
+            criteria.and("roles").in(roleIds);
+        } else if (role != null && role.equalsIgnoreCase("partners")) {
+            Role r = roleRepository.findByName(ERole.ROLE_PARTNER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+
+            criteria.and("roles").in(r.getId());
+        }
+
+        Query query = new Query(criteria);
+
+        // Pagination
+        long total = mongoTemplate.count(query, User.class); // Total count for pagination
+        query.skip((long) page * size).limit(size);
+
+        // Fetch paginated results
+        List<User> users = mongoTemplate.find(query, User.class);
+
+        return new PageImpl<>(users, PageRequest.of(page, size), total);
+    }
+
+    public Page<User> findUsersByRoleIds(List<String> roleIds, int page, int size) {
+        // Create the query
+        Query query = new Query();
+        query.addCriteria(Criteria.where("roles").in(roleIds));
+        // order by signUp date
+        query.with(Sort.by(Sort.Direction.DESC, "signUpDate"));
+
+        // Pagination
+        long total = mongoTemplate.count(query, User.class); // Total count for pagination
+        query.skip((long) page * size).limit(size);
+
+        // Fetch paginated results
+        List<User> users = mongoTemplate.find(query, User.class);
+
+        return new PageImpl<>(users, PageRequest.of(page, size), total);
+    }
+
+
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
-                .token(jwtToken)                
+                .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
                 .revoked(false)

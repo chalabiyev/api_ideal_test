@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -375,5 +376,47 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<User> getUserByUserName(@PathVariable("userName") String userName) {
         return ResponseEntity.ok(authenticationService.getUserByUsername(userName));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/listUsers")
+    @SecurityRequirement(name = "authentication")
+    public ResponseEntity<Page<User>> findAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(authenticationService.findAllUsers(page, size));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/listPartnerUsers")
+    @SecurityRequirement(name = "authentication")
+    public ResponseEntity<Page<User>> listPartnerUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(authenticationService.findAllPartnerUsers(page, size));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('IT_MANAGER')")
+    @GetMapping("/listManagements")
+    @SecurityRequirement(name = "authentication")
+    public ResponseEntity<Page<User>> findAllManagements(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(authenticationService.findManagementUsers(page, size));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @GetMapping("/filterUsers")
+    public Page<User> getUsers(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String role,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return authenticationService.filterUsers(search, role, page, size);
     }
 }

@@ -4,5 +4,6 @@ public enum EFinalStatus {
     NEW,
     PENDING,
     ACCEPTED,
+    CLOSED,
     REJECTED
 }
