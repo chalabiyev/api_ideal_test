@@ -166,6 +166,10 @@ export const navData = [
             title: 'Haqqımızda (Əsas səhifədəki)',
             path: paths.webesassehife.haqqimizda,
           },
+          {
+            title: 'Partnyorlar Logoları',
+            path: paths.webesassehife.partnyorlarlogo,
+          },
         ],
       },
       {

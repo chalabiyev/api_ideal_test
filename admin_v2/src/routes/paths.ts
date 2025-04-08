@@ -92,6 +92,7 @@ export const paths = {
     slayderduzeliset: (id: string) => `/webesassehife/slayderduzeliset/${id}`,
     slayderelaveet: `/webesassehife/slayderelaveet`,
     haqqimizda: `/webesassehife/haqqimizda`,
+    partnyorlarlogo: `/webesassehife/partnyorlarlogo`,
   },
   webkredit: {
     root: `/webkredit`,

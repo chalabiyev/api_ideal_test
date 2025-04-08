@@ -101,6 +101,8 @@ export interface CreditRequestDto {
   guarantors: Guarantor[];
   recruiter: EmployeeInfoResponse;
   pensioner: PensionerInfoResponse;
+  category?: string;
+  detail?: string;
 }
 
 export interface User {

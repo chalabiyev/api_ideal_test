@@ -68,6 +68,7 @@ const KampaniyaDuzelisEt = lazy(
 );
 const Elaqe = lazy(() => import('src/pages/dashboard/WebPanelPages/Elaqe'));
 const Abuneler = lazy(() => import('src/pages/dashboard/WebPanelPages/Abuneler'));
+const PartnyorlarLogo = lazy(() => import('src/pages/dashboard/WebPanelPages/PartnersLogo'));
 
 const layoutContent = (
   <DashboardLayout>
@@ -140,6 +141,7 @@ export const dashboardRoutes = [
           { path: 'slayderduzeliset/:id', element: <SlayderDuzelisEt /> },
           { path: 'slayderelaveet', element: <SlayderElaveEt /> },
           { path: 'haqqimizda', element: <Haqqimizda /> },
+          { path: 'partnyorlarlogo', element: <PartnyorlarLogo /> },
         ],
       },
       {

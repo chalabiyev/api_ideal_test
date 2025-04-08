@@ -11,16 +11,16 @@ export interface CreditFormData {
     mortgage: string;
   };
   conditions: {
-    minAmount: number;
-    maxAmount: number;
-    minPeriod: number;
-    maxPeriod: number;
-    minRate: number;
-    maxRate: number;
-    minFIFD: number;
-    maxFIFD: number;
+    minAmount: string;
+    maxAmount: string;
+    minPeriod: string;
+    maxPeriod: string;
+    minRate: string;
+    maxRate: string;
+    minFIFD: string;
+    maxFIFD: string;
     currency: string;
-    commissionRate: number;
+    commissionRate: string;
     requiredDocuments: string;
   };
   videoDescription: {
