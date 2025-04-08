@@ -1,6 +1,6 @@
 pipelines:
   branches:
-    release:
+    test:
       - step:
           name: Clear Old Files
           script:
@@ -39,7 +39,7 @@ pipelines:
           script:
             - cd admin_v2
             - yarn install
-            - yarn buildC
+            - NODE_ENV=test yarn buildC
             - pipe: 'atlassian/scp-deploy:1.5.1'
               variables:
                 USER: esam
