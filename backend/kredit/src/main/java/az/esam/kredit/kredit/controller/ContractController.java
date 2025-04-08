@@ -77,7 +77,7 @@ public class ContractController {
                 request.getCreditTerm()
         );
         double totalPayment = monthlyPayment * request.getCreditTerm();
-        double totalInterest = totalPayment - request.getCreditAmount();
+        double totalInterest = Math.round((totalPayment - request.getCreditAmount()) * 100.0) / 100.0;
 
         PPTransEntity ppTransEntity = PPTransEntity.builder()
                 .date(request.getConfirmDate())
@@ -125,5 +125,60 @@ public class ContractController {
                 .owner(user)
                 .build());
         return ResponseEntity.ok(Map.of("pdfName", pdfName, "status", "success"));
+    }
+
+    @GetMapping("calculate")
+    public void calculate() throws IOException {
+        double monthlyPayment = creditCalculation.calculateMonthlyPayment(
+                5000,
+                10,
+                12
+        );
+        List<PaymentTableContent> creditPayment = creditCalculation.calculatePaymentTable(
+                "lsdkjflkdsjfksldf",
+                5000,
+                10,
+                12
+        );
+        double totalPayment = monthlyPayment * 12;
+        double totalInterest = Math.round((totalPayment - 5000) * 100.0) / 100.0;
+
+        PPTransEntity ppTransEntity = PPTransEntity.builder()
+                .date(new Date())
+                .creditAmount(5000)
+                .interestRate(10)
+                .creditTerm(12)
+                .monthlyPayment(monthlyPayment)
+                .userPin("kdflmnkdlf")
+                .userSerialNumber("dkfnldf")
+                .userFullName("dkfnjldf")
+                .birthDate(new Date())
+                .totalPayment(totalPayment)
+                .totalInterest(totalInterest)
+                .paymentTableContents(creditPayment)
+                .build();
+
+        System.out.println("Monthly Payment: " + monthlyPayment);
+        System.out.println("Total interest " + totalInterest);
+        Path uploadDir = Paths.get("uploads");
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+        String pdfName = UUID.randomUUID().toString() + ".pdf";
+        Path path = Paths.get(uploadDir.toString(), pdfName);
+
+        List<String> htmlContents = new ArrayList<>(List.of(
+                pdfService.loadHtmlContent("pp-trans", ppTransEntity.toMap())
+        ));
+
+        byte[] mergedPdf = pdfService.mergePdfs(htmlContents, path);
+
+        // Save to file or return as a response
+        Files.write(path, mergedPdf);
+        uploadedFileRepository.save(UploadedFile.builder()
+                .fileName(pdfName)
+                .upladedDate(new Date())
+                .build());
+
     }
 }
