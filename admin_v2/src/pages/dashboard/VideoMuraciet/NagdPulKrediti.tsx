@@ -13,12 +13,13 @@ import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
-import { CreditRequestDto } from 'src/types/CreditRequestDto';
+import { CreditRequestDto, Partner } from 'src/types/CreditRequestDto';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 import PensionerTab from './PensionerTab';
 import TabAKB from 'src/components/NewCredit/TabAKB';
 import { AKB_STATE_TYPE } from './types';
+import { getPartnerById } from 'src/api/PartnerService';
 
 // ----------------------------------------------------------------------
 
@@ -182,6 +183,7 @@ export default function Page() {
   const clientPin: string = queryParams.get('pin') ?? '';
   const clientId: string = queryParams.get('clientId') ?? '';
   const operatorId: string = queryParams.get('operatorId') ?? '';
+  const partnerId: string = queryParams.get('partnerId') ?? '';
 
   // tab changes
   const [value, setValue] = React.useState('1');
@@ -367,17 +369,16 @@ export default function Page() {
   const [contractPdf, setContractPdf] = useState('');
 
   // Call this function only to set the userInfo after data is fetched
-  const getUserInfo = () => {
+  const getUserInfo = async () => {
     if (hasData) {
       if (userData) data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
-      setCreditRequest({
-        ...creditRequest,
-        requestedUserPin: userData.username,
-        phoneNumber: userData.phoneNumber,
-        requestDate: new Date(),
-        spouses: [],
-      });
+      let newCreditRequest = { ...creditRequest, requestedUserPin: userData.username, phoneNumber: userData.phoneNumber, requestDate: new Date(), spouses: [] };
+      if (partnerId) {
+        let partner = await getPartnerById(partnerId);
+        if (partner) newCreditRequest = { ...newCreditRequest, partner: partner };
+      }
+      setCreditRequest(newCreditRequest);
     }
   };
 
@@ -440,7 +441,7 @@ export default function Page() {
       try {
         let msg = JSON.parse(event.data) as SignalType;
         listenSignals(msg);
-      } catch (error) {}
+      } catch (error) { }
     }
   };
 

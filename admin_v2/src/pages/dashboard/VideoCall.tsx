@@ -59,6 +59,7 @@ const VideoCall = () => {
   const [clientPin, setClientPin] = useState<string>('');
   const [clientName, setClientName] = useState<string>('');
   const [partnerId, setPartnerId] = useState<string>('');
+  const [partner, setPartner] = useState<any>(null);
 
   const [clientPhoto, setClientPhoto] = useState<string>('');
   const [newCallType, setNewCallType] = useState<string>('');
@@ -77,6 +78,7 @@ const VideoCall = () => {
 
   const getPartner = async (id: string) => {
     const partner = await getPartnerById(id);
+    setPartner(partner);
     partnerName = partner?.companyName || '';
     return partnerName;
   };
@@ -194,7 +196,7 @@ const VideoCall = () => {
     setAccepCall(true); // Aramanın kabul edildiğini belirtiyoruz
     startTimer(); // Timer'ı başlatıyoruz
     if (newCallType == 'above') {
-      let newTab = window.open(`/videomuraciet/nagd-pul-krediti?pin=${clientPin}&clientId=${clientId}&operatorId=${operatorId}`, '_blank');
+      let newTab = window.open(`/videomuraciet/nagd-pul-krediti?pin=${clientPin}&clientId=${clientId}&operatorId=${operatorId}&partnerId=${partnerId}`, '_blank');
       if (newTab)
         newTab.focus();
     }

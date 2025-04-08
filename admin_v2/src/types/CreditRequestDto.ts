@@ -103,6 +103,7 @@ export interface CreditRequestDto {
   pensioner: PensionerInfoResponse;
   category?: string;
   detail?: string;
+  partner?: Partner;
 }
 
 export interface User {
