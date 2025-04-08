@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Condition {
-    private double minAmount;
-    private double maxAmount;
-    private int minPeriod;
-    private int maxPeriod;
-    private double minRate;
-    private double maxRate;
-    private double minFIFD;
-    private double maxFIFD;
+    private String minAmount;
+    private String maxAmount;
+    private String minPeriod;
+    private String maxPeriod;
+    private String minRate;
+    private String maxRate;
+    private String minFIFD;
+    private String maxFIFD;
     private String currency;
-    private double commissionRate;
+    private String commissionRate;
     private String requiredDocuments;
 }
