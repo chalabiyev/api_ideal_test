@@ -38,16 +38,16 @@ const KreditElaveEt = () => {
       mortgage: '',
     },
     conditions: {
-      minAmount: 0,
-      maxAmount: 0,
-      minPeriod: 0,
-      maxPeriod: 0,
-      minRate: 0,
-      maxRate: 0,
-      minFIFD: 0,
-      maxFIFD: 0,
+      minAmount: '',
+      maxAmount: '',
+      minPeriod: '',
+      maxPeriod: '',
+      minRate: '',
+      maxRate: '',
+      minFIFD: '',
+      maxFIFD: '',
       currency: 'AZN',
-      commissionRate: 0,
+      commissionRate: '',
       requiredDocuments: '',
     },
     videoDescription: {
@@ -57,6 +57,10 @@ const KreditElaveEt = () => {
       videoUrl: '',
     },
   });
+
+  useEffect(() => {
+    console.log('creditFormData', creditFormData);
+  }, [creditFormData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -80,7 +84,7 @@ const KreditElaveEt = () => {
       ...prev,
       conditions: {
         ...prev.conditions,
-        [name]: name === 'requiredDocuments' ? value : value === '' ? 0 : parseFloat(value),
+        [name]: value,
       },
     }));
   };
@@ -144,15 +148,15 @@ const KreditElaveEt = () => {
 
   function isValid() {
     if (
-      creditFormData.conditions.commissionRate === 0 ||
-      creditFormData.conditions.maxAmount === 0 ||
-      creditFormData.conditions.maxFIFD === 0 ||
-      creditFormData.conditions.maxPeriod === 0 ||
-      creditFormData.conditions.maxRate === 0 ||
-      creditFormData.conditions.minAmount === 0 ||
-      creditFormData.conditions.minFIFD === 0 ||
-      creditFormData.conditions.minPeriod === 0 ||
-      creditFormData.conditions.minRate === 0
+      creditFormData.conditions.commissionRate === '' ||
+      creditFormData.conditions.maxAmount === '' ||
+      creditFormData.conditions.maxFIFD === '' ||
+      creditFormData.conditions.maxPeriod === '' ||
+      creditFormData.conditions.maxRate === '' ||
+      creditFormData.conditions.minAmount === '' ||
+      creditFormData.conditions.minFIFD === '' ||
+      creditFormData.conditions.minPeriod === '' ||
+      creditFormData.conditions.minRate === ''
     ) {
       return false;
     }
@@ -305,60 +309,54 @@ const KreditElaveEt = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Minimum məbləğ"
                   name="minAmount"
-                  value={creditFormData.conditions.minAmount || null}
+                  value={creditFormData.conditions.minAmount || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Maksimum məbləğ"
                   name="maxAmount"
-                  value={creditFormData.conditions.maxAmount || null}
+                  value={creditFormData.conditions.maxAmount || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Minimum faiz"
                   name="minRate"
-                  value={creditFormData.conditions.minRate || null}
+                  value={creditFormData.conditions.minRate || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Maksimum faiz"
                   name="maxRate"
-                  value={creditFormData.conditions.maxRate || null}
+                  value={creditFormData.conditions.maxRate || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Maksimum kredit müddəti"
                   name="maxPeriod"
-                  value={creditFormData.conditions.maxPeriod || null}
+                  value={creditFormData.conditions.maxPeriod || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Minimum kredit müddəti"
                   name="minPeriod"
-                  value={creditFormData.conditions.minPeriod || null}
+                  value={creditFormData.conditions.minPeriod || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -366,20 +364,18 @@ const KreditElaveEt = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Maksimum faktiki illik faiz dərəcəsi (FİFD)"
                   name="maxFIFD"
-                  value={creditFormData.conditions.maxFIFD || null}
+                  value={creditFormData.conditions.maxFIFD || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Minimum faktiki illik faiz dərəcəsi (FİFD)"
                   name="minFIFD"
-                  value={creditFormData.conditions.minFIFD || null}
+                  value={creditFormData.conditions.minFIFD || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
@@ -395,10 +391,9 @@ const KreditElaveEt = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type="number"
                   label="Komissiya xərci"
                   name="commissionRate"
-                  value={creditFormData.conditions.commissionRate || null}
+                  value={creditFormData.conditions.commissionRate || ''}
                   onChange={handleConditionsChange}
                 />
               </Grid>
