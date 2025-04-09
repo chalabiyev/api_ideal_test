@@ -98,22 +98,22 @@ const TabCreditDataPagePartner = ({
               shrink: true,
             }}
           >
-            <option value="">Seçin</option>
+            <option value="aksesuar">Aksesuar</option>
             <option value="avtomobil">Avtomobil</option>
+            <option value="digər">Digər</option>
             <option value="ev">Ev</option>
+            <option value="idman">İdman və həvəskar</option>
+            <option value="kitab">Kitab və ofis ləvazimatları</option>
             <option value="texnika">Məişət texnikası</option>
+            <option value="mebel">Mebel</option>
+            <option value="oyuncaq">Oyuncaq və hobbi</option>
+            <option value="">Seçin</option>
             <option value="telefon">Telefon və planşet</option>
             <option value="komputer">Komputer və laptop</option>
-            <option value="mebel">Mebel</option>
             <option value="saat">Saat və zərgərlik</option>
-            <option value="idman">İdman və həvəskar</option>
             <option value="uşaq">Uşaq məhsulları</option>
             <option value="kosmetika">Kosmetika və parfümeriya</option>
-            <option value="kitab">Kitab və ofis ləvazimatları</option>
-            <option value="oyuncaq">Oyuncaq və hobbi</option>
             <option value="paltar">Paltar və ayaqqabı</option>
-            <option value="aksesuar">Aksesuar</option>
-            <option value="digər">Digər</option>
           </TextField>
         </Grid>
 

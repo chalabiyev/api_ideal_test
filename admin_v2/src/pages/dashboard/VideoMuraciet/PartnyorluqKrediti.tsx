@@ -24,7 +24,10 @@ import TabAKBPartner from 'src/components/partner/TabAKBPartner';
 import RecruiterDataPartner from 'src/components/partner/RecruiterDataPartner';
 import PensionerTabPartner from 'src/components/partner/PensionerTabPartner';
 import TabGuarantorPartner from 'src/components/partner/TabGuarantorPartner';
-import TabRelatedPersons from 'src/components/partner/TabFamilyInformationPartner';
+import TabRelatedPersons, {
+  FamilyInfo,
+  Person,
+} from 'src/components/partner/TabFamilyInformationPartner';
 import TabVehicleInformationPartner from 'src/components/partner/TabVehicleInformationPartner';
 import TabCreditDataPagePartner from 'src/components/partner/TabCreditDataPagePartner';
 import TabContractPartner from 'src/components/partner/TabContractPartner';
@@ -352,6 +355,21 @@ export default function Page() {
     },
   });
 
+  // Family Information states
+  const [familyInfo, setFamilyInfo] = useState<FamilyInfo>({
+    workExperience: '',
+    familyMembers: '',
+    familyIncome: '',
+    isRenting: false,
+    rentAmount: '',
+    rentDuration: '',
+    actualAddress: '',
+    additionalIncomes: [{ id: 0, source: '', amount: '' }],
+    idQuality: 3,
+    generalNote: '',
+    relatedPersons: [] as Person[],
+  });
+
   // -------------------recurit---------------------------recurit------------------------------recurit--------------
 
   const {
@@ -499,7 +517,7 @@ export default function Page() {
                 <Tab label="İş yeri" value="3" />
                 <Tab label="Təqaüd məlumatları" value="4" />
                 <Tab label="Zaminlik haqqında məlumat" value="5" />
-                <Tab label="Əlaqəli şəxlər" value="6" />
+                <Tab label="Ümumi məlumatlar" value="6" />
                 <Tab label="Nəqliyyat vasitələri" value="7" />
                 <Tab label="Kredit ver" value="8" />
                 <Tab label="Video qeydiyyat" value="9" />
@@ -555,7 +573,7 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="6">
-              <TabRelatedPersons />
+              <TabRelatedPersons familyInfo={familyInfo} setFamilyInfo={setFamilyInfo} />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="7">
