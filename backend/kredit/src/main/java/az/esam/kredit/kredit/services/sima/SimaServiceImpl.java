@@ -547,25 +547,32 @@ public class SimaServiceImpl implements SimaService {
     public AuthenticationResponse getToken(HttpServletRequest request, SimaTokenRequest simaTokenRequest) {
         String ipAddr = getClientIpAddress(request);
         Optional<SimaEncodedContract> findSimaContract = simaEncodedContractRepository.findByOperationId(simaTokenRequest.getOperationId());
+        log.info("sima getToken findSimaContract : {}", findSimaContract);
         try {
             // && ipAddr.equals(findSimaContract.get().getSignerIP()) 
             if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed && oTPService.validateOTPForSima(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(), EPlatform.PHONE)) {
                 SimaEncodedContract contract = findSimaContract.get();
+                log.info("sima getToken contract : {}", contract);
                 SimaCertPersonInfo person = getPersonFromCertificate(contract.getSignerCert());
+                log.info(ipAddr + " sima getToken person : {}", person);
                 if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {
                     try {
                         FullIDCardInfoResponse idCard = documentInfoService.getIdCardInfoByPin(person.getFinCode());
+                        log.info("sima getToken idCard : {}", idCard);
                         person.setPhoneNumber(simaTokenRequest.getPhoneNumber());
                         AuthenticationResponse auth = authenticationService.simaWeb2AppLogin(person, idCard, simaTokenRequest.getPassword());
+                        log.info("sima getToken auth : {}", auth);
                         if (auth != null) {
                             contract.setTokenData(auth);
                             return auth;
                         }
                     } catch (Exception e) {
+                        log.error("sima getToken error : {}", e);
                     }
                 }
             }
         } catch (BadRequestException ex) {
+            log.error("sima getToken error : {}", ex);
         }
         return null;
     }

@@ -759,6 +759,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     return response;
                 }
             } catch (BadRequestException ex) {
+                log.error("simaWeb2AppLogin error : {}", ex);
             }
         } else {
             User savedUser = findUser.get();
