@@ -146,13 +146,10 @@ public class OTPServiceImpl implements OTPService {
 
             if (otpRecord.isEmpty()) {
                 throw new BadRequestException("OTP record not found");
-            }
-
-            if (otpRecord.get().getExpirationDate().before(new Date())) {
-                throw new BadRequestException("OTP code is expired");
-            }
+            }          
 
             boolean result = passwordEncoder.matches(otpCode, otpRecord.get().getOtpCode());
+            log.info("validateOTPForSima result : {}", result);
             if (result) {
                 otpRecord.get().setValidationDate(new Date());
                 otpRepository.save(otpRecord.get());
