@@ -147,17 +147,7 @@ const KreditElaveEt = () => {
   };
 
   function isValid() {
-    if (
-      creditFormData.conditions.commissionRate === '' ||
-      creditFormData.conditions.maxAmount === '' ||
-      creditFormData.conditions.maxFIFD === '' ||
-      creditFormData.conditions.maxPeriod === '' ||
-      creditFormData.conditions.maxRate === '' ||
-      creditFormData.conditions.minAmount === '' ||
-      creditFormData.conditions.minFIFD === '' ||
-      creditFormData.conditions.minPeriod === '' ||
-      creditFormData.conditions.minRate === ''
-    ) {
+    if (!creditFormData.title || !creditFormData.bannerImage || !creditFormData.image) {
       return false;
     }
     return true;
