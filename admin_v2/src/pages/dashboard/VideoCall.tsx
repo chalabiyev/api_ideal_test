@@ -195,11 +195,11 @@ const VideoCall = () => {
     setIsCallActive(true); // Çağrıyı aktif hale getiriyoruz
     setAccepCall(true); // Aramanın kabul edildiğini belirtiyoruz
     startTimer(); // Timer'ı başlatıyoruz
-    if (newCallType == 'above') {
+    // if (newCallType == 'above') {
       let newTab = window.open(`/videomuraciet/nagd-pul-krediti?pin=${clientPin}&clientId=${clientId}&operatorId=${operatorId}&partnerId=${partnerId}`, '_blank');
       if (newTab)
         newTab.focus();
-    }
+    // }
   };
 
   const handleRejectCall = () => {
