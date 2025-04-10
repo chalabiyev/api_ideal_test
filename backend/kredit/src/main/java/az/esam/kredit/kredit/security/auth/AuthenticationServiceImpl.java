@@ -86,8 +86,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .replace(")", "")
                     .replace(" ", "")
                     .replace("-", "")
-                    .replace("+", "")
-            );
+                    .replace("+", ""));
             if (!request.getPhoneNumber().startsWith("994")) {
                 request.setPhoneNumber("994" + request.getPhoneNumber());
             }
@@ -159,7 +158,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request, Authentication authentication) throws BadRequestException {
+    public AuthenticationResponse register(RegisterRequest request, Authentication authentication)
+            throws BadRequestException {
         try {
             var admin = authentication != null ? userRepository.findByUsername(authentication.getName())
                     .orElse(null) : null;
@@ -173,8 +173,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .replace(")", "")
                         .replace(" ", "")
                         .replace("-", "")
-                        .replace("+", "")
-                );
+                        .replace("+", ""));
                 if (!request.getPhoneNumber().startsWith("994")) {
                     request.setPhoneNumber("994" + request.getPhoneNumber());
                 }
@@ -189,8 +188,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 }
             } else if (!existingUser.getStatus().equals(EUserStatus.DELETED)
                     // existingUser role==partner and request role==partner
-                    && ((existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_PARTNER)) && request.getRoles().contains("partner"))
-                    || (existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_USER)) && request.getRoles() == null))) {
+                    && ((existingUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_PARTNER))
+                            && request.getRoles().contains("partner"))
+                            || (existingUser.getRoles().stream().anyMatch(
+                                    role -> role.getName().equals(ERole.ROLE_USER)) && request.getRoles() == null))) {
                 // TODO: check role
                 throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
             }
@@ -239,7 +240,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 roles.add(studentRole);
                 strRoles.add(studentRole.getName().name());
             } else {
-                if (admin != null && admin.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN))) {
+                if (admin != null
+                        && admin.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN))) {
                     strRoles.forEach(role -> {
                         switch (role) {
                             case "admin", ROLE_ADMIN_STR:
@@ -322,7 +324,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(LoginRequest request) {
         try {
             var user = userRepository.findByUsername(request.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + request.getUsername()));
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            "User Not Found with username: " + request.getUsername()));
 
             if (user.getStatus().equals(EUserStatus.DELETED)) {
                 throw new UsernameNotFoundException("User not found! Deleted or not even exists");
@@ -331,8 +334,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
-                            request.getPassword())
-            );
+                            request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             var userDetails = (UserDetails) authentication.getPrincipal();
@@ -345,7 +347,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .map(item -> item.getName().name())
                     .toList();
 
-//            revokeAllUserTokens(user);
+            // revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
 
             userRepository.save(user);
@@ -500,8 +502,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         try {
             String username = jwtService.extractUsername(request.getHeader("Authorization").substring(7));
             return userRepository.findByUsername(username)
-                    .orElseThrow(()
-                            -> new BadCredentialsException("User Not Found with username: " + username));
+                    .orElseThrow(() -> new BadCredentialsException("User Not Found with username: " + username));
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new BadCredentialsException(e.getMessage());
@@ -509,7 +510,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException {
+    public boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication)
+            throws BadRequestException {
         try {
             User userExists = userRepository.findByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User does not exists"));
@@ -525,7 +527,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse setPassword(SetPasswordRequest request, HttpServletRequest httpRequest, Authentication a) throws BadRequestException {
+    public AuthenticationResponse setPassword(SetPasswordRequest request, HttpServletRequest httpRequest,
+            Authentication a) throws BadRequestException {
         try {
             var user = userRepository.findByUsername(a.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -536,8 +539,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 user.getUsername(),
-                                request.getPassword())
-                );
+                                request.getPassword()));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 var userDetails = (UserDetails) authentication.getPrincipal();
@@ -594,8 +596,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 ERole.ROLE_ADMIN,
                 ERole.ROLE_HR,
                 ERole.ROLE_CREDIT_MANAGER,
-                ERole.ROLE_ACCOUNTANT
-        ));
+                ERole.ROLE_ACCOUNTANT));
         if (roles.isEmpty()) {
             throw new IllegalArgumentException("Error: Roles are not found.");
         }
@@ -626,8 +627,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     Criteria.where("email").regex(search, "i"),
                     Criteria.where("voen").regex(search, "i"),
                     Criteria.where("organisationName").regex(search, "i"),
-                    Criteria.where("title").regex(search, "i")
-            );
+                    Criteria.where("title").regex(search, "i"));
         }
 
         if (role != null && role.equalsIgnoreCase("users")) {
@@ -640,8 +640,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     ERole.ROLE_ADMIN,
                     ERole.ROLE_HR,
                     ERole.ROLE_CREDIT_MANAGER,
-                    ERole.ROLE_ACCOUNTANT
-            ));
+                    ERole.ROLE_ACCOUNTANT));
             if (roles.isEmpty()) {
                 throw new IllegalArgumentException("Error: Roles are not found.");
             }
@@ -685,7 +684,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new PageImpl<>(users, PageRequest.of(page, size), total);
     }
 
-
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .token(jwtToken)
@@ -713,8 +711,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard, String password) {
+    public AuthenticationResponse simaWeb2AppLogin(SimaCertPersonInfo person, FullIDCardInfoResponse idCard,
+            String password) {
+        String phoneNumber = person.getPhoneNumber()
+                .replaceAll("\\+", "")
+                .replaceAll("\\(", "")
+                .replaceAll("\\)", "")
+                .replaceAll(" ", "");
         Optional<User> findUser = userRepository.findByUsername(person.getFinCode());
+        if (findUser.isEmpty()) {
+            findUser = userRepository.findByPhoneNumber(phoneNumber);
+        }
         if (findUser.isEmpty()) {
             try {
                 // TODO: check if user exists with partner pin, then add partner role to user
@@ -733,7 +740,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .password(password)
                             .fatherName(person.getFatherName())
                             .fullName(person.getFullName())
-                            .phoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""))
+                            .phoneNumber(phoneNumber)
                             .organisation(person.getOrganisation())
                             .voen(person.getVoen())
                             .title(person.getTitle())
@@ -751,9 +758,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     AuthenticationResponse response = register(registerRequest, null);
                     // TODO: sms gonder url?token=accessToken
                     smsService.sendSMSOneToN(SendSmsRequest.builder()
-                            .message("Sizin hesabınız uğurla yaradıldı. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
-                                    + "http://localhost:8081/setpassword??token=" + response.getAccessToken()
-                                    + " Link 24 saat ərzində aktivdir.")
+                            .message(
+                                    "Sizin hesabınız uğurla yaradıldı. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
+                                            + "https://kabinet.idealkredit.az/setpassword?token=" + response.getAccessToken()
+                                            + " Link 24 saat ərzində aktivdir.")
                             .numbers(List.of(person.getPhoneNumber()))
                             .build());
                     return response;
@@ -787,7 +795,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 savedUser.setGender(idCard.getGender().equals("MALE") ? EGender.MALE : EGender.FEMALE);
                 savedUser.setMaritalStatus(idCard.getMaritalStatus());
                 savedUser.setPhoto(idCard.getImage());
-                savedUser.setPhoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(" ", ""));
+                savedUser.setPhoneNumber(person.getPhoneNumber().replaceAll("\\+", "").replaceAll("\\(", "")
+                        .replaceAll("\\)", "").replaceAll(" ", ""));
             }
             userRepository.save(savedUser);
             UserDetails userDetails = UserDetailsImpl.build(savedUser);

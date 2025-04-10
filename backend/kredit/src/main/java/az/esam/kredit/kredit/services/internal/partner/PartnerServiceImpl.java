@@ -150,7 +150,7 @@ public class PartnerServiceImpl implements PartnerService {
                         .numbers(List.of(partner.getPhoneNumber()))
                         .message("Sizin partnyorlugunuz uğurla təsdiqləndi. " +
                                 "Hesabınıza aşağıdakı url-dən pin və istifadəçi hesabınızın parolu ilə giriş edə bilərsiniz: \n" +
-                                "http://localhost:8081/auth/jwt/sign-in")
+                                "https://admin.idealkredit.az/auth/jwt/sign-in")
                         .build());
 
                 // set user's companys
@@ -184,7 +184,7 @@ public class PartnerServiceImpl implements PartnerService {
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
                         .numbers(List.of(partner.getPhoneNumber()))
                         .message("Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
-                                + "http://localhost:8081/setpassword??token=" + response.getAccessToken()
+                                + "https://kabinet.idealkredit.az/setpassword??token=" + response.getAccessToken()
                                 + " Link 24 saat ərzində aktivdir.")
                         .build());
             }
