@@ -39,7 +39,7 @@ pipelines:
           script:
             - cd admin_v2
             - yarn install
-            - NODE_ENV=test yarn buildC
+            - yarn buildTest
             - pipe: 'atlassian/scp-deploy:1.5.1'
               variables:
                 USER: esam
