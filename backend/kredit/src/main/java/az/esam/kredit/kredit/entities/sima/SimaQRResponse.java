@@ -13,5 +13,6 @@ public class SimaQRResponse {
     
     private String image;    
     private String operationId;
+    private String tsQueryUrl;
 
 }

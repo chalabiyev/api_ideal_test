@@ -142,58 +142,64 @@ public class SimaServiceImpl implements SimaService {
     @Override
     public SimaQRResponse getAuthQR(String finCode, ContractTypeEnum contractType) {
 
-//        try {
-//            String hmactest = hmacSHA256(masterKey, "{\"ProtoInfo\":{\"Name\":\"web2app\",\"Version\":\"1.3\"},\"OperationInfo\":{\"Type\":\"Auth\",\"OperationId\":\"7b173770-57bb-4405-9ded-038fc9fc1f36\",\"NbfUTC\":1733356800,\"ExpUTC\":1733443200,\"Assignee\":[]},\"DataInfo\":{\"DataURI\":\"https://api.studentall.az:9899/api/sima/getData?operationId=7b173770-57bb-4405-9ded-038fc9fc1f36\",\"AlgName\":null,\"FingerPrint\":null},\"ClientInfo\":{\"ClientId\":3144201,\"IconURI\":\"https://ideal-kredit-copy.vercel.app/HeaderLogo.png\",\"Callback\":\"https://api.studentall.az:9899/api/sima/callBack\",\"ClientName\":\"Ideal Kredit\",\"RedirectURI\":\"https://localhost:8080/simalogin\",\"HostName\":null}}");
-//            hmactest = base64Encode(hmactest);
-//        } catch (Exception ex) {
-//            Logger.getLogger(SimaServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        ProtoInfo protoInfoTest = ProtoInfo.builder().Name("web2app").Version("1.3").build();
-//        OperationInfo operationInfoTest = OperationInfo.builder()
-//                .Type(ContractTypeEnum.Auth)
-//                .OperationId("7b173770-57bb-4405-9ded-038fc9fc1f36")
-//                .NbfUTC(1733356800)
-//                .ExpUTC(1733443200)
-//                .Assignee(new ArrayList())
-//                .build();
-//        ClientInfo clientInfoTest = ClientInfo.builder()
-//                .ClientId(3144201)
-//                .ClientName("Ideal Kredit")
-//                .IconURI("https://ideal-kredit-copy.vercel.app/HeaderLogo.png")
-//                .Callback("https://api.studentall.az:9899/api/sima/callBack")
-//                .RedirectURI("https://localhost:8080/simalogin")
-//                .build();
-//        SignableContainer signableContainerTest = SignableContainer.builder()
-//                .ProtoInfo(protoInfoTest)
-//                .OperationInfo(operationInfoTest)
-//                .ClientInfo(clientInfoTest)
-//                .DataInfo(DataInfo.builder()
-//                        .DataURI("https://api.studentall.az:9899/api/sima/getData?operationId=7b173770-57bb-4405-9ded-038fc9fc1f36").build())
-//                .build();
-//
-//        String signableContainerStrTest;
-//        try {
-//            signableContainerStrTest = om.writeValueAsString(signableContainerTest).trim();
-////            String chTest = sha256(signableContainerStrTest);
-//            String sTest = hmacSHA256(masterKey, signableContainerStrTest);
-//            Header header = Header.builder()
-//                    .AlgName("HMACSHA256")
-//                    .Signature(base64Encode(sTest))
-//                    .build();
-//            SimaContract simaContractTest = SimaContract.builder()
-//                    .SignableContainer(signableContainerTest)
-//                    .Header(header)
-//                    .build();
-//            String simaContractStrTest = om.writeValueAsString(simaContractTest);
-//            String encodedContractTest = base64Encode(simaContractStrTest);
-//            String qrStrTest = getFileUri.concat(encodedContractTest);
-//            log.info(qrStrTest);
-//        } catch (JsonProcessingException ex) {
-//
-//        } catch (Exception ex) {
-//
-//        }
+        // try {
+        // String hmactest = hmacSHA256(masterKey,
+        // "{\"ProtoInfo\":{\"Name\":\"web2app\",\"Version\":\"1.3\"},\"OperationInfo\":{\"Type\":\"Auth\",\"OperationId\":\"7b173770-57bb-4405-9ded-038fc9fc1f36\",\"NbfUTC\":1733356800,\"ExpUTC\":1733443200,\"Assignee\":[]},\"DataInfo\":{\"DataURI\":\"https://api.studentall.az:9899/api/sima/getData?operationId=7b173770-57bb-4405-9ded-038fc9fc1f36\",\"AlgName\":null,\"FingerPrint\":null},\"ClientInfo\":{\"ClientId\":3144201,\"IconURI\":\"https://ideal-kredit-copy.vercel.app/HeaderLogo.png\",\"Callback\":\"https://api.studentall.az:9899/api/sima/callBack\",\"ClientName\":\"Ideal
+        // Kredit\",\"RedirectURI\":\"https://localhost:8080/simalogin\",\"HostName\":null}}");
+        // hmactest = base64Encode(hmactest);
+        // } catch (Exception ex) {
+        // Logger.getLogger(SimaServiceImpl.class.getName()).log(Level.SEVERE, null,
+        // ex);
+        // }
+        // ProtoInfo protoInfoTest =
+        // ProtoInfo.builder().Name("web2app").Version("1.3").build();
+        // OperationInfo operationInfoTest = OperationInfo.builder()
+        // .Type(ContractTypeEnum.Auth)
+        // .OperationId("7b173770-57bb-4405-9ded-038fc9fc1f36")
+        // .NbfUTC(1733356800)
+        // .ExpUTC(1733443200)
+        // .Assignee(new ArrayList())
+        // .build();
+        // ClientInfo clientInfoTest = ClientInfo.builder()
+        // .ClientId(3144201)
+        // .ClientName("Ideal Kredit")
+        // .IconURI("https://ideal-kredit-copy.vercel.app/HeaderLogo.png")
+        // .Callback("https://api.studentall.az:9899/api/sima/callBack")
+        // .RedirectURI("https://localhost:8080/simalogin")
+        // .build();
+        // SignableContainer signableContainerTest = SignableContainer.builder()
+        // .ProtoInfo(protoInfoTest)
+        // .OperationInfo(operationInfoTest)
+        // .ClientInfo(clientInfoTest)
+        // .DataInfo(DataInfo.builder()
+        // .DataURI("https://api.studentall.az:9899/api/sima/getData?operationId=7b173770-57bb-4405-9ded-038fc9fc1f36").build())
+        // .build();
+        //
+        // String signableContainerStrTest;
+        // try {
+        // signableContainerStrTest =
+        // om.writeValueAsString(signableContainerTest).trim();
+        //// String chTest = sha256(signableContainerStrTest);
+        // String sTest = hmacSHA256(masterKey, signableContainerStrTest);
+        // Header header = Header.builder()
+        // .AlgName("HMACSHA256")
+        // .Signature(base64Encode(sTest))
+        // .build();
+        // SimaContract simaContractTest = SimaContract.builder()
+        // .SignableContainer(signableContainerTest)
+        // .Header(header)
+        // .build();
+        // String simaContractStrTest = om.writeValueAsString(simaContractTest);
+        // String encodedContractTest = base64Encode(simaContractStrTest);
+        // String qrStrTest = getFileUri.concat(encodedContractTest);
+        // log.info(qrStrTest);
+        // } catch (JsonProcessingException ex) {
+        //
+        // } catch (Exception ex) {
+        //
+        // }
         String result = "";
+        String qrStr = "";
         Calendar c = Calendar.getInstance();
         Date now = new Date();
         c.setTime(now);
@@ -235,7 +241,7 @@ public class SimaServiceImpl implements SimaService {
             String simaContractStr = om.writeValueAsString(simaContract).trim();
             log.info("sima simaContractStr : {}", simaContractStr);
             String encodedContract = base64Encode(simaContractStr);
-            String qrStr = getFileUri.concat(encodedContract);
+            qrStr = getFileUri.concat(encodedContract);
             BufferedImage qrImage = generateQRCodeImage(qrStr);
             result = imgToBase64String(qrImage, "png");
             SimaEncodedContract simaEncodedContract = SimaEncodedContract.builder()
@@ -252,7 +258,11 @@ public class SimaServiceImpl implements SimaService {
         } catch (Exception ex) {
             log.error("Error", ex);
         }
-        return SimaQRResponse.builder().image(result).operationId(operationId).build();
+        return SimaQRResponse.builder()
+                .image(result)
+                .operationId(operationId)
+                .tsQueryUrl(qrStr)
+                .build();
     }
 
     @Override
@@ -263,11 +273,12 @@ public class SimaServiceImpl implements SimaService {
         String tsCert = request.getHeader("ts-cert");
         String tsSign = request.getHeader("ts-sign");
         log.info("sima callBack tsCert : {}", tsCert);
-//        log.info("sima callBack dataSignature : {}", callBack.getDataSignature());
+        // log.info("sima callBack dataSignature : {}", callBack.getDataSignature());
         SimaCertPersonInfo person = getPersonFromCertificate(tsCert);
         if (person != null) {
             log.info("sima callBack certificate person : {}", person);
-            Optional<SimaEncodedContract> findContract = simaEncodedContractRepository.findByOperationId(callBack.getOperationId());
+            Optional<SimaEncodedContract> findContract = simaEncodedContractRepository
+                    .findByOperationId(callBack.getOperationId());
             if (findContract.isPresent()) {
                 SimaEncodedContract contract = findContract.get();
                 log.info("sima callBack contract : {}", contract);
@@ -280,7 +291,8 @@ public class SimaServiceImpl implements SimaService {
                     contract.setSignerIP(getClientIpAddress(request));
                     contract.setStatus(ContractStatusEnum.succesed);
                     contract.setSignerFin(person.getFinCode());
-                    if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Sign) {
+                    if (contract.getSimaContract().getSignableContainer().getOperationInfo()
+                            .getType() == ContractTypeEnum.Sign) {
                         if (contract.getFileName() != null) {
                             byte[] bytes = Base64.getDecoder().decode(contract.getDataSignature());
                             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
@@ -292,21 +304,22 @@ public class SimaServiceImpl implements SimaService {
                 }
                 simaEncodedContractRepository.save(contract);
 
-//                try {
-//                    String dataB64 = base64Encode(callBack.getOperationId());
-//                    boolean verifyWithTsSign = verifySign(tsCert, dataB64, tsSign);
-//                    log.info("verifyWithTsSign : {}", verifyWithTsSign);
-//                } catch (Exception e) {
-//                    log.error("Sign verifyWithTsSign verify error", e);
-//                }
-//
-//                try {
-//                    String dataB64 = base64Encode(callBack.getOperationId());
-//                    boolean verifyWithCallbackDS = verifySign(tsCert, dataB64, callBack.getDataSignature());
-//                    log.info("verifyWithCallbackDS : {}", verifyWithCallbackDS);
-//                } catch (Exception e) {
-//                    log.error("Sign verifyWithCallbackDS verify error", e);
-//                }
+                // try {
+                // String dataB64 = base64Encode(callBack.getOperationId());
+                // boolean verifyWithTsSign = verifySign(tsCert, dataB64, tsSign);
+                // log.info("verifyWithTsSign : {}", verifyWithTsSign);
+                // } catch (Exception e) {
+                // log.error("Sign verifyWithTsSign verify error", e);
+                // }
+                //
+                // try {
+                // String dataB64 = base64Encode(callBack.getOperationId());
+                // boolean verifyWithCallbackDS = verifySign(tsCert, dataB64,
+                // callBack.getDataSignature());
+                // log.info("verifyWithCallbackDS : {}", verifyWithCallbackDS);
+                // } catch (Exception e) {
+                // log.error("Sign verifyWithCallbackDS verify error", e);
+                // }
             }
         }
         return result;
@@ -359,8 +372,7 @@ public class SimaServiceImpl implements SimaService {
 
     public BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
         QRCodeWriter barcodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix
-                = barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 350, 350);
+        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 350, 350);
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
 
@@ -394,13 +406,16 @@ public class SimaServiceImpl implements SimaService {
         SimaGetFileResponse result = null;
         String tsQuery = request.getParameter("tsquery");
         if (tsQuery != null) {
-            Optional<SimaEncodedContract> optSimaContract = simaEncodedContractRepository.findByEncodedContract(tsQuery);
+            Optional<SimaEncodedContract> optSimaContract = simaEncodedContractRepository
+                    .findByEncodedContract(tsQuery);
             if (optSimaContract.isPresent()) {
                 SimaEncodedContract simaEncodedContract = optSimaContract.get();
-                if (simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {
+                if (simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo()
+                        .getType() == ContractTypeEnum.Auth) {
                     result = SimaGetFileResponse.builder()
                             .filename("challenge")
-                            .data(base64Encode(simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getOperationId()))
+                            .data(base64Encode(simaEncodedContract.getSimaContract().getSignableContainer()
+                                    .getOperationInfo().getOperationId()))
                             .build();
                 }
             }
@@ -491,21 +506,26 @@ public class SimaServiceImpl implements SimaService {
         String operationId = request.getParameter("operationId");
         String fileName = request.getParameter("fileName");
         if (operationId != null) {
-            Optional<SimaEncodedContract> optSimaContract = simaEncodedContractRepository.findByOperationId(operationId);
+            Optional<SimaEncodedContract> optSimaContract = simaEncodedContractRepository
+                    .findByOperationId(operationId);
             if (optSimaContract.isPresent()) {
                 SimaEncodedContract simaEncodedContract = optSimaContract.get();
                 try {
-                    if (simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {
+                    if (simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo()
+                            .getType() == ContractTypeEnum.Auth) {
                         result = SimaGetFileResponse.builder()
                                 .filename("challenge")
-                                .data(base64Encode(simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getOperationId()))
+                                .data(base64Encode(simaEncodedContract.getSimaContract().getSignableContainer()
+                                        .getOperationInfo().getOperationId()))
                                 .build();
                         simaEncodedContract.setStatus(ContractStatusEnum.signing);
                         simaEncodedContractRepository.save(simaEncodedContract);
-                    } else if (simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Sign) {
+                    } else if (simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo()
+                            .getType() == ContractTypeEnum.Sign) {
                         SimaCertPersonInfo person = getPersonFromCertificate(tsCert);
                         Resource file = storageService.loadAsResource(fileName);
-                        if (fileName == null || file == null || !person.getFinCode().equals(simaEncodedContract.getSimaContract().getSignableContainer().getOperationInfo().getAssignee().get(0))) {
+                        if (fileName == null || file == null || !person.getFinCode().equals(simaEncodedContract
+                                .getSimaContract().getSignableContainer().getOperationInfo().getAssignee().get(0))) {
                             throw new Exception("file not found");
                         }
 
@@ -546,21 +566,26 @@ public class SimaServiceImpl implements SimaService {
     @Override
     public AuthenticationResponse getToken(HttpServletRequest request, SimaTokenRequest simaTokenRequest) {
         String ipAddr = getClientIpAddress(request);
-        Optional<SimaEncodedContract> findSimaContract = simaEncodedContractRepository.findByOperationId(simaTokenRequest.getOperationId());
+        Optional<SimaEncodedContract> findSimaContract = simaEncodedContractRepository
+                .findByOperationId(simaTokenRequest.getOperationId());
         log.info("sima getToken findSimaContract : {}", findSimaContract);
         try {
-            // && ipAddr.equals(findSimaContract.get().getSignerIP()) 
-            if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed && oTPService.validateOTPForSima(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(), EPlatform.PHONE)) {
+            // && ipAddr.equals(findSimaContract.get().getSignerIP())
+            if (findSimaContract.isPresent() && findSimaContract.get().getStatus() == ContractStatusEnum.succesed
+                    && oTPService.validateOTPForSima(simaTokenRequest.getPhoneNumber(), simaTokenRequest.getOtpCode(),
+                            EPlatform.PHONE)) {
                 SimaEncodedContract contract = findSimaContract.get();
                 log.info("sima getToken contract : {}", contract);
                 SimaCertPersonInfo person = getPersonFromCertificate(contract.getSignerCert());
                 log.info(ipAddr + " sima getToken person : {}", person);
-                if (contract.getSimaContract().getSignableContainer().getOperationInfo().getType() == ContractTypeEnum.Auth) {
+                if (contract.getSimaContract().getSignableContainer().getOperationInfo()
+                        .getType() == ContractTypeEnum.Auth) {
                     try {
                         FullIDCardInfoResponse idCard = documentInfoService.getIdCardInfoByPin(person.getFinCode());
                         log.info("sima getToken idCard : {}", idCard);
                         person.setPhoneNumber(simaTokenRequest.getPhoneNumber());
-                        AuthenticationResponse auth = authenticationService.simaWeb2AppLogin(person, idCard, simaTokenRequest.getPassword());
+                        AuthenticationResponse auth = authenticationService.simaWeb2AppLogin(person, idCard,
+                                simaTokenRequest.getPassword());
                         log.info("sima getToken auth : {}", auth);
                         if (auth != null) {
                             contract.setTokenData(auth);
@@ -607,8 +632,8 @@ public class SimaServiceImpl implements SimaService {
                 .DataInfo(DataInfo.builder()
                         .DataURI(getDataUri
                                 .concat("?operationId=").concat(operationId)
-                                .concat("&fileName=").concat(fileName)
-                        ).build())
+                                .concat("&fileName=").concat(fileName))
+                        .build())
                 .build();
         try {
             String signableContainerStr = om.writeValueAsString(signableContainer).trim();
