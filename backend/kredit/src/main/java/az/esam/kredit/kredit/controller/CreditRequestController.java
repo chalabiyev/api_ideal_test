@@ -28,7 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
-@CrossOrigin(origins = {"*"}, maxAge = 3600)
+@CrossOrigin(origins = { "*" }, maxAge = 3600)
 @RestController
 @Validated
 @RequestMapping("/api/creditrequest")
@@ -58,7 +58,8 @@ public class CreditRequestController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/createA")
-    public ResponseEntity<CreditRequest> createAdmin(@RequestBody CreditRequestDto requestdto, Authentication authentication) throws Exception {
+    public ResponseEntity<CreditRequest> createAdmin(@RequestBody CreditRequestDto requestdto,
+            Authentication authentication) throws Exception {
         Optional<User> user = userRepository.findByUsername(requestdto.getRequestedUserPin());
         if (user.isEmpty()) {
             user = userRepository.findByPin(requestdto.getRequestedUserPin());
@@ -86,9 +87,9 @@ public class CreditRequestController {
     @PostMapping("/activate")
     public ResponseEntity<SimaQRResponse> activate(
             @RequestParam @NotBlank(message = "Kredit request id boş ola bilməz") String creditRequestId,
-            Authentication authentication
-    ) {
-        return ResponseEntity.ok(creditRequestService.activate(creditRequestId, authentication));
+            @RequestParam String redirectUrl,
+            Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.activate(creditRequestId, redirectUrl, authentication));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -127,7 +128,8 @@ public class CreditRequestController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/search")
-    public ResponseEntity<Page<CreditRequest>> search(@RequestBody CreditRequestSearchDto search, Authentication authentication) {
+    public ResponseEntity<Page<CreditRequest>> search(@RequestBody CreditRequestSearchDto search,
+            Authentication authentication) {
         return ResponseEntity.ok(creditRequestService.search(search, authentication));
     }
 
@@ -143,8 +145,10 @@ public class CreditRequestController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/countOfConfirmStatus/{confirmStatus}")
-    public ResponseEntity<Long> countOfConfirmStatus(@PathVariable String confirmStatus, Authentication authentication) {
-        return ResponseEntity.ok(creditRequestService.countOfConfirmStatus(CreditRequestStatusEnum.valueOf(confirmStatus), authentication));
+    public ResponseEntity<Long> countOfConfirmStatus(@PathVariable String confirmStatus,
+            Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService
+                .countOfConfirmStatus(CreditRequestStatusEnum.valueOf(confirmStatus), authentication));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -153,8 +157,7 @@ public class CreditRequestController {
     @GetMapping("/acceptByAdmin")
     public ResponseEntity<CreditRequest> acceptByAdmin(
             @RequestParam @NotBlank(message = "Kredit request id boş ola bilməz") String creditRequestId,
-            Authentication authentication
-    ) {
+            Authentication authentication) {
         return ResponseEntity.ok(creditRequestService.acceptByAdmin(creditRequestId, authentication));
     }
 
@@ -164,8 +167,7 @@ public class CreditRequestController {
     @GetMapping("/rejectByAdmin")
     public ResponseEntity<CreditRequest> rejectByAdmin(
             @RequestParam @NotBlank(message = "Kredit request id boş ola bilməz") String creditRequestId,
-            Authentication authentication
-    ) {
+            Authentication authentication) {
         return ResponseEntity.ok(creditRequestService.rejectByAdmin(creditRequestId, authentication));
     }
 }

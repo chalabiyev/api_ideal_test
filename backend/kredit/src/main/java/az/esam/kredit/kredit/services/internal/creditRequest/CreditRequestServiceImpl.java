@@ -15,6 +15,7 @@ import az.esam.kredit.kredit.services.external.sms.SMSService;
 import az.esam.kredit.kredit.services.sima.SimaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Value("${kabinetUrl}")
+    private String kabinetUrl;
 
     @Override
     public CreditRequest create(CreditRequest request, Authentication authentication) {
@@ -105,9 +109,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
         boolean flag = false;
         if (request.getCreditType() != null && request.getCreditType().equals(ECreditType.BELOW_500)) {
-//        Müraciətçinin 30 gündən çox gecikən aktiv krediti varsa kredit təsdiq olunmasın.
-//        Müraciətçinin yaşı məsələn 20-70 yaş aralığında olmalıdır.
-//        Müraciətçinin Rəsmi gəliri 350 manat və ondan yuxarı olsun.
+            // Müraciətçinin 30 gündən çox gecikən aktiv krediti varsa kredit təsdiq
+            // olunmasın.
+            // Müraciətçinin yaşı məsələn 20-70 yaş aralığında olmalıdır.
+            // Müraciətçinin Rəsmi gəliri 350 manat və ondan yuxarı olsun.
 
             int age = new Date().getYear() - request.getRequestedUser().getBirthDate().getYear();
             if (age < 20 || age > 70) {
@@ -130,7 +135,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
                 // muraciet tesdiqlendi sms
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
-                        .message("Sizin kredit muracietiniz təsdiqləndi, mobil nömrə və şifrə vasitəsilə aşağıdakı linkdən hesabınıza daxil olub və krediti aktivləşdirin \nhttps://kreditminimal.studentall.az/")
+                        .message(
+                                "Sizin kredit muracietiniz təsdiqləndi, mobil nömrə və şifrə vasitəsilə aşağıdakı linkdən hesabınıza daxil olub və krediti aktivləşdirin \n"
+                                        + kabinetUrl)
                         .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
                         .build());
                 creditRequestRepository.save(request);
@@ -141,7 +148,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     @Override
-    public SimaQRResponse activate(String creditRequestId, Authentication authentication) {
+    public SimaQRResponse activate(String creditRequestId, String redirectUrl, Authentication authentication) {
         var user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
@@ -150,7 +157,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 && creditRequest.getConfirmStatus() == CreditRequestStatusEnum.Accepted
                 && creditRequest.getActivateStatus() == EActivateStatus.PENDING) {
             // sign with sima
-            SimaQRResponse simaQRResponse = simaService.getAuthQR(creditRequest.getRequestedUser().getPin(), ContractTypeEnum.Sign);
+            SimaQRResponse simaQRResponse = simaService.getAuthQR(creditRequest.getRequestedUser().getPin(),
+                    redirectUrl,
+                    ContractTypeEnum.Sign);
 
             creditRequest.setActivateStatus(EActivateStatus.ACTIVATED);
             creditRequest.setFinalStatus(EFinalStatus.ACCEPTED);
@@ -161,7 +170,9 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
             // send sms to user
             smsService.sendSMSOneToN(SendSmsRequest.builder()
-                    .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit aktivləşdirildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun")
+                    .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount()
+                            + " AZN kredit aktivləşdirildi, kredit məlumatları üçün " + kabinetUrl
+                            + " saytına daxil olun")
                     .numbers(List.of(creditRequest.getRequestedUser().getPhoneNumber()))
                     .build());
             return simaQRResponse;
@@ -259,7 +270,8 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             q.addCriteria(Criteria.where("creditType").is(ECreditType.valueOf(search.getCreditType()).name()));
         }
         if (search.getConfirmStatus() != null && !search.getConfirmStatus().isEmpty()) {
-            q.addCriteria(Criteria.where("confirmStatus").is(CreditRequestStatusEnum.valueOf(search.getConfirmStatus()).name()));
+            q.addCriteria(Criteria.where("confirmStatus")
+                    .is(CreditRequestStatusEnum.valueOf(search.getConfirmStatus()).name()));
         }
         if (search.getSearch() != null && search.getSearch().trim().length() > 0) {
             if (isAdmin(usr)) {
@@ -293,7 +305,8 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             }
         }
 
-        List<CreditRequest> list = mongoTemplate.find(q.with(Sort.by(Sort.Order.desc("requestDate"))), CreditRequest.class);
+        List<CreditRequest> list = mongoTemplate.find(q.with(Sort.by(Sort.Order.desc("requestDate"))),
+                CreditRequest.class);
 
         return PageableExecutionUtils.getPage(
                 list,
@@ -305,7 +318,8 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     @Override
     public Long countOf(ECreditType creditType, Authentication auth) {
         User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
-        return isAdmin(usr) ? creditRequestRepository.countByCreditType(creditType) : creditRequestRepository.countByCreditTypeAndRequestedUser(creditType, usr);
+        return isAdmin(usr) ? creditRequestRepository.countByCreditType(creditType)
+                : creditRequestRepository.countByCreditTypeAndRequestedUser(creditType, usr);
     }
 
     @Override
@@ -320,7 +334,8 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         // send sms to user
         smsService.sendSMSOneToN(SendSmsRequest.builder()
                 .numbers(List.of(creditRequest.getRequestedUser().getPhoneNumber()))
-                .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit təsdiq edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun")
+                .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount()
+                        + " AZN kredit təsdiq edildi, kredit məlumatları üçün " + kabinetUrl + " saytına daxil olun")
                 .build());
 
         return creditRequest;
@@ -340,7 +355,8 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         // send sms to user
         smsService.sendSMSOneToN(SendSmsRequest.builder()
                 .numbers(List.of(creditRequest.getRequestedUser().getPhoneNumber()))
-                .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount() + " AZN kredit ləğv edildi, kredit məlumatları üçün https://kreditminimal.studentall.az/ saytına daxil olun")
+                .message("Sizin adınıza İdeal BOKT-da " + creditRequest.getCreditAmount()
+                        + " AZN kredit ləğv edildi, kredit məlumatları üçün " + kabinetUrl + " saytına daxil olun")
                 .build());
 
         return creditRequest;
@@ -349,6 +365,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     @Override
     public Long countOfConfirmStatus(CreditRequestStatusEnum confirmStatus, Authentication auth) {
         User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
-        return isAdmin(usr) ? creditRequestRepository.countByConfirmStatus(confirmStatus) : creditRequestRepository.countByConfirmStatusAndRequestedUser(confirmStatus, usr);
+        return isAdmin(usr) ? creditRequestRepository.countByConfirmStatus(confirmStatus)
+                : creditRequestRepository.countByConfirmStatusAndRequestedUser(confirmStatus, usr);
     }
 }

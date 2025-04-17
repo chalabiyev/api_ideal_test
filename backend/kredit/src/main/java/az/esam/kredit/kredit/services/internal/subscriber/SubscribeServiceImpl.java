@@ -25,6 +25,9 @@ public class SubscribeServiceImpl implements SubscribeService {
     @Value("${spring.mail.username}")
     private String from;
 
+    @Value("${kabinetUrl}")
+    private String kabinetUrl;
+
     @Autowired
     private SubscriberRepository subscriberRepository;
 
@@ -34,7 +37,8 @@ public class SubscribeServiceImpl implements SubscribeService {
     @Autowired
     CampaignRepository campaignRepository;
 
-    public static final String url = "https://kreditlanding.studentall.az";
+    @Value("${landingUrl}")
+    private String url;
 
     @Override
     public boolean subscribe(SubscribeRequest request) throws BadRequestException {
@@ -77,8 +81,7 @@ public class SubscribeServiceImpl implements SubscribeService {
                 from,
                 email,
                 "Wunderkingə xoş gəldiniz!",
-                subscribeHtmlContent
-        );
+                subscribeHtmlContent);
     }
 
     private void sendUnsubscribeEmail(String email) throws BadRequestException {
@@ -86,8 +89,7 @@ public class SubscribeServiceImpl implements SubscribeService {
                 from,
                 email,
                 "Abunəlikdən çıxmısınız",
-                unSubscribeHtmlContent
-        );
+                unSubscribeHtmlContent(url));
     }
 
     @Override
@@ -101,19 +103,23 @@ public class SubscribeServiceImpl implements SubscribeService {
                     "<head>" +
                     "<style>" +
                     "body {font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;}" +
-                    ".container {max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 5px;}" +
-                    ".header {background-color: #007BFF; padding: 20px; color: white; text-align: center; font-size: 24px;}" +
+                    ".container {max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 5px;}"
+                    +
+                    ".header {background-color: #007BFF; padding: 20px; color: white; text-align: center; font-size: 24px;}"
+                    +
                     ".content {padding: 20px; font-size: 16px; color: #333333;}" +
-                    ".footer {background-color: #f4f4f4; text-align: center; padding: 10px; font-size: 12px; color: #888888;}" +
+                    ".footer {background-color: #f4f4f4; text-align: center; padding: 10px; font-size: 12px; color: #888888;}"
+                    +
                     "</style>" +
                     "</head>" +
                     "<body>" +
                     "<div class='container'>" +
                     "<div class='header'>Yeni kampaniya: " + campaign.getTitle() + "</div>" +
                     "<div class='content'>" +
-                    "<p>" + (campaign.getDescription().length() > 50 ?
-                    campaign.getDescription().substring(0, 50) + "..." :
-                    campaign.getDescription()) + "</p>" +
+                    "<p>"
+                    + (campaign.getDescription().length() > 50 ? campaign.getDescription().substring(0, 50) + "..."
+                            : campaign.getDescription())
+                    + "</p>" +
                     "<p><a href='" + url + "/kampaniyalar/" + campaign.getId() + "'>Read More</a></p>" +
                     "</div>" +
                     "<div class='footer'>" +
@@ -135,8 +141,7 @@ public class SubscribeServiceImpl implements SubscribeService {
                             log.error("Error sending email to {}", subscriber.getEmail());
                             throw new RuntimeException(e);
                         }
-                    }
-            );
+                    });
 
             campaign.setSubscriptionMailSent(true);
             campaignRepository.save(campaign);

@@ -140,7 +140,7 @@ public class SimaServiceImpl implements SimaService {
     }
 
     @Override
-    public SimaQRResponse getAuthQR(String finCode, ContractTypeEnum contractType) {
+    public SimaQRResponse getAuthQR(String finCode, String redirectUrl, ContractTypeEnum contractType) {
 
         // try {
         // String hmactest = hmacSHA256(masterKey,
@@ -219,6 +219,7 @@ public class SimaServiceImpl implements SimaService {
                 .ClientName(clientName)
                 .IconURI(iconUri)
                 .Callback(callBackUri)
+                .RedirectURI(redirectUrl)
                 .build();
         SignableContainer signableContainer = SignableContainer.builder()
                 .ProtoInfo(protoInfo)
@@ -603,7 +604,7 @@ public class SimaServiceImpl implements SimaService {
     }
 
     @Override
-    public SimaQRResponse getPdfQR(String fileName, String finCode) {
+    public SimaQRResponse getPdfQR(String fileName, String redirectUrl, String finCode) {
         String result = "";
         Calendar c = Calendar.getInstance();
         Date now = new Date();
@@ -624,6 +625,7 @@ public class SimaServiceImpl implements SimaService {
                 .ClientName(clientName)
                 .IconURI(iconUri)
                 .Callback(callBackUri)
+                .RedirectURI(redirectUrl)
                 .build();
         SignableContainer signableContainer = SignableContainer.builder()
                 .ProtoInfo(protoInfo)

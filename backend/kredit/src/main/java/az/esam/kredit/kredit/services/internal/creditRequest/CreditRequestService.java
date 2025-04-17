@@ -14,7 +14,7 @@ public interface CreditRequestService {
 
     CreditRequest create(CreditRequest request, Authentication authentication);
 
-    SimaQRResponse activate(String creditRequestId, Authentication authentication);
+    SimaQRResponse activate(String creditRequestId, String redirectUrl, Authentication authentication);
 
     CreditRequest update(CreditRequest request);
 

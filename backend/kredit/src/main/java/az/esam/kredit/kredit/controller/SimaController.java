@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@CrossOrigin(origins = {"*"}, maxAge = 3600)
+@CrossOrigin(origins = { "*" }, maxAge = 3600)
 @RestController
 @RequestMapping("/api/sima")
 public class SimaController {
@@ -23,15 +23,17 @@ public class SimaController {
 
     @GetMapping("/getAuthQR")
     public ResponseEntity<SimaQRResponse> getAuthQR(
+            @RequestParam(required = false) String redirectUrl,
             HttpServletRequest httpRequest) {
-        return ResponseEntity.ok(simaService.getAuthQR(null, ContractTypeEnum.Auth));
+        return ResponseEntity.ok(simaService.getAuthQR(null, redirectUrl, ContractTypeEnum.Auth));
     }
 
     @GetMapping("/getAuthQRWithPin/{finCode}")
     public ResponseEntity<SimaQRResponse> getAuthQRWithPin(
             HttpServletRequest httpRequest,
-            @PathVariable("finCode") String finCode) {
-        return ResponseEntity.ok(simaService.getAuthQR(finCode, ContractTypeEnum.Auth));
+            @PathVariable("finCode") String finCode,
+            @RequestParam(required = false) String redirectUrl) {
+        return ResponseEntity.ok(simaService.getAuthQR(finCode, redirectUrl, ContractTypeEnum.Auth));
     }
 
     @GetMapping("/getFile")
@@ -56,16 +58,14 @@ public class SimaController {
     @GetMapping("/getStatus/{operationId}")
     public ResponseEntity<ContractStatusEnum> getContractStatusByOperationId(
             HttpServletRequest httpRequest,
-            @PathVariable(required = true, name = "operationId")
-            @NotBlank(message = "OperationId boş ola bilməz") String operationId) {
+            @PathVariable(required = true, name = "operationId") @NotBlank(message = "OperationId boş ola bilməz") String operationId) {
         return ResponseEntity.ok(simaService.getContractStatusByOperationId(operationId));
     }
 
     @PostMapping("/getToken")
     public ResponseEntity<AuthenticationResponse> getToken(
             HttpServletRequest httpRequest,
-            @Valid @RequestBody SimaTokenRequest request
-    ) {
+            @Valid @RequestBody SimaTokenRequest request) {
         return ResponseEntity.ok(simaService.getToken(httpRequest, request));
     }
 
@@ -73,8 +73,9 @@ public class SimaController {
     public ResponseEntity<SimaQRResponse> getPdfQR(
             HttpServletRequest httpRequest,
             @PathVariable("fileName") String fileName,
-            @PathVariable("finCode") String finCode) {
-        return ResponseEntity.ok(simaService.getPdfQR(fileName, finCode));
+            @PathVariable("finCode") String finCode,
+            @RequestParam(required = false) String redirectUrl) {
+        return ResponseEntity.ok(simaService.getPdfQR(fileName, finCode, redirectUrl));
     }
 
 }
