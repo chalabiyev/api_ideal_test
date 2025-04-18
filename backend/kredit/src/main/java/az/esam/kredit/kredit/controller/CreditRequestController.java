@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,6 +50,12 @@ public class CreditRequestController {
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/create")
     public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {
+
+        // FIXME : Cihan : Remove before live
+        if (!request.getPhoneNumber().contains("504809988")) {
+            return ResponseEntity.internalServerError().build();
+        }
+
         var user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         request.setRequestedUser(user);
