@@ -105,7 +105,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             request.setCreditType(ECreditType.BELOW_500);
         }
 
-        creditRequestRepository.insert(request);
+        request = creditRequestRepository.insert(request);
 
         boolean flag = false;
         if (request.getCreditType() != null && request.getCreditType().equals(ECreditType.BELOW_500)) {
