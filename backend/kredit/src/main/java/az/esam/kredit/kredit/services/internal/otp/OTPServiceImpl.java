@@ -1,17 +1,11 @@
 package az.esam.kredit.kredit.services.internal.otp;
 
-import az.esam.kredit.kredit.dtos.requests.*;
-import az.esam.kredit.kredit.dtos.responses.sms.SmsResponse;
-import az.esam.kredit.kredit.entities.enums.EPlatform;
-import az.esam.kredit.kredit.entities.enums.EUserStatus;
-import az.esam.kredit.kredit.services.external.email.EmailService;
-import az.esam.kredit.kredit.entities.OTPRecord;
-import az.esam.kredit.kredit.entities.User;
-import az.esam.kredit.kredit.repositories.OTPRepository;
-import az.esam.kredit.kredit.repositories.UserRepository;
-import az.esam.kredit.kredit.services.external.sms.SMSService;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +14,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import az.esam.kredit.kredit.dtos.requests.ChangeEmailRequest;
+import az.esam.kredit.kredit.dtos.requests.ChangePasswordRequest;
+import az.esam.kredit.kredit.dtos.requests.ChangePhoneRequest;
+import az.esam.kredit.kredit.dtos.requests.OTPRequest;
+import az.esam.kredit.kredit.dtos.requests.PasswordResetRequest;
+import az.esam.kredit.kredit.dtos.requests.SendSmsRequest;
+import az.esam.kredit.kredit.dtos.responses.sms.SmsResponse;
+import az.esam.kredit.kredit.entities.OTPRecord;
+import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.enums.EPlatform;
+import az.esam.kredit.kredit.entities.enums.EUserStatus;
+import az.esam.kredit.kredit.repositories.OTPRepository;
+import az.esam.kredit.kredit.repositories.UserRepository;
+import az.esam.kredit.kredit.services.external.email.EmailService;
+import az.esam.kredit.kredit.services.external.sms.SMSService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -50,6 +60,20 @@ public class OTPServiceImpl implements OTPService {
             if (request.getContact() == null) {
                 throw new BadRequestException("Contact is required");
             }
+            Date now = new Date();
+            Date startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            Date endDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+            // Günde sadece bir defa OTP gönderme kontrolü
+            if (platform.equals(EPlatform.PHONE.name()) && !request.getContact().contains("504809988")) {
+                if (otpRepository.countByPhoneAndSendDateBetween(request.getContact(), startDate, endDate) > 0) {
+                    throw new BadRequestException("An OTP has already been sent to this contact today.");
+                }
+            } else if (platform.equals(EPlatform.EMAIL.name())) {
+                if (otpRepository.countByEmailAndSendDateBetween(request.getContact(), startDate, endDate) > 0) {
+                    throw new BadRequestException("An OTP has already been sent to this contact today.");
+                }
+            }
 
             String otpCode = createOtpCode();
 
@@ -66,9 +90,13 @@ public class OTPServiceImpl implements OTPService {
 
             if (platform.equals(EPlatform.PHONE.name())) {
                 otpRecord.setPhone(request.getContact());
+
+                // SMS bakiyesi kontrolü
                 if (smsService.getSMSBalance() <= 0) {
                     throw new BadRequestException("SMS balance is empty");
                 }
+
+                // Telefon numarasını temizleme ve formatlama
                 request.setContact(request.getContact()
                         .replace("(", "")
                         .replace(")", "")
@@ -78,12 +106,15 @@ public class OTPServiceImpl implements OTPService {
                 if (!request.getContact().substring(0, 3).equals("994")) {
                     request.setContact("994" + request.getContact());
                 }
+
+                // SMS gönderme işlemi
                 List<SmsResponse> response = smsService.sendSMSOneToN(
                         SendSmsRequest.builder()
                                 .message("Your OTP code is: " + otpCode)
                                 .numbers(List.of(request.getContact()))
                                 .build());
                 boolean result = response != null && !response.isEmpty() && response.get(0).getCharge() == 1;
+
                 if (result) {
                     otpRepository.insert(otpRecord);
                 }
@@ -91,6 +122,7 @@ public class OTPServiceImpl implements OTPService {
             } else if (platform.equals(EPlatform.EMAIL.name())) {
                 otpRecord.setEmail(request.getContact());
 
+                // E-posta gönderme işlemi
                 if (emailService.sendEmail(from, request.getContact(), "OTP Code", otpCode)) {
                     otpRepository.insert(otpRecord);
                     return true;
@@ -146,7 +178,7 @@ public class OTPServiceImpl implements OTPService {
 
             if (otpRecord.isEmpty()) {
                 throw new BadRequestException("OTP record not found");
-            }          
+            }
 
             boolean result = passwordEncoder.matches(otpCode, otpRecord.get().getOtpCode());
             log.info("validateOTPForSima result : {}", result);
@@ -162,15 +194,15 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform) throws BadRequestException {
+    public boolean resetPassword(PasswordResetRequest request, HttpServletRequest httpRequest, String platform)
+            throws BadRequestException {
         if (platform.equals(EPlatform.PHONE.name())) {
             request.setContact(request.getContact()
                     .replace("(", "")
                     .replace(")", "")
                     .replace(" ", "")
                     .replace("-", "")
-                    .replace("+", "")
-            );
+                    .replace("+", ""));
             if (!request.getContact().startsWith("994")) {
                 request.setContact("994" + request.getContact());
             }
@@ -178,9 +210,9 @@ public class OTPServiceImpl implements OTPService {
         try {
             User user = platform.equals(EPlatform.PHONE.name())
                     ? userRepository.findByPhoneNumber(request.getContact())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"))
+                            .orElseThrow(() -> new UsernameNotFoundException("User not found"))
                     : userRepository.findByEmail(request.getContact())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (request.getNewPassword().equals(request.getPassword())) {
                 if (validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform))) {
@@ -199,7 +231,8 @@ public class OTPServiceImpl implements OTPService {
     }
 
     @Override
-    public boolean changePassword(ChangePasswordRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException {
+    public boolean changePassword(ChangePasswordRequest request, HttpServletRequest httpRequest,
+            Authentication authentication) throws BadRequestException {
         try {
             var user = userRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
