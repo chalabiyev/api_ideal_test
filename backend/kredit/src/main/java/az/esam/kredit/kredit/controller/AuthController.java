@@ -44,7 +44,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Slf4j
-@CrossOrigin(origins = {"*"}, maxAge = 3600)
+@CrossOrigin(origins = { "*" }, maxAge = 3600)
 @RestController
 @Validated
 @RequestMapping("/api/auth")
@@ -110,8 +110,7 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> create(
             @Valid @RequestBody RegisterRequest registerRequest,
             HttpServletRequest httpRequest,
-            Authentication authentication
-    ) throws BadRequestException {
+            Authentication authentication) throws BadRequestException {
         AuthenticationResponse response = authenticationService.register(registerRequest, authentication);
         return ResponseEntity.ok(response);
     }
@@ -120,8 +119,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<AuthenticationResponse> login(
             @Valid @RequestBody LoginRequest loginRequest,
-            HttpServletRequest httpRequest
-    ) {
+            HttpServletRequest httpRequest) {
         AuthenticationResponse response = authenticationService.authenticate(loginRequest);
         return ResponseEntity.ok(response);
     }
@@ -132,8 +130,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<?> refreshToken(
             HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
+            HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
         return ResponseEntity.status(200).body("Token refreshed successfully");
     }
@@ -197,7 +194,8 @@ public class AuthController {
             @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
             HttpServletRequest httpRequest) throws BadRequestException {
         request.setIpAddress(Helper.getClientIpAddress(httpRequest));
-        if (otpService.validateOTP(request.getContact(), request.getOtpCode(), EPlatform.valueOf(platform.toUpperCase()))) {
+        if (otpService.validateOTP(request.getContact(), request.getOtpCode(),
+                EPlatform.valueOf(platform.toUpperCase()))) {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(true);
@@ -213,8 +211,7 @@ public class AuthController {
     public ResponseEntity<Boolean> changePassword(
             @Valid @RequestBody ChangePasswordRequest request,
             Authentication authentication,
-            HttpServletRequest httpRequest
-    ) throws BadRequestException {
+            HttpServletRequest httpRequest) throws BadRequestException {
         if (otpService.changePassword(request, httpRequest, authentication)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -231,8 +228,7 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> setPassword(
             @Valid @RequestBody SetPasswordRequest request,
             Authentication authentication,
-            HttpServletRequest httpRequest
-    ) throws BadRequestException {
+            HttpServletRequest httpRequest) throws BadRequestException {
         return ResponseEntity.ok(authenticationService.setPassword(request, httpRequest, authentication));
     }
 
@@ -242,8 +238,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<Boolean> changeEmail(
             @Valid @RequestBody ChangeEmailRequest request,
-            HttpServletRequest httpRequest
-    ) throws BadRequestException {
+            HttpServletRequest httpRequest) throws BadRequestException {
         if (otpService.changeEmail(request, httpRequest)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -260,8 +255,7 @@ public class AuthController {
     public ResponseEntity<Boolean> changeFullName(
             @Valid @RequestBody ChangeNameRequest request,
             Authentication authentication,
-            HttpServletRequest httpRequest
-    ) throws BadRequestException {
+            HttpServletRequest httpRequest) throws BadRequestException {
         if (authenticationService.changeName(request, httpRequest, authentication)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -277,8 +271,7 @@ public class AuthController {
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<Boolean> changePhone(
             @Valid @RequestBody ChangePhoneRequest request,
-            HttpServletRequest httpRequest
-    ) throws BadRequestException {
+            HttpServletRequest httpRequest) throws BadRequestException {
         if (otpService.changePhone(request, httpRequest)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -293,8 +286,7 @@ public class AuthController {
     public ResponseEntity<Boolean> resetPassword(
             @Valid @RequestBody PasswordResetRequest request,
             @RequestParam @NotBlank(message = "Platforma tipi boş ola bilməz") String platform,
-            HttpServletRequest httpRequest
-    ) throws BadRequestException {
+            HttpServletRequest httpRequest) throws BadRequestException {
         if (otpService.resetPassword(request, httpRequest, platform.toUpperCase())) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -383,8 +375,7 @@ public class AuthController {
     @SecurityRequirement(name = "authentication")
     public ResponseEntity<Page<User>> findAllUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(authenticationService.findAllUsers(page, size));
     }
 
@@ -393,8 +384,7 @@ public class AuthController {
     @SecurityRequirement(name = "authentication")
     public ResponseEntity<Page<User>> listPartnerUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(authenticationService.findAllPartnerUsers(page, size));
     }
 
@@ -403,8 +393,7 @@ public class AuthController {
     @SecurityRequirement(name = "authentication")
     public ResponseEntity<Page<User>> findAllManagements(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(authenticationService.findManagementUsers(page, size));
     }
 
@@ -415,8 +404,7 @@ public class AuthController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String role,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         return authenticationService.filterUsers(search, role, page, size);
     }
 }
