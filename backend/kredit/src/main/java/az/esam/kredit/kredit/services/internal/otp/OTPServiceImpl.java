@@ -64,6 +64,10 @@ public class OTPServiceImpl implements OTPService {
             Date startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
             Date endDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
+            if (!request.getContact().contains("504809988")) {
+                throw new BadRequestException("Contact is required");
+            }
+
             // Günde sadece bir defa OTP gönderme kontrolü
             if (platform.equals(EPlatform.PHONE.name()) && !request.getContact().contains("504809988")) {
                 if (otpRepository.countByPhoneAndSendDateBetween(request.getContact(), startDate, endDate) > 0) {
