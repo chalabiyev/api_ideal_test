@@ -4,6 +4,9 @@ import az.esam.kredit.kredit.entities.CreditRequest;
 import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.entities.enums.CreditRequestStatusEnum;
 import az.esam.kredit.kredit.entities.enums.ECreditType;
+
+import java.util.Optional;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface CreditRequestRepository extends MongoRepository<CreditRequest, String> {
@@ -18,4 +21,5 @@ public interface CreditRequestRepository extends MongoRepository<CreditRequest, 
 
     public long countByConfirmStatusAndRequestedUser(CreditRequestStatusEnum confirmStatus, User requestedUser);
 
+    public Optional<CreditRequest> findOneByRequestedUserOrderByRequestDateDesc(User requestedUser);
 }

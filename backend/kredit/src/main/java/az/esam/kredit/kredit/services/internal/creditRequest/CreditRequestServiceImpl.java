@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -91,12 +93,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         request.setConfirmStatus(CreditRequestStatusEnum.Requested);
         request.setActivateStatus(EActivateStatus.PENDING);
 
-        // muracite baxilir sms
-        smsService.sendSMSOneToN(SendSmsRequest.builder()
-                .message("Sizin kredit muracietiniz qebul olundu, tezliklə sizə status barədə məlumat veriləcək")
-                .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
-                .build());
-
         if (request.getPartner() != null) {
             request.setCreditType(ECreditType.PARTNER_CREDIT);
         } else if (request.getCreditAmount() > 500d) {
@@ -105,43 +101,72 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             request.setCreditType(ECreditType.BELOW_500);
         }
 
-        request = creditRequestRepository.insert(request);
-
         boolean flag = false;
-        if (request.getCreditType() != null && request.getCreditType().equals(ECreditType.BELOW_500)) {
-            // Müraciətçinin 30 gündən çox gecikən aktiv krediti varsa kredit təsdiq
-            // olunmasın.
-            // Müraciətçinin yaşı məsələn 20-70 yaş aralığında olmalıdır.
-            // Müraciətçinin Rəsmi gəliri 350 manat və ondan yuxarı olsun.
+        if (request.getCreditType() == null) {
+            throw new RuntimeException("Credit type is null");
+        }
+        String rejectMessage = "Hormətli müştəri, hazırda daxili şərtlərə uyğun olaraq sizə kredit rəsmiləşdirilə bilməz";
+        // Müraciətçinin 30 gündən çox gecikən aktiv krediti varsa kredit təsdiq
+        // olunmasın.
+        // Müraciətçinin yaşı məsələn 20-70 yaş aralığında olmalıdır.
+        // Müraciətçinin Rəsmi gəliri 350 manat və ondan yuxarı olsun.
+        int age = new Date().getYear() - request.getRequestedUser().getBirthDate().getYear();
+        if (age < 20 || age > 70) {
+            request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
+            request.setConfirmerComment("Yaş limiti 20-70 aralığında olmalıdır");
+            creditRequestRepository.save(request);
+            flag = true;
+            smsService.sendSMSOneToN(SendSmsRequest.builder()
+                    .message(
+                            rejectMessage)
+                    .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
+                    .build());
+            return request;
+        }
 
-            int age = new Date().getYear() - request.getRequestedUser().getBirthDate().getYear();
-            if (age < 20 || age > 70) {
+        if (request.getRequestedUser().getSalary() < 350) {
+            request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
+            request.setConfirmerComment("Rəsmi gəlir 350 manatdan aşağı olmamalıdır");
+            creditRequestRepository.save(request);
+            flag = true;
+            smsService.sendSMSOneToN(SendSmsRequest.builder()
+                    .message(
+                            rejectMessage)
+                    .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
+                    .build());
+            return request;
+        }
+
+        Optional<CreditRequest> credit = creditRequestRepository
+                .findOneByRequestedUserOrderByRequestDateDesc(request.getRequestedUser());
+
+        if (credit.isPresent()) {
+            Date requestDate = credit.get().getRequestDate();
+            long diff = new Date().getTime() - requestDate.getTime();
+            if (diff < 2592000000L) {
                 request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
-                request.setConfirmerComment("Yaş limiti 20-70 aralığında olmalıdır");
+                request.setConfirmerComment("Müraciətçinin 30 gün gecikməsi olmamalıdır");
                 creditRequestRepository.save(request);
                 flag = true;
-            }
-
-            if (request.getRequestedUser().getSalary() < 350) {
-                request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
-                request.setConfirmerComment("Rəsmi gəlir 350 manatdan aşağı olmamalıdır");
-                creditRequestRepository.save(request);
-                flag = true;
-            }
-
-            // TODO check if user has active credit
-            if (!flag) {
-                request.setConfirmStatus(CreditRequestStatusEnum.Accepted);
-
-                // muraciet tesdiqlendi sms
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
                         .message(
-                                "Sizin kredit muracietiniz təsdiqləndi, mobil nömrə və şifrə vasitəsilə aşağıdakı linkdən hesabınıza daxil olub və krediti aktivləşdirin \n"
-                                        + kabinetUrl)
+                                rejectMessage)
                         .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
                         .build());
-                creditRequestRepository.save(request);
+                return request;
             }
+        }
+
+        if (!flag) {
+            request.setConfirmStatus(CreditRequestStatusEnum.Accepted);
+            // muraciet tesdiqlendi sms
+            smsService.sendSMSOneToN(SendSmsRequest.builder()
+                    .message(
+                            "Sizin kredit muracietiniz təsdiqləndi, mobil nömrə və şifrə vasitəsilə aşağıdakı linkdən hesabınıza daxil olub və krediti aktivləşdirin \n"
+                                    + kabinetUrl)
+                    .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
+                    .build());
+            creditRequestRepository.save(request);
         }
 
         return request;
