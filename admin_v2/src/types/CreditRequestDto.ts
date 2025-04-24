@@ -104,6 +104,14 @@ export interface CreditRequestDto {
   category?: string;
   detail?: string;
   partner?: Partner;
+  creditDetails?: {
+    storeName: string;
+    operationType: 'məhsul' | 'xidmət';
+    productName: string;
+    creditTerm: number;
+    cashPrice: number;
+    creditAmount: number;
+  };
 }
 
 export interface User {

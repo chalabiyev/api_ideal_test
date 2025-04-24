@@ -235,7 +235,16 @@ export default function Page() {
     requestDate: new Date(),
     decisionQueryEnabled: false,
     guarantors: [],
-    // --------------------recurit ---------------------------recurit ------------------------------recurit --------------
+    // Yeni əlavə edilən credit details
+    creditDetails: {
+      storeName: 'Kapital Bank',
+      operationType: 'xidmət',
+      productName: 'iPhone 15 Pro',
+      creditTerm: 12,
+      cashPrice: 3000,
+      creditAmount: 3750, // 3000 + (3000 * 25%)
+    },
+    // --------------------recurit ---------------------
     recruiter: {
       active: [
         {
