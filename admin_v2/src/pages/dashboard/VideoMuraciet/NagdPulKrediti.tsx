@@ -20,7 +20,10 @@ import PensionerTab from './PensionerTab';
 import TabAKB from 'src/components/NewCredit/TabAKB';
 import { AKB_STATE_TYPE } from './types';
 import { getPartnerById } from 'src/api/PartnerService';
-import TabRelatedPersons, { FamilyInfo, Person } from 'src/components/NewCredit/TabFamilyInformationPartner';
+import TabRelatedPersons, {
+  FamilyInfo,
+  Person,
+} from 'src/components/NewCredit/TabFamilyInformationPartner';
 
 // ----------------------------------------------------------------------
 
@@ -233,6 +236,18 @@ export default function Page() {
       creditTerm: 12,
       cashPrice: 3000,
       creditAmount: 3750, // 3000 + (3000 * 25%)
+      // Yeni əlavə edilən sahələr
+      category: 'aksessuar',
+      detail: '',
+      creditAmountInput: 0,
+      annualPercent: 0,
+      monthlyPayment: 0,
+      totalPayment: 0,
+      cardCost: 0,
+      valuationCost: 0,
+      insuranceCost: 0,
+      creditPurpose: '',
+      decisionQueryEnabled: false,
     },
     // --------------------recurit ---------------------------recurit ------------------------------recurit --------------
     recruiter: {
@@ -585,6 +600,7 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="8">
+              {/* kredit ver  */}
               <TabCreditDataPage
                 setValue={setValue}
                 creditRequest={creditRequest}

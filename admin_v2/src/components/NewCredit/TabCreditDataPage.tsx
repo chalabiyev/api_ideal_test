@@ -40,9 +40,13 @@ const TabCreditDataPage = ({
 
   return (
     <Box sx={{ py: 4 }}>
-      <Typography variant="h6" gutterBottom>
-        Qaimə məlumatları
-      </Typography>
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6" gutterBottom sx={{ marginBottom: '20px' }}>
+            Qaimə məlumatları
+          </Typography>
+        </Grid>
+      </Grid>
 
       <Grid container spacing={4}>
         {/* Mağaza adı */}
@@ -136,6 +140,16 @@ const TabCreditDataPage = ({
             label="Məhsulun kateqoriyası"
             name="category"
             fullWidth
+            value={creditRequest?.creditDetails?.category || ''}
+            onChange={(e) =>
+              setCreditRequest({
+                ...creditRequest,
+                creditDetails: {
+                  ...creditRequest.creditDetails,
+                  category: e.target.value,
+                },
+              })
+            }
             SelectProps={{
               native: true,
             }}
@@ -152,7 +166,6 @@ const TabCreditDataPage = ({
             <option value="texnika">Məişət texnikası</option>
             <option value="mebel">Mebel</option>
             <option value="oyuncaq">Oyuncaq və hobbi</option>
-            <option value="">Seçin</option>
             <option value="telefon">Telefon və planşet</option>
             <option value="komputer">Komputer və laptop</option>
             <option value="saat">Saat və zərgərlik</option>
@@ -168,64 +181,228 @@ const TabCreditDataPage = ({
             label="Detallı məlumat"
             fullWidth
             placeholder="Məsələn: Avtomobil hissəsi, model, marka və s."
+            value={creditRequest?.creditDetails?.detail || ''}
+            onChange={(e) =>
+              setCreditRequest({
+                ...creditRequest,
+                creditDetails: {
+                  ...creditRequest.creditDetails,
+                  detail: e.target.value,
+                },
+              })
+            }
           />
         </Grid>
 
         {/* Kredi Miktarı */}
         <Grid item xs={12} sm={6}>
-          <TextField label="Kredit Miqdarı (AZN)" type="number" fullWidth />
+          <TextField
+            label="Kredit Miqdarı (AZN)"
+            fullWidth
+            value={
+              creditRequest?.creditDetails?.creditAmountInput === 0
+                ? ''
+                : creditRequest?.creditDetails?.creditAmountInput || ''
+            }
+            onChange={({ target: { value } }) => {
+              if (value === '' || /^\d*$/.test(value)) {
+                setCreditRequest({
+                  ...creditRequest,
+                  creditDetails: {
+                    ...creditRequest.creditDetails,
+                    creditAmountInput: value === '' ? null : Number(value),
+                  },
+                });
+              }
+            }}
+          />
         </Grid>
 
         {/* Faiz Oranı */}
         <Grid item xs={12} sm={6}>
-          <TextField label="İllik Faiz Dərəcəsi (%)" type="number" fullWidth />
+          <TextField
+            label="İllik Faiz Dərəcəsi (%)"
+            fullWidth
+            value={
+              creditRequest?.creditDetails?.annualPercent === 0
+                ? ''
+                : creditRequest?.creditDetails?.annualPercent || ''
+            }
+            onChange={({ target: { value } }) => {
+              if (value === '' || /^\d*$/.test(value)) {
+                setCreditRequest({
+                  ...creditRequest,
+                  creditDetails: {
+                    ...creditRequest.creditDetails,
+                    annualPercent: value === '' ? null : Number(value),
+                  },
+                });
+              }
+            }}
+          />
         </Grid>
 
         {/* Kreditin Müddəti */}
         <Grid item xs={12}>
-          <Typography gutterBottom>Kreditin Müddəti: {creditRequest.creditTerm} ay</Typography>
-          <Slider valueLabelDisplay="auto" min={6} defaultValue={12} max={84} />
+          <Typography gutterBottom>
+            Kreditin Müddəti: {creditRequest?.creditDetails?.creditTerm || 0} ay
+          </Typography>
+          <Slider
+            valueLabelDisplay="auto"
+            min={6}
+            value={creditRequest?.creditDetails?.creditTerm || 12}
+            max={84}
+            onChange={(_, value) =>
+              setCreditRequest({
+                ...creditRequest,
+                creditDetails: {
+                  ...creditRequest.creditDetails,
+                  creditTerm: value as number,
+                },
+              })
+            }
+          />
         </Grid>
 
         {/* Xidmət Haqqı */}
         <Grid item xs={12}>
-          <Typography gutterBottom>Xidmət haqqı: {creditRequest.serviceRate} %</Typography>
-          <Slider valueLabelDisplay="auto" min={0.1} max={50} step={0.1} defaultValue={1.5} />
+          <Typography gutterBottom>
+            Xidmət haqqı: {creditRequest?.creditDetails?.serviceRate || 0} %
+          </Typography>
+          <Slider
+            valueLabelDisplay="auto"
+            min={0.1}
+            max={50}
+            step={0.1}
+            value={creditRequest?.creditDetails?.serviceRate || 1.5}
+            onChange={(_, value) =>
+              setCreditRequest({
+                ...creditRequest,
+                creditDetails: {
+                  ...creditRequest.creditDetails,
+                  serviceRate: value as number,
+                },
+              })
+            }
+          />
         </Grid>
 
         {/* Kart Xərci */}
         <Grid item xs={12} sm={6}>
-          <TextField label="Kart Xərci (AZN)" type="number" fullWidth />
+          <TextField
+            label="Kart Xərci (AZN)"
+            fullWidth
+            value={
+              creditRequest?.creditDetails?.cardCost === 0
+                ? ''
+                : creditRequest?.creditDetails?.cardCost || ''
+            }
+            onChange={({ target: { value } }) => {
+              if (value === '' || /^\d*$/.test(value)) {
+                setCreditRequest({
+                  ...creditRequest,
+                  creditDetails: {
+                    ...creditRequest.creditDetails,
+                    cardCost: value === '' ? null : Number(value),
+                  },
+                });
+              }
+            }}
+          />
         </Grid>
 
         {/* Qiymətləndirmə Xərci */}
         <Grid item xs={12} sm={6}>
-          <TextField label="Qiymətləndirmə Xərci (AZN)" type="number" fullWidth />
+          <TextField
+            label="Qiymətləndirmə Xərci (AZN)"
+            fullWidth
+            value={
+              creditRequest?.creditDetails?.valuationCost === 0
+                ? ''
+                : creditRequest?.creditDetails?.valuationCost || ''
+            }
+            onChange={({ target: { value } }) => {
+              if (value === '' || /^\d*$/.test(value)) {
+                setCreditRequest({
+                  ...creditRequest,
+                  creditDetails: {
+                    ...creditRequest.creditDetails,
+                    valuationCost: value === '' ? null : Number(value),
+                  },
+                });
+              }
+            }}
+          />
         </Grid>
 
         {/* Sığorta Xərci */}
         <Grid item xs={12}>
-          <Typography gutterBottom>Sığorta xərci: {creditRequest.insuranceCost} %</Typography>
-          <Slider valueLabelDisplay="auto" min={0.1} max={10} step={0.1} defaultValue={1} />
+          <Typography gutterBottom>
+            Sığorta xərci: {creditRequest?.creditDetails?.insuranceCost || 0} %
+          </Typography>
+          <Slider
+            valueLabelDisplay="auto"
+            min={0.1}
+            max={10}
+            step={0.1}
+            value={creditRequest?.creditDetails?.insuranceCost || 1}
+            onChange={(_, value) =>
+              setCreditRequest({
+                ...creditRequest,
+                creditDetails: {
+                  ...creditRequest.creditDetails,
+                  insuranceCost: value as number,
+                },
+              })
+            }
+          />
         </Grid>
 
         {/* Aylıq Ödəniş */}
         <Grid item xs={12} sm={6}>
-          <TextField label="Aylıq Ödəniş (AZN)" fullWidth disabled />
+          <TextField
+            label="Aylıq Ödəniş (AZN)"
+            fullWidth
+            value={
+              creditRequest?.creditDetails?.monthlyPayment === 0
+                ? ''
+                : creditRequest?.creditDetails?.monthlyPayment || ''
+            }
+            onChange={({ target: { value } }) => {
+              if (value === '' || /^\d*$/.test(value)) {
+                setCreditRequest({
+                  ...creditRequest,
+                  creditDetails: {
+                    ...creditRequest.creditDetails,
+                    monthlyPayment: value === '' ? null : Number(value),
+                  },
+                });
+              }
+            }}
+          />
         </Grid>
 
         {/* Cəmi Ödəniş */}
         <Grid item xs={12} sm={6}>
-          <TextField label="Cəmi Ödəniləcək Məbləğ (AZN)" fullWidth disabled />
-        </Grid>
-
-        {/* Karta Gedən Məbləğ */}
-        <Grid item xs={12} sm={6}>
           <TextField
-            label="Karta Gedən Məbləğ (AZN)"
-            value={creditRequest.cartCost}
+            label="Cəmi Ödəniləcək Məbləğ (AZN)"
             fullWidth
-            disabled
+            value={
+              creditRequest?.creditDetails?.totalPayment === 0
+                ? ''
+                : creditRequest?.creditDetails?.totalPayment || ''
+            }
+            onChange={({ target: { value } }) => {
+              if (value === '' || /^\d*$/.test(value)) {
+                setCreditRequest({
+                  ...creditRequest,
+                  creditDetails: {
+                    ...creditRequest.creditDetails,
+                    totalPayment: value === '' ? null : Number(value),
+                  },
+                });
+              }
+            }}
           />
         </Grid>
 
@@ -235,8 +412,16 @@ const TabCreditDataPage = ({
             label="Krediti almaq üçün məqsəd"
             multiline
             rows={4}
-            value={creditRequest.creditPurpose}
-            onChange={(e) => setCreditRequest({ ...creditRequest, creditPurpose: e.target.value })}
+            value={creditRequest?.creditDetails?.creditPurpose || ''}
+            onChange={(e) =>
+              setCreditRequest({
+                ...creditRequest,
+                creditDetails: {
+                  ...creditRequest.creditDetails,
+                  creditPurpose: e.target.value,
+                },
+              })
+            }
             fullWidth
           />
         </Grid>
@@ -246,11 +431,14 @@ const TabCreditDataPage = ({
           <FormControlLabel
             control={
               <Switch
-                checked={creditRequest.decisionQueryEnabled}
+                checked={creditRequest?.creditDetails?.decisionQueryEnabled || false}
                 onChange={() =>
                   setCreditRequest({
                     ...creditRequest,
-                    decisionQueryEnabled: !creditRequest.decisionQueryEnabled,
+                    creditDetails: {
+                      ...creditRequest.creditDetails,
+                      decisionQueryEnabled: !creditRequest.creditDetails?.decisionQueryEnabled,
+                    },
                   })
                 }
               />
