@@ -20,6 +20,12 @@ export interface EsamVideoCallOperatorProp {
   outgoingChatMessage?: any;
   setOutgoingChatMessage?: any;
   setClientUUID: any;
+  invoiceType?: string;
+  setInvoiceType?: any;
+  itemName?: string;
+  setItemName?: any;
+  creditDuration?: string;
+  setCreditDuration?: any;
 }
 
 const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
@@ -174,6 +180,15 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
       const { partnerId } = s;
       prop.setPartnerId(partnerId);
       prop.partnerId = partnerId;
+    }
+    if (s.invoiceType && s.itemName && s.creditDuration) {
+      const { invoiceType, itemName, creditDuration } = s;
+      prop.setInvoiceType(invoiceType);
+      prop.invoiceType = invoiceType;
+      prop.setItemName(itemName);
+      prop.itemName = itemName;
+      prop.setCreditDuration(creditDuration);
+      prop.creditDuration = creditDuration;
     }
   };
 

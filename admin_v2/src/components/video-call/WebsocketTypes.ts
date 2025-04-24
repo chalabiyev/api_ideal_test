@@ -21,4 +21,7 @@ export interface SignalType {
     sdp?: string;
     candidate?: RTCIceCandidate | null;
     msg?: string;
+    invoiceType?: string;
+    itemName?: string;
+    creditDuration?: string;
 }

@@ -184,6 +184,9 @@ export default function Page() {
   const clientId: string = queryParams.get('clientId') ?? '';
   const operatorId: string = queryParams.get('operatorId') ?? '';
   const partnerId: string = queryParams.get('partnerId') ?? '';
+  const invoiceType: string = queryParams.get('invoiceType') ?? '';
+  const itemName: string = queryParams.get('itemName') ?? '';
+  const creditDuration: string = queryParams.get('creditDuration') ?? '';
 
   // tab changes
   const [value, setValue] = React.useState('1');
@@ -376,7 +379,7 @@ export default function Page() {
       let newCreditRequest = { ...creditRequest, requestedUserPin: userData.username, phoneNumber: userData.phoneNumber, requestDate: new Date(), spouses: [] };
       if (partnerId) {
         let partner = await getPartnerById(partnerId);
-        if (partner) newCreditRequest = { ...newCreditRequest, partner: partner };
+        if (partner) newCreditRequest = { ...newCreditRequest, partner: partner  };
       }
       setCreditRequest(newCreditRequest);
     }
