@@ -184,7 +184,7 @@ public class PartnerServiceImpl implements PartnerService {
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
                         .numbers(List.of(partner.getPhoneNumber()))
                         .message("Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
-                                + "https://kabinet.idealkredit.az/setpassword??token=" + response.getAccessToken()
+                                + "https://kabinet.idealkredit.az/setpassword?token=" + response.getAccessToken()
                                 + " Link 24 saat ərzində aktivdir.")
                         .build());
             }
