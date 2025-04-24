@@ -20,6 +20,7 @@ import PensionerTab from './PensionerTab';
 import TabAKB from 'src/components/NewCredit/TabAKB';
 import { AKB_STATE_TYPE } from './types';
 import { getPartnerById } from 'src/api/PartnerService';
+import TabRelatedPersons, { FamilyInfo, Person } from 'src/components/NewCredit/TabFamilyInformationPartner';
 
 // ----------------------------------------------------------------------
 
@@ -224,6 +225,15 @@ export default function Page() {
     requestDate: new Date(),
     decisionQueryEnabled: false,
     guarantors: [],
+    // Yeni əlavə edilən credit details
+    creditDetails: {
+      storeName: 'Kapital Bank',
+      operationType: 'xidmət',
+      productName: 'iPhone 15 Pro',
+      creditTerm: 12,
+      cashPrice: 3000,
+      creditAmount: 3750, // 3000 + (3000 * 25%)
+    },
     // --------------------recurit ---------------------------recurit ------------------------------recurit --------------
     recruiter: {
       active: [
@@ -344,6 +354,21 @@ export default function Page() {
     },
   });
 
+  // Family Information states
+  const [familyInfo, setFamilyInfo] = useState<FamilyInfo>({
+    workExperience: '',
+    familyMembers: '',
+    familyIncome: '',
+    isRenting: false,
+    rentAmount: '',
+    rentDuration: '',
+    actualAddress: '',
+    additionalIncomes: [{ id: 0, source: '', amount: '' }],
+    idQuality: 3,
+    generalNote: '',
+    relatedPersons: [] as Person[],
+  });
+
   // -------------------recurit---------------------------recurit------------------------------recurit--------------
 
   const {
@@ -373,7 +398,13 @@ export default function Page() {
     if (hasData) {
       if (userData) data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
-      let newCreditRequest = { ...creditRequest, requestedUserPin: userData.username, phoneNumber: userData.phoneNumber, requestDate: new Date(), spouses: [] };
+      let newCreditRequest = {
+        ...creditRequest,
+        requestedUserPin: userData.username,
+        phoneNumber: userData.phoneNumber,
+        requestDate: new Date(),
+        spouses: [],
+      };
       if (partnerId) {
         let partner = await getPartnerById(partnerId);
         if (partner) newCreditRequest = { ...newCreditRequest, partner: partner };
@@ -441,7 +472,7 @@ export default function Page() {
       try {
         let msg = JSON.parse(event.data) as SignalType;
         listenSignals(msg);
-      } catch (error) { }
+      } catch (error) {}
     }
   };
 
@@ -466,8 +497,8 @@ export default function Page() {
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading="Nağd pul krediti"
-          links={[{ name: 'Video müraciət' }, { name: 'Nağd pul krediti' }]}
+          heading="Yeni kredit"
+          links={[{ name: 'Video müraciət' }, { name: 'Yeni kredit' }]}
           // action={
           //   <Button
           //     component={RouterLink}
@@ -490,7 +521,7 @@ export default function Page() {
                 <Tab label="İş yeri" value="3" />
                 <Tab label="Təqaüd məlumatları" value="4" />
                 <Tab label="Zaminlik haqqında məlumat" value="5" />
-                <Tab label="Əlaqəli şəxlər" value="6" />
+                <Tab label="Ümumi məlumatlar" value="6" />
                 <Tab label="Nəqliyyat vasitələri" value="7" />
                 <Tab label="Kredit ver" value="8" />
                 <Tab label="Video qeydiyyat" value="9" />
@@ -546,7 +577,7 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="6">
-              <TabFamilyInformation />
+              <TabRelatedPersons familyInfo={familyInfo} setFamilyInfo={setFamilyInfo} />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="7">
