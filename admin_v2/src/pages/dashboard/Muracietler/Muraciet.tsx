@@ -16,14 +16,55 @@ import { callGetFile } from 'src/api/FileService';
 import { Iconify } from 'src/components/iconify';
 
 const Muraciet = () => {
-  const [data, setData] = React.useState<CreditRequest>({});
+  const [data, setData] = React.useState<CreditRequest>({
+    creditDetails: {
+      storeName: '',
+      operationType: 'product',
+      productName: '',
+      creditTerm: 0,
+      cashPrice: 0,
+      creditAmount: 0,
+      category: '',
+      detail: '',
+      creditAmountInput: 0,
+      annualPercent: 0,
+      monthlyPayment: 0,
+      totalPayment: 0,
+      cardCost: 0,
+      valuationCost: 0,
+      insuranceCost: 0,
+      creditPurpose: '',
+      decisionQueryEnabled: false,
+      serviceRate: 0,
+    },
+    workExperience: '',
+    familyMembers: '',
+    familyIncome: '',
+    isRenting: false,
+    rentAmount: '',
+    rentDuration: '',
+    actualAddress: '',
+    additionalIncomes: [],
+    idQuality: 0,
+    generalNote: '',
+    relatedPersons: [],
+    pensioner: {
+      name: '',
+      patronymic: '',
+      birthDate: '',
+      surname: '',
+      allowance: [],
+      pension: [],
+    },
+  });
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
 
   useEffect(() => {
     if (!id) return;
     getCreditRequest(id).then((response) => {
-      setData(response ?? {});
+      if (!response) return;
+      setData(response);
     });
   }, []);
 

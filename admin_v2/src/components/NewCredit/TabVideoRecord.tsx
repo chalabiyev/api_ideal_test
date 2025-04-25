@@ -16,7 +16,7 @@ import { SignalType } from '../video-call/WebsocketTypes';
 import { callDeleteFile, callGetFile } from 'src/api/FileService';
 import { toast } from 'sonner';
 import { Iconify } from '../iconify';
-import { CreditRequestDto } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequestDto';
 import { set } from 'nprogress';
 
 const TabVideoRecord = ({
@@ -30,13 +30,13 @@ const TabVideoRecord = ({
   setCreditRequest
 }: {
   userInfo: any;
-  creditRequest: CreditRequestDto;
+  creditRequest: CreditRequest;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   newSignal: SignalType | undefined;
   sendSignal: (s: SignalType) => void;
   videoData: string;
   setVideoData: (s: string) => void;
-  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
 }) => {
   const [recording, setRecording] = useState(false);
   const [signTextOpen, setSignTextOpen] = useState(false);

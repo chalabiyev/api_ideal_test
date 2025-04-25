@@ -13,7 +13,7 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
-import { CreditRequest, CreditRequestUIState } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequestDto';
 
 const TabCreditDataPage = ({
   setValue,

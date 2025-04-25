@@ -1,8 +1,4 @@
-import {
-  Guarantor,
-  EmployeeInfoResponse,
-  PensionerInfoResponse,
-} from 'src/pages/dashboard/VideoMuraciet/types';
+import { Guarantor } from 'src/pages/dashboard/VideoMuraciet/types';
 
 export type ECreditType =
   | 'ABOVE_500'
@@ -151,6 +147,8 @@ export interface CreditRequest {
   cashPrice?: number;
   operationType?: string;
   productName?: string;
+  // BU SATIRIN ÜST KISMI YUKARDA GÖNDERDİĞİNİZLE BİREBİR AYNI
+  // ALT KISMINI BEN EKLEDİM DİĞER TABLARDAKI INPUTLAR IÇİN İÇİN 
   creditDetails: {
     storeName?: string;
     operationType?: 'product' | 'service';
@@ -182,28 +180,38 @@ export interface CreditRequest {
   idQuality: number;
   generalNote: string;
   relatedPersons: Person[];
-}
-
-export interface CreditRequestUIState {
-  creditDetails: {
-    storeName?: string;
-    operationType?: 'product' | 'service';
-    productName?: string;
-    creditTerm?: number;
-    cashPrice?: number;
-    creditAmount?: number;
-    category?: string;
-    detail?: string;
-    creditAmountInput?: number | null;
-    annualPercent?: number | null;
-    monthlyPayment?: number | null;
-    totalPayment?: number | null;
-    cardCost?: number | null;
-    valuationCost?: number | null;
-    insuranceCost?: number | null;
-    creditPurpose?: string;
-    decisionQueryEnabled?: boolean;
-    serviceRate?: number;
+  pensioner: {
+    name: string;
+    patronymic: string;
+    birthDate: string;
+    surname: string;
+    allowance: Array<{
+      beginDate: string;
+      type: {
+        id: number;
+        description: string;
+      };
+      group: {
+        id: number;
+        description: string;
+      };
+      amount: number;
+      endDate: string;
+    }>;
+    pension: Array<{
+      type: {
+        label: string;
+        id: number;
+        description: string;
+      };
+      group: {
+        id: number;
+        description: string;
+      };
+      amount: number;
+      startDate: string;
+      endDate: string;
+    }>;
   };
 }
 
@@ -345,38 +353,4 @@ export interface CreditRequestSearchDto {
   search?: string;
   pageSize: number;
   page: number;
-}
-
-export interface PensionerState {
-  name: string;
-  patronymic: string;
-  birthDate: string;
-  surname: string;
-  allowance: Array<{
-    beginDate: string;
-    type: {
-      id: number;
-      description: string;
-    };
-    group: {
-      id: number;
-      description: string;
-    };
-    amount: number;
-    endDate: string;
-  }>;
-  pension: Array<{
-    type: {
-      label: string;
-      id: number;
-      description: string;
-    };
-    group: {
-      id: number;
-      description: string;
-    };
-    amount: number;
-    startDate: string;
-    endDate: string;
-  }>;
 }

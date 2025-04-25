@@ -12,15 +12,7 @@ import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabContract from 'src/components/NewCredit/TabContract';
-import {
-  CreditRequestUIState,
-  Partner,
-  RecruiterState,
-  RecruiterDataType,
-  PensionerState,
-  CreditRequest,
-  Person,
-} from 'src/types/CreditRequestDto';
+import { RecruiterState,  CreditRequest, Person } from 'src/types/CreditRequestDto';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 import PensionerTab from './PensionerTab';
@@ -385,6 +377,45 @@ export default function Page() {
     idQuality: 3,
     generalNote: '',
     relatedPersons: [] as Person[],
+
+    // pensioner data
+    pensioner: {
+      name: 'Ad',
+      patronymic: 'Ata adı',
+      birthDate: 'Doğum tarixi',
+      surname: 'Soyad',
+      allowance: [
+        {
+          beginDate: 'Başlanğıc tarixi',
+          type: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          group: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          amount: 100,
+          endDate: 'Bitmə tarixi',
+        },
+      ],
+      pension: [
+        {
+          type: {
+            label: 'Qısa adı',
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          group: {
+            id: 0,
+            description: 'Identifikasiyaya uyğun izah',
+          },
+          amount: 1000,
+          startDate: 'Başlanğıc tarixi',
+          endDate: '24.32.1223',
+        },
+      ],
+    },
   });
 
   // -------------------recurit---------------------------recurit------------------------------recurit--------------
@@ -557,57 +588,6 @@ export default function Page() {
     }
   }, []);
 
-  const [pensionerState, setPensionerState] = useState<PensionerState>({
-    name: 'Ad',
-    patronymic: 'Ata adı',
-    birthDate: 'Doğum tarixi',
-    surname: 'Soyad',
-    allowance: [
-      {
-        beginDate: 'Başlanğıc tarixi',
-        type: {
-          id: 0,
-          description: 'Identifikasiyaya uyğun izah',
-        },
-        group: {
-          id: 0,
-          description: 'Identifikasiyaya uyğun izah',
-        },
-        amount: 100,
-        endDate: 'Bitmə tarixi',
-      },
-      {
-        beginDate: 'Başlanğıc tarixi',
-        type: {
-          id: 0,
-          description: 'Identifikasiyaya uyğun izah 2',
-        },
-        group: {
-          id: 0,
-          description: 'Identifikasiyaya uyğun izah',
-        },
-        amount: 0,
-        endDate: 'Bitmə tarixi',
-      },
-    ],
-    pension: [
-      {
-        type: {
-          label: 'Qısa adı',
-          id: 0,
-          description: 'Identifikasiyaya uyğun izah',
-        },
-        group: {
-          id: 0,
-          description: 'Identifikasiyaya uyğun izah',
-        },
-        amount: 1000,
-        startDate: 'Başlanğıc tarixi',
-        endDate: '24.32.1223',
-      },
-    ],
-  });
-
   return (
     <>
       <Helmet>
@@ -683,8 +663,6 @@ export default function Page() {
                 creditRequest={creditRequest}
                 setCreditRequest={setCreditRequest}
                 setValue={setValue}
-                pensionerState={pensionerState}
-                setPensionerState={setPensionerState}
               />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="5">
