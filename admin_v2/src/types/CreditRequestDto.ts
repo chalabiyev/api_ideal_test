@@ -92,6 +92,20 @@ export interface RecruiterState {
   }>;
 }
 
+export interface Person {
+  id: number;
+  name: string;
+  note: string;
+  phone: string;
+  relation: string;
+}
+
+export interface AdditionalIncome {
+  id: number;
+  source: string;
+  amount: string;
+}
+
 export interface CreditRequest {
   createdBy?: string;
   updatedBy?: string;
@@ -137,53 +151,37 @@ export interface CreditRequest {
   cashPrice?: number;
   operationType?: string;
   productName?: string;
-}
-
-export interface CreditRequestDto {
-  createdBy?: string;
-  updatedBy?: string;
-  createdDate?: Date;
-  updatedDate?: Date;
-  id?: string;
-  phoneNumber?: string;
-  otherPhoneNumbers?: OtherPhoneNumbers;
-  creditAmount?: number;
-  creditTerm?: number;
-  creditAmountWithText?: string;
-  requestDate?: Date;
-  confirmStatus?: 'Requested' | 'Accepted' | 'Rejected';
-  activateStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
-  finalStatus?: EFinalStatus;
-  requestedUser?: User;
-  confirmDate?: Date;
-  confirmerComment?: string;
-  creditType?: ECreditType;
-  serviceRate?: number;
-  cartCost?: number;
-  insuranceCost?: number;
-  valuationCost?: number;
-  monthlyPayment?: number;
-  amountToBePaid?: number;
-  creditPurpose?: string;
-  annualPercent?: number;
-  otherPayment?: number;
-  notarialCost?: string;
-  insuranceType?: string;
-  guarantee?: 'NONE' | 'ZAMIN' | 'GIROV';
-  spouses?: Spouse[];
-  fine?: string;
-  simaContractOperationId?: string;
-  connectedWithBOKT?: boolean;
-  contractFileName?: string;
-  videoSignFileName?: string;
-  decisionQueryEnabled?: boolean;
-  videoSignText?: string;
-  partner?: Partner;
-  guarantors?: Guarantor[];
-  recruiter?: RecruiterDataType;
-  cashPrice?: number;
-  operationType?: string;
-  productName?: string;
+  creditDetails: {
+    storeName?: string;
+    operationType?: 'product' | 'service';
+    productName?: string;
+    creditTerm?: number;
+    cashPrice?: number;
+    creditAmount?: number;
+    category?: string;
+    detail?: string;
+    creditAmountInput?: number | null;
+    annualPercent?: number | null;
+    monthlyPayment?: number | null;
+    totalPayment?: number | null;
+    cardCost?: number | null;
+    valuationCost?: number | null;
+    insuranceCost?: number | null;
+    creditPurpose?: string;
+    decisionQueryEnabled?: boolean;
+    serviceRate?: number;
+  };
+  workExperience: string;
+  familyMembers: string;
+  familyIncome: string;
+  isRenting: boolean;
+  rentAmount: string;
+  rentDuration: string;
+  actualAddress: string;
+  additionalIncomes: AdditionalIncome[];
+  idQuality: number;
+  generalNote: string;
+  relatedPersons: Person[];
 }
 
 export interface CreditRequestUIState {

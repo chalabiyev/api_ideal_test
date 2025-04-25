@@ -11,15 +11,15 @@ import TabVehicleInformation from 'src/components/NewCredit/TabVehicleInformatio
 import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
-import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
 import {
-  CreditRequestDto,
   CreditRequestUIState,
   Partner,
   RecruiterState,
   RecruiterDataType,
   PensionerState,
+  CreditRequest,
+  Person,
 } from 'src/types/CreditRequestDto';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,10 +27,7 @@ import PensionerTab from './PensionerTab';
 import TabAKB from 'src/components/NewCredit/TabAKB';
 import { AKB_STATE_TYPE } from './types';
 import { getPartnerById } from 'src/api/PartnerService';
-import TabRelatedPersons, {
-  FamilyInfo,
-  Person,
-} from 'src/components/NewCredit/TabFamilyInformationPartner';
+import TabGeneralInformation from 'src/components/NewCredit/TabGeneralInformation';
 
 // ----------------------------------------------------------------------
 
@@ -290,7 +287,7 @@ export default function Page() {
     ],
   });
 
-  const [creditRequest, setCreditRequest] = useState<CreditRequestDto>({
+  const [creditRequest, setCreditRequest] = useState<CreditRequest>({
     createdBy: '',
     updatedBy: '',
     createdDate: new Date(),
@@ -355,9 +352,8 @@ export default function Page() {
     cashPrice: 3000,
     operationType: 'product',
     productName: 'iPhone 15 Pro',
-  });
 
-  const [creditRequestUI, setCreditRequestUI] = useState<CreditRequestUIState>({
+    // ILKIN : yeni eklenen
     creditDetails: {
       storeName: 'Kapital Bank',
       operationType: 'product',
@@ -378,10 +374,6 @@ export default function Page() {
       decisionQueryEnabled: false,
       serviceRate: 1.5,
     },
-  });
-
-  // Family Information states
-  const [familyInfo, setFamilyInfo] = useState<FamilyInfo>({
     workExperience: '',
     familyMembers: '',
     familyIncome: '',
@@ -449,12 +441,12 @@ export default function Page() {
           newCreditRequest = {
             ...newCreditRequest,
             partner: partner,
-            operationType: creditRequestUI.creditDetails.operationType,
-            productName: creditRequestUI.creditDetails.productName,
-            cashPrice: creditRequestUI.creditDetails.cashPrice,
+            operationType: creditRequest.creditDetails.operationType,
+            productName: creditRequest.creditDetails.productName,
+            cashPrice: creditRequest.creditDetails.cashPrice,
           };
           // @ts-ignore
-          setCreditRequestUI((prev) => ({
+          setCreditRequest((prev) => ({
             ...prev,
             creditDetails: {
               ...prev.creditDetails,
@@ -473,7 +465,7 @@ export default function Page() {
           creditAmount: calculateCreditAmount(parseFloat(cashPrice), parseInt(creditDuration)),
         };
         // @ts-ignore
-        setCreditRequestUI((prev) => ({
+        setCreditRequest((prev) => ({
           ...prev,
           creditDetails: {
             ...prev.creditDetails,
@@ -708,7 +700,10 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="6">
-              <TabRelatedPersons familyInfo={familyInfo} setFamilyInfo={setFamilyInfo} />
+              <TabGeneralInformation
+                creditRequest={creditRequest}
+                setCreditRequest={setCreditRequest}
+              />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="7">
@@ -720,8 +715,6 @@ export default function Page() {
                 setValue={setValue}
                 creditRequest={creditRequest}
                 setCreditRequest={setCreditRequest}
-                creditRequestUI={creditRequestUI}
-                setCreditRequestUI={setCreditRequestUI}
               />
             </TabPanel>
 

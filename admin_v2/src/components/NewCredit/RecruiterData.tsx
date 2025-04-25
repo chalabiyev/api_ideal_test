@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CreditRequestDto, RecruiterState } from 'src/types/CreditRequestDto';
+import { CreditRequest, RecruiterState } from 'src/types/CreditRequestDto';
 import { EmployeeInfoResponse, RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
 import { GetEmployeeInfoByPin } from 'src/api/AsanFinanceService';
 
@@ -26,10 +26,10 @@ const RecruiterData = ({
   recruiterState,
   setRecruiterState,
 }: {
-  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
   pin: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  creditRequest: CreditRequestDto;
+  creditRequest: CreditRequest;
   recruiterState: RecruiterState;
   setRecruiterState: React.Dispatch<React.SetStateAction<RecruiterState>>;
 }) => {
