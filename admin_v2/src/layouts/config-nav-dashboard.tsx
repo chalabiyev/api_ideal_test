@@ -80,13 +80,13 @@ export const navData = [
         icon: ICONS.video,
         children: [
           {
-            title: 'Nağd pul krediti',
+            title: 'Yeni kredit',
             path: paths.videomuraciet.nagdpulkrediti,
             openInNewTab: true,
           },
-          { title: 'Partnyorluq krediti', path: paths.videomuraciet.partnyorlukkrediti },
-          { title: 'Biznes krediti', path: paths.videomuraciet.bizneskrediti },
-          { title: 'Məlumat', path: paths.videomuraciet.məlumat },
+          // { title: 'Partnyorluq krediti', path: paths.videomuraciet.partnyorlukkrediti },
+          // { title: 'Biznes krediti', path: paths.videomuraciet.bizneskrediti },
+          // { title: 'Məlumat', path: paths.videomuraciet.məlumat },
         ],
       },
     ],
@@ -98,7 +98,7 @@ export const navData = [
         path: paths.fizikimuraciet.root,
         icon: ICONS.user,
         children: [
-          { title: 'Nağd pul krediti', path: paths.fizikimuraciet.nagdpulkrediti },
+          { title: 'Yeni kredit', path: paths.fizikimuraciet.nagdpulkrediti },
           { title: 'Partnyorluq krediti', path: paths.fizikimuraciet.partnyorlukkrediti },
           { title: 'Lombard krediti', path: paths.fizikimuraciet.lombardkrediti },
           { title: 'Avtolizinq', path: paths.fizikimuraciet.avtolizinqkrediti },

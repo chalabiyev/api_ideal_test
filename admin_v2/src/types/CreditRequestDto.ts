@@ -104,6 +104,26 @@ export interface CreditRequestDto {
   category?: string;
   detail?: string;
   partner?: Partner;
+  creditDetails?: {
+    storeName?: string;
+    operationType?: 'xidmət' | 'məhsul';
+    productName?: string;
+    creditTerm?: number;
+    cashPrice?: number;
+    creditAmount?: number;
+    category?: string;
+    detail?: string;
+    creditAmountInput?: number | null;
+    annualPercent?: number | null;
+    monthlyPayment?: number | null;
+    totalPayment?: number | null;
+    cardCost?: number | null;
+    valuationCost?: number | null;
+    insuranceCost?: number | null;
+    creditPurpose?: string;
+    decisionQueryEnabled?: boolean;
+    serviceRate?: number;
+  };
 }
 
 export interface User {
