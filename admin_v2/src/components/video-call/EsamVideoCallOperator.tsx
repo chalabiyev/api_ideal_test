@@ -26,6 +26,8 @@ export interface EsamVideoCallOperatorProp {
   setItemName?: any;
   creditDuration?: string;
   setCreditDuration?: any;
+  cashPrice?: string;
+  setCashPrice?: any;
 }
 
 const turnServerURL = import.meta.env.VITE_TURN_SERVER_URL;
@@ -181,7 +183,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
       prop.setPartnerId(partnerId);
       prop.partnerId = partnerId;
     }
-    if (s.invoiceType && s.itemName && s.creditDuration) {
+    if (s.invoiceType && s.itemName && s.creditDuration && s.cashPrice) {
       const { invoiceType, itemName, creditDuration } = s;
       prop.setInvoiceType(invoiceType);
       prop.invoiceType = invoiceType;
@@ -189,6 +191,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
       prop.itemName = itemName;
       prop.setCreditDuration(creditDuration);
       prop.creditDuration = creditDuration;
+      prop.setCashPrice(s.cashPrice);
     }
   };
 

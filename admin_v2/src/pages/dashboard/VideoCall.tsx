@@ -63,6 +63,7 @@ const VideoCall = () => {
   const [itemName, setItemName] = useState<string>('');
   const [creditDuration, setCreditDuration] = useState<string>('');
   const [partner, setPartner] = useState<any>(null);
+  const [cashPrice, setCashPrice] = useState<string>('');
 
   const [clientPhoto, setClientPhoto] = useState<string>('');
   const [newCallType, setNewCallType] = useState<string>('');
@@ -190,19 +191,19 @@ const VideoCall = () => {
   };
 
   const handleAcceptCall = () => {
-    // eslint-disable-next-line
-    console.log("clientId : " + clientId);
-    // eslint-disable-next-line
-    console.log("operatorId : " + operatorId);
     setIncomingCall(false); // Gelen aramayı kapatıyoruz
     setIsCallActive(true); // Çağrıyı aktif hale getiriyoruz
     setAccepCall(true); // Aramanın kabul edildiğini belirtiyoruz
     startTimer(); // Timer'ı başlatıyoruz
-    // if (newCallType == 'above') {
-      let newTab = window.open(`/videomuraciet/nagd-pul-krediti?pin=${clientPin}&clientId=${clientId}&operatorId=${operatorId}&partnerId=${partnerId}&invoiceType=${invoiceType}&itemName=${itemName}&creditDuration=${creditDuration}`, '_blank');
-      if (newTab)
-        newTab.focus();
-    // }
+    let url = `/videomuraciet/nagd-pul-krediti?pin=${clientPin}&clientId=${clientId}&operatorId=${operatorId}`;
+    if (partnerId) url += `&partnerId=${partnerId}`;
+    if (invoiceType) url += `&invoiceType=${invoiceType}`;
+    if (itemName) url += `&itemName=${itemName}`;
+    if (creditDuration) url += `&creditDuration=${creditDuration}`;
+    if (cashPrice) url += `&cashPrice=${cashPrice}`;
+    let newTab = window.open(url, '_blank');
+    if (newTab)
+      newTab.focus();
   };
 
   const handleRejectCall = () => {
@@ -538,6 +539,14 @@ const VideoCall = () => {
           outgoingChatMessage={messageToSend}
           setOutgoingChatMessage={setMessageToSend}
           setClientUUID={(value: string) => setOperatorId(value)}
+          cashPrice={cashPrice}
+          setCashPrice={setCashPrice}
+          creditDuration={creditDuration}
+          setCreditDuration={setCreditDuration}
+          invoiceType={invoiceType}
+          setInvoiceType={setInvoiceType}
+          itemName={itemName}
+          setItemName={setItemName}
         />
       )}
     </Box>

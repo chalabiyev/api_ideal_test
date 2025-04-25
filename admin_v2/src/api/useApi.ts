@@ -9,6 +9,7 @@ const useApi = (endpoint: string, language: Language = Language.AZ) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchData = useCallback(async () => {
+    if (!endpoint) return;
     setLoading(true);
     try {
       const response = await request.get(endpoint, {

@@ -47,7 +47,8 @@ public class CreditRequest extends BaseEntity {
     private Double valuationCost;
     private Double monthlyPayment;
 
-    //creditAmount - (creditAmount * serviceRate) - (creditAmount * insuranceCost) - cartCost - valuationCost
+    // creditAmount - (creditAmount * serviceRate) - (creditAmount * insuranceCost)
+    // - cartCost - valuationCost
     private Double amountToBePaid;
 
     private String creditPurpose;
@@ -74,6 +75,10 @@ public class CreditRequest extends BaseEntity {
     private List<Guarantor> guarantors;
 
     private Recruiter recruiter;
+
+    private Double cashPrice;
+    private String operationType;
+    private String productName;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -105,6 +110,9 @@ public class CreditRequest extends BaseEntity {
         map.put("notarialCost", notarialCost);
         map.put("insuranceType", insuranceType);
         map.put("guarantee", guarantee != null ? guarantee.name() : null);
+        map.put("cashPrice", cashPrice);
+        map.put("operationType", operationType);
+        map.put("productName", productName);
         map.put("spouses", spouses != null
                 ? spouses.stream().map(spouse -> {
                     Map<String, Object> spouseMap = new HashMap<>();

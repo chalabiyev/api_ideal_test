@@ -57,6 +57,9 @@ export interface CreditRequest {
   partner?: Partner;
   guarantors?: Guarantor[];
   recruiter?: RecruiterDataType;
+  cashPrice?: number;
+  operationType?: string;
+  productName?: string;
 }
 
 export interface CreditRequestDto {
@@ -106,7 +109,7 @@ export interface CreditRequestDto {
   partner?: Partner;
   creditDetails?: {
     storeName?: string;
-    operationType?: 'xidmət' | 'məhsul';
+    operationType?: 'xidmət' | 'məhsul' | string;
     productName?: string;
     creditTerm?: number;
     cashPrice?: number;

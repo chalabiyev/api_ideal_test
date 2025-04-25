@@ -24,4 +24,5 @@ export interface SignalType {
     invoiceType?: string;
     itemName?: string;
     creditDuration?: string;
+    cashPrice?: string;
 }

@@ -249,15 +249,19 @@ const TabCreditDataPage = ({
           </Typography>
           <Slider
             valueLabelDisplay="auto"
-            min={6}
+            min={3}
             value={creditRequest?.creditDetails?.creditTerm || 12}
-            max={84}
+            step={3}
+            max={18}
             onChange={(_, value) =>
               setCreditRequest({
                 ...creditRequest,
                 creditDetails: {
                   ...creditRequest.creditDetails,
                   creditTerm: value as number,
+                  creditAmount: calculateCreditAmount(
+                    creditRequest?.creditDetails?.cashPrice || 0,
+                    value as number)
                 },
               })
             }

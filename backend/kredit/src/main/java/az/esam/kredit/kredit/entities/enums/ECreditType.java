@@ -4,5 +4,6 @@ public enum ECreditType {
     ABOVE_500,
     BELOW_500,
     PARTNER_CREDIT,
-    BUSINESS_CREDIT
+    BUSINESS_CREDIT,
+    NEUTRAL_CREDIT
 }

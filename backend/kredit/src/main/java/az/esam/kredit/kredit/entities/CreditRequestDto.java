@@ -59,5 +59,9 @@ public class CreditRequestDto {
 
     private List<Guarantor> guarantors;
     private Recruiter recruiter;
+    
+    private Double cashPrice;
+    private String operationType;
+    private String productName;
 
 }

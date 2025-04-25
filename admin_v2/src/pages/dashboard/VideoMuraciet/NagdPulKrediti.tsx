@@ -191,6 +191,7 @@ export default function Page() {
   const invoiceType: string = queryParams.get('invoiceType') ?? '';
   const itemName: string = queryParams.get('itemName') ?? '';
   const creditDuration: string = queryParams.get('creditDuration') ?? '';
+  const cashPrice: string = queryParams.get('cashPrice') ?? '';
 
   // tab changes
   const [value, setValue] = React.useState('1');
@@ -203,7 +204,7 @@ export default function Page() {
   const [guarantorPin, setGuarantorPin] = React.useState<string>('');
   const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
 
-  const guarantorEndpoint = `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`;
+  const guarantorEndpoint = guarantorPin ? `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}` : '';
   const {
     data: guarantorData,
     error: guarantorError,
@@ -212,9 +213,9 @@ export default function Page() {
     refetch: guarantorRefetch,
   } = useApi(guarantorEndpoint);
 
-  const endpoint = `/document/getIdCardInfoByPin?pin=${pin}`;
+  const endpoint = pin ? `/document/getIdCardInfoByPin?pin=${pin}` : '';
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
-  const endpointUserByUserName = `/auth/getUserByUserName/${pin}`;
+  const endpointUserByUserName = pin ? `/auth/getUserByUserName/${pin}` : '';
   const { data: userData } = useApi(endpointUserByUserName);
   const [creditRequest, setCreditRequest] = useState<CreditRequestDto>({
     creditAmount: 0,
@@ -395,7 +396,7 @@ export default function Page() {
     loading: _PENSIONER_LOADING,
     refetch: _PENSIONER_REFETCH,
     // } = useApi(`/auth/getUserByUserName/${pin}`);
-  } = useApi(`/asan-finance/getPensionerInfoByPin?pin=${pin}`);
+  } = useApi(pin ? `/asan-finance/getPensionerInfoByPin?pin=${pin}` : '');
 
   // useEffect(() => {
   //   if (_PENSIONER_HAS_DATA) {
@@ -410,7 +411,19 @@ export default function Page() {
   const [newSignal, setNewSignal] = useState<SignalType>();
   const [videoData, setVideoData] = useState('');
   const [contractPdf, setContractPdf] = useState('');
-
+  const calculateCreditAmount = (cashPrice: number, term: number) => {
+    const rates = {
+      3: 7.52,
+      6: 13.7,
+      9: 19.1,
+      12: 25,
+      15: 30,
+      18: 34.5,
+      24: 40,
+    };
+    const rate = rates[term as keyof typeof rates] || 0;
+    return cashPrice + (cashPrice * rate) / 100;
+  };
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = async () => {
     if (hasData) {
@@ -425,7 +438,19 @@ export default function Page() {
       };
       if (partnerId) {
         let partner = await getPartnerById(partnerId);
-        if (partner) newCreditRequest = { ...newCreditRequest, partner: partner  };
+        if (partner) newCreditRequest = { ...newCreditRequest, partner: partner, creditDetails: { ...newCreditRequest.creditDetails, storeName: partner.companyName } };
+      }
+      if (cashPrice && creditDuration && invoiceType && itemName) {
+        newCreditRequest = {
+          ...newCreditRequest, creditDetails: {
+            ...newCreditRequest.creditDetails,
+            cashPrice: parseFloat(cashPrice),
+            operationType: invoiceType,
+            productName: itemName,
+            creditTerm: parseInt(creditDuration),
+            creditAmount: calculateCreditAmount(parseFloat(cashPrice), parseInt(creditDuration))
+          }
+        };
       }
       setCreditRequest(newCreditRequest);
     }
@@ -490,7 +515,7 @@ export default function Page() {
       try {
         let msg = JSON.parse(event.data) as SignalType;
         listenSignals(msg);
-      } catch (error) {}
+      } catch (error) { }
     }
   };
 
