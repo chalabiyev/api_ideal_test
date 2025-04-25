@@ -13,8 +13,8 @@ import {
   Checkbox,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CreditRequestDto } from 'src/types/CreditRequestDto';
-import { PensionerInfoResponse, RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
+import { CreditRequestDto, PensionerState } from 'src/types/CreditRequestDto';
+import { PensionerInfoResponse } from 'src/pages/dashboard/VideoMuraciet/types';
 import { GetPensionerInfoByPin } from 'src/api/AsanFinanceService';
 
 const PensionerTab = ({
@@ -22,11 +22,15 @@ const PensionerTab = ({
   setValue,
   creditRequest,
   setCreditRequest,
+  pensionerState,
+  setPensionerState,
 }: {
   pin: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   creditRequest: CreditRequestDto;
   setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+  pensionerState: PensionerState;
+  setPensionerState: React.Dispatch<React.SetStateAction<PensionerState>>;
 }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [fetchFromService, setFetchFromService] = useState<boolean>(false);
@@ -40,14 +44,12 @@ const PensionerTab = ({
     const _PENSIONER_DATA = await GetPensionerInfoByPin(pin, fetchFromService);
 
     if (typeof _PENSIONER_DATA === 'object' && _PENSIONER_DATA !== null) {
-      setCreditRequest((prev) => ({
-        ...prev,
-        pensioner: _PENSIONER_DATA as PensionerInfoResponse,
-      }));
+      setPensionerState(_PENSIONER_DATA as PensionerState);
     } else {
       console.error('Invalid PENSIONER data:', _PENSIONER_DATA);
     }
   };
+
   return (
     <Box sx={{ py: 4 }}>
       <Card sx={{ m: 4, p: 2, display: 'flex', alignItems: 'center', backgroundColor: '#F9f' }}>
@@ -66,14 +68,14 @@ const PensionerTab = ({
       </Card>
       <Typography
         variant="h5"
-        sx={{ display: creditRequest.recruiter.active.length > 0 ? 'block' : 'none' }}
+        sx={{ display: pensionerState.allowance.length > 0 ? 'block' : 'none' }}
         gutterBottom
       >
         Təyin olunmuş müavinətlər
       </Typography>
 
       {/* hazirki  yeri məlumatları */}
-      {creditRequest?.pensioner?.allowance?.map((item, index) => (
+      {pensionerState.allowance.map((item, index) => (
         <Card sx={{ mb: 1 }} key={index}>
           <Accordion
             expanded={expanded === `panel${index + 43123}`}
@@ -111,7 +113,7 @@ const PensionerTab = ({
         Təqaüd məlumatları
       </Typography>
 
-      {creditRequest?.pensioner?.pension?.map((item, index) => (
+      {pensionerState.pension.map((item, index) => (
         <Card sx={{ mb: 1 }} key={index}>
           <Accordion
             expanded={expanded === `panel${index + 4323123}`}

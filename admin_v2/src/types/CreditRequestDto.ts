@@ -1,5 +1,4 @@
 import {
-  RecruiterDataType,
   Guarantor,
   EmployeeInfoResponse,
   PensionerInfoResponse,
@@ -14,6 +13,84 @@ export type ECreditType =
   | '';
 
 export type EFinalStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined;
+
+export interface RecruiterDataType {
+  education?: string;
+  companyName?: string;
+  salary?: number;
+  address?: string;
+  position?: string;
+  workPlace?: string;
+  workAddress?: string;
+  experience?: number;
+  otherIncome?: number;
+  voen?: string;
+  formOfOwnership?: string;
+  status?: string;
+  signUpDate?: Date;
+  photo?: string;
+  departmentId?: string;
+}
+
+export interface RecruiterState {
+  active: Array<{
+    employer: {
+      legalAddress: string;
+      workerCount: number;
+      name: string;
+      propertyType: {
+        label: string;
+        id: number;
+        type: string;
+        description: string;
+      };
+      voen: string;
+      phone: string;
+    };
+    employee: {
+      positionLabourContract: string;
+      ssn: string;
+      workPlaceType: {
+        label: string;
+        id: number;
+        type: string;
+        description: string;
+      };
+      position: string;
+      salary: number;
+      workPlace: string;
+    };
+    contract: {
+      number: string;
+      insertDate: string;
+      nextEndDate: string;
+      periodType: {
+        label: string;
+        id: number;
+        type: string;
+        description: string;
+      };
+      beginDate: string;
+      signDate: string;
+      endDate: string;
+    };
+  }>;
+  deactive: Array<{
+    employee: {
+      position: string;
+      salary: number;
+    };
+    employer: {
+      name: string;
+      voen: string;
+    };
+    contract: {
+      terminateDate: string;
+      beginDate: string;
+      endDate: string;
+    };
+  }>;
+}
 
 export interface CreditRequest {
   createdBy?: string;
@@ -77,7 +154,7 @@ export interface CreditRequestDto {
   confirmStatus?: 'Requested' | 'Accepted' | 'Rejected';
   activateStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
   finalStatus?: EFinalStatus;
-  requestedUserPin?: string;
+  requestedUser?: User;
   confirmDate?: Date;
   confirmerComment?: string;
   creditType?: ECreditType;
@@ -101,15 +178,18 @@ export interface CreditRequestDto {
   videoSignFileName?: string;
   decisionQueryEnabled?: boolean;
   videoSignText?: string;
-  guarantors: Guarantor[];
-  recruiter: EmployeeInfoResponse;
-  pensioner: PensionerInfoResponse;
-  category?: string;
-  detail?: string;
   partner?: Partner;
-  creditDetails?: {
+  guarantors?: Guarantor[];
+  recruiter?: RecruiterDataType;
+  cashPrice?: number;
+  operationType?: string;
+  productName?: string;
+}
+
+export interface CreditRequestUIState {
+  creditDetails: {
     storeName?: string;
-    operationType?: 'xidmət' | 'məhsul' | string;
+    operationType?: 'product' | 'service';
     productName?: string;
     creditTerm?: number;
     cashPrice?: number;
@@ -267,4 +347,38 @@ export interface CreditRequestSearchDto {
   search?: string;
   pageSize: number;
   page: number;
+}
+
+export interface PensionerState {
+  name: string;
+  patronymic: string;
+  birthDate: string;
+  surname: string;
+  allowance: Array<{
+    beginDate: string;
+    type: {
+      id: number;
+      description: string;
+    };
+    group: {
+      id: number;
+      description: string;
+    };
+    amount: number;
+    endDate: string;
+  }>;
+  pension: Array<{
+    type: {
+      label: string;
+      id: number;
+      description: string;
+    };
+    group: {
+      id: number;
+      description: string;
+    };
+    amount: number;
+    startDate: string;
+    endDate: string;
+  }>;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Box,
   Typography,
@@ -13,16 +13,20 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
-import { CreditRequestDto } from 'src/types/CreditRequestDto';
+import { CreditRequestDto, CreditRequestUIState } from 'src/types/CreditRequestDto';
 
 const TabCreditDataPage = ({
   setValue,
   creditRequest,
   setCreditRequest,
+  creditRequestUI,
+  setCreditRequestUI,
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   creditRequest: CreditRequestDto;
   setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+  creditRequestUI: CreditRequestUIState;
+  setCreditRequestUI: React.Dispatch<React.SetStateAction<CreditRequestUIState>>;
 }) => {
   const calculateCreditAmount = (cashPrice: number, term: number) => {
     const rates = {
@@ -54,7 +58,7 @@ const TabCreditDataPage = ({
           <TextField
             label="Partnyor mağaza"
             fullWidth
-            value={creditRequest?.creditDetails?.storeName || ''}
+            value={creditRequestUI.creditDetails.storeName || ''}
             disabled
           />
         </Grid>
@@ -64,12 +68,12 @@ const TabCreditDataPage = ({
           <FormControl fullWidth>
             <InputLabel>Əməliyyat növü</InputLabel>
             <Select
-              value={creditRequest?.creditDetails?.operationType || ''}
+              value={creditRequestUI.creditDetails.operationType || ''}
               label="Əməliyyat növü"
               disabled
             >
-              <MenuItem value="məhsul">Məhsul</MenuItem>
-              <MenuItem value="xidmət">Xidmət</MenuItem>
+              <MenuItem value="product">Məhsul</MenuItem>
+              <MenuItem value="service">Xidmət</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -79,7 +83,7 @@ const TabCreditDataPage = ({
           <TextField
             label="Məhsulun adı"
             fullWidth
-            value={creditRequest?.creditDetails?.productName || ''}
+            value={creditRequestUI.creditDetails.productName || ''}
             disabled
           />
         </Grid>
@@ -89,7 +93,7 @@ const TabCreditDataPage = ({
           <FormControl fullWidth>
             <InputLabel>Kreditin müddəti</InputLabel>
             <Select
-              value={creditRequest?.creditDetails?.creditTerm || 0}
+              value={creditRequestUI.creditDetails.creditTerm || 0}
               label="Kreditin müddəti"
               disabled
             >
@@ -108,9 +112,8 @@ const TabCreditDataPage = ({
         <Grid item xs={12} sm={6}>
           <TextField
             label="Nağd alış qiyməti (AZN)"
-            type="number"
             fullWidth
-            value={creditRequest?.creditDetails?.cashPrice || 0}
+            value={creditRequestUI.creditDetails.cashPrice || ''}
             disabled
           />
         </Grid>
@@ -119,9 +122,8 @@ const TabCreditDataPage = ({
         <Grid item xs={12} sm={6}>
           <TextField
             label="Kreditin məbləği (AZN)"
-            type="number"
             fullWidth
-            value={creditRequest?.creditDetails?.creditAmount || 0}
+            value={creditRequestUI.creditDetails.creditAmount || ''}
             disabled
           />
         </Grid>
@@ -140,16 +142,16 @@ const TabCreditDataPage = ({
             label="Məhsulun kateqoriyası"
             name="category"
             fullWidth
-            value={creditRequest?.creditDetails?.category || ''}
-            onChange={(e) =>
-              setCreditRequest({
-                ...creditRequest,
+            value={creditRequestUI.creditDetails.category || ''}
+            onChange={({ target: { value } }) => {
+              setCreditRequestUI((prev) => ({
+                ...prev,
                 creditDetails: {
-                  ...creditRequest.creditDetails,
-                  category: e.target.value,
+                  ...prev.creditDetails,
+                  category: value,
                 },
-              })
-            }
+              }));
+            }}
             SelectProps={{
               native: true,
             }}
@@ -166,6 +168,7 @@ const TabCreditDataPage = ({
             <option value="texnika">Məişət texnikası</option>
             <option value="mebel">Mebel</option>
             <option value="oyuncaq">Oyuncaq və hobbi</option>
+            <option value="">Seçin</option>
             <option value="telefon">Telefon və planşet</option>
             <option value="komputer">Komputer və laptop</option>
             <option value="saat">Saat və zərgərlik</option>
@@ -181,16 +184,16 @@ const TabCreditDataPage = ({
             label="Detallı məlumat"
             fullWidth
             placeholder="Məsələn: Avtomobil hissəsi, model, marka və s."
-            value={creditRequest?.creditDetails?.detail || ''}
-            onChange={(e) =>
-              setCreditRequest({
-                ...creditRequest,
+            value={creditRequestUI.creditDetails.detail || ''}
+            onChange={({ target: { value } }) => {
+              setCreditRequestUI((prev) => ({
+                ...prev,
                 creditDetails: {
-                  ...creditRequest.creditDetails,
-                  detail: e.target.value,
+                  ...prev.creditDetails,
+                  detail: value,
                 },
-              })
-            }
+              }));
+            }}
           />
         </Grid>
 
@@ -200,19 +203,19 @@ const TabCreditDataPage = ({
             label="Kredit Miqdarı (AZN)"
             fullWidth
             value={
-              creditRequest?.creditDetails?.creditAmountInput === 0
+              creditRequestUI.creditDetails.creditAmountInput === 0
                 ? ''
-                : creditRequest?.creditDetails?.creditAmountInput || ''
+                : creditRequestUI.creditDetails.creditAmountInput || ''
             }
             onChange={({ target: { value } }) => {
               if (value === '' || /^\d*$/.test(value)) {
-                setCreditRequest({
-                  ...creditRequest,
+                setCreditRequestUI((prev) => ({
+                  ...prev,
                   creditDetails: {
-                    ...creditRequest.creditDetails,
+                    ...prev.creditDetails,
                     creditAmountInput: value === '' ? null : Number(value),
                   },
-                });
+                }));
               }
             }}
           />
@@ -224,19 +227,19 @@ const TabCreditDataPage = ({
             label="İllik Faiz Dərəcəsi (%)"
             fullWidth
             value={
-              creditRequest?.creditDetails?.annualPercent === 0
+              creditRequestUI.creditDetails.annualPercent === 0
                 ? ''
-                : creditRequest?.creditDetails?.annualPercent || ''
+                : creditRequestUI.creditDetails.annualPercent || ''
             }
             onChange={({ target: { value } }) => {
               if (value === '' || /^\d*$/.test(value)) {
-                setCreditRequest({
-                  ...creditRequest,
+                setCreditRequestUI((prev) => ({
+                  ...prev,
                   creditDetails: {
-                    ...creditRequest.creditDetails,
+                    ...prev.creditDetails,
                     annualPercent: value === '' ? null : Number(value),
                   },
-                });
+                }));
               }
             }}
           />
@@ -245,49 +248,50 @@ const TabCreditDataPage = ({
         {/* Kreditin Müddəti */}
         <Grid item xs={12}>
           <Typography gutterBottom>
-            Kreditin Müddəti: {creditRequest?.creditDetails?.creditTerm || 0} ay
+            Kreditin Müddəti: {creditRequestUI.creditDetails.creditTerm || 0} ay
           </Typography>
           <Slider
             valueLabelDisplay="auto"
             min={3}
-            value={creditRequest?.creditDetails?.creditTerm || 12}
+            value={creditRequestUI.creditDetails.creditTerm || 12}
             step={3}
             max={18}
-            onChange={(_, value) =>
-              setCreditRequest({
-                ...creditRequest,
+            onChange={(_, value) => {
+              setCreditRequestUI((prev) => ({
+                ...prev,
                 creditDetails: {
-                  ...creditRequest.creditDetails,
+                  ...prev.creditDetails,
                   creditTerm: value as number,
                   creditAmount: calculateCreditAmount(
-                    creditRequest?.creditDetails?.cashPrice || 0,
-                    value as number)
+                    prev.creditDetails.cashPrice || 0,
+                    value as number
+                  ),
                 },
-              })
-            }
+              }));
+            }}
           />
         </Grid>
 
         {/* Xidmət Haqqı */}
         <Grid item xs={12}>
           <Typography gutterBottom>
-            Xidmət haqqı: {creditRequest?.creditDetails?.serviceRate || 0} %
+            Xidmət haqqı: {creditRequestUI.creditDetails.serviceRate || 0} %
           </Typography>
           <Slider
             valueLabelDisplay="auto"
             min={0.1}
             max={50}
             step={0.1}
-            value={creditRequest?.creditDetails?.serviceRate || 1.5}
-            onChange={(_, value) =>
-              setCreditRequest({
-                ...creditRequest,
+            value={creditRequestUI.creditDetails.serviceRate || 1.5}
+            onChange={(_, value) => {
+              setCreditRequestUI((prev) => ({
+                ...prev,
                 creditDetails: {
-                  ...creditRequest.creditDetails,
+                  ...prev.creditDetails,
                   serviceRate: value as number,
                 },
-              })
-            }
+              }));
+            }}
           />
         </Grid>
 
@@ -297,19 +301,19 @@ const TabCreditDataPage = ({
             label="Kart Xərci (AZN)"
             fullWidth
             value={
-              creditRequest?.creditDetails?.cardCost === 0
+              creditRequestUI.creditDetails.cardCost === 0
                 ? ''
-                : creditRequest?.creditDetails?.cardCost || ''
+                : creditRequestUI.creditDetails.cardCost || ''
             }
             onChange={({ target: { value } }) => {
               if (value === '' || /^\d*$/.test(value)) {
-                setCreditRequest({
-                  ...creditRequest,
+                setCreditRequestUI((prev) => ({
+                  ...prev,
                   creditDetails: {
-                    ...creditRequest.creditDetails,
+                    ...prev.creditDetails,
                     cardCost: value === '' ? null : Number(value),
                   },
-                });
+                }));
               }
             }}
           />
@@ -321,19 +325,19 @@ const TabCreditDataPage = ({
             label="Qiymətləndirmə Xərci (AZN)"
             fullWidth
             value={
-              creditRequest?.creditDetails?.valuationCost === 0
+              creditRequestUI.creditDetails.valuationCost === 0
                 ? ''
-                : creditRequest?.creditDetails?.valuationCost || ''
+                : creditRequestUI.creditDetails.valuationCost || ''
             }
             onChange={({ target: { value } }) => {
               if (value === '' || /^\d*$/.test(value)) {
-                setCreditRequest({
-                  ...creditRequest,
+                setCreditRequestUI((prev) => ({
+                  ...prev,
                   creditDetails: {
-                    ...creditRequest.creditDetails,
+                    ...prev.creditDetails,
                     valuationCost: value === '' ? null : Number(value),
                   },
-                });
+                }));
               }
             }}
           />
@@ -342,23 +346,23 @@ const TabCreditDataPage = ({
         {/* Sığorta Xərci */}
         <Grid item xs={12}>
           <Typography gutterBottom>
-            Sığorta xərci: {creditRequest?.creditDetails?.insuranceCost || 0} %
+            Sığorta xərci: {creditRequestUI.creditDetails.insuranceCost || 0} %
           </Typography>
           <Slider
             valueLabelDisplay="auto"
             min={0.1}
             max={10}
             step={0.1}
-            value={creditRequest?.creditDetails?.insuranceCost || 1}
-            onChange={(_, value) =>
-              setCreditRequest({
-                ...creditRequest,
+            value={creditRequestUI.creditDetails.insuranceCost || 1}
+            onChange={(_, value) => {
+              setCreditRequestUI((prev) => ({
+                ...prev,
                 creditDetails: {
-                  ...creditRequest.creditDetails,
+                  ...prev.creditDetails,
                   insuranceCost: value as number,
                 },
-              })
-            }
+              }));
+            }}
           />
         </Grid>
 
@@ -368,19 +372,19 @@ const TabCreditDataPage = ({
             label="Aylıq Ödəniş (AZN)"
             fullWidth
             value={
-              creditRequest?.creditDetails?.monthlyPayment === 0
+              creditRequestUI.creditDetails.monthlyPayment === 0
                 ? ''
-                : creditRequest?.creditDetails?.monthlyPayment || ''
+                : creditRequestUI.creditDetails.monthlyPayment || ''
             }
             onChange={({ target: { value } }) => {
               if (value === '' || /^\d*$/.test(value)) {
-                setCreditRequest({
-                  ...creditRequest,
+                setCreditRequestUI((prev) => ({
+                  ...prev,
                   creditDetails: {
-                    ...creditRequest.creditDetails,
+                    ...prev.creditDetails,
                     monthlyPayment: value === '' ? null : Number(value),
                   },
-                });
+                }));
               }
             }}
           />
@@ -392,19 +396,19 @@ const TabCreditDataPage = ({
             label="Cəmi Ödəniləcək Məbləğ (AZN)"
             fullWidth
             value={
-              creditRequest?.creditDetails?.totalPayment === 0
+              creditRequestUI.creditDetails.totalPayment === 0
                 ? ''
-                : creditRequest?.creditDetails?.totalPayment || ''
+                : creditRequestUI.creditDetails.totalPayment || ''
             }
             onChange={({ target: { value } }) => {
               if (value === '' || /^\d*$/.test(value)) {
-                setCreditRequest({
-                  ...creditRequest,
+                setCreditRequestUI((prev) => ({
+                  ...prev,
                   creditDetails: {
-                    ...creditRequest.creditDetails,
+                    ...prev.creditDetails,
                     totalPayment: value === '' ? null : Number(value),
                   },
-                });
+                }));
               }
             }}
           />
@@ -416,16 +420,16 @@ const TabCreditDataPage = ({
             label="Krediti almaq üçün məqsəd"
             multiline
             rows={4}
-            value={creditRequest?.creditDetails?.creditPurpose || ''}
-            onChange={(e) =>
-              setCreditRequest({
-                ...creditRequest,
+            value={creditRequestUI.creditDetails.creditPurpose || ''}
+            onChange={({ target: { value } }) => {
+              setCreditRequestUI((prev) => ({
+                ...prev,
                 creditDetails: {
-                  ...creditRequest.creditDetails,
-                  creditPurpose: e.target.value,
+                  ...prev.creditDetails,
+                  creditPurpose: value,
                 },
-              })
-            }
+              }));
+            }}
             fullWidth
           />
         </Grid>
@@ -435,16 +439,16 @@ const TabCreditDataPage = ({
           <FormControlLabel
             control={
               <Switch
-                checked={creditRequest?.creditDetails?.decisionQueryEnabled || false}
-                onChange={() =>
-                  setCreditRequest({
-                    ...creditRequest,
+                checked={creditRequestUI.creditDetails.decisionQueryEnabled || false}
+                onChange={() => {
+                  setCreditRequestUI((prev) => ({
+                    ...prev,
                     creditDetails: {
-                      ...creditRequest.creditDetails,
-                      decisionQueryEnabled: !creditRequest.creditDetails?.decisionQueryEnabled,
+                      ...prev.creditDetails,
+                      decisionQueryEnabled: !prev.creditDetails.decisionQueryEnabled,
                     },
-                  })
-                }
+                  }));
+                }}
               />
             }
             label="Qərar üçün sorğu göndər"
