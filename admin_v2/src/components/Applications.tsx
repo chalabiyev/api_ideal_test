@@ -34,7 +34,7 @@ import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
-import { ECreditType } from 'src/types/CreditRequestDto';
+import { ECreditType } from 'src/types/CreditRequest';
 import { CreditRequestSearchResponse } from 'src/types/CreditRequestSearchResponse';
 import { formatDate, formatDDate } from 'src/utils/formatDate';
 

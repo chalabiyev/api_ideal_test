@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CreditRequest, RecruiterState } from 'src/types/CreditRequestDto';
+import { CreditRequest, RecruiterState } from 'src/types/CreditRequest';
 import { EmployeeInfoResponse, RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
 import { GetEmployeeInfoByPin } from 'src/api/AsanFinanceService';
 

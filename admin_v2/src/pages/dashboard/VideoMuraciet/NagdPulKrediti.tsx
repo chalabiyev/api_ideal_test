@@ -12,7 +12,7 @@ import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabContract from 'src/components/NewCredit/TabContract';
-import { RecruiterState,  CreditRequest, Person } from 'src/types/CreditRequestDto';
+import { RecruiterState,  CreditRequest, Person } from 'src/types/CreditRequest';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 import PensionerTab from './PensionerTab';
@@ -317,7 +317,6 @@ export default function Page() {
     spouses: [],
     fine: '',
     simaContractOperationId: '',
-    connectedWithBOKT: false,
     contractFileName: '',
     videoSignFileName: '',
     decisionQueryEnabled: false,

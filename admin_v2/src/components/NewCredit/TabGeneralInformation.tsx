@@ -20,7 +20,7 @@ import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
-import { CreditRequest } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequest';
 
 export interface Person {
   id: number;

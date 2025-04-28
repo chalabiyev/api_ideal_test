@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { Icon } from '@iconify/react';
-import { EOwnerType } from 'src/types/CreditRequestDto';
+import { EOwnerType } from 'src/types/CreditRequest';
 import { BASE_URL } from 'src/api/request';
 import { toast } from 'sonner';
 import { usePostFile } from 'src/api/usePostFile';

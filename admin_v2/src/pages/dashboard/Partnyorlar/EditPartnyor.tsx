@@ -8,7 +8,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { EmptyContent } from 'src/components/empty-content';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { EOwnerType } from 'src/types/CreditRequestDto';
+import { EOwnerType } from 'src/types/CreditRequest';
 import ProfileTab from './ProfileTab';
 import SubmitPartnerButton from './SubmitPartnerButton';
 import PageControl from './PageControl';

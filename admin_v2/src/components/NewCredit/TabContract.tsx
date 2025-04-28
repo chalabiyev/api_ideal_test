@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { toast } from 'sonner';
-import { CreditRequest } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequest';
 import { generateContract, getPdfQR, getSimaStatus, SimaStatus } from 'src/api/ContractService';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 import { callGetFile } from 'src/api/FileService';

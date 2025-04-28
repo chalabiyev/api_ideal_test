@@ -118,6 +118,8 @@ export interface CreditRequest {
   activateStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
   finalStatus?: EFinalStatus;
   requestedUser?: User;
+  isConnectedWithBOKT?: boolean;
+  confirmerUser?: User;
   confirmDate?: Date;
   confirmerComment?: string;
   creditType?: ECreditType;
@@ -136,7 +138,6 @@ export interface CreditRequest {
   spouses?: Spouse[];
   fine?: string;
   simaContractOperationId?: string;
-  connectedWithBOKT?: boolean;
   contractFileName?: string;
   videoSignFileName?: string;
   decisionQueryEnabled?: boolean;

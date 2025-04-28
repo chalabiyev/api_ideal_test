@@ -1,33 +1,36 @@
 package az.esam.kredit.kredit.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.entities.CreditRequest;
-import az.esam.kredit.kredit.entities.CreditRequestDto;
-import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.entities.enums.CreditRequestStatusEnum;
 import az.esam.kredit.kredit.entities.enums.ECreditType;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
 import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.services.internal.creditRequest.CreditRequestService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
-
-import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
-import org.springframework.data.domain.Page;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
 @CrossOrigin(origins = { "*" }, maxAge = 3600)
@@ -66,19 +69,11 @@ public class CreditRequestController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/createA")
-    public ResponseEntity<CreditRequest> createAdmin(@RequestBody CreditRequestDto requestdto,
+    public ResponseEntity<CreditRequest> createAdmin(@RequestBody CreditRequest request,
             Authentication authentication) throws Exception {
-        Optional<User> user = userRepository.findByUsername(requestdto.getRequestedUserPin());
-        if (user.isEmpty()) {
-            user = userRepository.findByPin(requestdto.getRequestedUserPin());
-        }
-        CreditRequest request = om.readValue(om.writeValueAsString(requestdto), CreditRequest.class);
-        if (user.isPresent()) {
-            request.setRequestedUser(user.get());
-        } else {
+        if (request.getRequestedUser() == null) {
             throw new Exception("User not found");
         }
-
         return ResponseEntity.ok(creditRequestService.create(request, authentication));
     }
 

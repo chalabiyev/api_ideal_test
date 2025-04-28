@@ -13,7 +13,7 @@ import {
   Checkbox,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CreditRequest } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequest';
 import { PensionerInfoResponse } from 'src/pages/dashboard/VideoMuraciet/types';
 import { GetPensionerInfoByPin } from 'src/api/AsanFinanceService';
 

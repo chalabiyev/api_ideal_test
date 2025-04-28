@@ -38,7 +38,7 @@ import { Label } from 'src/components/label';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
-import { EOwnerType, EStatus, Partner } from 'src/types/CreditRequestDto';
+import { EOwnerType, EStatus, Partner } from 'src/types/CreditRequest';
 
 const faaliyetSahesiOptions = [
   { label: 'IT', value: 'IT' },

@@ -20,7 +20,7 @@ import BankInfoTab from './BankInfoTab';
 import ProfileTab from './ProfileTab';
 import { DashboardContent } from 'src/layouts/dashboard';
 import FizikiMuqavile from './FizikiMuqavile';
-import { ActivityType, EOwnerType } from 'src/types/CreditRequestDto';
+import { ActivityType, EOwnerType } from 'src/types/CreditRequest';
 import SubmitPartnerButton from './SubmitPartnerButton';
 import PageControl from './PageControl';
 import { RouterLink } from 'src/routes/components';

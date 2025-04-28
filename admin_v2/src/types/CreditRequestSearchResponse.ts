@@ -1,4 +1,4 @@
-import { CreditRequest } from "./CreditRequestDto";
+import { CreditRequest } from "./CreditRequest";
 
 export interface CreditRequestSearchResponse {
   numberOfElements: number;

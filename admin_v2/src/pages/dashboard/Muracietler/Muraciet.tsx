@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Card, Button, Grid, TextField, Typography, Box, Divider } from '@mui/material';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { CreditRequest } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequest';
 import {
   acceptCreditRequestByAdmin,
   getCreditRequest,

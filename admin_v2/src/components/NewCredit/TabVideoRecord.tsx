@@ -16,7 +16,7 @@ import { SignalType } from '../video-call/WebsocketTypes';
 import { callDeleteFile, callGetFile } from 'src/api/FileService';
 import { toast } from 'sonner';
 import { Iconify } from '../iconify';
-import { CreditRequest } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequest';
 import { set } from 'nprogress';
 
 const TabVideoRecord = ({
