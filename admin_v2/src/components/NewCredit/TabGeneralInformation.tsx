@@ -20,6 +20,7 @@ import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+import { CreditRequest } from 'src/types/CreditRequestDto';
 
 export interface Person {
   id: number;
@@ -47,11 +48,6 @@ export interface FamilyInfo {
   idQuality: number;
   generalNote: string;
   relatedPersons: Person[];
-}
-
-interface TabRelatedPersonsProps {
-  familyInfo: FamilyInfo;
-  setFamilyInfo: React.Dispatch<React.SetStateAction<FamilyInfo>>;
 }
 
 const StyledRating = styled(Rating)(({ theme }) => ({
@@ -93,9 +89,15 @@ function IconContainer(props: { value: number }) {
   return <span {...other}>{customIcons[value].icon}</span>;
 }
 
-const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFamilyInfo }) => {
+const TabGeneralInformation = ({
+  creditRequest,
+  setCreditRequest,
+}: {
+  creditRequest: CreditRequest;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
+}) => {
   const handleAddPerson = () => {
-    const allFieldsFilled = familyInfo.relatedPersons.every(
+    const allFieldsFilled = creditRequest.relatedPersons.every(
       (person) => person.name && person.phone && person.relation
     );
 
@@ -104,7 +106,7 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
       return;
     }
 
-    setFamilyInfo((prev) => ({
+    setCreditRequest((prev) => ({
       ...prev,
       relatedPersons: [
         ...prev.relatedPersons,
@@ -114,7 +116,7 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
   };
 
   const handlePersonChange = (id: number, field: keyof Person, value: string) => {
-    setFamilyInfo((prev) => ({
+    setCreditRequest((prev) => ({
       ...prev,
       relatedPersons: prev.relatedPersons.map((person) =>
         person.id === id ? { ...person, [field]: value } : person
@@ -123,14 +125,14 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
   };
 
   const handleDeletePerson = (id: number) => {
-    setFamilyInfo((prev) => ({
+    setCreditRequest((prev) => ({
       ...prev,
       relatedPersons: prev.relatedPersons.filter((person) => person.id !== id),
     }));
   };
 
   const handleAddIncome = () => {
-    setFamilyInfo((prev) => ({
+    setCreditRequest((prev) => ({
       ...prev,
       additionalIncomes: [
         ...prev.additionalIncomes,
@@ -140,7 +142,7 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
   };
 
   const handleIncomeChange = (id: number, field: keyof AdditionalIncome, value: string) => {
-    setFamilyInfo((prev) => ({
+    setCreditRequest((prev) => ({
       ...prev,
       additionalIncomes: prev.additionalIncomes.map((income) =>
         income.id === id ? { ...income, [field]: value } : income
@@ -149,7 +151,7 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
   };
 
   const handleDeleteIncome = (id: number) => {
-    setFamilyInfo((prev) => ({
+    setCreditRequest((prev) => ({
       ...prev,
       additionalIncomes: prev.additionalIncomes.filter((income) => income.id !== id),
     }));
@@ -161,7 +163,7 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
         Əlaqəli Şəxslər
       </Typography>
 
-      {familyInfo.relatedPersons.map((person) => (
+      {creditRequest.relatedPersons.map((person) => (
         <Card key={person.id} sx={{ mb: 4, p: 2 }}>
           <CardContent>
             <Typography variant="subtitle1" sx={{ mb: 2 }}>
@@ -238,8 +240,10 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
             fullWidth
             placeholder="Məs: 2 il, 10 ay"
             label="İş təcrübəsi (ay və il)"
-            value={familyInfo.workExperience}
-            onChange={(e) => setFamilyInfo((prev) => ({ ...prev, workExperience: e.target.value }))}
+            value={creditRequest.workExperience}
+            onChange={(e) =>
+              setCreditRequest((prev) => ({ ...prev, workExperience: e.target.value }))
+            }
           />
         </CardContent>
       </Card>
@@ -256,9 +260,9 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
                 fullWidth
                 placeholder="Məs: 2"
                 label="Ailə üzvlərinin sayı"
-                value={familyInfo.familyMembers}
+                value={creditRequest.familyMembers}
                 onChange={(e) =>
-                  setFamilyInfo((prev) => ({ ...prev, familyMembers: e.target.value }))
+                  setCreditRequest((prev) => ({ ...prev, familyMembers: e.target.value }))
                 }
               />
             </Grid>
@@ -267,9 +271,9 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
                 fullWidth
                 placeholder="Məs: 1000 AZN"
                 label="Ailənin ümumi gəliri (AZN)"
-                value={familyInfo.familyIncome}
+                value={creditRequest.familyIncome}
                 onChange={(e) =>
-                  setFamilyInfo((prev) => ({ ...prev, familyIncome: e.target.value }))
+                  setCreditRequest((prev) => ({ ...prev, familyIncome: e.target.value }))
                 }
               />
             </Grid>
@@ -286,23 +290,23 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
           <FormControlLabel
             control={
               <Checkbox
-                checked={familyInfo.isRenting}
+                checked={creditRequest.isRenting}
                 onChange={(e) =>
-                  setFamilyInfo((prev) => ({ ...prev, isRenting: e.target.checked }))
+                  setCreditRequest((prev) => ({ ...prev, isRenting: e.target.checked }))
                 }
               />
             }
             label="Kirayə qalır"
           />
-          {familyInfo.isRenting && (
+          {creditRequest.isRenting && (
             <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Kirayə məbləği (AZN)"
-                  value={familyInfo.rentAmount}
+                  value={creditRequest.rentAmount}
                   onChange={(e) =>
-                    setFamilyInfo((prev) => ({ ...prev, rentAmount: e.target.value }))
+                    setCreditRequest((prev) => ({ ...prev, rentAmount: e.target.value }))
                   }
                 />
               </Grid>
@@ -311,9 +315,9 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
                   fullWidth
                   placeholder="Məs: 1 il, 10 ay"
                   label="Kirayədə qalma müddəti"
-                  value={familyInfo.rentDuration}
+                  value={creditRequest.rentDuration}
                   onChange={(e) =>
-                    setFamilyInfo((prev) => ({ ...prev, rentDuration: e.target.value }))
+                    setCreditRequest((prev) => ({ ...prev, rentDuration: e.target.value }))
                   }
                 />
               </Grid>
@@ -322,8 +326,10 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
           <TextField
             fullWidth
             label="Faktiki yaşayış ünvanı"
-            value={familyInfo.actualAddress}
-            onChange={(e) => setFamilyInfo((prev) => ({ ...prev, actualAddress: e.target.value }))}
+            value={creditRequest.actualAddress}
+            onChange={(e) =>
+              setCreditRequest((prev) => ({ ...prev, actualAddress: e.target.value }))
+            }
             sx={{ mt: 2 }}
           />
         </CardContent>
@@ -335,7 +341,7 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
       </Typography>
       <Card sx={{ mb: 4, p: 2 }}>
         <CardContent>
-          {familyInfo.additionalIncomes.map((income) => (
+          {creditRequest.additionalIncomes.map((income) => (
             <Grid container spacing={2} key={income.id} sx={{ mb: 2 }}>
               <Grid item xs={12} sm={5}>
                 <TextField
@@ -384,9 +390,9 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
             size="large"
             highlightSelectedOnly
             name="highlight-selected-only"
-            value={familyInfo.idQuality}
+            value={creditRequest.idQuality}
             onChange={(_, value) =>
-              setFamilyInfo((prev) => ({ ...prev, idQuality: value as number }))
+              setCreditRequest((prev) => ({ ...prev, idQuality: value as number }))
             }
             IconContainerComponent={IconContainer}
             getLabelText={(value: number) => customIcons[value].label}
@@ -405,8 +411,8 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
             multiline
             rows={4}
             label="Ümumi qeyd"
-            value={familyInfo.generalNote}
-            onChange={(e) => setFamilyInfo((prev) => ({ ...prev, generalNote: e.target.value }))}
+            value={creditRequest.generalNote}
+            onChange={(e) => setCreditRequest((prev) => ({ ...prev, generalNote: e.target.value }))}
           />
         </CardContent>
       </Card>
@@ -414,4 +420,4 @@ const TabRelatedPersons: React.FC<TabRelatedPersonsProps> = ({ familyInfo, setFa
   );
 };
 
-export default TabRelatedPersons;
+export default TabGeneralInformation;

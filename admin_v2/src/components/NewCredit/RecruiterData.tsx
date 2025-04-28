@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CreditRequestDto } from 'src/types/CreditRequestDto';
+import { CreditRequest, RecruiterState } from 'src/types/CreditRequestDto';
 import { EmployeeInfoResponse, RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
 import { GetEmployeeInfoByPin } from 'src/api/AsanFinanceService';
 
@@ -23,11 +23,15 @@ const RecruiterData = ({
   pin,
   setValue,
   creditRequest,
+  recruiterState,
+  setRecruiterState,
 }: {
-  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
   pin: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  creditRequest: CreditRequestDto;
+  creditRequest: CreditRequest;
+  recruiterState: RecruiterState;
+  setRecruiterState: React.Dispatch<React.SetStateAction<RecruiterState>>;
 }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [fetchFromService, setFetchFromService] = useState<boolean>(false);
@@ -41,10 +45,7 @@ const RecruiterData = ({
     const _EMPLOYEE_DATA = await GetEmployeeInfoByPin(pin, fetchFromService);
 
     if (typeof _EMPLOYEE_DATA === 'object' && _EMPLOYEE_DATA !== null) {
-      setCreditRequest((prev) => ({
-        ...prev,
-        recruiter: _EMPLOYEE_DATA as EmployeeInfoResponse,
-      }));
+      setRecruiterState(_EMPLOYEE_DATA as RecruiterState);
     } else {
       console.error('Invalid employee data:', _EMPLOYEE_DATA);
     }
@@ -68,13 +69,13 @@ const RecruiterData = ({
       </Card>
       <Typography
         variant="h5"
-        sx={{ display: creditRequest.recruiter.active.length > 0 ? 'block' : 'none' }}
+        sx={{ display: recruiterState.active.length > 0 ? 'block' : 'none' }}
         gutterBottom
       >
         Hazırki iş yer(lər)i
       </Typography>
       {/* hazirki  yeri məlumatları */}
-      {creditRequest?.recruiter?.active?.map((item, index) => (
+      {recruiterState.active.map((item, index) => (
         <Card sx={{ mb: 4 }} key={index}>
           <Typography variant="h6" sx={{ mt: 2, px: 2 }} color="primary.main" gutterBottom>
             {item.employer.legalAddress}
@@ -209,8 +210,8 @@ const RecruiterData = ({
         Köhnə iş yer(lər)i
       </Typography>
 
-      {creditRequest?.recruiter?.deactive?.map((item, index) => (
-        <Card sx={{ mb: 4 }}>
+      {recruiterState.deactive.map((item, index) => (
+        <Card sx={{ mb: 4 }} key={index}>
           <Typography variant="h6" sx={{ mt: 2, px: 2 }} color="error" gutterBottom>
             {item.employer.name}
           </Typography>

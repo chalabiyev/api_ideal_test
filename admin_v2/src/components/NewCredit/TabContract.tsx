@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { toast } from 'sonner';
-import { CreditRequestDto } from 'src/types/CreditRequestDto';
+import { CreditRequest } from 'src/types/CreditRequestDto';
 import { generateContract, getPdfQR, getSimaStatus, SimaStatus } from 'src/api/ContractService';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
 import { callGetFile } from 'src/api/FileService';
@@ -21,7 +21,7 @@ import { createCreditRequest } from 'src/api/CreditService';
 
 const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, sendSignal, setCreditRequest }:
   {
-    creditRequest: CreditRequestDto, contractPdf: string; setContractPdf: any; setCreditRequest: any;
+    creditRequest: CreditRequest, contractPdf: string; setContractPdf: any; setCreditRequest: any;
     newSignal: SignalType | undefined;
     sendSignal: (s: SignalType) => void;
   }) => {

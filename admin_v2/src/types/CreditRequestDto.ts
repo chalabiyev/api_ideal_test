@@ -1,9 +1,4 @@
-import {
-  RecruiterDataType,
-  Guarantor,
-  EmployeeInfoResponse,
-  PensionerInfoResponse,
-} from 'src/pages/dashboard/VideoMuraciet/types';
+import { Guarantor } from 'src/pages/dashboard/VideoMuraciet/types';
 
 export type ECreditType =
   | 'ABOVE_500'
@@ -14,6 +9,98 @@ export type ECreditType =
   | '';
 
 export type EFinalStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined;
+
+export interface RecruiterDataType {
+  education?: string;
+  companyName?: string;
+  salary?: number;
+  address?: string;
+  position?: string;
+  workPlace?: string;
+  workAddress?: string;
+  experience?: number;
+  otherIncome?: number;
+  voen?: string;
+  formOfOwnership?: string;
+  status?: string;
+  signUpDate?: Date;
+  photo?: string;
+  departmentId?: string;
+}
+
+export interface RecruiterState {
+  active: Array<{
+    employer: {
+      legalAddress: string;
+      workerCount: number;
+      name: string;
+      propertyType: {
+        label: string;
+        id: number;
+        type: string;
+        description: string;
+      };
+      voen: string;
+      phone: string;
+    };
+    employee: {
+      positionLabourContract: string;
+      ssn: string;
+      workPlaceType: {
+        label: string;
+        id: number;
+        type: string;
+        description: string;
+      };
+      position: string;
+      salary: number;
+      workPlace: string;
+    };
+    contract: {
+      number: string;
+      insertDate: string;
+      nextEndDate: string;
+      periodType: {
+        label: string;
+        id: number;
+        type: string;
+        description: string;
+      };
+      beginDate: string;
+      signDate: string;
+      endDate: string;
+    };
+  }>;
+  deactive: Array<{
+    employee: {
+      position: string;
+      salary: number;
+    };
+    employer: {
+      name: string;
+      voen: string;
+    };
+    contract: {
+      terminateDate: string;
+      beginDate: string;
+      endDate: string;
+    };
+  }>;
+}
+
+export interface Person {
+  id: number;
+  name: string;
+  note: string;
+  phone: string;
+  relation: string;
+}
+
+export interface AdditionalIncome {
+  id: number;
+  source: string;
+  amount: string;
+}
 
 export interface CreditRequest {
   createdBy?: string;
@@ -60,56 +147,11 @@ export interface CreditRequest {
   cashPrice?: number;
   operationType?: string;
   productName?: string;
-}
-
-export interface CreditRequestDto {
-  createdBy?: string;
-  updatedBy?: string;
-  createdDate?: Date;
-  updatedDate?: Date;
-  id?: string;
-  phoneNumber?: string;
-  otherPhoneNumbers?: OtherPhoneNumbers;
-  creditAmount?: number;
-  creditTerm?: number;
-  creditAmountWithText?: string;
-  requestDate?: Date;
-  confirmStatus?: 'Requested' | 'Accepted' | 'Rejected';
-  activateStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
-  finalStatus?: EFinalStatus;
-  requestedUserPin?: string;
-  confirmDate?: Date;
-  confirmerComment?: string;
-  creditType?: ECreditType;
-  serviceRate?: number;
-  cartCost?: number;
-  insuranceCost?: number;
-  valuationCost?: number;
-  monthlyPayment?: number;
-  amountToBePaid?: number;
-  creditPurpose?: string;
-  annualPercent?: number;
-  otherPayment?: number;
-  notarialCost?: string;
-  insuranceType?: string;
-  guarantee?: 'NONE' | 'ZAMIN' | 'GIROV';
-  spouses?: Spouse[];
-  fine?: string;
-  simaContractOperationId?: string;
-  connectedWithBOKT?: boolean;
-  contractFileName?: string;
-  videoSignFileName?: string;
-  decisionQueryEnabled?: boolean;
-  videoSignText?: string;
-  guarantors: Guarantor[];
-  recruiter: EmployeeInfoResponse;
-  pensioner: PensionerInfoResponse;
-  category?: string;
-  detail?: string;
-  partner?: Partner;
-  creditDetails?: {
+  // BU SATIRIN ÜST KISMI YUKARDA GÖNDERDİĞİNİZLE BİREBİR AYNI
+  // ALT KISMINI BEN EKLEDİM DİĞER TABLARDAKI INPUTLAR IÇİN İÇİN 
+  creditDetails: {
     storeName?: string;
-    operationType?: 'xidmət' | 'məhsul' | string;
+    operationType?: 'product' | 'service';
     productName?: string;
     creditTerm?: number;
     cashPrice?: number;
@@ -126,6 +168,50 @@ export interface CreditRequestDto {
     creditPurpose?: string;
     decisionQueryEnabled?: boolean;
     serviceRate?: number;
+  };
+  workExperience: string;
+  familyMembers: string;
+  familyIncome: string;
+  isRenting: boolean;
+  rentAmount: string;
+  rentDuration: string;
+  actualAddress: string;
+  additionalIncomes: AdditionalIncome[];
+  idQuality: number;
+  generalNote: string;
+  relatedPersons: Person[];
+  pensioner: {
+    name: string;
+    patronymic: string;
+    birthDate: string;
+    surname: string;
+    allowance: Array<{
+      beginDate: string;
+      type: {
+        id: number;
+        description: string;
+      };
+      group: {
+        id: number;
+        description: string;
+      };
+      amount: number;
+      endDate: string;
+    }>;
+    pension: Array<{
+      type: {
+        label: string;
+        id: number;
+        description: string;
+      };
+      group: {
+        id: number;
+        description: string;
+      };
+      amount: number;
+      startDate: string;
+      endDate: string;
+    }>;
   };
 }
 

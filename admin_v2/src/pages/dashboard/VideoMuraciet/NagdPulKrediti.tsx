@@ -11,19 +11,15 @@ import TabVehicleInformation from 'src/components/NewCredit/TabVehicleInformatio
 import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
-import TabFamilyInformation from 'src/components/NewCredit/TabFamilyInformation';
 import TabContract from 'src/components/NewCredit/TabContract';
-import { CreditRequestDto, Partner } from 'src/types/CreditRequestDto';
+import { RecruiterState,  CreditRequest, Person } from 'src/types/CreditRequestDto';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 import PensionerTab from './PensionerTab';
 import TabAKB from 'src/components/NewCredit/TabAKB';
 import { AKB_STATE_TYPE } from './types';
 import { getPartnerById } from 'src/api/PartnerService';
-import TabRelatedPersons, {
-  FamilyInfo,
-  Person,
-} from 'src/components/NewCredit/TabFamilyInformationPartner';
+import TabGeneralInformation from 'src/components/NewCredit/TabGeneralInformation';
 
 // ----------------------------------------------------------------------
 
@@ -204,7 +200,9 @@ export default function Page() {
   const [guarantorPin, setGuarantorPin] = React.useState<string>('');
   const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
 
-  const guarantorEndpoint = guarantorPin ? `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}` : '';
+  const guarantorEndpoint = guarantorPin
+    ? `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`
+    : '';
   const {
     data: guarantorData,
     error: guarantorError,
@@ -217,31 +215,145 @@ export default function Page() {
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
   const endpointUserByUserName = pin ? `/auth/getUserByUserName/${pin}` : '';
   const { data: userData } = useApi(endpointUserByUserName);
-  const [creditRequest, setCreditRequest] = useState<CreditRequestDto>({
+  const [recruiterState, setRecruiterState] = useState<RecruiterState>({
+    active: [
+      {
+        employer: {
+          legalAddress: 'ESAM Innovations',
+          workerCount: 12,
+          name: 'Qurumun adı',
+          propertyType: {
+            label: '',
+            id: 0,
+            type: '',
+            description: 'Mülkiyyətin növü',
+          },
+          voen: '645234236324',
+          phone: '+994 50 123 45 67',
+        },
+        employee: {
+          positionLabourContract: 'Aparıcı',
+          ssn: '54213321321',
+          workPlaceType: {
+            label: '',
+            id: 0,
+            type: '',
+            description: '',
+          },
+          position: 'Aparıcı',
+          salary: 1000,
+          workPlace: 'Kapital bank',
+        },
+        contract: {
+          number: '',
+          insertDate: '12.12.2021',
+          nextEndDate: '12.12.2022',
+          periodType: {
+            label: '',
+            id: 0,
+            type: '',
+            description: '',
+          },
+          beginDate: '12.12.2023',
+          signDate: '12.12.2024',
+          endDate: '12.12.2025',
+        },
+      },
+    ],
+    deactive: [
+      {
+        employee: {
+          position: '',
+          salary: 0,
+        },
+        employer: {
+          name: 'Claradix',
+          voen: '4312213',
+        },
+        contract: {
+          terminateDate: '',
+          beginDate: '',
+          endDate: '',
+        },
+      },
+    ],
+  });
+
+  const [creditRequest, setCreditRequest] = useState<CreditRequest>({
+    createdBy: '',
+    updatedBy: '',
+    createdDate: new Date(),
+    updatedDate: new Date(),
+    id: '',
+    phoneNumber: '',
+    otherPhoneNumbers: {
+      Ev: '',
+      Is: '',
+      GSM: '',
+    },
     creditAmount: 0,
     creditTerm: 12,
-    annualPercent: 0,
-    serviceRate: 1.5,
-    insuranceCost: 1,
-    cartCost: 10,
-    valuationCost: 0,
-    contractFileName: '',
-    videoSignText: '',
-    requestedUserPin: '',
-    phoneNumber: '',
+    creditAmountWithText: '',
     requestDate: new Date(),
+    confirmStatus: 'Requested',
+    activateStatus: 'PENDING',
+    finalStatus: 'PENDING',
+    requestedUser: undefined,
+    confirmDate: new Date(),
+    confirmerComment: '',
+    creditType: 'BELOW_500',
+    serviceRate: 1.5,
+    cartCost: 10,
+    insuranceCost: 1,
+    valuationCost: 0,
+    monthlyPayment: 0,
+    amountToBePaid: 0,
+    creditPurpose: '',
+    annualPercent: 0,
+    otherPayment: 0,
+    notarialCost: '',
+    insuranceType: '',
+    guarantee: 'NONE',
+    spouses: [],
+    fine: '',
+    simaContractOperationId: '',
+    connectedWithBOKT: false,
+    contractFileName: '',
+    videoSignFileName: '',
     decisionQueryEnabled: false,
+    videoSignText: '',
+    partner: undefined,
     guarantors: [],
-    // Yeni əlavə edilən credit details
+    recruiter: {
+      education: '',
+      companyName: '',
+      salary: 0,
+      address: '',
+      position: '',
+      workPlace: '',
+      workAddress: '',
+      experience: 0,
+      otherIncome: 0,
+      voen: '',
+      formOfOwnership: '',
+      status: '',
+      signUpDate: new Date(),
+      photo: '',
+      departmentId: '',
+    },
+    cashPrice: 3000,
+    operationType: 'product',
+    productName: 'iPhone 15 Pro',
+
+    // ILKIN : yeni eklenen
     creditDetails: {
       storeName: 'Kapital Bank',
-      operationType: 'xidmət',
+      operationType: 'product',
       productName: 'iPhone 15 Pro',
       creditTerm: 12,
       cashPrice: 3000,
-      creditAmount: 3750, // 3000 + (3000 * 25%)
-      // Yeni əlavə edilən sahələr
-      category: 'aksessuar',
+      creditAmount: 3750,
+      category: '',
       detail: '',
       creditAmountInput: 0,
       annualPercent: 0,
@@ -252,80 +364,26 @@ export default function Page() {
       insuranceCost: 0,
       creditPurpose: '',
       decisionQueryEnabled: false,
+      serviceRate: 1.5,
     },
-    // --------------------recurit ---------------------------recurit ------------------------------recurit --------------
-    recruiter: {
-      active: [
-        {
-          employer: {
-            legalAddress: 'ESAM Innovations',
-            workerCount: 12,
-            name: 'Qurumun adı',
-            propertyType: {
-              label: '',
-              id: 0,
-              type: '',
-              description: 'Mülkiyyətin növü',
-            },
-            voen: '645234236324',
-            phone: '+994 50 123 45 67',
-          },
-          employee: {
-            positionLabourContract: 'Aparıcı',
-            ssn: '54213321321',
-            workPlaceType: {
-              label: '',
-              id: 0,
-              type: '',
-              description: '',
-            },
-            position: 'Aparıcı',
-            salary: 1000,
-            workPlace: 'Kapital bank',
-          },
-          contract: {
-            number: '',
-            insertDate: '12.12.2021',
-            nextEndDate: '12.12.2022',
-            periodType: {
-              label: '',
-              id: 0,
-              type: '',
-              description: '',
-            },
+    workExperience: '',
+    familyMembers: '',
+    familyIncome: '',
+    isRenting: false,
+    rentAmount: '',
+    rentDuration: '',
+    actualAddress: '',
+    additionalIncomes: [{ id: 0, source: '', amount: '' }],
+    idQuality: 3,
+    generalNote: '',
+    relatedPersons: [] as Person[],
 
-            beginDate: '12.12.2023',
-            signDate: '12.12.2024',
-
-            endDate: '12.12.2025',
-          },
-        },
-      ],
-      deactive: [
-        {
-          employee: {
-            position: '',
-            salary: 0,
-          },
-          employer: {
-            name: 'Claradix',
-            voen: '4312213',
-          },
-          contract: {
-            terminateDate: '',
-            beginDate: '',
-            endDate: '',
-          },
-        },
-      ],
-    },
-    // --------------------pension---------------------------pension------------------------------pension--------------
+    // pensioner data
     pensioner: {
       name: 'Ad',
       patronymic: 'Ata adı',
       birthDate: 'Doğum tarixi',
       surname: 'Soyad',
-
       allowance: [
         {
           beginDate: 'Başlanğıc tarixi',
@@ -338,19 +396,6 @@ export default function Page() {
             description: 'Identifikasiyaya uyğun izah',
           },
           amount: 100,
-          endDate: 'Bitmə tarixi',
-        },
-        {
-          beginDate: 'Başlanğıc tarixi',
-          type: {
-            id: 0,
-            description: 'Identifikasiyaya uyğun izah 2',
-          },
-          group: {
-            id: 0,
-            description: 'Identifikasiyaya uyğun izah',
-          },
-          amount: 0,
           endDate: 'Bitmə tarixi',
         },
       ],
@@ -371,21 +416,6 @@ export default function Page() {
         },
       ],
     },
-  });
-
-  // Family Information states
-  const [familyInfo, setFamilyInfo] = useState<FamilyInfo>({
-    workExperience: '',
-    familyMembers: '',
-    familyIncome: '',
-    isRenting: false,
-    rentAmount: '',
-    rentDuration: '',
-    actualAddress: '',
-    additionalIncomes: [{ id: 0, source: '', amount: '' }],
-    idQuality: 3,
-    generalNote: '',
-    relatedPersons: [] as Person[],
   });
 
   // -------------------recurit---------------------------recurit------------------------------recurit--------------
@@ -438,19 +468,45 @@ export default function Page() {
       };
       if (partnerId) {
         let partner = await getPartnerById(partnerId);
-        if (partner) newCreditRequest = { ...newCreditRequest, partner: partner, creditDetails: { ...newCreditRequest.creditDetails, storeName: partner.companyName } };
+        if (partner) {
+          newCreditRequest = {
+            ...newCreditRequest,
+            partner: partner,
+            operationType: creditRequest.creditDetails.operationType,
+            productName: creditRequest.creditDetails.productName,
+            cashPrice: creditRequest.creditDetails.cashPrice,
+          };
+          // @ts-ignore
+          setCreditRequest((prev) => ({
+            ...prev,
+            creditDetails: {
+              ...prev.creditDetails,
+              storeName: partner.companyName,
+            },
+          }));
+        }
       }
       if (cashPrice && creditDuration && invoiceType && itemName) {
         newCreditRequest = {
-          ...newCreditRequest, creditDetails: {
-            ...newCreditRequest.creditDetails,
+          ...newCreditRequest,
+          cashPrice: parseFloat(cashPrice),
+          operationType: invoiceType,
+          productName: itemName,
+          creditTerm: parseInt(creditDuration),
+          creditAmount: calculateCreditAmount(parseFloat(cashPrice), parseInt(creditDuration)),
+        };
+        // @ts-ignore
+        setCreditRequest((prev) => ({
+          ...prev,
+          creditDetails: {
+            ...prev.creditDetails,
             cashPrice: parseFloat(cashPrice),
             operationType: invoiceType,
             productName: itemName,
             creditTerm: parseInt(creditDuration),
-            creditAmount: calculateCreditAmount(parseFloat(cashPrice), parseInt(creditDuration))
-          }
-        };
+            creditAmount: calculateCreditAmount(parseFloat(cashPrice), parseInt(creditDuration)),
+          },
+        }));
       }
       setCreditRequest(newCreditRequest);
     }
@@ -515,7 +571,7 @@ export default function Page() {
       try {
         let msg = JSON.parse(event.data) as SignalType;
         listenSignals(msg);
-      } catch (error) { }
+      } catch (error) {}
     }
   };
 
@@ -596,6 +652,8 @@ export default function Page() {
                 pin={pin}
                 creditRequest={creditRequest}
                 setValue={setValue}
+                recruiterState={recruiterState}
+                setRecruiterState={setRecruiterState}
               />
             </TabPanel>
 
@@ -620,7 +678,10 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="6">
-              <TabRelatedPersons familyInfo={familyInfo} setFamilyInfo={setFamilyInfo} />
+              <TabGeneralInformation
+                creditRequest={creditRequest}
+                setCreditRequest={setCreditRequest}
+              />
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="7">
@@ -628,7 +689,6 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="8">
-              {/* kredit ver  */}
               <TabCreditDataPage
                 setValue={setValue}
                 creditRequest={creditRequest}

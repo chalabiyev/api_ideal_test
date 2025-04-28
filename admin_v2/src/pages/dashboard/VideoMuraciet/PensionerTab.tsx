@@ -13,8 +13,8 @@ import {
   Checkbox,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CreditRequestDto } from 'src/types/CreditRequestDto';
-import { PensionerInfoResponse, RecruiterDataType } from 'src/pages/dashboard/VideoMuraciet/types';
+import { CreditRequest } from 'src/types/CreditRequestDto';
+import { PensionerInfoResponse } from 'src/pages/dashboard/VideoMuraciet/types';
 import { GetPensionerInfoByPin } from 'src/api/AsanFinanceService';
 
 const PensionerTab = ({
@@ -25,8 +25,8 @@ const PensionerTab = ({
 }: {
   pin: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  creditRequest: CreditRequestDto;
-  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequestDto>>;
+  creditRequest: CreditRequest;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
 }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [fetchFromService, setFetchFromService] = useState<boolean>(false);
@@ -38,16 +38,43 @@ const PensionerTab = ({
 
   const GetPensionerInfoByPinFunc = async () => {
     const _PENSIONER_DATA = await GetPensionerInfoByPin(pin, fetchFromService);
-
     if (typeof _PENSIONER_DATA === 'object' && _PENSIONER_DATA !== null) {
-      setCreditRequest((prev) => ({
-        ...prev,
-        pensioner: _PENSIONER_DATA as PensionerInfoResponse,
-      }));
+      const transformedPensioner = {
+        ..._PENSIONER_DATA,
+        allowance: _PENSIONER_DATA.allowance?.map(item => ({
+          beginDate: item.beginDate || '',
+          endDate: item.endDate || '',
+          type: {
+            id: item.type?.id || 0,
+            description: item.type?.description || ''
+          },
+          group: {
+            id: item.group?.id || 0, 
+            description: item.group?.description || ''
+          },
+          amount: item.amount || 0
+        })) || [],
+        pension: (_PENSIONER_DATA.pension || []).map(item => ({
+          type: {
+            id: item.type?.id || 0,
+            description: item.type?.description || '',
+            label: item.type?.description || ''
+          },
+          group: {
+            id: item.group?.id || 0,
+            description: item.group?.description || ''
+          },
+          amount: item.amount || 0,
+          startDate: item.startDate || '',
+          endDate: item.endDate || ''
+        }))
+      };
+      setCreditRequest({ ...creditRequest, pensioner: transformedPensioner });
     } else {
       console.error('Invalid PENSIONER data:', _PENSIONER_DATA);
     }
   };
+
   return (
     <Box sx={{ py: 4 }}>
       <Card sx={{ m: 4, p: 2, display: 'flex', alignItems: 'center', backgroundColor: '#F9f' }}>
@@ -66,14 +93,14 @@ const PensionerTab = ({
       </Card>
       <Typography
         variant="h5"
-        sx={{ display: creditRequest.recruiter.active.length > 0 ? 'block' : 'none' }}
+        sx={{ display: creditRequest.pensioner.allowance.length > 0 ? 'block' : 'none' }}
         gutterBottom
       >
         Təyin olunmuş müavinətlər
       </Typography>
 
       {/* hazirki  yeri məlumatları */}
-      {creditRequest?.pensioner?.allowance?.map((item, index) => (
+      {creditRequest.pensioner.allowance.map((item, index) => (
         <Card sx={{ mb: 1 }} key={index}>
           <Accordion
             expanded={expanded === `panel${index + 43123}`}
@@ -111,7 +138,7 @@ const PensionerTab = ({
         Təqaüd məlumatları
       </Typography>
 
-      {creditRequest?.pensioner?.pension?.map((item, index) => (
+      {creditRequest.pensioner.pension.map((item, index) => (
         <Card sx={{ mb: 1 }} key={index}>
           <Accordion
             expanded={expanded === `panel${index + 4323123}`}
