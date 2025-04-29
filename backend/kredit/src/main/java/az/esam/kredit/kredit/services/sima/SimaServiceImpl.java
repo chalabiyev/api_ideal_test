@@ -605,6 +605,7 @@ public class SimaServiceImpl implements SimaService {
 
     @Override
     public SimaQRResponse getPdfQR(String fileName, String redirectUrl, String finCode) {
+        log.info("getPdfQR finCode : " + finCode);
         String result = "";
         Calendar c = Calendar.getInstance();
         Date now = new Date();

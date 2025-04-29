@@ -152,7 +152,7 @@ export interface CreditRequest {
   // ALT KISMINI BEN EKLEDİM DİĞER TABLARDAKI INPUTLAR IÇİN İÇİN 
   creditDetails: {
     storeName?: string;
-    operationType?: 'product' | 'service';
+    operationType?: 'product' | 'service' | string;
     productName?: string;
     creditTerm?: number;
     cashPrice?: number;

@@ -75,7 +75,7 @@ public class SimaController {
             @PathVariable("fileName") String fileName,
             @PathVariable("finCode") String finCode,
             @RequestParam(required = false) String redirectUrl) {
-        return ResponseEntity.ok(simaService.getPdfQR(fileName, finCode, redirectUrl));
+        return ResponseEntity.ok(simaService.getPdfQR(fileName, redirectUrl, finCode));
     }
 
 }

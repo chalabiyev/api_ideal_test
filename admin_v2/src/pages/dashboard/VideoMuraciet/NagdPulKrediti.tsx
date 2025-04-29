@@ -12,7 +12,7 @@ import TabCreditDataPage from 'src/components/NewCredit/TabCreditDataPage';
 import TabVideoRecord from 'src/components/NewCredit/TabVideoRecord';
 import RecruiterData from 'src/components/NewCredit/RecruiterData';
 import TabContract from 'src/components/NewCredit/TabContract';
-import { RecruiterState,  CreditRequest, Person } from 'src/types/CreditRequest';
+import { RecruiterState, CreditRequest, Person } from 'src/types/CreditRequest';
 import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 import PensionerTab from './PensionerTab';
@@ -20,6 +20,8 @@ import TabAKB from 'src/components/NewCredit/TabAKB';
 import { AKB_STATE_TYPE } from './types';
 import { getPartnerById } from 'src/api/PartnerService';
 import TabGeneralInformation from 'src/components/NewCredit/TabGeneralInformation';
+import request from 'src/api/request';
+import usePost from 'src/api/usePost';
 
 // ----------------------------------------------------------------------
 
@@ -458,9 +460,9 @@ export default function Page() {
     if (hasData) {
       if (userData) data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
-      let newCreditRequest = {
+      let newCreditRequest : CreditRequest = {
         ...creditRequest,
-        requestedUserPin: userData.username,
+        requestedUser: userData,
         phoneNumber: userData.phoneNumber,
         requestDate: new Date(),
         spouses: [],
@@ -474,6 +476,7 @@ export default function Page() {
             operationType: creditRequest.creditDetails.operationType,
             productName: creditRequest.creditDetails.productName,
             cashPrice: creditRequest.creditDetails.cashPrice,
+            creditType: 'PARTNER_CREDIT'
           };
           // @ts-ignore
           setCreditRequest((prev) => ({
@@ -486,38 +489,36 @@ export default function Page() {
         }
       }
       if (cashPrice && creditDuration && invoiceType && itemName) {
+        const dblCashPrice = parseFloat(cashPrice);
+        const dblCalculateCreditAmount = calculateCreditAmount(dblCashPrice, parseInt(creditDuration));
         newCreditRequest = {
           ...newCreditRequest,
-          cashPrice: parseFloat(cashPrice),
-          operationType: invoiceType,
+          cashPrice: dblCashPrice,
+          operationType: invoiceType == 'məhsul' ? 'product' : 'service',
           productName: itemName,
           creditTerm: parseInt(creditDuration),
-          creditAmount: calculateCreditAmount(parseFloat(cashPrice), parseInt(creditDuration)),
-        };
-        // @ts-ignore
-        setCreditRequest((prev) => ({
-          ...prev,
+          creditAmount: dblCalculateCreditAmount,
+          creditType: partnerId ? 'PARTNER_CREDIT' : (dblCalculateCreditAmount > 500 ? 'ABOVE_500' : 'BELOW_500'),
+          creditAmountWithText: `${dblCalculateCreditAmount} AZN`,
           creditDetails: {
-            ...prev.creditDetails,
-            cashPrice: parseFloat(cashPrice),
-            operationType: invoiceType,
+            ...newCreditRequest.creditDetails,
+            cashPrice: dblCashPrice,
+            operationType: invoiceType == 'məhsul' ? 'product' : 'service',
             productName: itemName,
             creditTerm: parseInt(creditDuration),
-            creditAmount: calculateCreditAmount(parseFloat(cashPrice), parseInt(creditDuration)),
+            creditAmount: dblCalculateCreditAmount,
+            creditAmountInput: dblCalculateCreditAmount,
           },
-        }));
+        };
+      }
+      if (hasGuarantorData) {
+        setGuarantorInfo(guarantorData);
+        newCreditRequest = {
+          ...newCreditRequest,
+          guarantors: [guarantorData],
+        }
       }
       setCreditRequest(newCreditRequest);
-    }
-  };
-
-  const getGuarantorInfo = () => {
-    if (hasGuarantorData) {
-      setGuarantorInfo(guarantorData);
-      setCreditRequest({
-        ...creditRequest,
-        guarantors: [guarantorData],
-      });
     }
   };
 
@@ -530,7 +531,6 @@ export default function Page() {
   useEffect(() => {
     // Trigger user info update whenever new data is fetched
     getUserInfo();
-    getGuarantorInfo();
 
     // eslint-disable-next-line
   }, [data, guarantorData]);
@@ -570,7 +570,7 @@ export default function Page() {
       try {
         let msg = JSON.parse(event.data) as SignalType;
         listenSignals(msg);
-      } catch (error) {}
+      } catch (error) { }
     }
   };
 
@@ -669,7 +669,6 @@ export default function Page() {
                 setValue={setValue}
                 loading={guarantorLoading}
                 guarantorInfo={guarantorInfo}
-                getGuarantorInfo={getGuarantorInfo}
                 setPin={setGuarantorPin}
                 setSeriaNo={setGuarantorSeriaNo}
                 hasData={hasGuarantorData}

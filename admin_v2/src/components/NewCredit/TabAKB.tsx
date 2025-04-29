@@ -30,17 +30,17 @@ const TabAKB = ({
   AKB_STATE: AKB_STATE_TYPE;
   setAKB_STATE: React.Dispatch<React.SetStateAction<AKB_STATE_TYPE>>;
 }) => {
-  useEffect(() => {
-    const fetchData = async () => {
-      // eslint-disable-next-line
-      const data = await usePost(`/akb/inquireByIdCard`);
-      if (data !== null) {
-        // @ts-ignore
-        setAKB_STATE(data as AKB_STATE_TYPE);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // eslint-disable-next-line
+  //     const data = await usePost(`/akb/inquireByIdCard`);
+  //     if (data !== null) {
+  //       // @ts-ignore
+  //       setAKB_STATE(data as AKB_STATE_TYPE);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
   return (
     <Box sx={{ py: 4 }}>
       <Card>

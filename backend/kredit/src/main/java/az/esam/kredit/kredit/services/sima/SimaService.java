@@ -43,5 +43,5 @@ public interface SimaService {
 
     public AuthenticationResponse getToken(HttpServletRequest request, SimaTokenRequest simaTokenRequest);
 
-    public SimaQRResponse getPdfQR(String fileName, String finCode, String redirectUrl);
+    public SimaQRResponse getPdfQR(String fileName, String redirectUrl, String finCode);
 }

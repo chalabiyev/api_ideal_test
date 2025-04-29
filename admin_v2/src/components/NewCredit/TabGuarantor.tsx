@@ -5,8 +5,7 @@ import { Guarantor } from 'src/pages/dashboard/VideoMuraciet/types';
 const TabGuarantor = ({
   setValue,
   loading,
-  guarantorInfo,
-  getGuarantorInfo,
+  guarantorInfo,  
   hasData,
   setPin,
   setSeriaNo,
@@ -14,7 +13,6 @@ const TabGuarantor = ({
   setValue: React.Dispatch<React.SetStateAction<string>>;
   loading: boolean;
   guarantorInfo: any;
-  getGuarantorInfo: () => void;
   hasData: boolean;
   setPin: React.Dispatch<React.SetStateAction<string>>;
   setSeriaNo: React.Dispatch<React.SetStateAction<string>>;
@@ -27,8 +25,7 @@ const TabGuarantor = ({
     if (targetZamin?.pin && targetZamin.documentNumber) {
       setPin(targetZamin.pin);
       setSeriaNo(targetZamin.documentNumber);
-
-      getGuarantorInfo();
+      
     } else {
       console.log('PIN veya Serial Number eksik');
     }

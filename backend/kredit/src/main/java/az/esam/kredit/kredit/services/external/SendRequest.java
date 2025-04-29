@@ -17,7 +17,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.cert.CertificateException;
 import java.util.Base64;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 @Slf4j
 @Service
@@ -26,10 +32,44 @@ public class SendRequest {
     public static final ObjectMapper objectMapper = new ObjectMapper();
     public static final XmlMapper xmlMapper = new XmlMapper();
 
-    public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey, boolean isXml) {
+    public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey,
+            boolean isXml) {
         JsonNode result = null;
         try {
-            OkHttpClient client = new OkHttpClient().newBuilder().build();
+            // SSL doğrulamasını devre dışı bırakmak için özel TrustManager ve
+            // HostnameVerifier oluşturun
+            TrustManager[] trustAllCerts = new TrustManager[] {
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType)
+                                throws CertificateException {
+                            // Herhangi bir kontrol yapma (güvenilir kabul et)
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType)
+                                throws CertificateException {
+                            // Herhangi bir kontrol yapma (güvenilir kabul et)
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[] {};
+                        }
+                    }
+            };
+
+            // SSLContext'i oluşturun ve TrustManager'ı ayarlayın
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                    .hostnameVerifier((hostname, session) -> true) // Hostname doğrulamasını devre dışı bırak
+                    .connectTimeout(30, TimeUnit.SECONDS) // Bağlantı zaman aşımı
+                    .readTimeout(30, TimeUnit.SECONDS) // Okuma zaman aşımı
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .build();
             Request.Builder builder = new Request.Builder()
                     .url(url);
 
@@ -69,7 +109,8 @@ public class SendRequest {
 
                 if (!response.isSuccessful()) {
                     log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
-                    throw new RuntimeException("Request failed with status code: " + statusCode + " and message " + responseStr);
+                    throw new RuntimeException(
+                            "Request failed with status code: " + statusCode + " and message " + responseStr);
                 }
 
                 if (isXml) {
@@ -87,7 +128,8 @@ public class SendRequest {
         return result;
     }
 
-    public JsonNode sendRequest(String url, String data, String username, String password) throws IOException, InterruptedException {
+    public JsonNode sendRequest(String url, String data, String username, String password)
+            throws IOException, InterruptedException {
         JsonNode result = null;
         // Encode credentials to Base64
         String credentials = username + ":" + password;
