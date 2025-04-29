@@ -19,6 +19,6 @@ import java.util.List;
 public class InquiryHistory {
     @JsonProperty("inquiryHistoryItem")
     @JsonDeserialize(using = EmptyStringAsNullDeserializer.class)
-    private List<InquiryHistoryItem> inquiryHistoryItems;
+    private List<InquiryHistoryItem> inquiryHistoryItem;
 }
 

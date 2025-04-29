@@ -6,6 +6,7 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardReque
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.EAKBTYPES;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
+import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.Liability;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
 import az.esam.kredit.kredit.properties.AkbProperties;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -68,7 +70,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
                     "        <inq:inquireByIdCard>\n" +
                     "           <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n" +
                     "           <accept>" + akbRequest.getAccept() + "</accept>\n" +
-                    "           <documentSerial>" + akbRequest.getDocumentSerial() + "</documentSerial>\n" +
+                    "           <documentSerial>AZE</documentSerial>\n" +
                     "           <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n" +
                     "           <pinCode>" + akbRequest.getPinCode() + "</pinCode>\n" +
                     "           <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
@@ -79,14 +81,27 @@ public class AKBRequestServiceImpl implements AKBRequestService {
                     "</soapenv:Envelope>";
 
             log.info("inquireByIdCard Request URL: {}", url);
+            log.info("bodyStr: {}", bodyStr);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
-            String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            String encodedCredentials = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
+                JsonNode returnNode = jsonResponse.get("Body").get("inquireByIdCardResponse").get("return");
+                JsonNode node = returnNode.get("liabilities").get("liability");
+                List<Liability> liabilityList = new ArrayList();
+                if (node.isArray()) {
+                    liabilityList = objectMapper.convertValue(node, ArrayList.class);
+                } else if (node.isObject()) {
+                    Liability liability = objectMapper.convertValue(node, Liability.class);
+                    liabilityList.add(liability);
+                }
+
                 String jsonString = objectMapper
-                        .writeValueAsString(jsonResponse.get("Body").get("inquireByIdCardResponse").get("return"));
+                        .writeValueAsString(returnNode);
+                log.info("jsonString: {}", jsonString);
                 InquireByIdCardResponse response = objectMapper.readValue(jsonString, InquireByIdCardResponse.class);
+                response.getLiabilities().setLiability(liabilityList);
                 inquireByIdCardResponseRepository.save(response);
                 return response;
             } else {
@@ -122,7 +137,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("inquireByPassport Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 return jsonResponse;
@@ -160,7 +175,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("inquireByServiceCard Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 return jsonResponse;
@@ -196,7 +211,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("inquireByTaxNo Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 return jsonResponse;
@@ -228,7 +243,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("inquireUtilityServices Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(
@@ -265,7 +280,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("getBorrowerScore Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper
@@ -299,7 +314,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("getBalanceInfo Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper
@@ -330,7 +345,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpBorrInquiryPurposes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(
@@ -368,7 +383,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpCollateralTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper
@@ -406,7 +421,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpCountries Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper
@@ -444,7 +459,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpCreditClassTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper
@@ -482,7 +497,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpCreditPurposeTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper.writeValueAsString(
@@ -520,7 +535,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpCreditStatusTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper
@@ -555,7 +570,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpCreditTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper
@@ -590,7 +605,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             log.info("lkpCurrencies Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", authName, encodedCredentials,
+            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
             if (jsonResponse != null) {
                 String jsonString = objectMapper

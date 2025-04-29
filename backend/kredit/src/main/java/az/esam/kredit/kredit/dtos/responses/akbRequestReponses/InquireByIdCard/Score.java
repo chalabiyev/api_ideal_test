@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Score {
-    private String calculated;
+    private Boolean calculated;
 }

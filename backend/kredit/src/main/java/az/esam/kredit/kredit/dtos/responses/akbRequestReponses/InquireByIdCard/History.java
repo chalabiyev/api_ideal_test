@@ -21,5 +21,5 @@ public class History {
 
     @JsonProperty("historyItem")
     @JsonDeserialize(using = EmptyStringAsNullDeserializer.class)
-    private List<HistoryItem> historyItems;
+    private List<HistoryItem> historyItem;
 }

@@ -1,18 +1,29 @@
 package az.esam.kredit.kredit.services.external;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import org.springframework.stereotype.Service;
@@ -33,6 +44,173 @@ public class SendRequest {
 
     public static final ObjectMapper objectMapper = new ObjectMapper();
     public static final XmlMapper xmlMapper = new XmlMapper();
+
+    public OkHttpClient createClientWithPfx(String pfxPath, String passwordStr) throws Exception {
+        // 1. KeyStore oluştur (PKCS12 formatında)
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        try (InputStream is = new FileInputStream(pfxPath)) {
+            keyStore.load(is, passwordStr.toCharArray());
+        }
+
+        // 2. KeyManagerFactory başlat
+        KeyManagerFactory kmf = KeyManagerFactory
+                .getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, passwordStr.toCharArray());
+
+        // 3. TRUST-ALL TrustManager oluştur
+        TrustManager[] trustAllCerts = new TrustManager[] {
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                        // Her şeyi kabul et
+                    }
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                        // Her şeyi kabul et
+                    }
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
+                }
+        };
+
+        // 4. SSLContext oluştur
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kmf.getKeyManagers(), trustAllCerts, null);
+
+        // 5. Hostname doğrulamayı devre dışı bırak (yalnızca test için!)
+        HostnameVerifier hostnameVerifier = (hostname, session) -> true;
+
+        return new OkHttpClient.Builder()
+                .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                .hostnameVerifier(hostnameVerifier)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+    }
+
+    public String executeRequestAKBStr(String bodyStr, String url, String method, String authName, String authKey,
+            boolean isXml) {
+        String result = null;
+        try {
+            OkHttpClient client = createClientWithPfx("555.pfx", "555");
+            Request.Builder builder = new Request.Builder()
+                    .url(url);
+
+            if (isXml) {
+                builder.addHeader("Accept", "application/xml")
+                        .addHeader("Content-Type", "application/xml; charset=utf-8");
+            } else {
+                builder.addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json; charset=utf-8");
+            }
+
+            if (authName != null && authKey != null) {
+                builder = builder.addHeader(authName, authKey);
+            }
+            log.info("Service URL: {}", url);
+
+            if ("GET".equalsIgnoreCase(method)) {
+                builder = builder.method("GET", null);
+            } else if ("POST".equalsIgnoreCase(method)) {
+                okhttp3.MediaType mediaType = okhttp3.MediaType.parse(isXml ? "application/xml" : "application/json");
+                RequestBody body = (bodyStr != null && !bodyStr.isEmpty())
+                        ? RequestBody.create(bodyStr, mediaType)
+                        : RequestBody.create(isXml ? "<empty/>" : "{}", mediaType);
+                builder = builder.method("POST", body);
+                log.info("Service body: {}", bodyStr);
+            }
+
+            Request request = builder.build();
+            try (Response response = client.newCall(request).execute()) {
+                int statusCode = response.code();
+                if (response.body() == null) {
+                    log.error("Response body is null with status code {}", statusCode);
+                    throw new RuntimeException("Response body is null with status code " + statusCode);
+                }
+                String responseStr = response.body().string();
+                log.info("Service response: {} {}", responseStr, statusCode);
+
+                if (!response.isSuccessful()) {
+                    log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
+                    throw new RuntimeException(
+                            "Request failed with status code: " + statusCode + " and message " + responseStr);
+                }
+
+                result = responseStr;
+            }
+        } catch (Exception e) {
+            log.error("Unexpected error occurred: {}", e.getMessage());
+            throw new RuntimeException("Request execution failed", e);
+        }
+        return result;
+    }
+
+    public JsonNode executeRequestAKB(String bodyStr, String url, String method, String authName, String authKey,
+            boolean isXml) {
+        JsonNode result = null;
+        try {
+            OkHttpClient client = createClientWithPfx("555.pfx", "555");
+            Request.Builder builder = new Request.Builder()
+                    .url(url);
+
+            if (isXml) {
+                builder.addHeader("Accept", "application/xml")
+                        .addHeader("Content-Type", "application/xml; charset=utf-8");
+            } else {
+                builder.addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json; charset=utf-8");
+            }
+
+            if (authName != null && authKey != null) {
+                builder = builder.addHeader(authName, authKey);
+            }
+            log.info("Service URL: {}", url);
+
+            if ("GET".equalsIgnoreCase(method)) {
+                builder = builder.method("GET", null);
+            } else if ("POST".equalsIgnoreCase(method)) {
+                okhttp3.MediaType mediaType = okhttp3.MediaType.parse(isXml ? "application/xml" : "application/json");
+                RequestBody body = (bodyStr != null && !bodyStr.isEmpty())
+                        ? RequestBody.create(bodyStr, mediaType)
+                        : RequestBody.create(isXml ? "<empty/>" : "{}", mediaType);
+                builder = builder.method("POST", body);
+                log.info("Service body: {}", bodyStr);
+            }
+
+            Request request = builder.build();
+            try (Response response = client.newCall(request).execute()) {
+                int statusCode = response.code();
+                if (response.body() == null) {
+                    log.error("Response body is null with status code {}", statusCode);
+                    throw new RuntimeException("Response body is null with status code " + statusCode);
+                }
+                String responseStr = response.body().string();
+                log.info("Service response: {} {}", responseStr, statusCode);
+
+                if (!response.isSuccessful()) {
+                    log.error("Request failed with status code: {} and message {}", statusCode, responseStr);
+                    throw new RuntimeException(
+                            "Request failed with status code: " + statusCode + " and message " + responseStr);
+                }
+
+                if (isXml) {
+                    JsonNode xmlNode = xmlMapper.readTree(responseStr);
+                    String jsonString = objectMapper.writeValueAsString(xmlNode);
+                    result = objectMapper.readTree(jsonString);
+                } else {
+                    result = objectMapper.readTree(responseStr);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Unexpected error occurred: {}", e.getMessage());
+            throw new RuntimeException("Request execution failed", e);
+        }
+        return result;
+    }
 
     public JsonNode executeRequest(String bodyStr, String url, String method, String authName, String authKey,
             boolean isXml) {

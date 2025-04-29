@@ -16,6 +16,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "akb_inquireByIdCardResponses")
 public class InquireByIdCardResponse {
     @Id
+    private String id;
+
     private String reportId;
     private String reportingDate;
     private Borrower borrower;
