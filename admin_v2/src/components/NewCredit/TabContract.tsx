@@ -18,13 +18,23 @@ import { callGetFile } from 'src/api/FileService';
 import { SimaQRResponse } from 'src/types/SimaQRResponse';
 import { SignalType } from '../video-call/WebsocketTypes';
 import { createCreditRequest } from 'src/api/CreditService';
+import { Navigate } from 'react-router-dom';
 
-const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, sendSignal, setCreditRequest }:
-  {
-    creditRequest: CreditRequest, contractPdf: string; setContractPdf: any; setCreditRequest: any;
-    newSignal: SignalType | undefined;
-    sendSignal: (s: SignalType) => void;
-  }) => {
+const TabContract = ({
+  creditRequest,
+  contractPdf,
+  setContractPdf,
+  newSignal,
+  sendSignal,
+  setCreditRequest,
+}: {
+  creditRequest: CreditRequest;
+  contractPdf: string;
+  setContractPdf: any;
+  setCreditRequest: any;
+  newSignal: SignalType | undefined;
+  sendSignal: (s: SignalType) => void;
+}) => {
   const [isSigning, setIsSigning] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [contractGenerating, setContractGenerating] = useState(false);
@@ -40,7 +50,6 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
     sendSignal({ type: 'signPdf', msg: creditRequest.contractFileName });
   };
 
-
   useEffect(() => {
     if (contractCreated) {
       callGetFile(creditRequest.contractFileName!).then((file) => {
@@ -48,16 +57,18 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
           setContractPdf(file);
         }
       });
-      createCreditRequest(creditRequest).then((res) => {
-        if (res) {
-          setCreditRequest(res);
-          toast.success('Müraciət uğurla bildirildi!');
-        } else {
+      createCreditRequest(creditRequest)
+        .then((res) => {
+          if (res) {
+            setCreditRequest(res);
+            toast.success('Müraciət uğurla bildirildi!');
+          } else {
+            toast.error('Müraciət yaradılmadı!');
+          }
+        })
+        .catch(() => {
           toast.error('Müraciət yaradılmadı!');
-        }
-      }).catch(() => {
-        toast.error('Müraciət yaradılmadı!');
-      });
+        });
     }
   }, [contractCreated]);
 
@@ -65,30 +76,34 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
     if (simaOperationId && creditRequest.contractFileName && !contractCreated) {
       setCheckCounter(checkCounter + 1);
       if (checkCounter > 10) {
-        if (intervalId)
-          clearInterval(intervalId);
+        if (intervalId) clearInterval(intervalId);
         setIsSigning(false);
         setOpenDialog(false);
         toast.error('Müqavilə imzalanmadı.');
       }
       getSimaStatus(simaOperationId).then((res: SimaStatus) => {
         if (res == SimaStatus.Success) {
-          if (intervalId)
-            clearInterval(intervalId);
+          if (intervalId) clearInterval(intervalId);
           setIsSigning(false);
           setOpenDialog(false);
           setContractCreated(true);
           setCurrentStatus('Müqavilə uğurla imzalandı!');
+          
+          // yönəndirmə və toast mesaj
+          toast.success('Müqavilə uğurla imzalandı. Yönləndirilirsiniz...');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
         } else if (res == SimaStatus.Failed) {
-          if (intervalId)
-            clearInterval(intervalId);
+          if (intervalId) clearInterval(intervalId);
           toast.error('Müqavilə imzalanmadı.');
           setIsSigning(false);
           setOpenDialog(false);
+          toast.error('Müqavilə imzalanmadı.');
         }
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (simaOperationId && creditRequest.contractFileName) {
@@ -103,7 +118,6 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
     }
   }, [simaOperationId]);
 
-
   useEffect(() => {
     if (newSignal?.type == 'signingPdf' && newSignal.msg) {
       setCurrentStatus('Müqavilə imzalanır...');
@@ -116,27 +130,30 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
   useEffect(() => {
     if (creditRequest && !contractGenerating) {
       setContractGenerating(true);
-      generateContract(creditRequest).then((res: ContractGenerateResponse | null) => {
-        if (res?.status == 'success') {
-          setCreditRequest({ ...creditRequest, contractFileName: res.pdfName });
-          callGetFile(res.pdfName).then((file) => {
-            if (file) {
-              setContractPdf(file);
-              setContractGenerating(false);
-            }
-            else {
-              toast.error("Müqavilə tərtib olunmadı!");
-              setContractGenerating(false);
-            }
-          }).catch((err) => {
-            toast.error("Müqavilə tərtib olunmadı!");
-            setContractGenerating(false);
-          });
-        }
-      }).catch((err) => {
-        toast.error("Müqavilə tərtib olunmadı!");
-        setContractGenerating(false);
-      });
+      generateContract(creditRequest)
+        .then((res: ContractGenerateResponse | null) => {
+          if (res?.status == 'success') {
+            setCreditRequest({ ...creditRequest, contractFileName: res.pdfName });
+            callGetFile(res.pdfName)
+              .then((file) => {
+                if (file) {
+                  setContractPdf(file);
+                  setContractGenerating(false);
+                } else {
+                  toast.error('Müqavilə tərtib olunmadı!');
+                  setContractGenerating(false);
+                }
+              })
+              .catch((err) => {
+                toast.error('Müqavilə tərtib olunmadı!');
+                setContractGenerating(false);
+              });
+          }
+        })
+        .catch((err) => {
+          toast.error('Müqavilə tərtib olunmadı!');
+          setContractGenerating(false);
+        });
     }
   }, [creditRequest]);
 
@@ -156,7 +173,13 @@ const TabContract = ({ creditRequest, contractPdf, setContractPdf, newSignal, se
           }}
         >
           {contractGenerating && <Typography>Müqavilə yaradılır...</Typography>}
-          {!contractGenerating && <embed src={`${contractPdf}#toolbar=0&navpanes=0&scrollbar=0`} width="100%" height="400px" />}
+          {!contractGenerating && (
+            <embed
+              src={`${contractPdf}#toolbar=0&navpanes=0&scrollbar=0`}
+              width="100%"
+              height="400px"
+            />
+          )}
         </CardContent>
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button

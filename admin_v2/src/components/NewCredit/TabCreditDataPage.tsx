@@ -247,7 +247,7 @@ const TabCreditDataPage = ({
             Kreditin Müddəti: {creditRequest.creditDetails.creditTerm || 0} ay
           </Typography>
           <Slider
-          disabled
+            disabled
             valueLabelDisplay="auto"
             min={3}
             value={creditRequest.creditDetails.creditTerm || 12}
