@@ -78,7 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse registerAdmin(RegisterRequest request) throws BadRequestException {
         try {
-            var existingUser = userRepository.findByUsername(request.getUsername())
+            var existingUser = userRepository.findFirstByUsername(request.getUsername())
                     .orElse(null);
 
             request.setPhoneNumber(request.getPhoneNumber()
@@ -161,10 +161,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request, Authentication authentication)
             throws BadRequestException {
         try {
-            var admin = authentication != null ? userRepository.findByUsername(authentication.getName())
+            var admin = authentication != null ? userRepository.findFirstByUsername(authentication.getName())
                     .orElse(null) : null;
 
-            var existingUser = userRepository.findByUsername(request.getUsername())
+            var existingUser = userRepository.findFirstByUsername(request.getUsername())
                     .orElse(null);
 
             if (request.getPhoneNumber() != null) {
@@ -323,7 +323,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(LoginRequest request) {
         try {
-            var user = userRepository.findByUsername(request.getUsername())
+            var user = userRepository.findFirstByUsername(request.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException(
                             "User Not Found with username: " + request.getUsername()));
 
@@ -389,7 +389,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             username = jwtService.extractUsername(refreshToken);
 
             if (username != null) {
-                User user = userRepository.findByUsername(username)
+                User user = userRepository.findFirstByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
                 UserDetails userDetails = UserDetailsImpl.build(user);
@@ -429,7 +429,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void logout(String username) {
         try {
-            var user = userRepository.findByUsername(username);
+            var user = userRepository.findFirstByUsername(username);
             if (user.isPresent()) {
                 User usr = user.get();
                 revokeAllUserTokens(usr);
@@ -445,7 +445,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User getUserByUsername(String username) {
         try {
-            return userRepository.findByUsername(username)
+            return userRepository.findFirstByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -470,7 +470,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new BadCredentialsException("User not found!");
             }
 
-            User user = userRepository.findByUsername(authentication.getName())
+            User user = userRepository.findFirstByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
             if (passwordEncoder.matches(password, user.getPassword())) {
                 user.setStatus(EUserStatus.DELETED);
@@ -501,7 +501,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public User me(HttpServletRequest request) {
         try {
             String username = jwtService.extractUsername(request.getHeader("Authorization").substring(7));
-            return userRepository.findByUsername(username)
+            return userRepository.findFirstByUsername(username)
                     .orElseThrow(() -> new BadCredentialsException("User Not Found with username: " + username));
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -513,7 +513,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication)
             throws BadRequestException {
         try {
-            User userExists = userRepository.findByUsername(authentication.getName())
+            User userExists = userRepository.findFirstByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User does not exists"));
 
             userExists.setFullName(request.getFullName());
@@ -530,7 +530,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse setPassword(SetPasswordRequest request, HttpServletRequest httpRequest,
             Authentication a) throws BadRequestException {
         try {
-            var user = userRepository.findByUsername(a.getName())
+            var user = userRepository.findFirstByUsername(a.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (request.getNewPassword().equals(request.getPassword())) {
@@ -718,14 +718,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .replaceAll("\\(", "")
                 .replaceAll("\\)", "")
                 .replaceAll(" ", "");
-        Optional<User> findUser = userRepository.findByUsername(person.getFinCode());
+        Optional<User> findUser = userRepository.findFirstByUsername(person.getFinCode());
         if (findUser.isEmpty()) {
-            findUser = userRepository.findByPhoneNumber(phoneNumber);
+            findUser = userRepository.findFirstByPhoneNumber(phoneNumber);
         }
         if (findUser.isEmpty()) {
             try {
                 // TODO: check if user exists with partner pin, then add partner role to user
-                User existingUser = userRepository.findByUsername(person.getFinCode()).orElse(null);
+                User existingUser = userRepository.findFirstByUsername(person.getFinCode()).orElse(null);
                 if (existingUser != null) {
                     addRole(existingUser.getUsername(), ERole.ROLE_USER);
                     return authenticate(LoginRequest.builder()
@@ -760,7 +760,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     smsService.sendSMSOneToN(SendSmsRequest.builder()
                             .message(
                                     "Sizin hesabınız uğurla yaradıldı. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
-                                            + "https://kabinet.idealkredit.az/setpassword?token=" + response.getAccessToken()
+                                            + "https://kabinet.idealkredit.az/setpassword?token="
+                                            + response.getAccessToken()
                                             + " Link 24 saat ərzində aktivdir.")
                             .numbers(List.of(person.getPhoneNumber()))
                             .build());
@@ -827,7 +828,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public User addRole(String username, ERole role) {
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         Role roleToAdd = roleRepository.findByName(role)
                 .orElseThrow(() -> new UsernameNotFoundException("Role not found!"));

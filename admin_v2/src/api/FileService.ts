@@ -24,6 +24,29 @@ export const callGetFile = async (fileName: string) => {
   }
 };
 
+
+export const callGetFileBase64 = async (fileName: string) => {
+  const response = await fetch(`${BASE_URL}/file/getFile/${fileName}`, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${token}`,
+      'X-API-KEY': API_KEY,
+    },
+    method: 'GET',
+  });
+  if (response.ok) {
+    const blobData = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blobData);
+    });
+    // eslint-disable-next-line
+  } else {
+    return null;
+  }
+};
+
 export const uploadFile = async (file: Blob) => {
   let fdata = new FormData();
   fdata.append('file', file);
@@ -46,6 +69,30 @@ export const uploadFile = async (file: Blob) => {
     return { ok: false, data: null };
   }
 };
+
+export const uploadFileWithFile = async (file: File) => {
+  let fdata = new FormData();
+  fdata.append('file', file);
+  fdata.append('isPublic', 'false');
+  const response = await fetch(`${BASE_URL}/file/uploadFile`, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${token}`,
+      'X-API-KEY': API_KEY,
+    },
+    body: fdata,
+    method: 'POST',
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return { ok: true, data: data };
+    // eslint-disable-next-line
+  } else {
+    return { ok: false, data: null };
+  }
+};
+
 export const uploadPublicFile = async (file: Blob) => {
   let fdata = new FormData();
   fdata.append('file', file);

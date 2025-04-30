@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import { CreditRequest } from 'src/types/CreditRequest';
 import { generateContract, getPdfQR, getSimaStatus, SimaStatus } from 'src/api/ContractService';
 import { ContractGenerateResponse } from 'src/types/ContractGenerateResponse';
-import { callGetFile } from 'src/api/FileService';
+import { callGetFile, callGetFileBase64, uploadFile, uploadFileWithFile } from 'src/api/FileService';
 import { SimaQRResponse } from 'src/types/SimaQRResponse';
 import { SignalType } from '../video-call/WebsocketTypes';
 import { createCreditRequest } from 'src/api/CreditService';
@@ -57,20 +57,33 @@ const TabContract = ({
           setContractPdf(file);
         }
       });
-      createCreditRequest(creditRequest)
-        .then((res) => {
-          if (res) {
-            setCreditRequest(res);
-            toast.success('Müraciət uğurla bildirildi!');
-          } else {
-            toast.error('Müraciət yaradılmadı!');
-          }
-        })
-        .catch(() => {
-          toast.error('Müraciət yaradılmadı!');
-        });
+      // createCreditRequest(creditRequest)
+      //   .then((res) => {
+      //     if (res) {
+      //       setCreditRequest(res);
+      //       toast.success('Müraciət uğurla bildirildi!');
+      //     } else {
+      //       toast.error('Müraciət yaradılmadı!');
+      //     }
+      //   })
+      //   .catch(() => {
+      //     toast.error('Müraciət yaradılmadı!');
+      //   });
     }
   }, [contractCreated]);
+
+  const base64ToFile = (base64: string, fileName: string) => {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i += 1) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const file = new File([blob], fileName, { type: 'application/pdf' });
+    return file;
+  };
+
 
   const checkSignStatus = () => {
     if (simaOperationId && creditRequest.contractFileName && !contractCreated) {
@@ -88,12 +101,75 @@ const TabContract = ({
           setOpenDialog(false);
           setContractCreated(true);
           setCurrentStatus('Müqavilə uğurla imzalandı!');
-          
-          // yönəndirmə və toast mesaj
-          toast.success('Müqavilə uğurla imzalandı. Yönləndirilirsiniz...');
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 2000);
+
+          toast.success('Operator imzası gözlənilir....');
+
+          callGetFileBase64(creditRequest.contractFileName!).then((pdfFileBase64) => {
+            if (pdfFileBase64) {
+              fetch('http://127.0.0.1:18230/api/v1/signer/readcertificatesfromstore').then((res) => {
+                res.json().then((result) => {
+                  console.log('readcertificatesfromstore', result);
+                  if (result.isSuccess && result.output.certificates && result.output.certificates.length > 0) {
+                    const files = [{
+                      "name": creditRequest.contractFileName!,
+                      "rawData": pdfFileBase64.toString().replace('data:application/pdf;base64,', '')
+                    }];
+                    const data = {
+                      "signFormat": "Pades",
+                      "tsaClientName": "Default",
+                      "signCertificateSerialNumber": result.output.certificates[0].serialNumber,
+                      "files": files
+                    }
+                    fetch('http://127.0.0.1:18230/api/v1/signer/fullsign', {
+                      method: 'POST',
+                      body: JSON.stringify(data),
+                      headers: {
+                        "Content-Type": 'application/json'
+                      }
+                    }).then((res) => {
+                      console.log("signing response", res);
+                      res.json().then((signResult) => {
+                        console.log("signing result", signResult);
+                        if (signResult.isSuccess && signResult.output.padesFile.rawData) {
+                          const file = base64ToFile(signResult.output.padesFile.rawData, creditRequest.contractFileName!);
+                          console.log('file', file);
+                          uploadFileWithFile(file).then((res) => {
+                            let lastCreditRequest = { ...creditRequest, contractFileName: res.data.message };
+                            setCreditRequest(lastCreditRequest);
+                            createCreditRequest(lastCreditRequest).then((res) => {
+                              if (res) {
+                                setCreditRequest(res);
+                                // yönəndirmə və toast mesaj
+                                toast.success('Müqavilə uğurla imzalandı. Yönləndirilirsiniz...');
+                                setTimeout(() => {
+                                  window.location.href = '/';
+                                }, 2000);
+                              }
+                            });
+                          }).catch((err) => {
+                            throw err;
+                          });
+                        } else {
+                          throw new Error('Müqavilə imzalanmadı.');
+                        }
+                      }).catch((err) => {
+                        throw err;
+                      });
+                    }).catch((err) => {
+                      throw err;
+                    });
+                  }
+                }).catch((err) => {
+                  throw err;
+                });
+              }).catch((err) => {
+                console.log("signing error", err);
+                toast.error('Müqavilə imzalanmadı.');
+              });
+
+
+            }
+          });
         } else if (res == SimaStatus.Failed) {
           if (intervalId) clearInterval(intervalId);
           toast.error('Müqavilə imzalanmadı.');

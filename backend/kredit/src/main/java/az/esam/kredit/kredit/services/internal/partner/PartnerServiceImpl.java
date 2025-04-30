@@ -142,7 +142,7 @@ public class PartnerServiceImpl implements PartnerService {
 
         if (!partner.getStatus().equals(EFinalStatus.ACCEPTED) && EFinalStatus.ACCEPTED.equals(EFinalStatus.valueOf(status))) {
             // check if user exists with partner pin, then add partner role to user
-            User existingUser = userRepository.findByUsername(partner.getPin()).orElse(null);
+            User existingUser = userRepository.findFirstByUsername(partner.getPin()).orElse(null);
             if (existingUser != null) {
                 authenticationService.addRole(existingUser.getUsername(), ERole.ROLE_PARTNER);
                 // TODO: sms gonder partner role added
@@ -173,7 +173,7 @@ public class PartnerServiceImpl implements PartnerService {
 
                 AuthenticationResponse response = authenticationService.register(registerRequest, authentication);
 
-                existingUser = userRepository.findByUsername(partner.getPin())
+                existingUser = userRepository.findFirstByUsername(partner.getPin())
                         .orElseThrow(() -> new RuntimeException("User tapılmadı"));
                 if (existingUser.getPartners() == null) {
                     existingUser.setPartners(new HashSet<>());

@@ -58,7 +58,7 @@ public class FileController {
             Authentication authentication
     ) {
         try {
-            var user = userRepository.findByUsername(authentication.getName())
+            var user = userRepository.findFirstByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             String fileName = System.currentTimeMillis() + "_" + normalizeFileName(file.getOriginalFilename());
             logger.info(fileName);
@@ -89,7 +89,7 @@ public class FileController {
     ) {
         try {
 
-            var user = authentication != null ? userRepository.findByUsername(authentication.getName())
+            var user = authentication != null ? userRepository.findFirstByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found")) : null;
             List<String> fileNames = new ArrayList<>();
             for (MultipartFile f : file) {
@@ -143,7 +143,7 @@ public class FileController {
         try {
             logger.info("getFile");
             logger.info(fileName);
-            var user = userRepository.findByUsername(authentication.getName())
+            var user = userRepository.findFirstByUsername(authentication.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             logger.info(user.getUsername());
             UploadedFile uploadedFile = uploadedFileRepository.findByFileName(fileName)

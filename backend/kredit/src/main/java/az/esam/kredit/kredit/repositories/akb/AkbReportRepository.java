@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface AkbReportRepository extends MongoRepository<Report, String> {
 
-    Optional<Report> findByBorrowerFinOrderByReportingDateDesc(String fin);
+    Optional<Report> findFirstByBorrowerFinOrderByReportingDateDesc(String fin);
 
 }

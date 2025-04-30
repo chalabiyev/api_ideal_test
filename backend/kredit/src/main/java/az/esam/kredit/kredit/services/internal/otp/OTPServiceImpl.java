@@ -64,10 +64,6 @@ public class OTPServiceImpl implements OTPService {
             Date startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
             Date endDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-            if (!request.getContact().contains("504809988")) {
-                throw new BadRequestException("Contact is required");
-            }
-
             // Günde sadece bir defa OTP gönderme kontrolü
             if (platform.equals(EPlatform.PHONE.name()) && !request.getContact().contains("504809988")) {
                 if (otpRepository.countByPhoneAndSendDateBetween(request.getContact(), startDate, endDate) > 0) {
@@ -213,7 +209,7 @@ public class OTPServiceImpl implements OTPService {
         }
         try {
             User user = platform.equals(EPlatform.PHONE.name())
-                    ? userRepository.findByPhoneNumber(request.getContact())
+                    ? userRepository.findFirstByPhoneNumber(request.getContact())
                             .orElseThrow(() -> new UsernameNotFoundException("User not found"))
                     : userRepository.findByEmail(request.getContact())
                             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -287,13 +283,13 @@ public class OTPServiceImpl implements OTPService {
     @Override
     public boolean changePhone(ChangePhoneRequest request, HttpServletRequest httpRequest) throws BadRequestException {
         try {
-            User userExists = userRepository.findByPhoneNumber(request.getNewPhone()).orElse(null);
+            User userExists = userRepository.findFirstByPhoneNumber(request.getNewPhone()).orElse(null);
 
             if (userExists != null && !userExists.getStatus().equals(EUserStatus.DELETED)) {
                 throw new BadRequestException("Phone number already exists");
             }
 
-            User user = userRepository.findByPhoneNumber(request.getPhone())
+            User user = userRepository.findFirstByPhoneNumber(request.getPhone())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (validateOTP(request.getNewPhone(), request.getOtpCode(), EPlatform.PHONE)) {

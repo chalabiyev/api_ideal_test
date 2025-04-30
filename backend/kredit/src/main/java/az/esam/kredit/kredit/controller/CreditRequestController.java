@@ -52,14 +52,8 @@ public class CreditRequestController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/create")
-    public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {
-
-        // FIXME : Cihan : Remove before live
-        if (!request.getPhoneNumber().contains("504809988")) {
-            return ResponseEntity.internalServerError().build();
-        }
-
-        var user = userRepository.findByUsername(authentication.getName())
+    public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {      
+        var user = userRepository.findFirstByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         request.setRequestedUser(user);
         return ResponseEntity.ok(creditRequestService.create(request, authentication));

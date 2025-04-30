@@ -8,5 +8,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface AKBBorrowerScoreResponseRepository extends MongoRepository<AKBBorrowerScoreResponse, String> {
 
-    public Optional<AKBBorrowerScoreResponse> findByReportId(String reportId);
+    public Optional<AKBBorrowerScoreResponse> findFirstByReportId(String reportId);
 }

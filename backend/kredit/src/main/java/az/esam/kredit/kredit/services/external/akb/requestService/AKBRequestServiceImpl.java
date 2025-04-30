@@ -160,7 +160,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     public Report inquireByIdCard(InquireByIdCardRequest akbRequest) {
         try {
             Optional<Report> oldReport = akbReportRepository
-                    .findByBorrowerFinOrderByReportingDateDesc(akbRequest.getPinCode());
+                    .findFirstByBorrowerFinOrderByReportingDateDesc(akbRequest.getPinCode());
             if (oldReport.isPresent()) {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(oldReport.get().getReportingDate());
                 Date tenDaysAgo = new Date(date.getTime() - (10 * 24 * 60 * 60 * 1000));
@@ -365,7 +365,7 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     @Override
     public AKBBorrowerScoreResponse getBorrowerScore(String reportId) {
         try {
-            Optional<AKBBorrowerScoreResponse> oldScore = borrowerScoreResponseRepository.findByReportId(reportId);
+            Optional<AKBBorrowerScoreResponse> oldScore = borrowerScoreResponseRepository.findFirstByReportId(reportId);
             if (oldScore.isPresent()) {
                 return oldScore.get();
             }

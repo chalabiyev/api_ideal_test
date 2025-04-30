@@ -14,6 +14,8 @@ import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.services.external.sms.SMSService;
 import az.esam.kredit.kredit.services.sima.SimaService;
 import lombok.extern.slf4j.Slf4j;
+
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -59,6 +61,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public CreditRequest create(CreditRequest request, Authentication authentication) {
+
+        if (request.getId() == null || request.getId().isEmpty()) {
+            request.setId(new ObjectId().toString());
+        }
 
         request.setRequestDate(new Date());
         if (request.getCreditAmount() == null) {
@@ -166,7 +172,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                                     + kabinetUrl)
                     .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
                     .build());
-            creditRequestRepository.save(request);
+            request = creditRequestRepository.save(request);
         }
 
         return request;
@@ -174,7 +180,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public SimaQRResponse activate(String creditRequestId, String redirectUrl, Authentication authentication) {
-        var user = userRepository.findByUsername(authentication.getName())
+        var user = userRepository.findFirstByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
                 .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
@@ -226,7 +232,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public CreditRequest get(String id, Authentication authentication) {
-        var user = userRepository.findByUsername(authentication.getName())
+        var user = userRepository.findFirstByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         CreditRequest creditRequest = creditRequestRepository.findById(id).orElseThrow();
         if (user.getRoles().stream().filter(f -> f.getName() == ERole.ROLE_ADMIN).count() == 0) {
@@ -247,7 +253,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public Long count(Authentication auth) {
-        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
+        User usr = userRepository.findFirstByUsername(auth.getName()).orElseThrow();
         return isAdmin(usr) ? creditRequestRepository.count() : creditRequestRepository.countByRequestedUser(usr);
     }
 
@@ -288,7 +294,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public Page<CreditRequest> search(CreditRequestSearchDto search, Authentication auth) {
-        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
+        User usr = userRepository.findFirstByUsername(auth.getName()).orElseThrow();
         Query q = new Query().skip(search.getPage() * search.getPageSize())
                 .limit(search.getPageSize());
         if (search.getCreditType() != null && !search.getCreditType().isEmpty()) {
@@ -342,14 +348,14 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public Long countOf(ECreditType creditType, Authentication auth) {
-        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
+        User usr = userRepository.findFirstByUsername(auth.getName()).orElseThrow();
         return isAdmin(usr) ? creditRequestRepository.countByCreditType(creditType)
                 : creditRequestRepository.countByCreditTypeAndRequestedUser(creditType, usr);
     }
 
     @Override
     public CreditRequest acceptByAdmin(String creditRequestId, Authentication authentication) {
-        var user = userRepository.findByUsername(authentication.getName())
+        var user = userRepository.findFirstByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
                 .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
@@ -368,7 +374,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public CreditRequest rejectByAdmin(String creditRequestId, Authentication authentication) {
-        var user = userRepository.findByUsername(authentication.getName())
+        var user = userRepository.findFirstByUsername(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
                 .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
@@ -389,7 +395,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public Long countOfConfirmStatus(CreditRequestStatusEnum confirmStatus, Authentication auth) {
-        User usr = userRepository.findByUsername(auth.getName()).orElseThrow();
+        User usr = userRepository.findFirstByUsername(auth.getName()).orElseThrow();
         return isAdmin(usr) ? creditRequestRepository.countByConfirmStatus(confirmStatus)
                 : creditRequestRepository.countByConfirmStatusAndRequestedUser(confirmStatus, usr);
     }
