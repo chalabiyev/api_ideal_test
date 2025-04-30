@@ -195,3 +195,11 @@ export interface Report {
   score: Score;
   balance: number;
 }
+
+export interface AKBBorrowerScoreResponse {
+  id?: string;
+  reportId?: string;
+  response?: string;
+  point?: number;
+  pdRate?: number;
+}

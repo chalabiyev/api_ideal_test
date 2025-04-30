@@ -20,6 +20,6 @@ public class AKBBorrowerScoreResponse {
     private String reportId;
 
     private String response;
-    private Integer point;
-    private Integer pdRate;
+    private Double point;
+    private Double pdRate;
 }

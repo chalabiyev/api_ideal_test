@@ -20,7 +20,8 @@ import TabAKB from 'src/components/NewCredit/TabAKB';
 import { getPartnerById } from 'src/api/PartnerService';
 import TabGeneralInformation from 'src/components/NewCredit/TabGeneralInformation';
 import request from 'src/api/request';
-import { Report } from './types';
+import { AKBBorrowerScoreResponse, Report } from './types';
+import { toast } from 'sonner';
 
 
 // ----------------------------------------------------------------------
@@ -32,6 +33,11 @@ const metadata = { title: `Video müraciət | Nağd ` };
 let wsNK: WebSocket;
 
 export default function Page() {
+  const [AKB_SCORE, setAKB_SCORE] = useState<AKBBorrowerScoreResponse>({
+    point: 0,
+    pdRate: 0,
+    response: ''
+  })
   const [AKB_STATE, setAKB_STATE] = useState<Report>({
     id: 'RP-202502261234',
     reportingDate: '2025-02-26',
@@ -496,21 +502,29 @@ export default function Page() {
           guarantors: [guarantorData],
         }
       }
-      console.log('akb data checking..');
-      const akbResponse = await request.post('/akb/inquireByIdCard', {
-        "purposeCode": "001",
-        "accept": true,
-        "documentSerial": "AZE",
-        "documentNo": newCreditRequest.requestedUser?.seriaNo,
-        "pinCode": newCreditRequest.requestedUser?.pin,
-        "org_id": "135",
-        "branchId": "IdealKredit",
-        "userId": "IdealKreditBoktWs"
-      });
-      console.log('akb response', akbResponse);
-      if (akbResponse) {
-        setAKB_STATE(akbResponse.data);
+      try {
+        const akbResponse = await request.post('/akb/inquireByIdCard', {
+          "purposeCode": "001",
+          "accept": true,
+          "documentSerial": "AZE",
+          "documentNo": newCreditRequest.requestedUser?.seriaNo,
+          "pinCode": newCreditRequest.requestedUser?.pin,
+          "org_id": "135",
+          "branchId": "IdealKredit",
+          "userId": "IdealKreditBoktWs"
+        });
+        if (akbResponse) {
+          let akbData = akbResponse.data as Report;
+          setAKB_STATE(akbData);
+          const akbScore = await request.get(`/akb/getBorrowerScore?reportId=${akbData.id}`);
+          if (akbScore) {
+            setAKB_SCORE(akbScore.data as AKBBorrowerScoreResponse);
+          }
+        }
+      } catch (error) {
+        toast.error('AKB bilgileri tapılmadı');
       }
+
       setCreditRequest(newCreditRequest);
     }
   };
@@ -636,7 +650,7 @@ export default function Page() {
             </TabPanel>
 
             <TabPanel sx={{ p: 0 }} value="2">
-              <TabAKB AKB_STATE={AKB_STATE} setAKB_STATE={setAKB_STATE} />
+              <TabAKB AKB_STATE={AKB_STATE} setAKB_STATE={setAKB_STATE} AKB_SCORE={AKB_SCORE} setAKB_SCORE={setAKB_SCORE} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="3">
               <RecruiterData

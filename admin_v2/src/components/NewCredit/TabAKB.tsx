@@ -19,14 +19,18 @@ import {
   CardHeader,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Report } from 'src/pages/dashboard/VideoMuraciet/types';
+import { AKBBorrowerScoreResponse, Report } from 'src/pages/dashboard/VideoMuraciet/types';
 
 const TabAKB = ({
   AKB_STATE,
   setAKB_STATE,
+  AKB_SCORE,
+  setAKB_SCORE
 }: {
   AKB_STATE: Report;
   setAKB_STATE: React.Dispatch<React.SetStateAction<Report>>;
+  AKB_SCORE: AKBBorrowerScoreResponse,
+  setAKB_SCORE: React.Dispatch<React.SetStateAction<AKBBorrowerScoreResponse>>;
 }) => {
 
   return (
@@ -52,7 +56,7 @@ const TabAKB = ({
               <TextField
                 label="Kredit reytinqi"
                 fullWidth
-                value={AKB_STATE.score.calculated || ''}
+                value={AKB_SCORE.point || ''}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -69,7 +73,7 @@ const TabAKB = ({
         Öhdəlik kreditləri:
       </Typography>
 
-      {AKB_STATE.liabilities.map((liability, index) => (
+      {AKB_STATE.liabilities.sort((a, b) => (a.outstandingDebtMain > b.outstandingDebtMain ? -1 : 1)).map((liability, index) => (
         <Card sx={{ mb: 1, mt: 1, border: `1px solid #2968E9` }}>
           <Accordion key={index}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
