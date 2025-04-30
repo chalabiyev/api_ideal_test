@@ -17,11 +17,11 @@ import { SignalType } from 'src/components/video-call/WebsocketTypes';
 import { v4 as uuidv4 } from 'uuid';
 import PensionerTab from './PensionerTab';
 import TabAKB from 'src/components/NewCredit/TabAKB';
-import { AKB_STATE_TYPE } from './types';
 import { getPartnerById } from 'src/api/PartnerService';
 import TabGeneralInformation from 'src/components/NewCredit/TabGeneralInformation';
 import request from 'src/api/request';
-import usePost from 'src/api/usePost';
+import { Report } from './types';
+
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +32,8 @@ const metadata = { title: `Video müraciət | Nağd ` };
 let wsNK: WebSocket;
 
 export default function Page() {
-  const [AKB_STATE, setAKB_STATE] = useState<AKB_STATE_TYPE>({
-    reportId: 'RP-202502261234',
+  const [AKB_STATE, setAKB_STATE] = useState<Report>({
+    id: 'RP-202502261234',
     reportingDate: '2025-02-26',
     borrower: {
       documentNo: 'AZE1234567',
@@ -48,8 +48,8 @@ export default function Page() {
       status: 'Aktiv',
       participantOfPatrioticWar: true,
     },
-    liabilities: {
-      liability: [
+    liabilities:
+      [
         {
           id: 'CRD-20240001',
           bankId: 'BA001',
@@ -63,8 +63,7 @@ export default function Page() {
           daysInterestOverdue: 5,
           daysMainSumOverdue: 20,
           contractDueOn: '2026-06-10',
-          firstContractDueOn: '2023-06-10',
-          interestRate: '14%',
+          interestRate: 14,
           lastUpdatedDate: '2025-02-20',
           lastPaymentDate: '2025-01-15',
           outstandingDebtMain: 9000,
@@ -75,29 +74,23 @@ export default function Page() {
           creditPurpose: 'Məişət avadanlığı alacaq',
           currency: 'AZN',
           mkrId: 'MK12345',
-          coBorrowerCount: '0',
-          frameworkContractId: 'FRC-98765',
           collateralCode: 'CLT-0001',
           collateralRegistryAgency: 'Əmlak Məsələləri Dövlət Xidməti',
           collateralRegistryNo: 'CL-2023-456',
           collateralAnyInfo: 'Əlavə təminat yoxdur',
-          collateralMarketValue: '17000 AZN',
           creditStatusCloseDate: '',
-          history: {
-            historyItem: [
-              {
-                overdueDays: '2',
-                reportingPeriod: '2024-12-12',
-                creditStatus: 'Tam ödənilmiş',
-              },
-              {
-                overdueDays: '0',
-                reportingPeriod: '2025-01-01',
-                creditStatus: 'Balansdan silinmiş',
-              },
-            ],
-          },
-          initialAmountHistory: '15000',
+          history: [
+            {
+              overdueDays: 2,
+              reportingPeriod: '2024-12-12',
+              creditStatus: 'Tam ödənilmiş',
+            },
+            {
+              overdueDays: 0,
+              reportingPeriod: '2025-01-01',
+              creditStatus: 'Balansdan silinmiş',
+            },
+          ],
         },
         {
           id: 'CRD-20240001',
@@ -112,8 +105,7 @@ export default function Page() {
           daysInterestOverdue: 5,
           daysMainSumOverdue: 20,
           contractDueOn: '2026-06-10',
-          firstContractDueOn: '2023-06-10',
-          interestRate: '14%',
+          interestRate: 14,
           lastUpdatedDate: '2025-02-20',
           lastPaymentDate: '2025-01-15',
           outstandingDebtMain: 9000,
@@ -124,59 +116,45 @@ export default function Page() {
           creditPurpose: 'Məişət avadanlığı alacaq',
           currency: 'AZN',
           mkrId: 'MK12345',
-          coBorrowerCount: '0',
-          frameworkContractId: 'FRC-98765',
           collateralCode: 'CLT-0001',
           collateralRegistryAgency: 'Əmlak Məsələləri Dövlət Xidməti',
           collateralRegistryNo: 'CL-2023-456',
           collateralAnyInfo: 'Əlavə təminat yoxdur',
-          collateralMarketValue: '17000 AZN',
           creditStatusCloseDate: '',
-          history: {
-            historyItem: [
-              {
-                overdueDays: '2',
-                reportingPeriod: '2024-12-12',
-                creditStatus: 'Tam ödənilmiş',
-              },
-              {
-                overdueDays: '0',
-                reportingPeriod: '2025-01-01',
-                creditStatus: 'Balansdan silinmiş',
-              },
-            ],
-          },
-          initialAmountHistory: '15000',
+          history: [
+            {
+              overdueDays: 2,
+              reportingPeriod: '2024-12-12',
+              creditStatus: 'Tam ödənilmiş',
+            },
+            {
+              overdueDays: 0,
+              reportingPeriod: '2025-01-01',
+              creditStatus: 'Balansdan silinmiş',
+            },
+          ],
         },
       ],
-    },
-    coBorrowers: 'Yoxdur',
-    guarantee: 'Yoxdur',
-    inquiryHistory: {
-      inquiryHistoryItem: [
-        {
-          inqOrgIDType: 'Bank',
-          inqBankId: 'PA001',
-          inqBankName: 'ABB',
-          inqDate: '2024-10-20',
-          inqPurposeId: 'Kredit müraciəti',
-          inqType: 'Fiziki şəxs',
-        },
-        {
-          inqOrgIDType: 'Bank',
-          inqBankId: 'PA001',
-          inqBankName: 'ABB',
-          inqDate: '2024-10-20',
-          inqPurposeId: 'Kredit müraciəti',
-          inqType: 'Fiziki şəxs',
-        },
-      ],
-    },
+    inquiryHistory: [
+      {
+        inqOrgIDType: 'Bank',
+        inqBankId: 'PA001',
+        inqBankName: 'ABB',
+        inqDate: '2024-10-20',
+        inqPurposeId: 'Kredit müraciəti',
+      },
+      {
+        inqOrgIDType: 'Bank',
+        inqBankId: 'PA001',
+        inqBankName: 'ABB',
+        inqDate: '2024-10-20',
+        inqPurposeId: 'Kredit müraciəti',
+      },
+    ],
     score: {
-      calculated: '40',
+      calculated: true,
     },
-    balance: 100,
-    comments: 'Borcalan vaxtında ödəniş etməyə çalışır, lakin kiçik gecikmələr olub.',
+    balance: 100
   });
 
   // eslint-disable-next-line
@@ -460,7 +438,7 @@ export default function Page() {
     if (hasData) {
       if (userData) data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
-      let newCreditRequest : CreditRequest = {
+      let newCreditRequest: CreditRequest = {
         ...creditRequest,
         requestedUser: userData,
         phoneNumber: userData.phoneNumber,
@@ -517,6 +495,21 @@ export default function Page() {
           ...newCreditRequest,
           guarantors: [guarantorData],
         }
+      }
+      console.log('akb data checking..');
+      const akbResponse = await request.post('/akb/inquireByIdCard', {
+        "purposeCode": "001",
+        "accept": true,
+        "documentSerial": "AZE",
+        "documentNo": newCreditRequest.requestedUser?.seriaNo,
+        "pinCode": newCreditRequest.requestedUser?.pin,
+        "org_id": "135",
+        "branchId": "IdealKredit",
+        "userId": "IdealKreditBoktWs"
+      });
+      console.log('akb response', akbResponse);
+      if (akbResponse) {
+        setAKB_STATE(akbResponse.data);
       }
       setCreditRequest(newCreditRequest);
     }

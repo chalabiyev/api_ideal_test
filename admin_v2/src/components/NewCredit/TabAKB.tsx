@@ -19,28 +19,16 @@ import {
   CardHeader,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { AKB_STATE_TYPE } from 'src/pages/dashboard/VideoMuraciet/types';
-import useApi from 'src/api/useApi';
-import usePost from 'src/api/usePost';
+import { Report } from 'src/pages/dashboard/VideoMuraciet/types';
 
 const TabAKB = ({
   AKB_STATE,
   setAKB_STATE,
 }: {
-  AKB_STATE: AKB_STATE_TYPE;
-  setAKB_STATE: React.Dispatch<React.SetStateAction<AKB_STATE_TYPE>>;
+  AKB_STATE: Report;
+  setAKB_STATE: React.Dispatch<React.SetStateAction<Report>>;
 }) => {
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     // eslint-disable-next-line
-  //     const data = await usePost(`/akb/inquireByIdCard`);
-  //     if (data !== null) {
-  //       // @ts-ignore
-  //       setAKB_STATE(data as AKB_STATE_TYPE);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+
   return (
     <Box sx={{ py: 4 }}>
       <Card>
@@ -70,9 +58,9 @@ const TabAKB = ({
             <Grid item xs={12} sm={6}>
               <TextField label="Balans" fullWidth value={AKB_STATE.balance || ''} />
             </Grid>
-            <Grid item xs={12} sm={12}>
+            {/* <Grid item xs={12} sm={12}>
               <TextField label="Əlavə qeyd" fullWidth value={AKB_STATE.comments || ''} />
-            </Grid>
+            </Grid> */}
           </Grid>
         </CardContent>
       </Card>
@@ -81,7 +69,7 @@ const TabAKB = ({
         Öhdəlik kreditləri:
       </Typography>
 
-      {AKB_STATE.liabilities.liability.map((liability, index) => (
+      {AKB_STATE.liabilities.map((liability, index) => (
         <Card sx={{ mb: 1, mt: 1, border: `1px solid #2968E9` }}>
           <Accordion key={index}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -185,13 +173,13 @@ const TabAKB = ({
                 <Grid item xs={12} sm={6}>
                   <TextField label="Valyuta" fullWidth value={liability.currency || ''} />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                   <TextField
                     label="Birgə kredit götürənlərin sayı"
                     fullWidth
                     value={liability.coBorrowerCount || ''}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
 
               <Typography variant="subtitle1" sx={{ mt: 5, mb: 4 }}>
@@ -205,13 +193,13 @@ const TabAKB = ({
                     value={liability.collateralRegistryAgency || ''}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                   <TextField
                     label="Əmlakının Bazardakı Dəyəri"
                     fullWidth
                     value={liability.collateralMarketValue || ''}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Əmlakının Qeydiyyat Nömrəsi"
@@ -242,7 +230,7 @@ const TabAKB = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {liability.history.historyItem.map((history, index) => (
+                    {liability.history.map((history, index) => (
                       <TableRow
                         key={index}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -276,7 +264,7 @@ const TabAKB = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {AKB_STATE.inquiryHistory.inquiryHistoryItem.map((history, index) => (
+                {AKB_STATE.inquiryHistory.map((history, index) => (
                   <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell align="center">{history.inqBankName}</TableCell>
                     <TableCell align="center">{history.inqDate}</TableCell>

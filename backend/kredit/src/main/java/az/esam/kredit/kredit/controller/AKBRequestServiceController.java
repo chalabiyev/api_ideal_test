@@ -7,6 +7,7 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
+import az.esam.kredit.kredit.dtos.responses.akbxml.Report;
 import az.esam.kredit.kredit.services.external.akb.requestService.AKBRequestService;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotBlank;
@@ -29,7 +30,7 @@ public class AKBRequestServiceController {
     private AKBRequestService akbRequestService;
 
     @PostMapping("/inquireByIdCard")
-    public ResponseEntity<InquireByIdCardResponse> inquireByIdCard(@RequestBody InquireByIdCardRequest akbRequest) {
+    public ResponseEntity<Report> inquireByIdCard(@RequestBody InquireByIdCardRequest akbRequest) {
         return ResponseEntity.ok(akbRequestService.inquireByIdCard(akbRequest));
     }
 

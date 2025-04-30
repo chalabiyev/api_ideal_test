@@ -7,13 +7,15 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
+import az.esam.kredit.kredit.dtos.responses.akbxml.Report;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
 
 public interface AKBRequestService {
 
-    InquireByIdCardResponse inquireByIdCard(InquireByIdCardRequest akbRequest);
+//    InquireByIdCardResponse inquireByIdCard(InquireByIdCardRequest akbRequest);
+    Report inquireByIdCard(InquireByIdCardRequest akbRequest);
 
     JsonNode inquireByPassport(InquireByPassportRequest akbRequest); // we will not use this service
 

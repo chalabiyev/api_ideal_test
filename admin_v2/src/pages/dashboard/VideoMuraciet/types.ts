@@ -121,81 +121,77 @@ export type MultiType = {
 };
 
 // ------------------- akb ---------------------
-export type AKB_STATE_TYPE = {
-  reportId: string;
-  reportingDate: string;
-  borrower: {
-    documentNo: string;
-    name: string;
-    fin: string;
-    dateOfBirth: string;
-    placeOfBirth: string;
-    personType: string;
-    fileDate: string;
-    locationCity: string;
-    registeredAddress: string;
-    status: string;
-    participantOfPatrioticWar: boolean;
-  };
-  liabilities: {
-    liability: {
-      id: string;
-      bankId: string;
-      bankName: string;
-      accountNo: string;
-      creditType: string;
-      orgIDType: string;
-      grantedOn: string;
-      initialAmount: number;
-      lineAmount: number;
-      daysInterestOverdue: number;
-      daysMainSumOverdue: number;
-      contractDueOn: string;
-      firstContractDueOn: string;
-      interestRate: string;
-      lastUpdatedDate: string;
-      lastPaymentDate: string;
-      outstandingDebtMain: number;
-      outstandingDebtInterest: number;
-      monthlyPaymentAmount: number;
-      prolongations: number;
-      creditStatus: string;
-      creditPurpose: string;
-      currency: string;
-      mkrId: string;
-      coBorrowerCount: string;
-      frameworkContractId: string;
-      collateralCode: string;
-      collateralRegistryAgency: string;
-      collateralRegistryNo: string;
-      collateralAnyInfo: string;
-      collateralMarketValue: string;
-      creditStatusCloseDate: string;
-      history: {
-        historyItem: {
-          overdueDays: string;
-          reportingPeriod: string;
-          creditStatus: string;
-        }[];
-      };
-      initialAmountHistory: string;
-    }[];
-  };
-  coBorrowers: string;
-  guarantee: string;
-  inquiryHistory: {
-    inquiryHistoryItem: {
-      inqOrgIDType: string;
-      inqBankId: string;
-      inqBankName: string;
-      inqDate: string;
-      inqPurposeId: string;
-      inqType: string;
-    }[];
-  };
-  score: {
-    calculated: string;
-  };
+
+interface Borrower {
+  documentNo: string;
+  name: string;
+  fin: string;
+  dateOfBirth: string; // ISO tarih formatı olarak
+  placeOfBirth: string;
+  personType: string;
+  fileDate: string; // ISO tarih formatı olarak
+  locationCity: string;
+  registeredAddress: string;
+  status: string;
+  participantOfPatrioticWar: boolean;
+}
+
+interface HistoryItem {
+  overdueDays: number | null;
+  reportingPeriod: string | null;
+  creditStatus: string | null;
+}
+
+interface Liability {
+  id: string;
+  bankId: string;
+  bankName: string;
+  accountNo: string;
+  creditType: string;
+  orgIDType: string;
+  grantedOn: string; // ISO tarih formatı olarak
+  initialAmount: number;
+  lineAmount: number;
+  daysInterestOverdue: number;
+  daysMainSumOverdue: number;
+  contractDueOn: string; // ISO tarih formatı olarak
+  interestRate: number;
+  lastUpdatedDate: string; // ISO tarih formatı olarak
+  lastPaymentDate: string; // ISO tarih formatı olarak
+  outstandingDebtMain: number;
+  outstandingDebtInterest: number;
+  monthlyPaymentAmount: number;
+  prolongations: number;
+  creditStatus: string;
+  creditStatusCloseDate: string; // ISO tarih formatı olarak
+  creditPurpose: string;
+  currency: string;
+  mkrId: string;
+  collateralCode: string;
+  collateralRegistryAgency: string;
+  collateralRegistryNo: string;
+  collateralAnyInfo: string;
+  history: HistoryItem[];
+}
+
+interface InquiryHistoryItem {
+  inqOrgIDType: string;
+  inqBankId: string;
+  inqBankName: string;
+  inqDate: string; // ISO tarih formatı olarak
+  inqPurposeId: string;
+}
+
+interface Score {
+  calculated: boolean;
+}
+
+export interface Report {
+  id: string;
+  reportingDate: string; // ISO tarih formatı olarak
+  borrower: Borrower;
+  liabilities: Liability[];
+  inquiryHistory: InquiryHistoryItem[];
+  score: Score;
   balance: number;
-  comments: string;
-};
+}

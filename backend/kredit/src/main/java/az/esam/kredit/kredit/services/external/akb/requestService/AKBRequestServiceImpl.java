@@ -5,24 +5,33 @@ import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByPassportRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByServiceCardRequest;
 import az.esam.kredit.kredit.dtos.requests.akb.request.InquireByTaxNoRequest;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.EAKBTYPES;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.InquireByIdCardResponse;
-import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.InquireByIdCard.Liability;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.lkpBorrInquiryPurposes.*;
 import az.esam.kredit.kredit.dtos.responses.akbRequestReponses.utilityServiceResponse.AKBUtilityServiceResponse;
+import az.esam.kredit.kredit.dtos.responses.akbxml.Report;
+import az.esam.kredit.kredit.dtos.responses.akbxml.Root;
 import az.esam.kredit.kredit.properties.AkbProperties;
 import az.esam.kredit.kredit.repositories.akb.*;
 import az.esam.kredit.kredit.services.external.SendRequest;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import javax.xml.transform.stream.StreamSource;
+
 import static az.esam.kredit.kredit.services.external.SendRequest.objectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import static java.lang.Math.log;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 @Slf4j
 @Service
@@ -36,6 +45,9 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     SendRequest sendRequest;
 
     private String authName = "Authorization";
+
+    @Autowired
+    AkbReportRepository akbReportRepository;
 
     @Autowired
     InquireByIdCardResponseRepository inquireByIdCardResponseRepository;
@@ -58,52 +70,119 @@ public class AKBRequestServiceImpl implements AKBRequestService {
     @Autowired
     AKBCurrencyResponseRepository currencyResponseRepository;
 
+    /*
+     * @Override
+     * public InquireByIdCardResponse inquireByIdCard(InquireByIdCardRequest
+     * akbRequest) {
+     * try {
+     * String queryParams = "/services/BorrowerInquiryWS";
+     * String url = properties.getHost() + queryParams;
+     * String bodyStr =
+     * "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:inq=\"http://inquiryws.mkr.risk.az/\">\n"
+     * +
+     * "    <soapenv:Header/>\n" +
+     * "    <soapenv:Body>\n" +
+     * "        <inq:inquireByIdCard>\n" +
+     * "           <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n"
+     * +
+     * "           <accept>" + akbRequest.getAccept() + "</accept>\n" +
+     * "           <documentSerial>AZE</documentSerial>\n" +
+     * "           <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n" +
+     * "           <pinCode>" + akbRequest.getPinCode() + "</pinCode>\n" +
+     * "           <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
+     * "           <branchId>" + akbRequest.getBranchId() + "</branchId>\n" +
+     * "           <userId>" + akbRequest.getUserId() + "</userId>\n" +
+     * "        </inq:inquireByIdCard>\n" +
+     * "    </soapenv:Body>\n" +
+     * "</soapenv:Envelope>";
+     * 
+     * log.info("inquireByIdCard Request URL: {}", url);
+     * log.info("bodyStr: {}", bodyStr);
+     * String credentials = properties.getRequest_username() + ":" +
+     * properties.getRequest_password();
+     * String encodedCredentials = "Basic " +
+     * Base64.getEncoder().encodeToString(credentials.getBytes());
+     * JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST",
+     * authName, encodedCredentials,
+     * true);
+     * if (jsonResponse != null) {
+     * JsonNode returnNode =
+     * jsonResponse.get("Body").get("inquireByIdCardResponse").get("return");
+     * JsonNode node = returnNode.get("liabilities").get("liability");
+     * List<Liability> liabilityList = new ArrayList();
+     * if (node.isArray()) {
+     * liabilityList = objectMapper.convertValue(node, ArrayList.class);
+     * } else if (node.isObject()) {
+     * Liability liability = objectMapper.convertValue(node, Liability.class);
+     * liabilityList.add(liability);
+     * }
+     * 
+     * String jsonString = objectMapper
+     * .writeValueAsString(returnNode);
+     * log.info("jsonString: {}", jsonString);
+     * InquireByIdCardResponse response = objectMapper.readValue(jsonString,
+     * InquireByIdCardResponse.class);
+     * response.getLiabilities().setLiability(liabilityList);
+     * inquireByIdCardResponseRepository.save(response);
+     * return response;
+     * } else {
+     * log.error("inquireByIdCard Response is null or empty");
+     * }
+     * } catch (Exception ex) {
+     * log.error(null, ex);
+     * return null;
+     * }
+     * return null;
+     * }
+     */
+
+    public Root parseXml(InputStream xmlInputStream) throws Exception {
+        JAXBContext jaxbContext = JAXBContext.newInstance(Root.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        Root root = (Root) unmarshaller.unmarshal(new StreamSource(xmlInputStream));
+        return root;
+    }
+
     @Override
-    public InquireByIdCardResponse inquireByIdCard(InquireByIdCardRequest akbRequest) {
+    public Report inquireByIdCard(InquireByIdCardRequest akbRequest) {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
             String bodyStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:inq=\"http://inquiryws.mkr.risk.az/\">\n"
-                    +
-                    "    <soapenv:Header/>\n" +
-                    "    <soapenv:Body>\n" +
-                    "        <inq:inquireByIdCard>\n" +
-                    "           <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n" +
-                    "           <accept>" + akbRequest.getAccept() + "</accept>\n" +
-                    "           <documentSerial>AZE</documentSerial>\n" +
-                    "           <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n" +
-                    "           <pinCode>" + akbRequest.getPinCode() + "</pinCode>\n" +
-                    "           <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
-                    "           <branchId>" + akbRequest.getBranchId() + "</branchId>\n" +
-                    "           <userId>" + akbRequest.getUserId() + "</userId>\n" +
-                    "        </inq:inquireByIdCard>\n" +
-                    "    </soapenv:Body>\n" +
-                    "</soapenv:Envelope>";
+                    + "    <soapenv:Header/>\n"
+                    + "    <soapenv:Body>\n"
+                    + "        <inq:inquireByIdCard>\n"
+                    + "           <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n"
+                    + "           <accept>" + akbRequest.getAccept() + "</accept>\n"
+                    + "           <documentSerial>AZE</documentSerial>\n"
+                    + "           <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n"
+                    + "           <pinCode>" + akbRequest.getPinCode() + "</pinCode>\n"
+                    + "           <orgId>" + akbRequest.getOrg_id() + "</orgId>\n"
+                    + "           <branchId>" + akbRequest.getBranchId() + "</branchId>\n"
+                    + "           <userId>" + akbRequest.getUserId() + "</userId>\n"
+                    + "        </inq:inquireByIdCard>\n"
+                    + "    </soapenv:Body>\n"
+                    + "</soapenv:Envelope>";
 
             log.info("inquireByIdCard Request URL: {}", url);
             log.info("bodyStr: {}", bodyStr);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
             String encodedCredentials = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
-            JsonNode jsonResponse = sendRequest.executeRequestAKB(bodyStr, url, "POST", authName, encodedCredentials,
+            String xmlResponse = sendRequest.executeRequestAKBStr(bodyStr, url, "POST", authName, encodedCredentials,
                     true);
-            if (jsonResponse != null) {
-                JsonNode returnNode = jsonResponse.get("Body").get("inquireByIdCardResponse").get("return");
-                JsonNode node = returnNode.get("liabilities").get("liability");
-                List<Liability> liabilityList = new ArrayList();
-                if (node.isArray()) {
-                    liabilityList = objectMapper.convertValue(node, ArrayList.class);
-                } else if (node.isObject()) {
-                    Liability liability = objectMapper.convertValue(node, Liability.class);
-                    liabilityList.add(liability);
-                }
-
-                String jsonString = objectMapper
-                        .writeValueAsString(returnNode);
-                log.info("jsonString: {}", jsonString);
-                InquireByIdCardResponse response = objectMapper.readValue(jsonString, InquireByIdCardResponse.class);
-                response.getLiabilities().setLiability(liabilityList);
-                inquireByIdCardResponseRepository.save(response);
-                return response;
+            if (xmlResponse != null) {
+                Root root = parseXml(new ByteArrayInputStream(xmlResponse.getBytes()));
+                var responseReturn = root.getSoapBody().getInquireByIdCardResponse().getReturn();
+                Report report = new Report();
+                report.setId(responseReturn.getReportId());
+                report.setReportingDate(responseReturn.getReportingDate());
+                report.setBorrower(responseReturn.getBorrower());
+                report.setLiabilities(responseReturn.getLiabilities().getLiabilityList());
+                report.setInquiryHistory(responseReturn.getInquiryHistory().getItems());
+                report.setScore(responseReturn.getScore());
+                report.setBalance(responseReturn.getBalance());
+                akbReportRepository.save(report);
+                return report;
             } else {
                 log.error("inquireByIdCard Response is null or empty");
             }
@@ -119,20 +198,20 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <inquireByPassport xmlns=\"http://inquiryws.mkr.risk.az/\">\n" +
-                    "      <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n" +
-                    "      <accept>" + akbRequest.getAccept() + "</accept>\n" +
-                    "      <countryISO3Code>" + akbRequest.getCountryISO3Code() + "</countryISO3Code>\n" +
-                    "      <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n" +
-                    "      <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
-                    "      <branchId>" + akbRequest.getBranchId() + "</branchId>\n" +
-                    "      <userId>" + akbRequest.getUserId() + "</userId>\n" +
-                    "    </inquireByPassport>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <inquireByPassport xmlns=\"http://inquiryws.mkr.risk.az/\">\n"
+                    + "      <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n"
+                    + "      <accept>" + akbRequest.getAccept() + "</accept>\n"
+                    + "      <countryISO3Code>" + akbRequest.getCountryISO3Code() + "</countryISO3Code>\n"
+                    + "      <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n"
+                    + "      <orgId>" + akbRequest.getOrg_id() + "</orgId>\n"
+                    + "      <branchId>" + akbRequest.getBranchId() + "</branchId>\n"
+                    + "      <userId>" + akbRequest.getUserId() + "</userId>\n"
+                    + "    </inquireByPassport>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("inquireByPassport Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -156,21 +235,21 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <inquireByServiceCard xmlns=\"http://inquiryws.mkr.risk.az/\">\n" +
-                    "      <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n" +
-                    "      <accept>" + akbRequest.getAccept() + "</accept>\n" +
-                    "      <documentSerial>" + akbRequest.getDocumentSerial() + "</documentSerial>\n" +
-                    "      <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n" +
-                    "      <birthDate>" + akbRequest.getBirthDate() + "</birthDate>\n" +
-                    "      <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
-                    "      <branchId>" + akbRequest.getBranchId() + "</branchId>\n" +
-                    "      <userId>" + akbRequest.getUserId() + "</userId>\n" +
-                    "    </inquireByServiceCard>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <inquireByServiceCard xmlns=\"http://inquiryws.mkr.risk.az/\">\n"
+                    + "      <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n"
+                    + "      <accept>" + akbRequest.getAccept() + "</accept>\n"
+                    + "      <documentSerial>" + akbRequest.getDocumentSerial() + "</documentSerial>\n"
+                    + "      <documentNo>" + akbRequest.getDocumentNo() + "</documentNo>\n"
+                    + "      <birthDate>" + akbRequest.getBirthDate() + "</birthDate>\n"
+                    + "      <orgId>" + akbRequest.getOrg_id() + "</orgId>\n"
+                    + "      <branchId>" + akbRequest.getBranchId() + "</branchId>\n"
+                    + "      <userId>" + akbRequest.getUserId() + "</userId>\n"
+                    + "    </inquireByServiceCard>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("inquireByServiceCard Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -194,19 +273,19 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <inquireByTaxNo xmlns=\"http://inquiryws.mkr.risk.az/\">\n" +
-                    "      <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n" +
-                    "      <accept>" + akbRequest.getAccept() + "</accept>\n" +
-                    "      <taxNo>" + akbRequest.getTaxNo() + "</taxNo>\n" +
-                    "      <orgId>" + akbRequest.getOrg_id() + "</orgId>\n" +
-                    "      <branchId>" + akbRequest.getBranchId() + "</branchId>\n" +
-                    "      <userId>" + akbRequest.getUserId() + "</userId>\n" +
-                    "    </inquireByTaxNo>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <inquireByTaxNo xmlns=\"http://inquiryws.mkr.risk.az/\">\n"
+                    + "      <purposeCode>" + akbRequest.getPurposeCode() + "</purposeCode>\n"
+                    + "      <accept>" + akbRequest.getAccept() + "</accept>\n"
+                    + "      <taxNo>" + akbRequest.getTaxNo() + "</taxNo>\n"
+                    + "      <orgId>" + akbRequest.getOrg_id() + "</orgId>\n"
+                    + "      <branchId>" + akbRequest.getBranchId() + "</branchId>\n"
+                    + "      <userId>" + akbRequest.getUserId() + "</userId>\n"
+                    + "    </inquireByTaxNo>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("inquireByTaxNo Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -231,14 +310,13 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
             String bodyStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:inq=\"http://inquiryws.mkr.risk.az/\">\n"
-                    +
-                    "   <soapenv:Header/>\n" +
-                    "   <soapenv:Body>\n" +
-                    "      <inq:inquireUtilityServices>\n" +
-                    "         <reportId>" + reportId + "</reportId>\n" +
-                    "      </inq:inquireUtilityServices>\n" +
-                    "   </soapenv:Body>\n" +
-                    "</soapenv:Envelope>";
+                    + "   <soapenv:Header/>\n"
+                    + "   <soapenv:Body>\n"
+                    + "      <inq:inquireUtilityServices>\n"
+                    + "         <reportId>" + reportId + "</reportId>\n"
+                    + "      </inq:inquireUtilityServices>\n"
+                    + "   </soapenv:Body>\n"
+                    + "</soapenv:Envelope>";
 
             log.info("inquireUtilityServices Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -268,14 +346,13 @@ public class AKBRequestServiceImpl implements AKBRequestService {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
             String bodyStr = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:inq=\"http://inquiryws.mkr.risk.az/\">\n"
-                    +
-                    "   <soapenv:Header/>\n" +
-                    "   <soapenv:Body>\n" +
-                    "      <inq:getBorrowerScore>\n" +
-                    "         <reportId>" + reportId + "</reportId>\n" +
-                    "      </inq:getBorrowerScore>\n" +
-                    "   </soapenv:Body>\n" +
-                    "</soapenv:Envelope>\n";
+                    + "   <soapenv:Header/>\n"
+                    + "   <soapenv:Body>\n"
+                    + "      <inq:getBorrowerScore>\n"
+                    + "         <reportId>" + reportId + "</reportId>\n"
+                    + "      </inq:getBorrowerScore>\n"
+                    + "   </soapenv:Body>\n"
+                    + "</soapenv:Envelope>\n";
 
             log.info("getBorrowerScore Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -304,12 +381,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <getBalance xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <getBalance xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("getBalanceInfo Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -335,12 +412,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpBorrInquiryPurposes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpBorrInquiryPurposes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpBorrInquiryPurposes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -373,12 +450,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpCollateralTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpCollateralTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpCollateralTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -411,12 +488,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpCountries xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpCountries xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpCountries Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -449,12 +526,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpCreditClassTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpCreditClassTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpCreditClassTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -487,12 +564,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpCreditPurposeTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpCreditPurposeTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpCreditPurposeTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -525,12 +602,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpCreditStatusTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpCreditStatusTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpCreditStatusTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -560,12 +637,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpCreditTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpCreditTypes xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpCreditTypes Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
@@ -595,12 +672,12 @@ public class AKBRequestServiceImpl implements AKBRequestService {
         try {
             String queryParams = "/services/BorrowerInquiryWS";
             String url = properties.getHost() + queryParams;
-            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                    "  <soap:Body>\n" +
-                    "    <lkpCurrencies xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n" +
-                    "  </soap:Body>\n" +
-                    "</soap:Envelope>\n";
+            String bodyStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <lkpCurrencies xmlns=\"http://inquiryws.mkr.risk.az/\"/>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
 
             log.info("lkpCurrencies Request URL: {}", url);
             String credentials = properties.getRequest_username() + ":" + properties.getRequest_password();
