@@ -202,9 +202,9 @@ export default function Page() {
   const endpointUserByUserName = pin ? `/auth/getUserByUserName/${pin}` : '';
   const { data: userData } = useApi(endpointUserByUserName);
   const [recruiterState, setRecruiterState] = useState<RecruiterState>({
-    active: [
+    Active: [
       {
-        employer: {
+        Employer: {
           legalAddress: 'ESAM Innovations',
           workerCount: 12,
           name: 'Qurumun adı',
@@ -217,7 +217,7 @@ export default function Page() {
           voen: '645234236324',
           phone: '+994 50 123 45 67',
         },
-        employee: {
+        Employee: {
           positionLabourContract: 'Aparıcı',
           ssn: '54213321321',
           workPlaceType: {
@@ -230,7 +230,7 @@ export default function Page() {
           salary: 1000,
           workPlace: 'Kapital bank',
         },
-        contract: {
+        Contract: {
           number: '',
           insertDate: '12.12.2021',
           nextEndDate: '12.12.2022',
@@ -246,17 +246,17 @@ export default function Page() {
         },
       },
     ],
-    deactive: [
+    Deactive: [
       {
-        employee: {
+        Employee: {
           position: '',
           salary: 0,
         },
-        employer: {
+        Employer: {
           name: 'Claradix',
           voen: '4312213',
         },
-        contract: {
+        Contract: {
           terminateDate: '',
           beginDate: '',
           endDate: '',

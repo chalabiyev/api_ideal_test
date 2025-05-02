@@ -29,8 +29,8 @@ export interface RecruiterDataType {
 }
 
 export interface RecruiterState {
-  active: Array<{
-    employer: {
+  Active: Array<{
+    Employer: {
       legalAddress: string;
       workerCount: number;
       name: string;
@@ -43,7 +43,7 @@ export interface RecruiterState {
       voen: string;
       phone: string;
     };
-    employee: {
+    Employee: {
       positionLabourContract: string;
       ssn: string;
       workPlaceType: {
@@ -56,7 +56,7 @@ export interface RecruiterState {
       salary: number;
       workPlace: string;
     };
-    contract: {
+    Contract: {
       number: string;
       insertDate: string;
       nextEndDate: string;
@@ -71,16 +71,16 @@ export interface RecruiterState {
       endDate: string;
     };
   }>;
-  deactive: Array<{
-    employee: {
+  Deactive: Array<{
+    Employee: {
       position: string;
       salary: number;
     };
-    employer: {
+    Employer: {
       name: string;
       voen: string;
     };
-    contract: {
+    Contract: {
       terminateDate: string;
       beginDate: string;
       endDate: string;

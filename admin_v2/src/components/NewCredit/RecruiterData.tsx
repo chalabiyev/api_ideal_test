@@ -69,16 +69,16 @@ const RecruiterData = ({
       </Card>
       <Typography
         variant="h5"
-        sx={{ display: recruiterState.active.length > 0 ? 'block' : 'none' }}
+        sx={{ display: recruiterState.Active.length > 0 ? 'block' : 'none' }}
         gutterBottom
       >
         Hazırki iş yer(lər)i
       </Typography>
       {/* hazirki  yeri məlumatları */}
-      {recruiterState.active.map((item, index) => (
+      {recruiterState.Active.map((item, index) => (
         <Card sx={{ mb: 4 }} key={index}>
           <Typography variant="h6" sx={{ mt: 2, px: 2 }} color="primary.main" gutterBottom>
-            {item.employer.legalAddress}
+            {item.Employer.legalAddress}
           </Typography>
           <Accordion
             expanded={expanded === `panel${index + 43123}`}
@@ -92,28 +92,28 @@ const RecruiterData = ({
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Hüquqi ünvan"
-                    value={item.employer.legalAddress || ''}
+                    value={item.Employer.legalAddress || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="İşçi sayı" value={item.employer.workerCount || 0} fullWidth />
+                  <TextField label="İşçi sayı" value={item.Employer.workerCount || 0} fullWidth />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Qurumun adı" fullWidth value={item.employer.name || ''} />
+                  <TextField label="Qurumun adı" fullWidth value={item.Employer.name || ''} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Mülkiyyətin növü"
                     fullWidth
-                    value={item?.employer?.propertyType?.description || ''}
+                    value={item?.Employer?.propertyType?.description || ''}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="VÖEN" fullWidth value={item.employer.voen || ''} />
+                  <TextField label="VÖEN" fullWidth value={item.Employer.voen || ''} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Əlaqə nömrəsi" value={item.employer.phone || ''} fullWidth />
+                  <TextField label="Əlaqə nömrəsi" value={item.Employer.phone || ''} fullWidth />
                 </Grid>
               </Grid>
             </AccordionDetails>
@@ -131,29 +131,29 @@ const RecruiterData = ({
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Əmək müqaviləsi üzrə vəzifəsi"
-                    value={item.employee.positionLabourContract || ''}
+                    value={item.Employee.positionLabourContract || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Sosial Sığorta Nömrəsi"
-                    value={item.employee.ssn || ''}
+                    value={item.Employee.ssn || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Məşğulluq üzrə vəzifə"
-                    value={item.employee.position || ''}
+                    value={item.Employee.position || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Əmək haqqı" value={item.employee.salary || ''} fullWidth />
+                  <TextField label="Əmək haqqı" value={item.Employee.salary || ''} fullWidth />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="İş yeri" value={item.employee.workPlace || ''} fullWidth />
+                  <TextField label="İş yeri" value={item.Employee.workPlace || ''} fullWidth />
                 </Grid>
               </Grid>
             </AccordionDetails>
@@ -171,33 +171,33 @@ const RecruiterData = ({
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Sistemə daxil edilmə tarixi"
-                    value={item.contract.insertDate || ''}
+                    value={item.Contract.insertDate || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Müqavilənin növbəti bitmə tarixi"
-                    value={item.contract.nextEndDate || ''}
+                    value={item.Contract.nextEndDate || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Başlama tarixi"
-                    value={item.contract.beginDate || ''}
+                    value={item.Contract.beginDate || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="İmzalama tarixi"
-                    value={item.contract.signDate || ''}
+                    value={item.Contract.signDate || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Bitmə tarixi" value={item.contract.endDate || ''} fullWidth />
+                  <TextField label="Bitmə tarixi" value={item.Contract.endDate || ''} fullWidth />
                 </Grid>
               </Grid>
             </AccordionDetails>
@@ -210,10 +210,10 @@ const RecruiterData = ({
         Köhnə iş yer(lər)i
       </Typography>
 
-      {recruiterState.deactive.map((item, index) => (
+      {recruiterState.Deactive.map((item, index) => (
         <Card sx={{ mb: 4 }} key={index}>
           <Typography variant="h6" sx={{ mt: 2, px: 2 }} color="error" gutterBottom>
-            {item.employer.name}
+            {item.Employer.name}
           </Typography>
           <Accordion
             expanded={expanded === `panel${index + 322}`}
@@ -225,10 +225,10 @@ const RecruiterData = ({
             <AccordionDetails>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField value={item.employer.name || ''} label="Qurumun adı" fullWidth />
+                  <TextField value={item.Employer.name || ''} label="Qurumun adı" fullWidth />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="VÖEN" value={item.employer.voen || ''} fullWidth />
+                  <TextField label="VÖEN" value={item.Employer.voen || ''} fullWidth />
                 </Grid>
               </Grid>
             </AccordionDetails>
@@ -245,13 +245,13 @@ const RecruiterData = ({
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    value={item.employee.position || ''}
+                    value={item.Employee.position || ''}
                     label="Əmək müqaviləsi üzrə vəzifəsi"
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Əmək haqqı" value={item.employee.salary || ''} fullWidth />
+                  <TextField label="Əmək haqqı" value={item.Employee.salary || ''} fullWidth />
                 </Grid>
               </Grid>
             </AccordionDetails>
@@ -269,17 +269,17 @@ const RecruiterData = ({
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Başlama tarixi"
-                    value={item.contract.beginDate || ''}
+                    value={item.Contract.beginDate || ''}
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField label="Bitmə tarixi" value={item.contract.endDate || ''} fullWidth />
+                  <TextField label="Bitmə tarixi" value={item.Contract.endDate || ''} fullWidth />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Xitam tarixi"
-                    value={item.contract.terminateDate || ''}
+                    value={item.Contract.terminateDate || ''}
                     fullWidth
                   />
                 </Grid>

@@ -85,14 +85,14 @@ export type Contract = {
 };
 
 export type Job = {
-  employee: Employee;
-  employer: Employer;
-  contract: Contract;
+  Employee: Employee;
+  Employer: Employer;
+  Contract: Contract;
 };
 
 export type EmployeeInfoResponse = {
-  active: Job[];
-  deactive: Job[];
+  Active: Job[];
+  Deactive: Job[];
 };
 
 //  --------------------------------- pensioner ---------------------------------
