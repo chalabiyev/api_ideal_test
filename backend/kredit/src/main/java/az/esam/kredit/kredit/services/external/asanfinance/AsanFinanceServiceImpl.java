@@ -16,7 +16,11 @@ import az.esam.kredit.kredit.dtos.responses.asanfinance.voen.VoenInfoResponse;
 import az.esam.kredit.kredit.properties.AsanFinanceProperties;
 import az.esam.kredit.kredit.repositories.asanfinance.*;
 import az.esam.kredit.kredit.services.external.SendRequest;
+import jakarta.annotation.PostConstruct;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +61,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
+    @PostConstruct
+    public void init() {
+        objectMapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
+    }
+
     @Override
     public FarmInfoResponse getFarmInfoByPin(String pin, boolean fetchFromService) {
         try {
@@ -67,11 +78,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/FarmInfo/Pin/" + pin;
             log.info("getFarmInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<FarmInfoResponse> farmInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, FarmInfoResponse.class));
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                FarmInfoResponse.class));
 
                 FarmInfoResponse farmInfo = farmInfoResponse.getResponse();
                 if (farmInfo != null) {
@@ -102,12 +115,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/FarmInfo/Voen/" + voen;
             log.info("getFarmInfoByVoen Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<FarmInfoResponse> farmInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, FarmInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                FarmInfoResponse.class));
 
                 FarmInfoResponse farmInfo = farmInfoResponse.getResponse();
                 if (farmInfo != null) {
@@ -138,12 +152,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/All/" + pin;
             log.info("getPersonalInfoAllByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<PersonalInfoAllResponse> personInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, PersonalInfoAllResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                PersonalInfoAllResponse.class));
                 PersonalInfoAllResponse personInfo = personInfoResponse.getResponse();
                 if (personInfo != null) {
                     personInfo.setPIN(pin);
@@ -173,12 +188,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/" + pin;
             log.info("getPersonalInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<PersonalInfoAllResponse> personInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, PersonalInfoAllResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                PersonalInfoAllResponse.class));
                 PersonalInfoAllResponse personInfo = personInfoResponse.getResponse();
                 if (personInfo != null) {
                     personInfo.setPIN(pin);
@@ -208,12 +224,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v2/EmployeeInfo/" + pin;
             log.info("getEmployeeInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<EmployeeInfoResponse> employeeInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, EmployeeInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                EmployeeInfoResponse.class));
                 EmployeeInfoResponse employee = employeeInfoResponse.getResponse();
                 if (employee != null) {
                     employee.setPin(pin);
@@ -243,12 +260,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v2/PensionInfo/" + pin;
             log.info("getPensionerInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<PensionerInfoResponse> pensionerInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, PensionerInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                PensionerInfoResponse.class));
                 PensionerInfoResponse pensionerInfo = pensionerInfoResponse.getResponse();
                 if (pensionerInfo != null) {
                     pensionerInfo.setPin(pin);
@@ -278,12 +296,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/ForeignPassportInfo/" + pin;
             log.info("getForeignPassportInfoByPin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<PassportInfoResponse> passportInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, PassportInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                PassportInfoResponse.class));
                 PassportInfoResponse passportInfo = passportInfoResponse.getResponse();
                 if (passportInfo != null) {
                     passportInfo.setPIN(pin);
@@ -313,12 +332,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/VINInfo/" + vin;
             log.info("getVinInfoByVin Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<VinInfoResponse> vinInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, VinInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                VinInfoResponse.class));
                 VinInfoResponse vinInfo = vinInfoResponse.getResponse();
                 if (vinInfo != null) {
                     vinInfo.setVin(vin);
@@ -348,12 +368,13 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
             }
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/VoenInfo/" + voen;
             log.info("getVoenInfoByVoen Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<VoenInfoResponse> voenInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, VoenInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                VoenInfoResponse.class));
                 VoenInfoResponse voenInfo = voenInfoResponse.getResponse();
                 if (voenInfo != null) {
                     voenInfo.setVoen(voen);
@@ -374,21 +395,24 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     }
 
     @Override
-    public PersonalInfoAllResponse getPersonalInfoByPinAndDocument(String pin, String documentNumber, boolean fetchFromService) {
+    public PersonalInfoAllResponse getPersonalInfoByPinAndDocument(String pin, String documentNumber,
+            boolean fetchFromService) {
         try {
             if (!fetchFromService && personalInfoAllResponseRepository.findByPIN(pin).isPresent()) {
                 PersonalInfoAllResponse response = personalInfoAllResponseRepository.findByPIN(pin).get();
                 response.setSource(ESource.DB);
                 return response;
             }
-            String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/PinAndDocNumber?pin=" + pin + "&docNumber=" + documentNumber;
+            String url = asanFinanceProperties.getApiUrl() + "/api/v1/PersonalInfo/PinAndDocNumber?pin=" + pin
+                    + "&docNumber=" + documentNumber;
             log.info("getPersonalInfoByPinAndDocument Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 AsanFinanceResponse<PersonalInfoAllResponse> personInfoResponse = objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, PersonalInfoAllResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                PersonalInfoAllResponse.class));
                 PersonalInfoAllResponse personInfo = personInfoResponse.getResponse();
                 if (personInfo != null) {
                     personInfo.setPIN(pin);
@@ -411,16 +435,17 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     @Override
     public AsanFinanceResponse<ExpensesResponse> getExpensesInfo(AsanFinanceRequest asanFinanceRequest) {
         try {
-//          http://base-url/api/v1/Info/Expenses
+            // http://base-url/api/v1/Info/Expenses
             String bodyStr = objectMapper.writeValueAsString(asanFinanceRequest);
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/Info/Expenses";
             log.info("getExpensesInfo Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, ExpensesResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                ExpensesResponse.class));
             } else {
                 log.error("getExpensesInfo Response is null or empty");
             }
@@ -434,16 +459,17 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     @Override
     public AsanFinanceResponse<PaymentInfoResponse> getPaymentsInfo(AsanFinanceRequest asanFinanceRequest) {
         try {
-//          http://base-url/api/v1/Info/Payments
+            // http://base-url/api/v1/Info/Payments
             String bodyStr = objectMapper.writeValueAsString(asanFinanceRequest);
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/Info/Payments";
             log.info("getPaymentsInfo Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, PaymentInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                PaymentInfoResponse.class));
             } else {
                 log.error("getPaymentsInfo Response is null or empty");
             }
@@ -457,16 +483,17 @@ public class AsanFinanceServiceImpl implements AsanFinanceService {
     @Override
     public AsanFinanceResponse<BalanceInfoResponse> getBalanceInfo(AsanFinanceRequest asanFinanceRequest) {
         try {
-//          http://base-url/api/v1/Info/Balance
+            // http://base-url/api/v1/Info/Balance
             String bodyStr = objectMapper.writeValueAsString(asanFinanceRequest);
             String url = asanFinanceProperties.getApiUrl() + "/api/v1/Info/Balance";
             log.info("getBalanceInfo Request URL: {}", url);
-            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey", asanFinanceProperties.getApiKey(), false);
+            JsonNode jsonResponse = sendRequest.executeRequest(bodyStr, url, "POST", "ApiKey",
+                    asanFinanceProperties.getApiKey(), false);
             if (jsonResponse != null) {
                 return objectMapper.readValue(
                         jsonResponse.toString(),
-                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class, BalanceInfoResponse.class)
-                );
+                        objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
+                                BalanceInfoResponse.class));
             } else {
                 log.error("getBalanceInfo Response is null or empty");
             }

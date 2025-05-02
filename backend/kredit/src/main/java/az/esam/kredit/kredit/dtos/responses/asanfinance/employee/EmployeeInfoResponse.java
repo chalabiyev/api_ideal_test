@@ -2,6 +2,8 @@ package az.esam.kredit.kredit.dtos.responses.asanfinance.employee;
 
 import az.esam.kredit.kredit.dtos.enums.ESource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,11 +22,13 @@ import java.util.List;
 public class EmployeeInfoResponse {
 
     @Id
-    private String pin;
-
+    @JsonProperty("Pin")
+    private String Pin;
+    @JsonProperty("Active")
     private List<Job> Active;
-
+    @JsonProperty("Deactive")
     private List<Job> Deactive;
 
-    private ESource source;
+    @JsonProperty("Source")
+    private ESource Source;
 }

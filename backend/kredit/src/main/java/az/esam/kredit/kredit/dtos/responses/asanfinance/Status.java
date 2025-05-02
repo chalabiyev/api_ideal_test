@@ -1,6 +1,8 @@
 package az.esam.kredit.kredit.dtos.responses.asanfinance;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +14,10 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Status {
-    private String name;
-    private String code;
-    private String message;
+    @JsonProperty("Name")
+    private String Name;
+    @JsonProperty("Code")
+    private String Code;
+    @JsonProperty("Message")
+    private String Message;
 }
