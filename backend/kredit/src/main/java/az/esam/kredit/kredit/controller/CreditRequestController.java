@@ -48,16 +48,16 @@ public class CreditRequestController {
     @Autowired
     ObjectMapper om;
 
-    @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "authentication")
-    @SecurityRequirement(name = "X-API-KEY")
-    @PostMapping("/create")
-    public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {      
-        var user = userRepository.findFirstByUsername(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        request.setRequestedUser(user);
-        return ResponseEntity.ok(creditRequestService.create(request, authentication));
-    }
+    // @PreAuthorize("isAuthenticated()")
+    // @SecurityRequirement(name = "authentication")
+    // @SecurityRequirement(name = "X-API-KEY")
+    // @PostMapping("/create")
+    // public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {      
+    //     var user = userRepository.findFirstByUsername(authentication.getName())
+    //             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    //     request.setRequestedUser(user);
+    //     return ResponseEntity.ok(creditRequestService.create(request, authentication));
+    // }
 
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
