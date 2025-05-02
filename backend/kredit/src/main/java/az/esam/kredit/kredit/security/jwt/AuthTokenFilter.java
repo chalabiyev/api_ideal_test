@@ -38,8 +38,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
 
         // Skip API key check for Swagger and other excluded endpoints
@@ -48,7 +47,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (!request.getRequestURI().contains("/api/sima") && !request.getRequestURI().contains("/signal") && !checkApiKey(request)) {
+        if (!request.getRequestURI().contains("/api/sima") && !request.getRequestURI().contains("/signal")
+                && !request.getRequestURI().contains(".png") && !checkApiKey(request)) {
             if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Wrong API key or secret");
             }
@@ -60,7 +60,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 || request.getRequestURI().equals("/api/auth/register")
                 || request.getRequestURI().equals("/api/auth/login")
                 || request.getRequestURI().equals("/api/auth/reset-password")
-                || request.getRequestURI().contains("/api/sima")) {
+                || request.getRequestURI().contains("/api/sima")
+                || request.getRequestURI().contains(".png")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -91,8 +92,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                             null,
                             userDetails.getAuthorities());
                     authentication.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
+                            new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
@@ -117,7 +117,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private boolean isExcludedEndpoint(String requestURI) {
         return requestURI.startsWith("/swagger")
                 || requestURI.startsWith("/v3/api-docs")
-                || requestURI.startsWith("/swagger-ui.html")                
+                || requestURI.startsWith("/swagger-ui.html")
                 || requestURI.startsWith("/api/auth/getUserPhoto")
                 || requestURI.startsWith("/api/file/getPublicFile");
     }

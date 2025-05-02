@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -61,12 +62,18 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public CreditRequest create(CreditRequest request, Authentication authentication) {
-
         if (request.getId() == null || request.getId().isEmpty()) {
             request.setId(new ObjectId().toString());
         }
-
         request.setRequestDate(new Date());
+        Calendar c = Calendar.getInstance();
+        c.setTime(request.getRequestDate());
+        if (request.getCreditYear() == 0) {
+            request.setCreditYear(c.get(Calendar.YEAR));
+        }
+        if (request.getCreditOrderNo() == 0) {
+            request.setCreditOrderNo((int) creditRequestRepository.countByCreditYear(c.get(Calendar.YEAR)) + 1);
+        }
         if (request.getCreditAmount() == null) {
             request.setCreditAmount(499d);
         }
@@ -398,5 +405,13 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         User usr = userRepository.findFirstByUsername(auth.getName()).orElseThrow();
         return isAdmin(usr) ? creditRequestRepository.countByConfirmStatus(confirmStatus)
                 : creditRequestRepository.countByConfirmStatusAndRequestedUser(confirmStatus, usr);
+    }
+
+    @Override
+    public Long countByCreditYear() {
+        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return creditRequestRepository.countByCreditYear(c.get(Calendar.YEAR));
     }
 }

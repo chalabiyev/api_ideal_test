@@ -41,7 +41,6 @@ public class PdfServiceImpl implements PdfService {
         return templateEngine.process(templateName, context);
     }
 
-
     @Override
     public byte[] generatePdf(String htmlContent) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -83,40 +82,43 @@ public class PdfServiceImpl implements PdfService {
         return mergedOutputStream.toByteArray();
     }
 
-//    String templateName = "sifaris-xett"; // Template name without the ".html" extension
-//    Path outputFile = Path.of("/Users/aphar/Desktop/ideal-kredit/ideal_kredit/backend/kredit/uploads/output.pdf");
-//
-//    List<Spouse> spouses = List.of(
-//            new Spouse("John Doe", "AA123456", "2023-01-01", "Gov. Authority",
-//                    "New York", "USA", "123 Elm St", "456 Oak Ave",
-//                    "123-456-7890", "Tech Company", "Manager", "Tech Street"),
-//            new Spouse("Jane Smith", "BB654321", "2023-05-10", "Gov. Authority",
-//                    "Los Angeles", "USA", "789 Pine St", "321 Maple Ave",
-//                    "987-654-3210", "Finance Corp", "Analyst", "Finance Road")
-//    );
-//
-//    Map<String, Object> data = Map.of(
-//            "requestedUser", new Spouse("Alice Applicant", "CC987654", "2022-05-20", "Registrar",
-//                    "Baku", "Azerbaijan", "Nizami St 10", "Xatai St 5",
-//                    "051-123-4567", "Ideal Kredit", "Manager", "Ideal Office"),
-//            "spouses", spouses, // Pass the list of spouses correctly
-//            "factAddress", "Xatai St 5",
-//            "countOfChildren", 2,
-//            "education", "Bachelor's Degree",
-//            "workPlace", "Ideal Kredit",
-//            "workAddress", "Ideal Office",
-//            "position", "Manager",
-//            "salary", 2000,
-//            "otherIncome", 500
-//    );
+    // String templateName = "sifaris-xett"; // Template name without the ".html"
+    // extension
+    // Path outputFile =
+    // Path.of("/Users/aphar/Desktop/ideal-kredit/ideal_kredit/backend/kredit/uploads/output.pdf");
+    //
+    // List<Spouse> spouses = List.of(
+    // new Spouse("John Doe", "AA123456", "2023-01-01", "Gov. Authority",
+    // "New York", "USA", "123 Elm St", "456 Oak Ave",
+    // "123-456-7890", "Tech Company", "Manager", "Tech Street"),
+    // new Spouse("Jane Smith", "BB654321", "2023-05-10", "Gov. Authority",
+    // "Los Angeles", "USA", "789 Pine St", "321 Maple Ave",
+    // "987-654-3210", "Finance Corp", "Analyst", "Finance Road")
+    // );
+    //
+    // Map<String, Object> data = Map.of(
+    // "requestedUser", new Spouse("Alice Applicant", "CC987654", "2022-05-20",
+    // "Registrar",
+    // "Baku", "Azerbaijan", "Nizami St 10", "Xatai St 5",
+    // "051-123-4567", "Ideal Kredit", "Manager", "Ideal Office"),
+    // "spouses", spouses, // Pass the list of spouses correctly
+    // "factAddress", "Xatai St 5",
+    // "countOfChildren", 2,
+    // "education", "Bachelor's Degree",
+    // "workPlace", "Ideal Kredit",
+    // "workAddress", "Ideal Office",
+    // "position", "Manager",
+    // "salary", 2000,
+    // "otherIncome", 500
+    // );
 
-//    List<String> htmlContents = List.of(
-//            loadHtmlContent("sifaris-xett", Map.of("key", "value1")),
-//            loadHtmlContent("xett", Map.of("key", "value2"))
-//    );
-//
-//    byte[] mergedPdf = mergePdfs(htmlContents);
-//
-//    // Save to file or return as a response
-//        Files.write(outputFile, mergedPdf);
+    // List<String> htmlContents = List.of(
+    // loadHtmlContent("sifaris-xett", Map.of("key", "value1")),
+    // loadHtmlContent("xett", Map.of("key", "value2"))
+    // );
+    //
+    // byte[] mergedPdf = mergePdfs(htmlContents);
+    //
+    // // Save to file or return as a response
+    // Files.write(outputFile, mergedPdf);
 }

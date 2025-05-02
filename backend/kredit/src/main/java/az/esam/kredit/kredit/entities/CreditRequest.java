@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +94,8 @@ public class CreditRequest extends BaseEntity {
     private String generalNote;
     private List<Person> relatedPersons;
     private Pensioner pensioner;
+    private int creditOrderNo;
+    private int creditYear;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -147,7 +150,12 @@ public class CreditRequest extends BaseEntity {
                 : null);
         map.put("fine", fine);
         map.put("simaContractOperationId", simaContractOperationId);
-
+        map.put("creditOrderNo", creditOrderNo);
+        map.put("creditYear", creditYear);
+        map.put("requestDateStr", new SimpleDateFormat("dd.MM.yyyy").format(requestDate));
+        map.put("creditOrderNoStr", String.format("%05d", creditOrderNo));
+        map.put("documentNumber", "İK-BSİ/" + String.format("%05d", creditOrderNo) + "/" + creditYear);
+        map.put("documentDate", new SimpleDateFormat("dd.MM.yyyy").format(requestDate));
         return map;
     }
 

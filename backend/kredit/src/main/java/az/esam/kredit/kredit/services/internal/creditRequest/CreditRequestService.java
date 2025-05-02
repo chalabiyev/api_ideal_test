@@ -36,4 +36,5 @@ public interface CreditRequestService {
 
     CreditRequest rejectByAdmin(String creditRequestId, Authentication authentication);
 
+    Long countByCreditYear();
 }

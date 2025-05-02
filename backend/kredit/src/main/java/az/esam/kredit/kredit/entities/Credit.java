@@ -53,4 +53,37 @@ public class Credit extends BaseEntity {
     private String fine;
 
     private String simaContractOperationId;
+
+    private String contractFileName;
+    private String videoSignFileName;
+    private Boolean decisionQueryEnabled;
+    private String videoSignText;
+
+    @DocumentReference
+    private Partner partner;
+
+    @DocumentReference
+    private List<Guarantor> guarantors;
+
+    private Recruiter recruiter;
+
+    private Double cashPrice;
+    private String operationType;
+    private String productName;
+
+    private CreditDetail creditDetails;
+    private String workExperience;
+    private String familyMembers;
+    private String familyIncome;
+    private boolean isRenting;
+    private String rentAmount;
+    private String rentDuration;
+    private String actualAddress;
+    private List<AdditionalIncome> additionalIncomes;
+    private int idQuality;
+    private String generalNote;
+    private List<Person> relatedPersons;
+    private Pensioner pensioner;
+    private int creditOrderNo;
+    private int creditYear;
 }

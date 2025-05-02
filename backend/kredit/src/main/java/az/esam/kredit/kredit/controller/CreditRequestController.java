@@ -52,11 +52,13 @@ public class CreditRequestController {
     // @SecurityRequirement(name = "authentication")
     // @SecurityRequirement(name = "X-API-KEY")
     // @PostMapping("/create")
-    // public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest request, Authentication authentication) {      
-    //     var user = userRepository.findFirstByUsername(authentication.getName())
-    //             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    //     request.setRequestedUser(user);
-    //     return ResponseEntity.ok(creditRequestService.create(request, authentication));
+    // public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest
+    // request, Authentication authentication) {
+    // var user = userRepository.findFirstByUsername(authentication.getName())
+    // .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    // request.setRequestedUser(user);
+    // return ResponseEntity.ok(creditRequestService.create(request,
+    // authentication));
     // }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -166,5 +168,13 @@ public class CreditRequestController {
             @RequestParam @NotBlank(message = "Kredit request id boş ola bilməz") String creditRequestId,
             Authentication authentication) {
         return ResponseEntity.ok(creditRequestService.rejectByAdmin(creditRequestId, authentication));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @GetMapping("/countByCreditYear")
+    public ResponseEntity<Long> countByCreditYear(Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.countByCreditYear());
     }
 }

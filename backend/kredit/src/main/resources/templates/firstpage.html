@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            margin: 20px auto;
+            max-width: 1100px;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .document-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f0f8ff;
+            /* Light blue background for header */
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            font-family: "Open Sans Bold", sans-serif;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-info {
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .qr-code {
+            float: right;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="logo-container">
+            <img src="https://api.idealkredit.az/img_3.png" alt="Logo" style="height: 200px;" />
+        </div>
+    </div>
+
+    <!-- Document Number and Date -->
+    <div class="document-number">
+        <table style="width: 100%;">
+            <tr>
+                <td><strong>№ İК-BSİ/<span th:text="${creditOrderNoStr}">01</span>/<span
+                            th:text="${creditYear}">2025</span></strong></td>
+                <td style="text-align: right;"><strong><span th:text="${requestDateStr}">23.04.2025</span></strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Document Contents -->
+    <h3>Sənədin tərkib hissələri:</h3>
+    <ol>
+        <li>Qaimə</li>
+        <li>Ərizə</li>
+        <li>Kredit sifarişi</li>
+        <li>İstehlak krediti müqaviləsi üzrə standart məlumatlandırma forması</li>
+        <li>Əlaqəli kredit müqaviləsi</li>
+        <li>Müştərinin kredit tarixçəsinin tərtib edilməsi üçün məlumatların kredit bürosuna təqdim edilməsinə və ya
+            kredit bürosundan kredit hesabatının əldə edilməsinə razılıq ərizəsi</li>
+        <li>Müştərinin “ASAN” Finans sistemi vasitəsilə məlumatların alınmasına dair razılıq ərizəsi</li>
+        <li>Ödəniş cədvəli</li>
+    </ol>
+
+    <!-- Guarantor Section -->
+    <h3>Zamin (tələb olunarsa):</h3>
+    <ol>
+        <li>Zaminlik müqaviləsi</li>
+        <li>Zaminə aid kredit tarixçəsinin tərtib edilməsi üçün məlumatların kredit bürosuna təqdim edilməsinə və ya
+            kredit bürosundan kredit hesabatının əldə edilməsinə razılıq ərizəsi</li>
+        <li>“ASAN” Finans sistemi vasitəsilə zaminə aid məlumatların alınmasına dair razılıq ərizəsi</li>
+    </ol>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <div class="signature">
+            <p><strong>Sənəd SİMA İMZA vasitəsi ilə imzalanıb</strong></p>
+            <p>Sənədin həqiqiliyini QR kod vasitəsi ilə yoxlamağınız tövsiyyə edilir</p>
+            <p><a href="http://www.idealkredit.az" target="_blank">www.idealkredit.az</a></p>
+        </div>
+        <div class="qr-code">
+            <img src="https://api.idealkredit.az/img_4.png" alt="Logo" style="height: 150px;" />
+        </div>
+    </div>
+</body>
+
+</html>

@@ -22,4 +22,6 @@ public interface CreditRequestRepository extends MongoRepository<CreditRequest, 
     public long countByConfirmStatusAndRequestedUser(CreditRequestStatusEnum confirmStatus, User requestedUser);
 
     public Optional<CreditRequest> findOneByRequestedUserOrderByRequestDateDesc(User requestedUser);
+
+    public long countByCreditYear(int creditYear);
 }
