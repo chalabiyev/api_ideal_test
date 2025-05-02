@@ -214,6 +214,8 @@ export interface CreditRequest {
       endDate: string;
     }>;
   };
+  creditOrderNo?: number;
+  creditYear?: number;
 }
 
 export interface User {

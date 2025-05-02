@@ -57,18 +57,6 @@ const TabContract = ({
           setContractPdf(file);
         }
       });
-      // createCreditRequest(creditRequest)
-      //   .then((res) => {
-      //     if (res) {
-      //       setCreditRequest(res);
-      //       toast.success('Müraciət uğurla bildirildi!');
-      //     } else {
-      //       toast.error('Müraciət yaradılmadı!');
-      //     }
-      //   })
-      //   .catch(() => {
-      //     toast.error('Müraciət yaradılmadı!');
-      //   });
     }
   }, [contractCreated]);
 

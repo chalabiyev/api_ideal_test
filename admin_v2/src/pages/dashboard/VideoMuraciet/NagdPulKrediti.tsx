@@ -444,8 +444,12 @@ export default function Page() {
     if (hasData) {
       if (userData) data.phoneNumber = userData.phoneNumber;
       setUserInfo(data);
+      const creditYear = new Date().getFullYear();
+      const creditOrderNo = (await request.get('/creditrequest/countByCreditYear')).data + 1;
       let newCreditRequest: CreditRequest = {
         ...creditRequest,
+        creditYear: creditYear,
+        creditOrderNo: creditOrderNo,
         requestedUser: userData,
         phoneNumber: userData.phoneNumber,
         requestDate: new Date(),
@@ -460,16 +464,12 @@ export default function Page() {
             operationType: creditRequest.creditDetails.operationType,
             productName: creditRequest.creditDetails.productName,
             cashPrice: creditRequest.creditDetails.cashPrice,
-            creditType: 'PARTNER_CREDIT'
-          };
-          // @ts-ignore
-          setCreditRequest((prev) => ({
-            ...prev,
+            creditType: 'PARTNER_CREDIT',
             creditDetails: {
-              ...prev.creditDetails,
+              ...creditRequest.creditDetails,
               storeName: partner.companyName,
             },
-          }));
+          };
         }
       }
       if (cashPrice && creditDuration && invoiceType && itemName) {
