@@ -9,7 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
         rel="stylesheet" />
-    <title>Kredit Xətti Müqaviləsi</title>
+    <title>Kredit Müqaviləsi</title>
     <style>
         body {
             font-family: "Roboto", sans-serif;
@@ -202,7 +202,7 @@
         <img src="https://api.idealkredit.az/img.png" alt="Ideal Kredit Logo" /> <!-- Replace with your logo path -->
         <div class="header-title">
             <h1>"İDEAL KREDİT" BOKT MMC</h1>
-            <h2 th:text="'Kredit Xətti Müqaviləsi № ' + ${contractNumber}"></h2>
+            <h2 th:text="'Kredit Müqaviləsi № ' + ${contractNumber}"></h2>
         </div>
         <div></div>
     </div>
@@ -240,13 +240,13 @@
             </td>
         </tr>
         <tr>
-            <td class="title">Kredit xəttinin məbləği</td>
+            <td class="title">Kredit məbləği</td>
             <td th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></td>
         </tr>
         <tr>
             <td class="title">İllik faiz dərəcəsi</td>
             <td>
-                <p th:text="${documentNumber}">09/745-2023</p>Saylı kredit Xətti müqaviləsinə ediləcək Əlavələrlə
+                <p th:text="${documentNumber}">09/745-2023</p>Saylı kredit müqaviləsinə ediləcək Əlavələrlə
                 müəyyən olunur
             </td>
         </tr>
@@ -255,7 +255,7 @@
             <td th:text="${fine} + '%'"></td>
         </tr>
         <tr>
-            <td class="title">Kredit xəttinin müddəti</td>
+            <td class="title">Kredit müddəti</td>
             <td th:text="${creditTerm} + ' ay'"></td>
         </tr>
         <tr>
@@ -265,18 +265,18 @@
         <tr>
             <td class="title">Ayrılacaq tranşın məbləği</td>
             <td>
-                <p th:text="${documentNumber}">09/745-2023</p> Saylı kredit Xətti müqaviləsinə ediləcək Əlavələrlə
+                <p th:text="${documentNumber}">09/745-2023</p> Saylı kredit müqaviləsinə ediləcək Əlavələrlə
                 müəyyən olunur
             </td>
         </tr>
         <tr>
-            <td class="title">Kredit xəttinin təminatı</td>
+            <td class="title">Kredit təminatı</td>
             <td th:text="${guarantee}"></td>
         </tr>
         <tr>
             <td class="title">Xidmət haqqı və xərclər</td>
             <td>
-                <p th:text="${documentNumber}">09/745-2023</p> Saylı kredit Xətti müqaviləsinə ediləcək Əlavələrlə
+                <p th:text="${documentNumber}">09/745-2023</p> Saylı kredit müqaviləsinə ediləcək Əlavələrlə
                 müəyyən olunur
             </td>
         </tr>
@@ -288,7 +288,7 @@
         <span>2.1.</span> Bu müqavilə üzrə <span class="highlight">BOKT</span> Borcalara
         <span class="highlight" th:text="${creditTerm}"> ay müddətinə qaytarmaq şərti ilə</span>
         <span class="highlight" th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></span> məbləğində
-        kredit xətti açır.
+        kredit əldə edir.
         Borcalan isə bu Müqavilədə və ya onun əlavə(lər)ində göstərilən kredit məbləğini qəbul edərək, müqavilədə
         göstərilən müddətdə və
         qaydada, ödəniş qrafiki (Əlavə №1) əsasında krediti və həmin kreditə görə hesablanmış faizləri
@@ -313,7 +313,7 @@
         </div>
 
         <div class="subsection">
-            <span>2.5.</span> Borcalan bu kredit xətti müqaviləsinin əlavələri ilə ona ayrılacaq kredit məbləği üzrə
+            <span>2.5.</span> Borcalan bu kredit müqaviləsinin əlavələri ilə ona ayrılacaq kredit məbləği üzrə
             əsas borcun
             və faizlərin ödənilməsini ödəniş qrafikinə (Əlavə №1) uyğun olaraq həyata keçirir. Borcalan kredit və (və
             ya) ona
@@ -583,7 +583,7 @@
         <div class="section-title">5. Digər Müddəalar</div>
 
         <div class="subsection">
-            <span>5.1.</span> Kredit üzrə Faktiki İllik Faiz Dərəcəsi (FİFD) bu kredit xətti müqaviləsinə ediləcək
+            <span>5.1.</span> Kredit üzrə Faktiki İllik Faiz Dərəcəsi (FİFD) bu kredit müqaviləsinə ediləcək
             əlavələrdə
             göstərilir.
         </div>
@@ -693,7 +693,7 @@
             <span>5.13.</span> "Borcalan" maliyyə xidmətlərini istehlak edərkən qarşılaşdığı çətinliklər və suallarla
             əlaqədar
             Mərkəzi Bankın <span class="highlight">+994124935058</span> telefon nömrəsi və <span
-                class="highlight">+99412966</span> qaynar xətti ilə əlaqə saxlaya bilər.
+                class="highlight">+99412966</span> qaynar ilə əlaqə saxlaya bilər.
         </div>
 
         <div class="subsection">
@@ -722,8 +722,7 @@
                 <p class="bold">"İDEAL KREDİT" BOKT</p>
                 <p><span class="bold">Direktor:</span> Qubadov Qubad Baxas oğlu</p>
                 <p><span class="bold underline">Hüquqi ünvan:</span> Bakı şəhəri, F.Xoyski küç., 111"A", m.26</p>
-                <p><span class="bold underline">Faktiki ünvan:</span> Bakı şəh, Həsən Əliyev küç., 34 <small>(1 saylı
-                        ASAN Kommunal)</small></p>
+                <p><span class="bold underline">Faktiki ünvan:</span> Bakı şəhəri, 7-ci Mkr. S.Sani Axundov küç. 31/23</p>
                 <p><span class="bold">Tel:</span> 012 526 26 25</p>
                 <p><span class="bold">İndeks:</span> AZ 1078</p>
                 <p><span class="bold">VÖEN:</span> 1300480591</p>

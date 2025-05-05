@@ -106,10 +106,8 @@ public class ContractController {
                                 pdfService.loadHtmlContent("sifaris-xett", request.toMap()),
                                 pdfService.loadHtmlContent("xett", request.toMap()),
                                 pdfService.loadHtmlContent("trans", request.toMap()),
-                                pdfService.loadHtmlContent("erize-trans", request.toMap()),
                                 pdfService.loadHtmlContent("tehlil-trans", request.toMap()),
                                 pdfService.loadHtmlContent("pp-trans", ppTransEntity.toMap()),
-                                pdfService.loadHtmlContent("tt-kart", request.toMap()),
                                 pdfService.loadHtmlContent("page_6", request.toMap()),
                                 pdfService.loadHtmlContent("page_7", request.toMap())));
 
