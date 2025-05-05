@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-          rel="stylesheet"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+        rel="stylesheet" />
 
     <title>Ödəniş Qrafiki</title>
     <style>
@@ -51,11 +53,14 @@
             text-align: center;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
 
-        th, td {
+        th,
+        td {
             padding: 6px;
             font-size: 13px;
         }
@@ -75,7 +80,8 @@
             flex: 1;
             margin-left: 20px;
             line-height: 1.8;
-            align-self: flex-start; /* Align to top */
+            align-self: flex-start;
+            /* Align to top */
         }
 
         .side-text h4 {
@@ -101,7 +107,8 @@
             margin-top: 20px;
             text-align: center;
         }
-         .signatures {
+
+        .signatures {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
@@ -118,166 +125,173 @@
         }
     </style>
 </head>
+
 <body>
 
-<!-- Header Section -->
-<div class="header">
-    <img src="img.png" alt="İdeal Kredit Logo"/>
-    <h1>VÖEN: 1300480591<br/>ÖDƏNİŞ QRAFİKİ<br/>09/745-2023 saylı kredit xətti müqaviləsinə 1 saylı əlavə<br/>ƏLAVƏ №1
-    </h1>
-</div>
-<div>
-    <p><strong>Tarix:</strong>
-        <span th:text="${date}"></span></p>
-    <p><strong>Məbləğ:</strong> <span th:text="${creditAmount}"></span> AZN</p>
-    <p><strong>İllik faiz:</strong> <span th:text="${interestRate}"></span>%</p>
-    <p><strong>Müddət:</strong> <span th:text="${creditTerm}"></span> ay</p>
-    <p><strong>Güzəşt müddəti:</strong> AZN</p>
-    <p><strong>Aylıq annuitet:</strong> <span th:text="${monthlyPayment}"></span> AZN</p>
-</div>
-
-<!-- Main Content -->
-<div class="container">
-    <!-- Table Section -->
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>Tarix</th>
-                <th>Ayların sayı</th>
-                <th>Ödəniş</th>
-                <th>Əsas borc</th>
-                <th>Faiz</th>
-                <th>Qalıq</th>
-            </tr>
-            <tr th:each="payment, iterStat : ${paymentTable}">
-                <td th:text="${payment.date}"></td>
-                <td th:text="${payment.monthCount}"></td>
-                <td th:text="${payment.payment}"></td>
-                <td th:text="${payment.principal}"></td>
-                <td th:text="${payment.interest}"></td>
-                <td th:text="${payment.remainingDebt}"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td th:text="${totalPayment}"></td>
-                <td th:text="${creditAmount}"></td>
-                <td th:text="${totalInterest}"></td>
-                <td></td>
-            </tr>
-            <!-- Repeat rows as needed -->
-        </table>
+    <!-- Header Section -->
+    <div class="header">
+        <img src="https://api.idealkredit.az/img.png" alt="İdeal Kredit Logo" />
+        <h1>VÖEN: 1300480591<br />ÖDƏNİŞ QRAFİKİ<br />
+            <p th:text="${documentNumber}">09/745-2023</p> saylı kredit xətti müqaviləsinə 1 saylı əlavə<br />ƏLAVƏ №1
+        </h1>
+    </div>
+    <div>
+        <p><strong>Tarix:</strong>
+            <span th:text="${date}"></span>
+        </p>
+        <p><strong>Məbləğ:</strong> <span th:text="${creditAmount}"></span> AZN</p>
+        <p><strong>İllik faiz:</strong> <span th:text="${interestRate}"></span>%</p>
+        <p><strong>Müddət:</strong> <span th:text="${creditTerm}"></span> ay</p>
+        <p><strong>Güzəşt müddəti:</strong> AZN</p>
+        <p><strong>Aylıq annuitet:</strong> <span th:text="${monthlyPayment}"></span> AZN</p>
     </div>
 
-    <!-- Side Text Section -->
-    <div class="side-text">
-
-        <!-- Title Section -->
-        <h4>Ödəniş qaydası: Bank xidmətləri - İDEAL KREDİT</h4>
-
-        <!-- Payment Information -->
-        <div class="section">
-            <div class="box">
-                <table class="info-table">
-                    <tr>
-                        <th>FİN kod:</th>
-                        <td>
-                            <span th:text="${userPin}"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Doğum tarixi:</th>
-                        <td>
-                            <span th:text="${birthDate}"></span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Table Section -->
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Tarix</th>
+                    <th>Ayların sayı</th>
+                    <th>Ödəniş</th>
+                    <th>Əsas borc</th>
+                    <th>Faiz</th>
+                    <th>Qalıq</th>
+                </tr>
+                <tr th:each="payment, iterStat : ${paymentTable}">
+                    <td th:text="${payment.date}"></td>
+                    <td th:text="${payment.monthCount}"></td>
+                    <td th:text="${payment.payment}"></td>
+                    <td th:text="${payment.principal}"></td>
+                    <td th:text="${payment.interest}"></td>
+                    <td th:text="${payment.remainingDebt}"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td th:text="${totalPayment}"></td>
+                    <td th:text="${creditAmount}"></td>
+                    <td th:text="${totalInterest}"></td>
+                    <td></td>
+                </tr>
+                <!-- Repeat rows as needed -->
+            </table>
         </div>
 
-        <!-- Payment Methods -->
-        <div class="section">
-            <div class="box">
-                <strong>Ödəniş sistemləri ilə ödəmək üçün</strong>
-                <div style="display: flex; ">
-                    <img src="img_1.png" alt=""/>
-                    <img src="img_2.png" alt=""/>
+        <!-- Side Text Section -->
+        <div class="side-text">
+
+            <!-- Title Section -->
+            <h4>Ödəniş qaydası: Bank xidmətləri - İDEAL KREDİT</h4>
+
+            <!-- Payment Information -->
+            <div class="section">
+                <div class="box">
+                    <table class="info-table">
+                        <tr>
+                            <th>FİN kod:</th>
+                            <td>
+                                <span th:text="${userPin}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Doğum tarixi:</th>
+                            <td>
+                                <span th:text="${birthDate}"></span>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
-            <div class="box">
-                <strong>Beynəlxalq Bank ASC Nərimanov filialı</strong><br/>
-                <strong>H/h:</strong> AZ42IBAZ40090019442129326206<br/>
-                <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+            <!-- Payment Methods -->
+            <div class="section">
+                <div class="box">
+                    <strong>Ödəniş sistemləri ilə ödəmək üçün</strong>
+                    <div style="display: flex; ">
+                        <img src="https://api.idealkredit.az/img_1.png" alt="" />
+                        <img src="https://api.idealkredit.az/img_2.png" alt="" />
+                    </div>
+                </div>
+
+                <div class="box">
+                    <strong>Beynəlxalq Bank ASC Nərimanov filialı</strong><br />
+                    <strong>H/h:</strong> AZ42IBAZ40090019442129326206<br />
+                    <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+                </div>
             </div>
-        </div>
 
-        <div class="section">
-            <div class="box">
-                <strong>Bank Hesablarımıza ödəmək üçün</strong><br/>
-                Azərpoçt MMC PF 1<br/>
-                <strong>H/h:</strong> AZ05AZPO91015461400420200413<br/>
-                <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+            <div class="section">
+                <div class="box">
+                    <strong>Bank Hesablarımıza ödəmək üçün</strong><br />
+                    Azərpoçt MMC PF 1<br />
+                    <strong>H/h:</strong> AZ05AZPO91015461400420200413<br />
+                    <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+                </div>
+
+                <div class="box">
+                    <strong>Beynəlxalq Bank ASC Nərimanov filialı</strong><br />
+                    <strong>H/h:</strong> AZ42IBAZ40090019442129326206<br />
+                    <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+                </div>
             </div>
 
-            <div class="box">
-                <strong>Beynəlxalq Bank ASC Nərimanov filialı</strong><br/>
-                <strong>H/h:</strong> AZ42IBAZ40090019442129326206<br/>
-                <em>* Bu hesab üzrə istənilən filialdan ödəmək olar.</em>
+            <!-- Company Information -->
+            <div class="section">
+                <div class="box">
+                    <strong>İDEAL KREDİT -in ünvanı:</strong><br />
+                    Bakı şəhəri, AK. Həsən Əliyev küç., 34<br />
+                    (1 Saylı ASAN kommunalın 1-ci mərtəbəsi)<br />
+                    <strong>Tel:</strong> 012-526-26-25<br />
+                    <strong>Email:</strong> office@idealkredit.az<br />
+                    <strong>İş vaxtı:</strong> 09:00 - 18:00
+                </div>
             </div>
-        </div>
 
-        <!-- Company Information -->
-        <div class="section">
-            <div class="box">
-                <strong>İDEAL KREDİT -in ünvanı:</strong><br/>
-                Bakı şəhəri, AK. Həsən Əliyev küç., 34<br/>
-                (1 Saylı ASAN kommunalın 1-ci mərtəbəsi)<br/>
-                <strong>Tel:</strong> 012-526-26-25<br/>
-                <strong>Email:</strong> office@idealkredit.az<br/>
-                <strong>İş vaxtı:</strong> 09:00 - 18:00
+            <!-- Notice Section -->
+            <div class="notice">
+                <p>DİQQƏT!</p>
+                <p>HÖRMƏTLİ MÜŞTƏRİ!</p>
+                <p>KREDİT ÖDƏNİŞİNİZİ ÖDƏNİŞ QRAFİKİNDƏ<br />
+                    NƏZƏRDƏ TUTULAN TARİXLƏRDƏ SAAT<br />
+                    <strong>16:30 -DƏK</strong> ÖDƏMƏLİSİNİZ. ƏKS HALDA<br />
+                    KREDİTİNİZ GECİKMƏDƏ QALACAQ.
+                </p>
             </div>
-        </div>
 
-        <!-- Notice Section -->
-        <div class="notice">
-            <p>DİQQƏT!</p>
-            <p>HÖRMƏTLİ MÜŞTƏRİ!</p>
-            <p>KREDİT ÖDƏNİŞİNİZİ ÖDƏNİŞ QRAFİKİNDƏ<br/>
-                NƏZƏRDƏ TUTULAN TARİXLƏRDƏ SAAT<br/>
-                <strong>16:30 -DƏK</strong> ÖDƏMƏLİSİNİZ. ƏKS HALDA<br/>
-                KREDİTİNİZ GECİKMƏDƏ QALACAQ.</p>
         </div>
-
     </div>
-</div>
 
-<!-- Footer Note -->
-<div class="footer-note">
-    <strong>Qeyd:</strong> * Ödənişlər yalnız göstərilmiş banklar və digər ödəmə vasitələri (kassa, ödəniş terminalı,
-    onlayn ödəniş) ilə edilməlidir.<br/>
-    * Ödənişlərin "İDEAL KREDİT" BOKT-nin hər hansı bir əməkdaşına və ya digər şəxslərə edildiyi təqdirdə müqavilənin
-    4.5-ci bəndinə əsasən ödənişiniz qəbul edilməyəcək və ödəniş müqavilədə göstərilən qaydada 3.1.4-cü bəndə uyğun
-    tələb ediləcək.
-</div>
+    <!-- Footer Note -->
+    <div class="footer-note">
+        <strong>Qeyd:</strong> * Ödənişlər yalnız göstərilmiş banklar və digər ödəmə vasitələri (kassa, ödəniş
+        terminalı,
+        onlayn ödəniş) ilə edilməlidir.<br />
+        * Ödənişlərin "İDEAL KREDİT" BOKT-nin hər hansı bir əməkdaşına və ya digər şəxslərə edildiyi təqdirdə
+        müqavilənin
+        4.5-ci bəndinə əsasən ödənişiniz qəbul edilməyəcək və ödəniş müqavilədə göstərilən qaydada 3.1.4-cü bəndə uyğun
+        tələb ediləcək.
+    </div>
 
-<!-- Signatures Section -->
-<div class="signatures">
-    <div>
-        <strong>BOKT</strong><br/>
-        Direktor<br/>
-        <span class="bold">Q.B.Qubadov</span>
-        <div class="signature-line">____________________</div>
+    <!-- Signatures Section -->
+    <div class="signatures">
+        <div>
+            <strong>BOKT</strong><br />
+            Direktor<br />
+            <span class="bold">Q.B.Qubadov</span>
+            <div class="signature-line">____________________</div>
+        </div>
+        <div>
+            <strong>BORCALAN</strong><br />
+            Ş/V №: <span class="bold">
+                <span th:text="${userSerialNumber}"></span>
+            </span><br />
+            <span class="bold" th:text="${userFullName}"></span>
+            <div class="signature-line">____________________</div>
+        </div>
     </div>
-    <div>
-        <strong>BORCALAN</strong><br/>
-        Ş/V №: <span class="bold">
-        <span th:text="${userSerialNumber}"></span>
-    </span><br/>
-        <span class="bold" th:text="${userFullName}"></span>
-        <div class="signature-line">____________________</div>
-    </div>
-</div>
 
 </body>
+
 </html>

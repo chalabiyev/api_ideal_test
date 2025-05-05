@@ -100,6 +100,7 @@ public class ContractController {
 
                 List<String> htmlContents = new ArrayList<>(List.of(
                                 pdfService.loadHtmlContent("firstpage", request.toMap()),
+                                pdfService.loadHtmlContent("page_2", request.toMap()),
                                 pdfService.loadHtmlContent("m-formasi", request.toMap()),
                                 pdfService.loadHtmlContent("erize-xett", request.toMap()),
                                 pdfService.loadHtmlContent("sifaris-xett", request.toMap()),
@@ -108,7 +109,9 @@ public class ContractController {
                                 pdfService.loadHtmlContent("erize-trans", request.toMap()),
                                 pdfService.loadHtmlContent("tehlil-trans", request.toMap()),
                                 pdfService.loadHtmlContent("pp-trans", ppTransEntity.toMap()),
-                                pdfService.loadHtmlContent("tt-kart", request.toMap())));
+                                pdfService.loadHtmlContent("tt-kart", request.toMap()),
+                                pdfService.loadHtmlContent("page_6", request.toMap()),
+                                pdfService.loadHtmlContent("page_7", request.toMap())));
 
                 // Add content for each spouse with index
                 List<Spouse> spouses = request.getSpouses();

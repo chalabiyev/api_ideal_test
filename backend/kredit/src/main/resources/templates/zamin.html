@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-          rel="stylesheet"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+        rel="stylesheet" />
     <title>Kredit Xətti Müqaviləsi</title>
     <style>
         body {
@@ -16,7 +18,8 @@
             margin: 20px auto;
             max-width: 800px;
         }
-                .container {
+
+        .container {
             margin: 20px auto;
             max-width: 900px;
             padding: 20px;
@@ -31,7 +34,8 @@
         }
 
         .header img {
-            height: 80px; /* Logo size */
+            height: 80px;
+            /* Logo size */
         }
 
         .header-title {
@@ -51,9 +55,12 @@
             font-weight: 400;
             text-transform: uppercase;
         }
-        h1, h2 {
+
+        h1,
+        h2 {
             text-align: center;
         }
+
         .section-title {
             font-weight: bold;
             text-transform: uppercase;
@@ -62,20 +69,24 @@
             font-size: 1.1em;
             padding-bottom: 5px;
         }
+
         .content-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
         }
+
         .label {
             font-weight: bold;
             color: #444;
             min-width: 250px;
         }
+
         .value {
             color: #000;
             flex-grow: 1;
         }
+
         .note {
             font-style: italic;
             text-align: center;
@@ -83,27 +94,35 @@
             border-top: 1px solid #000;
             padding-top: 10px;
         }
+
         .note .underline {
             display: inline-block;
             text-decoration: underline;
         }
+
         .rekvizit-table {
             display: grid;
             grid-template-columns: 1fr 1fr;
             border: 1px solid #ccc;
         }
-        .left-box, .right-box {
+
+        .left-box,
+        .right-box {
             padding: 15px;
             border: 1px solid #ccc;
         }
+
         .left-box {
             border-right: none;
         }
-        .left-box h3, .right-box h3 {
+
+        .left-box h3,
+        .right-box h3 {
             margin: 0 0 10px;
             font-weight: bold;
             text-decoration: underline;
         }
+
         .signature-section {
             display: flex;
             justify-content: space-between;
@@ -111,308 +130,342 @@
             text-align: center;
             font-weight: bold;
         }
+
         .signature-box {
             width: 45%;
             padding: 10px;
             border-top: 1px solid #000;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        th, td {
+
+        th,
+        td {
             text-align: left;
             padding: 8px;
         }
+
         .title {
             font-weight: bold;
         }
+
         .highlight {
             font-weight: bold;
         }
+
         .separator {
             padding: 0 10px;
             color: #aaa;
         }
     </style>
 </head>
+
 <body>
-<!-- Header Section -->
-<div class="header">
-    <img src="img.png" alt="Ideal Kredit Logo"/> <!-- Replace with your logo path -->
-    <div class="header-title">
-        <h1>"İDEAL KREDİT" BOKT MMC</h1>
-        <h2>ZAMİNLİK MÜQAVİLƏSİ № 09/745-2023</h2>
+    <!-- Header Section -->
+    <div class="header">
+        <img src="https://api.idealkredit.az/img.png" alt="Ideal Kredit Logo" /> <!-- Replace with your logo path -->
+        <div class="header-title">
+            <h1>"İDEAL KREDİT" BOKT MMC</h1>
+            <h2>ZAMİNLİK MÜQAVİLƏSİ № <p th:text="${documentNumber}">09/745-2023</p>
+            </h2>
+        </div>
+        <div></div>
     </div>
-    <div></div>
-</div>
 
-<div style="display: flex; justify-content: space-between;">
-    <p><strong>Bakı şəhəri</strong></p>
-    <p><strong th:text="${requestDate}"></strong></p>
-</div>
-
-<p>
-    Əsasnamə və Etibarnamə əsasında fəaliyyət göstərən (gələcəkdə "BOKT" adlanacaq) BOKT “İDEAL KREDİT” MMC-nin
-    direktoru Qubadov Qubad Baxas oğlu şəxsində bir tərəfdən, gələcəkdə "Borcalan" adlanacaq fiziki şəxs
-    <strong th:text="${requestedUser.fullName}"></strong> şəxsində digər tərəfdən və gələcəkdə Zamin adlanacaq fiziki şəxs
-    <span th:text="${spouse.fullName}"></span> üçüncü tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar barədə
-    razılığa gələrək bu müqaviləni bağladılar.
-</p>
-
-<div class="section-title">1. ÜMUMİ ANLAYIŞLAR</div>
-<table>
-    <tr>
-        <td class="title">Zaminlik</td>
-        <td>- Bu müqaviləyə uyğun olaraq öhdəliyin icrasının təminatı üsulu</td>
-    </tr>
-    <tr>
-        <td class="title">BOKT</td>
-        <td>- Qüvvədə olan qanunvericiliyə uyğun kreditlər verən Bank Olmayan Kredit Təşkilatı “İDEAL KREDİT” MMC</td>
-    </tr>
-    <tr>
-        <td class="title">Borcalan</td>
-        <td>
-            Fiziki şəxs <span class="highlight" th:text="${requestedUser.fullName}"></span> <span class="separator">|</span>
-            Ş/V № <span class="highlight" th:text="${requestedUser.seriaNo}"></span> <span class="separator">|</span>
-            verilib: <span class="highlight" th:text="${requestedUser.eventDate}"></span>
-        </td>
-    </tr>
-    <tr>
-        <td class="title">Zamin</td>
-        <td>
-            Fiziki şəxs <span class="highlight" th:text="${spouse.fullName}"></span> <span class="separator">|</span>
-            Ş/V № <span class="highlight" th:text="${spouse.serialNumber}"></span> <span class="separator">|</span>
-            verilib: <span class="highlight" th:text="${spouse.eventDate}"></span>
-        </td>
-    </tr>
-    <tr>
-        <td class="title">Kreditin növü</td>
-        <td th:text="${creditType}"></td>
-    </tr>
-    <tr>
-        <td class="title">Kredit xəttinin məbləği</td>
-        <td><span class="highlight" th:text="${creditAmount}"> AZN</span></td>
-    </tr>
-</table>
-<div class="section-title">2. Müqavilənin Predmeti</div>
-
-<div class="subsection">
-    <span>2.1.</span> <span class="highlight" th:text="'BOKT'"></span> ilə Borcalan
-    <span class="highlight" th:text="${requestedUser.fullName}"></span> arasında Bakı şəhərində bağlanmış
-    <span class="highlight" th:text="${requestDate}"></span> ci il tarixli,
-    <span class="highlight" th:text="'09/745-2023'"></span> saylı kredit xətti müqaviləsinə əsasən
-    <span class="highlight" th:text="'BOKT'"></span> Borcalana
-    <span class="highlight" th:text="${creditTerm} + ' ay müddətində qaytarmaq şərti ilə'"></span>,
-    illik <span class="highlight" th:text="${annualPercent} + ' %'"></span> olmaqla
-    <span class="highlight" th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></span> məbləğində kredit xətti (tranşı)
-    ayırmışdır.
-</div>
-
-<div class="subsection">
-    <span>2.2.</span> Bu müqavilə üzrə Zamin özünə məxsus bütün daşınar və daşınmaz əmlakları ilə
-    <span class="highlight">BOKT</span>-la Borcalan arasında bağlanmış
-    <span class="highlight">29/09/2023</span> il tarixli,
-    <span class="highlight">09/745-2023</span> saylı kredit xətti müqaviləsi və onun əlavə(lər)si <span th:text="${spouse.fullName}"></span>
-    Borcalanın BOKT qarşısında
-    öhdəliklərini icra etməsi üçün məsuliyyəti öz üzərinə götürür.
-</div>
-
-<div class="subsection">
-    <span>2.3.</span> Borcalan zaminliklə təmin edilmiş öhdəliyi icra etmədikdə və ya lazımınca icra etmədikdə
-    Zamin və Borcalan <span class="highlight">BOKT</span> qarşısında birgə məsuliyyət daşıyır.
-</div>
-
-<div class="subsection">
-    <span>2.4.</span> Borcalanın <span class="highlight">BOKT</span> qarşısındakı öhdəlikləri icra etməməsi və ya
-    lazımınca icra etməməsi nəticəsində <span class="highlight">BOKT</span>-a dəyən bütün zərərlərin
-    (kredit müqaviləsi üzrə kredit (əsas) borc, faizlər, cərimə faizi, dəbbə pulu, məhkəmə xərcləri və s.)
-    əvəzinin ödənilməsi də daxil olmaqla, <span class="highlight">"İDEAL KREDİT"</span> BOKT qarşısında
-    Borcalan ilə eyni həcmdə, yəni tam öhdəlik üzrə məsuliyyət daşıyır.
-</div>
-
-<div class="subsection">
-    <span>2.5.</span> Bu müqavilə üzrə zaminlik <span class="highlight">09/745-2023</span> saylı kredit xətti
-    müqaviləsinin
-    müddəti bitdiyi tarixdən əlavə <span class="highlight">3 il</span> müddətində qüvvədədir.
-</div>
-
-<div class="section-title">3. Tərəflərin Hüquq və Vəzifələri</div>
-
-<div class="subsection-title">3.1. BOKT-nın hüquq və vəzifələri:</div>
-<div class="subsection">
-    <span>3.1.1.</span> Borcalan <span class="highlight">BOKT</span> qarşısında öz öhdəliklərinin icrasını lazımi
-    səviyyədə təmin etmədikdə,
-    <span class="highlight">BOKT</span> Zamindən verilmiş kreditin və ona hesablanmış faiz borcunun vaxtından əvvəl
-    qaytarılmasını tələb edə bilər.
-</div>
-<div class="subsection">
-    <span>3.1.2.</span> Zamin Borcalanın <span class="highlight">BOKT</span> qarşısında öhdəliklərini tam təmin etdikdən
-    sonra onun yazılı müraciəti əsasında,
-    <span class="highlight">BOKT</span> Borcalana qarşı tələbini təsdiq edən sənədləri Zamindən təqdim etməyə və həmin
-    tələbi təmin edən hüquqları verməyə borcludur.
-</div>
-
-<div class="subsection-title">3.2. Zaminin hüquq və vəzifələri:</div>
-<div class="subsection">
-    <span>3.2.1.1.</span> Zamin Borcalanın əvəzindən onun <span class="highlight">BOKT</span> qarşısında olan
-    öhdəliklərini icra etdikdən sonra,
-    <span class="highlight">BOKT</span>-dan Borcalana qarşı tələbini təsdiq edən sənədləri (reqres tələblə əlaqədar) və
-    həmin tələbi təmin edən hüquqların ona verilməsini tələb edə bilər.
-</div>
-<div class="subsection">
-    <span>3.2.2.</span> Borcalanın əvəzindən onun <span class="highlight">BOKT</span>-a olan öhdəliyini tam şəkildə icra
-    etdikdən sonra <span class="highlight">BOKT</span>-nın
-    Borcalana qarşı həmin öhdəlik üzrə hüquqlarından tam istifadə edə bilər və s.
-</div>
-<div class="subsection">
-    <span>3.2.3.</span> <span class="highlight">BOKT</span> tərəfindən Borcalanın öhdəliyinin icrası ilə əlaqədar Zamin
-    Borcalanı işə cəlb etdirə bilər.
-</div>
-<div class="subsection">
-    <span>3.2.4.</span> Zamin Borcalandan <span class="highlight">BOKT</span>-a ödənilmiş məbləğdən faizlər ödəməyi və
-    Borcalanın əvəzinə məsuliyyətlə bağlı çəkdiyi
-    digər zərərin əvəzini ödəməyi tələb edə bilər.
-</div>
-<div class="subsection">
-    <span>3.2.5.</span> Zamin <span class="highlight">BOKT</span>-nın tələbini ödədikdə bu barədə Borcalanı xəbərdar
-    etməyə borcludur.
-</div>
-
-<div class="subsection-title">3.3. Borcalanın hüquq və vəzifələri:</div>
-<div class="subsection">
-    <span>3.3.1.</span> Zaminliklə təmin olunmuş öhdəliyi icra etmiş Borcalan bu barədə dərhal Zamini məlumat
-    verməlidir.
-</div>
-<div class="subsection">
-    <span>3.3.2.</span> Borcalan <span class="highlight">BOKT</span> qarşısındakı öhdəlikləri icra etməməsi və ya
-    lazımınca icra etməməsi nəticəsində
-    <span class="highlight">BOKT</span>-a və Zamindən dəyən bütün zərərin əvəzinin ödənilməsinə görə <span
-        class="highlight">BOKT</span> və Zamin qarşısında məsuliyyət daşıyır.
-</div>
-<div class="section-title">4. Digər Müddəalar</div>
-
-<div class="subsection">
-    <span>4.1.</span> Tərəflər razılaşırlar ki, Borcalan üzərinə götürdüyü öhdəliyi icra etməzsə və ya lazımınca icra
-    etməzsə
-    bu halda <span class="highlight">BOKT</span> Borcalanın cərimə faizi və dəbbə pulu daxil olmaqla kredit və faiz
-    borcunu Zamindən tələb edə bilər.
-</div>
-<div class="subsection">
-    <span>4.2.</span> Bu müqavilə Borcalanın <span class="highlight">BOKT</span> qarşısındakı öhdəlikləri tam yerinə
-    yetirildikdən sonra qüvvədən düşür.
-</div>
-<div class="subsection">
-    <span>4.3.</span> Bu müqavilə üzrə öz vəzifəsini icra etməyən və ya lazımınca icra etməyən tərəf digər tərəfə
-    vurduğu zərərə görə məsuliyyət daşıyır
-    və qarşı tərəfə vurduğu zərəri tam həcmdə ödəməlidir.
-</div>
-<div class="subsection">
-    <span>4.4.</span> Zamin Borcalan tərəfindən öhdəliyin icra olunmaması və lazımınca icra olunmaması ilə əlaqədar
-    borcun məcburi qaydada alınmasını nəzərdə tutan
-    məhkəmə qətnaməsinin tam icra olunub başa çatmasınadək hesablanan faiz borcunun <span class="highlight">BOKT</span>-a
-    ödənilməsini təmin etməlidir.
-</div>
-<div class="subsection">
-    <span>4.5.</span> Zamin bu müqaviləni imzalamaqla, Bank olmayan kredit təşkilatları haqqında Azərbaycan Respublikası
-    Qanununa və digər qanunvericilik aktlarına
-    müvafiq olaraq özü haqqında məlumatların "Azərbaycan Kredit Bürosu" MMC-yə və Mərkəzi Bankın Mərkəzləşdirilmiş
-    Kredit Reyestrinə təqdim edilməsinə və
-    həmçinin "büro"da haqqında olan bütün məlumatların <span class="highlight">“İDEAL KREDİT” BOKT MMC</span> tərəfindən
-    sorğu edilməsinə razılıq verir.
-</div>
-<div class="subsection">
-    <span>4.6.</span> Zamin öhdəliklərini bu Müqavilə və onun əlavə(lər)inə uyğun şəkildə yerinə yetirmədiyi halda <span
-        class="highlight">"BOKT"</span>
-    "Zamin"in yaşayış yerlərinə, iş yerlərinə və "Zamin" ilə əlaqəli digər ünvanlara bildiriş (xəbərdarlıq və ya hər
-    hansı məlumatlandırıcı məktub) göndərə bilər.
-</div>
-<div class="subsection">
-    <span>4.7.</span> <span class="highlight">BOKT</span> bu Müqavilədən irəli gələn hüquq və vəzifələrini, o cümlədən,
-    kreditin qaytarılması üçün tədbirlərin görülməsini,
-    Zamin haqqında məlumatları Zaminin razılığı olmadan üçüncü şəxslərə verə (transfer edə) bilər. Zamin isə yalnız
-    <span class="highlight">BOKT</span>-nin yazılı razılığı ilə bu hüquqa malikdir.
-</div>
-<div class="subsection">
-    <span>4.8.</span> Bu müqavilənin icrası ilə bağlı meydana çıxan bütün mübahisələr tərəflər arasında danışıqlar yolu
-    ilə həll edilmədikdə,
-    mövcud qanunvericiliyə uyğun məhkəmə qaydasında həll ediləcəkdir.
-</div>
-
-<div class="signature-section">
-    <div class="signature-box">
-        <p>BOKT</p>
-
+    <div style="display: flex; justify-content: space-between;">
+        <p><strong>Bakı şəhəri</strong></p>
+        <p><strong th:text="${requestDate}"></strong></p>
     </div>
-    <div class="signature-box">
-        <p>Borcalan</p>
+
+    <p>
+        Əsasnamə və Etibarnamə əsasında fəaliyyət göstərən (gələcəkdə "BOKT" adlanacaq) BOKT “İDEAL KREDİT” MMC-nin
+        direktoru Qubadov Qubad Baxas oğlu şəxsində bir tərəfdən, gələcəkdə "Borcalan" adlanacaq fiziki şəxs
+        <strong th:text="${requestedUser.fullName}"></strong> şəxsində digər tərəfdən və gələcəkdə Zamin adlanacaq
+        fiziki şəxs
+        <span th:text="${spouse.fullName}"></span> üçüncü tərəfdən, (birlikdə "Tərəflər" adlanacaq) aşağıdakılar barədə
+        razılığa gələrək bu müqaviləni bağladılar.
+    </p>
+
+    <div class="section-title">1. ÜMUMİ ANLAYIŞLAR</div>
+    <table>
+        <tr>
+            <td class="title">Zaminlik</td>
+            <td>- Bu müqaviləyə uyğun olaraq öhdəliyin icrasının təminatı üsulu</td>
+        </tr>
+        <tr>
+            <td class="title">BOKT</td>
+            <td>- Qüvvədə olan qanunvericiliyə uyğun kreditlər verən Bank Olmayan Kredit Təşkilatı “İDEAL KREDİT” MMC
+            </td>
+        </tr>
+        <tr>
+            <td class="title">Borcalan</td>
+            <td>
+                Fiziki şəxs <span class="highlight" th:text="${requestedUser.fullName}"></span> <span
+                    class="separator">|</span>
+                Ş/V № <span class="highlight" th:text="${requestedUser.seriaNo}"></span> <span
+                    class="separator">|</span>
+                verilib: <span class="highlight" th:text="${requestedUser.eventDate}"></span>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">Zamin</td>
+            <td>
+                Fiziki şəxs <span class="highlight" th:text="${spouse.fullName}"></span> <span
+                    class="separator">|</span>
+                Ş/V № <span class="highlight" th:text="${spouse.serialNumber}"></span> <span class="separator">|</span>
+                verilib: <span class="highlight" th:text="${spouse.eventDate}"></span>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">Kreditin növü</td>
+            <td th:text="${creditType}"></td>
+        </tr>
+        <tr>
+            <td class="title">Kredit xəttinin məbləği</td>
+            <td><span class="highlight" th:text="${creditAmount}"> AZN</span></td>
+        </tr>
+    </table>
+    <div class="section-title">2. Müqavilənin Predmeti</div>
+
+    <div class="subsection">
+        <span>2.1.</span> <span class="highlight" th:text="'BOKT'"></span> ilə Borcalan
+        <span class="highlight" th:text="${requestedUser.fullName}"></span> arasında Bakı şəhərində bağlanmış
+        <span class="highlight" th:text="${requestDate}"></span> ci il tarixli,
+        <span class="highlight" th:text="${documentNumber}">09/745-2023</span> saylı kredit xətti müqaviləsinə əsasən
+        <span class="highlight" th:text="'BOKT'"></span> Borcalana
+        <span class="highlight" th:text="${creditTerm} + ' ay müddətində qaytarmaq şərti ilə'"></span>,
+        illik <span class="highlight" th:text="${annualPercent} + ' %'"></span> olmaqla
+        <span class="highlight" th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></span> məbləğində
+        kredit xətti (tranşı)
+        ayırmışdır.
     </div>
-    <div class="signature-box">
-        <p>Zamin</p>
+
+    <div class="subsection">
+        <span>2.2.</span> Bu müqavilə üzrə Zamin özünə məxsus bütün daşınar və daşınmaz əmlakları ilə
+        <span class="highlight">BOKT</span>-la Borcalan arasında bağlanmış
+        <span class="highlight" th:text="${requestDateStr}"></span>29/09/2023</span> il tarixli,
+        <span class="highlight" th:text="${documentNumber}">09/745-2023</span> saylı kredit xətti müqaviləsi və onun
+        əlavə(lər)si <span th:text="${spouse.fullName}"></span>
+        Borcalanın BOKT qarşısında
+        öhdəliklərini icra etməsi üçün məsuliyyəti öz üzərinə götürür.
     </div>
-</div>
 
-<div class="subsection">
-    <span>4.9.</span> Bu müqavilə eyni hüquqi qüvvəyə malik <span class="highlight">2 (iki)</span> nüsxədə tərtib
-    edilmişdir və tərəflərin imza və möhürü ilə təsdiq edildikdən sonra qüvvəyə minir.
-</div>
-<div class="subsection">
-    <span>4.10.</span> Bu müqavilənin müddətinin bitməsi tərəfləri müqavilə üzrə yaranmış öhdəliklərin icrasından azad
-    etmir.
-    Kredit müqaviləsi üzrə öhdəlik tam icra edildikdən sonra bu müqavilə öz qüvvəsini itirir.
-</div>
-<div class="subsection">
-    <span>4.11.</span> Öz qeydiyyat/yaşayış yerinin dəyişilməsi barədə (həmçinin borcalan və girovqoyan barəsində də)
-    <span class="highlight">"BOKT"</span>-a məlumat vermək,
-    olduğu yer, ticarətinin yeri və ya iş yeri, yaxud işə götürənin dəyişilməsi, həmçinin pasport məlumatları,
-    telefonları,
-    elektron poçt məlumatları, eləcə də digər rekvizitlərinin dəyişilməsi haqqında həmin dəyişiklikdən etibarən <span
-        class="highlight">5 (beş)</span> gün ərzində
-    <span class="highlight">"BOKT"</span>-ni xəbərdar etmək.
-</div>
-
-
-<div class="note">
-    ("Borcalan" əl ilə <span class="underline">"tanış oldum razıyam"</span> yazır və <span class="underline">"tarixi qeyd edir"</span>)
-</div>
-
-<div class="note">
-    ("Zamin" əl ilə <span class="underline">"tanış oldum razıyam"</span> yazır və <span class="underline">"tarixi qeyd edir"</span>)
-</div>
-
-
-<div class="section-title">7. Tərəflərin Rekvizitləri:</div>
-<div class="rekvizit-table">
-    <div class="left-box">
-        <h3 style="text-align: center">BOKT</h3>
-        <p><span class="bold">"İDEAL KREDİT" BOKT</span></p>
-        <p><span class="bold">Direktor:</span> Qubadov Qubad Baxas oğlu</p>
-        <p><span class="bold">Hüquqi ünvan:</span> Bakı şəhəri, F.Xoyski küç., 111"A", m.26</p>
-        <p><span class="bold">Faktiki ünvan:</span> Bakı şəh, Həsən Əliyev küç., 34 <small>(1 saylı ASAN
-            Kommunal)</small></p>
-        <p><span class="bold">Tel:</span> 012 526 26 25</p>
-        <p><span class="bold">İndeks:</span> AZ 1078</p>
-        <p><span class="bold">VÖEN:</span> 1300480591</p>
-        <p><span class="bold">Müdir:</span> M.Y</p>
+    <div class="subsection">
+        <span>2.3.</span> Borcalan zaminliklə təmin edilmiş öhdəliyi icra etmədikdə və ya lazımınca icra etmədikdə
+        Zamin və Borcalan <span class="highlight">BOKT</span> qarşısında birgə məsuliyyət daşıyır.
     </div>
-    <div class="right-box">
-        <h3 style="text-align: center">Borcalan</h3>
-        <p><span class="bold">Ali Veliyev</span></p>
-        <p><span class="bold">Ünvan:</span> Baku, Nizami Street</p>
-        <p><span class="bold">Ş/V №:</span> AA67890</p>
-        <p><span class="bold">Verilmə tarixi:</span> 2023-01-01</p>
-        <p>Baku, Nizami Street</p>
 
-        <div>
-            <h3 style="text-align: center">Zamin</h3>
-            <p><span class="bold">Veli Veliyev</span></p>
-            <p><span class="bold">Ünvan:</span> Baku, Street 1</p>
-            <p><span class="bold">Ş/V №:</span> AA12345</p>
-            <p><span class="bold">Verilmə tarixi:</span> 2023-01-01</p>
+    <div class="subsection">
+        <span>2.4.</span> Borcalanın <span class="highlight">BOKT</span> qarşısındakı öhdəlikləri icra etməməsi və ya
+        lazımınca icra etməməsi nəticəsində <span class="highlight">BOKT</span>-a dəyən bütün zərərlərin
+        (kredit müqaviləsi üzrə kredit (əsas) borc, faizlər, cərimə faizi, dəbbə pulu, məhkəmə xərcləri və s.)
+        əvəzinin ödənilməsi də daxil olmaqla, <span class="highlight">"İDEAL KREDİT"</span> BOKT qarşısında
+        Borcalan ilə eyni həcmdə, yəni tam öhdəlik üzrə məsuliyyət daşıyır.
+    </div>
+
+    <div class="subsection">
+        <span>2.5.</span> Bu müqavilə üzrə zaminlik <span th:text="${documentNumber}" class="highlight"
+            th:text="${documentNumber}">09/745-2023</span> saylı kredit xətti
+        müqaviləsinin
+        müddəti bitdiyi tarixdən əlavə <span class="highlight">3 il</span> müddətində qüvvədədir.
+    </div>
+
+    <div class="section-title">3. Tərəflərin Hüquq və Vəzifələri</div>
+
+    <div class="subsection-title">3.1. BOKT-nın hüquq və vəzifələri:</div>
+    <div class="subsection">
+        <span>3.1.1.</span> Borcalan <span class="highlight">BOKT</span> qarşısında öz öhdəliklərinin icrasını lazımi
+        səviyyədə təmin etmədikdə,
+        <span class="highlight">BOKT</span> Zamindən verilmiş kreditin və ona hesablanmış faiz borcunun vaxtından əvvəl
+        qaytarılmasını tələb edə bilər.
+    </div>
+    <div class="subsection">
+        <span>3.1.2.</span> Zamin Borcalanın <span class="highlight">BOKT</span> qarşısında öhdəliklərini tam təmin
+        etdikdən
+        sonra onun yazılı müraciəti əsasında,
+        <span class="highlight">BOKT</span> Borcalana qarşı tələbini təsdiq edən sənədləri Zamindən təqdim etməyə və
+        həmin
+        tələbi təmin edən hüquqları verməyə borcludur.
+    </div>
+
+    <div class="subsection-title">3.2. Zaminin hüquq və vəzifələri:</div>
+    <div class="subsection">
+        <span>3.2.1.1.</span> Zamin Borcalanın əvəzindən onun <span class="highlight">BOKT</span> qarşısında olan
+        öhdəliklərini icra etdikdən sonra,
+        <span class="highlight">BOKT</span>-dan Borcalana qarşı tələbini təsdiq edən sənədləri (reqres tələblə əlaqədar)
+        və
+        həmin tələbi təmin edən hüquqların ona verilməsini tələb edə bilər.
+    </div>
+    <div class="subsection">
+        <span>3.2.2.</span> Borcalanın əvəzindən onun <span class="highlight">BOKT</span>-a olan öhdəliyini tam şəkildə
+        icra
+        etdikdən sonra <span class="highlight">BOKT</span>-nın
+        Borcalana qarşı həmin öhdəlik üzrə hüquqlarından tam istifadə edə bilər və s.
+    </div>
+    <div class="subsection">
+        <span>3.2.3.</span> <span class="highlight">BOKT</span> tərəfindən Borcalanın öhdəliyinin icrası ilə əlaqədar
+        Zamin
+        Borcalanı işə cəlb etdirə bilər.
+    </div>
+    <div class="subsection">
+        <span>3.2.4.</span> Zamin Borcalandan <span class="highlight">BOKT</span>-a ödənilmiş məbləğdən faizlər ödəməyi
+        və
+        Borcalanın əvəzinə məsuliyyətlə bağlı çəkdiyi
+        digər zərərin əvəzini ödəməyi tələb edə bilər.
+    </div>
+    <div class="subsection">
+        <span>3.2.5.</span> Zamin <span class="highlight">BOKT</span>-nın tələbini ödədikdə bu barədə Borcalanı xəbərdar
+        etməyə borcludur.
+    </div>
+
+    <div class="subsection-title">3.3. Borcalanın hüquq və vəzifələri:</div>
+    <div class="subsection">
+        <span>3.3.1.</span> Zaminliklə təmin olunmuş öhdəliyi icra etmiş Borcalan bu barədə dərhal Zamini məlumat
+        verməlidir.
+    </div>
+    <div class="subsection">
+        <span>3.3.2.</span> Borcalan <span class="highlight">BOKT</span> qarşısındakı öhdəlikləri icra etməməsi və ya
+        lazımınca icra etməməsi nəticəsində
+        <span class="highlight">BOKT</span>-a və Zamindən dəyən bütün zərərin əvəzinin ödənilməsinə görə <span
+            class="highlight">BOKT</span> və Zamin qarşısında məsuliyyət daşıyır.
+    </div>
+    <div class="section-title">4. Digər Müddəalar</div>
+
+    <div class="subsection">
+        <span>4.1.</span> Tərəflər razılaşırlar ki, Borcalan üzərinə götürdüyü öhdəliyi icra etməzsə və ya lazımınca
+        icra
+        etməzsə
+        bu halda <span class="highlight">BOKT</span> Borcalanın cərimə faizi və dəbbə pulu daxil olmaqla kredit və faiz
+        borcunu Zamindən tələb edə bilər.
+    </div>
+    <div class="subsection">
+        <span>4.2.</span> Bu müqavilə Borcalanın <span class="highlight">BOKT</span> qarşısındakı öhdəlikləri tam yerinə
+        yetirildikdən sonra qüvvədən düşür.
+    </div>
+    <div class="subsection">
+        <span>4.3.</span> Bu müqavilə üzrə öz vəzifəsini icra etməyən və ya lazımınca icra etməyən tərəf digər tərəfə
+        vurduğu zərərə görə məsuliyyət daşıyır
+        və qarşı tərəfə vurduğu zərəri tam həcmdə ödəməlidir.
+    </div>
+    <div class="subsection">
+        <span>4.4.</span> Zamin Borcalan tərəfindən öhdəliyin icra olunmaması və lazımınca icra olunmaması ilə əlaqədar
+        borcun məcburi qaydada alınmasını nəzərdə tutan
+        məhkəmə qətnaməsinin tam icra olunub başa çatmasınadək hesablanan faiz borcunun <span
+            class="highlight">BOKT</span>-a
+        ödənilməsini təmin etməlidir.
+    </div>
+    <div class="subsection">
+        <span>4.5.</span> Zamin bu müqaviləni imzalamaqla, Bank olmayan kredit təşkilatları haqqında Azərbaycan
+        Respublikası
+        Qanununa və digər qanunvericilik aktlarına
+        müvafiq olaraq özü haqqında məlumatların "Azərbaycan Kredit Bürosu" MMC-yə və Mərkəzi Bankın Mərkəzləşdirilmiş
+        Kredit Reyestrinə təqdim edilməsinə və
+        həmçinin "büro"da haqqında olan bütün məlumatların <span class="highlight">“İDEAL KREDİT” BOKT MMC</span>
+        tərəfindən
+        sorğu edilməsinə razılıq verir.
+    </div>
+    <div class="subsection">
+        <span>4.6.</span> Zamin öhdəliklərini bu Müqavilə və onun əlavə(lər)inə uyğun şəkildə yerinə yetirmədiyi halda
+        <span class="highlight">"BOKT"</span>
+        "Zamin"in yaşayış yerlərinə, iş yerlərinə və "Zamin" ilə əlaqəli digər ünvanlara bildiriş (xəbərdarlıq və ya hər
+        hansı məlumatlandırıcı məktub) göndərə bilər.
+    </div>
+    <div class="subsection">
+        <span>4.7.</span> <span class="highlight">BOKT</span> bu Müqavilədən irəli gələn hüquq və vəzifələrini, o
+        cümlədən,
+        kreditin qaytarılması üçün tədbirlərin görülməsini,
+        Zamin haqqında məlumatları Zaminin razılığı olmadan üçüncü şəxslərə verə (transfer edə) bilər. Zamin isə yalnız
+        <span class="highlight">BOKT</span>-nin yazılı razılığı ilə bu hüquqa malikdir.
+    </div>
+    <div class="subsection">
+        <span>4.8.</span> Bu müqavilənin icrası ilə bağlı meydana çıxan bütün mübahisələr tərəflər arasında danışıqlar
+        yolu
+        ilə həll edilmədikdə,
+        mövcud qanunvericiliyə uyğun məhkəmə qaydasında həll ediləcəkdir.
+    </div>
+
+    <div class="signature-section">
+        <div class="signature-box">
+            <p>BOKT</p>
+
+        </div>
+        <div class="signature-box">
+            <p>Borcalan</p>
+        </div>
+        <div class="signature-box">
+            <p>Zamin</p>
         </div>
     </div>
-</div>
+
+    <div class="subsection">
+        <span>4.9.</span> Bu müqavilə eyni hüquqi qüvvəyə malik <span class="highlight">2 (iki)</span> nüsxədə tərtib
+        edilmişdir və tərəflərin imza və möhürü ilə təsdiq edildikdən sonra qüvvəyə minir.
+    </div>
+    <div class="subsection">
+        <span>4.10.</span> Bu müqavilənin müddətinin bitməsi tərəfləri müqavilə üzrə yaranmış öhdəliklərin icrasından
+        azad
+        etmir.
+        Kredit müqaviləsi üzrə öhdəlik tam icra edildikdən sonra bu müqavilə öz qüvvəsini itirir.
+    </div>
+    <div class="subsection">
+        <span>4.11.</span> Öz qeydiyyat/yaşayış yerinin dəyişilməsi barədə (həmçinin borcalan və girovqoyan barəsində
+        də)
+        <span class="highlight">"BOKT"</span>-a məlumat vermək,
+        olduğu yer, ticarətinin yeri və ya iş yeri, yaxud işə götürənin dəyişilməsi, həmçinin pasport məlumatları,
+        telefonları,
+        elektron poçt məlumatları, eləcə də digər rekvizitlərinin dəyişilməsi haqqında həmin dəyişiklikdən etibarən
+        <span class="highlight">5 (beş)</span> gün ərzində
+        <span class="highlight">"BOKT"</span>-ni xəbərdar etmək.
+    </div>
+
+
+    <div class="note">
+        ("Borcalan" əl ilə <span class="underline">"tanış oldum razıyam"</span> yazır və <span class="underline">"tarixi
+            qeyd edir"</span>)
+    </div>
+
+    <div class="note">
+        ("Zamin" əl ilə <span class="underline">"tanış oldum razıyam"</span> yazır və <span class="underline">"tarixi
+            qeyd edir"</span>)
+    </div>
+
+
+    <div class="section-title">7. Tərəflərin Rekvizitləri:</div>
+    <div class="rekvizit-table">
+        <div class="left-box">
+            <h3 style="text-align: center">BOKT</h3>
+            <p><span class="bold">"İDEAL KREDİT" BOKT</span></p>
+            <p><span class="bold">Direktor:</span> Qubadov Qubad Baxas oğlu</p>
+            <p><span class="bold">Hüquqi ünvan:</span> Bakı şəhəri, F.Xoyski küç., 111"A", m.26</p>
+            <p><span class="bold">Faktiki ünvan:</span> Bakı şəh, Həsən Əliyev küç., 34 <small>(1 saylı ASAN
+                    Kommunal)</small></p>
+            <p><span class="bold">Tel:</span> 012 526 26 25</p>
+            <p><span class="bold">İndeks:</span> AZ 1078</p>
+            <p><span class="bold">VÖEN:</span> 1300480591</p>
+            <p><span class="bold">Müdir:</span> M.Y</p>
+        </div>
+        <div class="right-box">
+            <h3 style="text-align: center">Borcalan</h3>
+            <p><span class="bold">Ali Veliyev</span></p>
+            <p><span class="bold">Ünvan:</span> Baku, Nizami Street</p>
+            <p><span class="bold">Ş/V №:</span> AA67890</p>
+            <p><span class="bold" th:text="${requestDateStr}">Verilmə tarixi:</span> 2023-01-01</p>
+            <p>Baku, Nizami Street</p>
+
+            <div>
+                <h3 style="text-align: center">Zamin</h3>
+                <p><span class="bold">Veli Veliyev</span></p>
+                <p><span class="bold">Ünvan:</span> Baku, Street 1</p>
+                <p><span class="bold">Ş/V №:</span> AA12345</p>
+                <p th:text="${requestDateStr}"><span class="bold">Verilmə tarixi:</span> 2023-01-01</p>
+            </div>
+        </div>
+    </div>
 
 </body>
+
 </html>

@@ -216,6 +216,7 @@ export interface CreditRequest {
   };
   creditOrderNo?: number;
   creditYear?: number;
+  items?: CreditProduct[];
 }
 
 export interface User {
@@ -356,4 +357,14 @@ export interface CreditRequestSearchDto {
   search?: string;
   pageSize: number;
   page: number;
+}
+
+export interface CreditProduct {
+  id?: string;
+  productName?: string;
+  description?: string;
+  logo?: string;
+  unitPrice?: number;
+  quantity?: number;
+  totalPrice?: number;
 }

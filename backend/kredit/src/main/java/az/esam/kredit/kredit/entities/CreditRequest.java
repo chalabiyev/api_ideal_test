@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import az.esam.kredit.kredit.entities.enums.*;
+import az.esam.kredit.kredit.utility.RoundUtil;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -96,6 +97,7 @@ public class CreditRequest extends BaseEntity {
     private Pensioner pensioner;
     private int creditOrderNo;
     private int creditYear;
+    private List<CreditProduct> items;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -119,7 +121,7 @@ public class CreditRequest extends BaseEntity {
         map.put("cartCost", cartCost);
         map.put("insuranceCost", insuranceCost);
         map.put("valuationCost", valuationCost);
-        map.put("monthlyPayment", monthlyPayment);
+        map.put("monthlyPayment", monthlyPayment != null ? RoundUtil.round(monthlyPayment, 2) : null);
         map.put("amountToBePaid", amountToBePaid);
         map.put("creditPurpose", creditPurpose);
         map.put("annualPercent", annualPercent);
@@ -156,6 +158,18 @@ public class CreditRequest extends BaseEntity {
         map.put("creditOrderNoStr", String.format("%05d", creditOrderNo));
         map.put("documentNumber", "İK-BSİ/" + String.format("%05d", creditOrderNo) + "/" + creditYear);
         map.put("documentDate", new SimpleDateFormat("dd.MM.yyyy").format(requestDate));
+        if (partner != null) {
+            map.put("partner", partner.toMap());
+        }
+        if (items != null) {
+            map.put("items", items.stream().map(item -> item.toMap()).collect(Collectors.toList()));
+            map.put("totalPrice", items.stream().mapToDouble(item -> item.getTotalPrice()).sum());
+        }
+        if (creditDetails != null) {
+            map.put("creditDetails", creditDetails.toMap());
+        }
+        map.put("isPhysicalPerson", true);
+        map.put("isLegalPerson", false);
         return map;
     }
 

@@ -192,7 +192,7 @@ const TabContract = ({
   }, [newSignal]);
 
   useEffect(() => {
-    if (creditRequest && !contractGenerating) {
+    if (creditRequest && !contractGenerating && !creditRequest.contractFileName) {
       setContractGenerating(true);
       generateContract(creditRequest)
         .then((res: ContractGenerateResponse | null) => {
@@ -219,7 +219,7 @@ const TabContract = ({
           setContractGenerating(false);
         });
     }
-  }, [creditRequest]);
+  }, []);
 
   return (
     <Box sx={{ py: 4 }}>

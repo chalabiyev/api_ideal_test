@@ -493,6 +493,14 @@ export default function Page() {
             creditAmount: dblCalculateCreditAmount,
             creditAmountInput: dblCalculateCreditAmount,
           },
+          items: [
+            {
+              productName: itemName,
+              unitPrice: dblCashPrice,
+              quantity: 1,
+              totalPrice: dblCashPrice
+            }
+          ]
         };
       }
       if (hasGuarantorData) {

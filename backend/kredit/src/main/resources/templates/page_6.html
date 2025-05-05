@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            margin: 20px auto;
+            max-width: 1100px;
+            line-height: 1.6;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .checkbox {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 1px solid #000;
+            margin-right: 5px;
+        }
+
+        .checked {
+            background-color: black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding: 5px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>KREDİT TARİXÇƏSİNİN TƏRTİB EDİLMƏSİ ÜÇÜN MƏLUMATLARIN KREDİT BÜROSUNA TƏQDİM EDİLMƏSİNƏ VƏ YA KREDİT BÜROSUNDAN
+        KREDİT HESABATININ ƏLDƏ EDİLMƏSİNƏ RAZILIQ ƏRİZƏSİ</h2>
+
+    <table width="732">
+        <tbody>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><span class="checkbox checked"></span><strong>Fiziki şəxs üzrə</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>FIZIKI ŞƏXSIN EYNILƏŞDIRMƏ MƏLUMATLARI</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Adı, soyadı, ata adı</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p th:text="${requestedUser.fullName}">Müşteri adı soyadı baba adı</p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Sənədin seriyası və nömrəsi və FİN</p>
+                </td>
+                <td width="156">
+                    <p th:text="${requestedUser.seriaNo}"></p>
+                </td>
+                <td width="210">
+                    <p th:text="${requestedUser.pin}">FİN</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p>VÖEN-i (mövcud olduğu halda)</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>Şəxsin adından çıxış edən səlahiyyətli şəxsin eyniləşdirmə məlumatları</strong>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Adı, soyadı, ata adı</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p> </p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Sənədin seriyası və nömrəsi</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p>Sənədin FİN kodu</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p>Səlahiyyəti təsdiq edən sənədin adı</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><span class="checkbox"></span> <strong>Hüquqi şəxs üzrə</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>HÜQUQI ŞƏXSIN EYNILƏŞDIRMƏ MƏLUMATLARI</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Adı</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p>VÖEN-i</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>Şəxsin adından çıxış edən səlahiyyətli şəxsin eyniləşdirmə məlumatları</strong>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p>Adı, soyadı, ata adı</p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Sənədin seriyası və nömrəsi</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p>Sənədin FİN kodu</p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Səlahiyyəti təsdiq edən sənədin adı</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p> </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>Razılıq verilən kredit bürosunun məlumatları</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Adı <strong><em>"Azərbaycan Kredit Bürosu" MMC</em></strong></p>
+                </td>
+                <td colspan="2" width="366">
+                    <p>VÖEN-i <strong><em>1305349901</em></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Razılığın tərtib olunma tarixi</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p th:text="${requestDateStr}">15.04.2025</p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Razılığın verilmə tarixi</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p th:text="${requestDateStr}">15.04.2025</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong> Məlumatın toplanılmasına və işlənilməsinə kredit tarixçəsi subyektinin
+                            münasibəti
+                        </strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Haqqımda toplanmış məlumatların kredit bürosundan əldə edilməsinə</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox checked"></span><strong> razıyam * </strong><span class="checkbox"></span>
+                        razı deyiləm
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Haqqımda toplanan məlumatların kredit bürosuna təqdim edilməsinə</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox checked"></span><strong> razıyam * </strong><span class="checkbox"></span>
+                        razı deyiləm
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>Məlumatın toplanılmasına və işlənilməsinə kredit tarixçəsi subyektinin
+                            münasibəti</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Toplanılmasına və işlənilməsinə razılıq verilmiş məlumatlar<br /><em>(Kredit təşkilatları
+                            üçün mütlət Bütün məlumatlar seçilməlidir)</em></p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox checked"></span><strong>Bütün məlumatlar *<br /></strong><span
+                            class="checkbox"></span> Kredit tarixçəsi subyektinin qeyd
+                        etdiyi məlumatlar</p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Məlumatların transsərhəd ötürülməsinə</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox checked"></span><strong> razıyam * </strong><span class="checkbox"></span>
+                        razı deyiləm
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Məlumatların "Kredit büroları haqqında" Azərbaycan Respublikasının Qanununun
+                        11.3-cü maddəsində nəzərdə tutulmuş hallarda başqa kredit bürosuna
+                        ötürülməsinə</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox checked"></span><strong> razıyam * </strong><span class="checkbox"></span>
+                        razı deyiləm
+                    </p>
+                    <p><strong> </strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Məlumatın saxlanma müddəti başa çatdıqdan və ya kredit tarixçəsi subyektinin
+                        ölümündən sonra</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox"></span> məhv edilsin ■ <strong>arxivləşdirilsin *</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Kredit tarixçəsi subyektlərinin ödəmə qabiliyyətinin və borc öhdəliklərinin icra
+                        intizamının qiymətləndirilməsi və kredit tarixçəsinin subyektlərinə fərdi kredit
+                        reytinqlərinin verilməsinə</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox checked"></span><strong> razıyam * </strong><span class="checkbox"></span>
+                        razı deyiləm
+                    </p>
+                    <p> </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>Razılığın müddəti və onun geri götürülməsi</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Borc öhdəliyi ilə bağlı olmayan hallar üzrə razılığın qüvvədə olma müddəti və
+                        onun geri götürülməsi şərtləri</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><em>Müddətsiz (il, ay, gün və s)<br />yoxdur<br />(şərtlər)</em></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>Razılığı alınmış şəxsin təsdiq qeydləri</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Razılıq alınarkən məlumat təchizatçısı və ya məlumat istifadəçisinin Qanunla
+                        müəyyən olunmuş vəzifələri və mənim hüquqlarım barədə mənə məlumat verilməsini</p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><span class="checkbox checked"></span><strong> təsdiq edirəm * </strong><span
+                            class="checkbox"></span> inkar edirəm
+                    </p>
+                    <p><em> </em></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="732">
+                    <p><strong>Kredit tarixçəsi subyektinin (və ya səlahiyyətli şəxsin) imzası və əlaqə
+                            nömrələri</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p><strong>Telefon</strong></p>
+                </td>
+                <td colspan="2" width="366">
+                    <p th:text="${phoneNumber}">Müşteri telefon numarası</p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p><strong>İmza</strong></p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><strong>Bu sənəd SİMA İMZA vasitəsi ilə imzalanıb</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p><strong>Razılığı almış şəxsin adı, soyadı və imzası:</strong></p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><strong> </strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="366">
+                    <p>Adı, soyadı: <strong th:text="${requestedUser.fullName}">Rza İbrahimov</strong></p>
+                </td>
+                <td colspan="2" width="366">
+                    <p><strong> </strong></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

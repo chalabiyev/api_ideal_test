@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta charset="UTF-8"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
-          rel="stylesheet"/>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+        rel="stylesheet" />
     <title>Plastik Kartın Təhvil-Təslim Aktı</title>
     <style>
         body {
@@ -30,7 +32,8 @@
         }
 
         .header img {
-            height: 80px; /* Logo size */
+            height: 80px;
+            /* Logo size */
         }
 
         .header-title {
@@ -72,7 +75,8 @@
             margin-top: 30px;
         }
 
-        .table td, .table th {
+        .table td,
+        .table th {
             border: 1px solid #fff;
             padding: 10px;
             text-align: center;
@@ -83,80 +87,89 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <!-- Header Section -->
-    <div class="header">
-        <img src="img.png" alt="Ideal Kredit Logo"/> <!-- Replace with your logo path -->
-        <div class="header-title">
-            <h1>PLASTİK KARTIN</h1>
-            <h2>Təhvil-Təslim Aktı</h2>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <img src="https://api.idealkredit.az/img.png" alt="Ideal Kredit Logo" />
+            <!-- Replace with your logo path -->
+            <div class="header-title">
+                <h1>PLASTİK KARTIN</h1>
+                <h2>Təhvil-Təslim Aktı</h2>
+            </div>
+            <div></div>
         </div>
-        <div></div>
+
+        <!-- Location and Date -->
+        <div class="location-date">
+            <p>Bakı şəhəri</p>
+            <p th:text="${requestDate}"></p>
+        </div>
+
+        <!-- Content Section -->
+        <p>Biz, aşağıda imza edənlər: <span class="bold">BOKT "İdeal Kredit" MMC</span>-nin adından Direktor Qubadov
+            Qubad
+            Baxas
+            oğlu bir tərəfdən və fiziki şəxs ("borcalan") <span class="bold" th:text="${requestedUser.fullName}"></span>
+            digər
+            tərəfdən
+            bu AKT-ı tərtib etdik ondan ötəri ki,
+            <span class="bold" th:text="${confirmDate}"></span> il tarixdə bağlanmış <span class="bold">
+                <span th:text="${documentNumber}">09/745-2023</span>
+            </span>
+            saylı kredit
+            xətti
+            müqaviləsi üzrə kredit məbləği köçürülmüş <span class="bold" th:text="${cardNumber}"></span> №-li plastik
+            kart(lar)
+            Bakı
+            şəhəri, Həsən Əliyev küçəsi 34, ünvanında borcalana təhvil verilmişdir. Borcalan bu AKT-ı imzalamaqla qeyd
+            edilən
+            plastik kart(lar)ı təhvil aldığını təsdiq edir.
+        </p>
+
+        <!-- Signature Section -->
+        <table class="table">
+            <tr>
+                <th>Təhvil verdi:</th>
+                <th>Təhvil aldı:</th>
+                <th>İştirak etdi:</th>
+            </tr>
+            <tr>
+                <td class="no-border">
+                    <span class="bold">BOKT "İdeal Kredit" MMC</span><br />
+                    Əməliyyat şöbəsi<br />
+                    Bakı şəh, Həsən Əliyev küç. 34<br />
+                    <span class="bold">VÖEN: 1300480591</span>
+                </td>
+                <td class="no-border">
+                    <span class="bold" th:text="${requestedUser.fullName}"></span><br />
+                    <span th:text="${requestedUser.address}"></span><br />
+                    Ş/V: <span class="bold" th:text="${requestedUser.seriaNo}"></span>
+                </td>
+                <td class="no-border">
+                    <span class="bold">BOKT "İdeal Kredit" MMC</span><br />
+                    Bakı şəh, Həsən Əliyev küç. 34<br />
+                    <span class="bold">VÖEN: 1300480591</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br /><span>_______________________</span><br />
+                    <span>imza/tarix</span>
+                </td>
+                <td>
+                    <br /><span>_______________________</span><br />
+                    <span>imza/tarix</span>
+                </td>
+                <td>
+                    <br /><span>_______________________</span><br />
+                    <span>imza/tarix</span>
+                </td>
+            </tr>
+        </table>
     </div>
-
-    <!-- Location and Date -->
-    <div class="location-date">
-        <p>Bakı şəhəri</p>
-        <p th:text="${requestDate}"></p>
-    </div>
-
-    <!-- Content Section -->
-    <p>Biz, aşağıda imza edənlər: <span class="bold">BOKT "İdeal Kredit" MMC</span>-nin adından Direktor Qubadov Qubad
-        Baxas
-        oğlu bir tərəfdən və fiziki şəxs ("borcalan") <span class="bold" th:text="${requestedUser.fullName}"></span> digər
-        tərəfdən
-        bu AKT-ı tərtib etdik ondan ötəri ki,
-        <span class="bold" th:text="${confirmDate}"></span> il tarixdə bağlanmış <span class="bold">09/745-2023</span>
-        saylı kredit
-        xətti
-        müqaviləsi üzrə kredit məbləği köçürülmüş <span class="bold" th:text="${cardNumber}"></span> №-li plastik kart(lar)
-        Bakı
-        şəhəri, Həsən Əliyev küçəsi 34, ünvanında borcalana təhvil verilmişdir. Borcalan bu AKT-ı imzalamaqla qeyd
-        edilən
-        plastik kart(lar)ı təhvil aldığını təsdiq edir.</p>
-
-    <!-- Signature Section -->
-    <table class="table">
-        <tr>
-            <th>Təhvil verdi:</th>
-            <th>Təhvil aldı:</th>
-            <th>İştirak etdi:</th>
-        </tr>
-        <tr>
-            <td class="no-border">
-                <span class="bold">BOKT "İdeal Kredit" MMC</span><br/>
-                Əməliyyat şöbəsi<br/>
-                Bakı şəh, Həsən Əliyev küç. 34<br/>
-                <span class="bold">VÖEN: 1300480591</span>
-            </td>
-            <td class="no-border">
-                <span class="bold" th:text="${requestedUser.fullName}"></span><br/>
-                <span th:text="${requestedUser.address}"></span><br/>
-                Ş/V: <span class="bold" th:text="${requestedUser.seriaNo}"></span>
-            </td>
-            <td class="no-border">
-                <span class="bold">BOKT "İdeal Kredit" MMC</span><br/>
-                Bakı şəh, Həsən Əliyev küç. 34<br/>
-                <span class="bold">VÖEN: 1300480591</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <br/><span>_______________________</span><br/>
-                <span>imza/tarix</span>
-            </td>
-            <td>
-                <br/><span>_______________________</span><br/>
-                <span>imza/tarix</span>
-            </td>
-            <td>
-                <br/><span>_______________________</span><br/>
-                <span>imza/tarix</span>
-            </td>
-        </tr>
-    </table>
-</div>
 </body>
+
 </html>
