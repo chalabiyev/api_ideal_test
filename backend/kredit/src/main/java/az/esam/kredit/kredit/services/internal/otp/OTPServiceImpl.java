@@ -66,11 +66,11 @@ public class OTPServiceImpl implements OTPService {
 
             // Günde sadece bir defa OTP gönderme kontrolü
             if (platform.equals(EPlatform.PHONE.name()) && !request.getContact().contains("504809988")) {
-                if (otpRepository.countByPhoneAndSendDateBetween(request.getContact(), startDate, endDate) > 0) {
+                if (otpRepository.countByPhoneAndSendDateBetween(request.getContact(), startDate, endDate) > 3) {
                     throw new BadRequestException("An OTP has already been sent to this contact today.");
                 }
             } else if (platform.equals(EPlatform.EMAIL.name())) {
-                if (otpRepository.countByEmailAndSendDateBetween(request.getContact(), startDate, endDate) > 0) {
+                if (otpRepository.countByEmailAndSendDateBetween(request.getContact(), startDate, endDate) > 3) {
                     throw new BadRequestException("An OTP has already been sent to this contact today.");
                 }
             }
