@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8" />
@@ -18,733 +18,641 @@
             margin: 20px auto;
             max-width: 800px;
         }
-
-        .container {
-            margin: 20px auto;
-            max-width: 900px;
-            padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header img {
-            height: 80px;
-            /* Logo size */
-        }
-
-        .header-title {
-            text-align: center;
-            flex: 1;
-        }
-
-        .header-title h1 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .header-title h2 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 400;
-            text-transform: uppercase;
-        }
-
-        h1,
-        h2 {
-            text-align: center;
-        }
-
-        .section-title {
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: center;
-            margin: 20px 0 10px;
-            font-size: 1.1em;
-            padding-bottom: 5px;
-        }
-
-        .content-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .label {
-            font-weight: bold;
-            color: #444;
-            min-width: 250px;
-        }
-
-        .value {
-            color: #000;
-            flex-grow: 1;
-        }
-
-        .note {
-            font-style: italic;
-            text-align: center;
-            /* Align text to center */
-            margin-top: 50px;
-            border-top: 1px solid #000;
-            /* Top border line */
-            padding-top: 10px;
-            /* Add some spacing above the text */
-        }
-
-        .note .underline {
-            display: inline-block;
-            text-decoration: underline;
-            /* Underline the text */
-            text-align: center;
-            /* Ensure the text inside is centered */
-        }
-
-
-        .signature-section {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 50px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .signature-box {
-            width: 45%;
-            padding: 10px;
-            border-top: 1px solid #000;
-        }
-
-        .rekvizit-table {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border: 1px solid #ccc;
-        }
-
-        .left-box,
-        .right-box {
-            padding: 15px;
-            border: 1px solid #ccc;
-        }
-
-        .left-box {
-            border-right: none;
-        }
-
-        .left-box h3,
-        .right-box h3 {
-            margin: 0 0 10px;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        p {
-            margin: 5px 0;
-        }
-
-        .bold {
-            font-weight: bold;
-        }
-
-        .underline {
-            text-decoration: underline;
-        }
-
-        .signature {
-            margin-top: 20px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .signature-line {
-            display: inline-block;
-            width: 60%;
-            border-bottom: 1px solid #fff;
-            margin-top: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th,
-        td {
-            text-align: left;
-            padding: 8px;
-        }
-
-        .title {
-            font-weight: bold;
-        }
-
-        .highlight {
-            font-weight: bold;
-        }
-
-        .separator {
-            padding: 0 10px;
-            color: #aaa;
-        }
     </style>
 </head>
 
 <body>
-    <!-- Header Section -->
-    <div class="header">
-        <img src="https://api.idealkredit.az/img.png" alt="Ideal Kredit Logo" /> <!-- Replace with your logo path -->
-        <div class="header-title">
-            <h1>"İDEAL KREDİT" BOKT MMC</h1>
-            <h2 th:text="'Kredit Müqaviləsi № ' + ${documentNumber}"></h2>
-        </div>
-        <div></div>
-    </div>
-
-
-    <div style="display:flex; justify-content: space-between;">
-        <p><strong>Bakı şəhəri</strong></p>
-        <p><strong th:text="${requestDateStr}"></strong></p>
+    <p style="text-align: center;">
+        <strong>“İDEAL KREDİT” BOKT MMC</strong> <strong></strong>
+    </p>
+    <p style="text-align: center;">
+        <strong>Əlaqəli kredit müqaviləsi</strong><strong>№</strong><strong th:text="${documentNumber}"></strong>
+        <strong></strong>
+    </p>
+    <p>
+        <strong></strong>
+    </p>
+    <div style="display: flex; justify-content: space-between;">
+        <p>Bakı şəhəri</p>
+        <p th:text="${requestDateStr}">07 iyun 2024</p>
     </div>
     <p>
-        Əsasnamə və Etibarnamə əsasında fəaliyyət göstərən (gələcəkdə "BOKT" adlanacaq) BOKT “İDEAL KREDİT” MMC-nin
-        direktoru Qubadov Qubad Baxas oğlu şəxsində bir tərəfdən, gələcəkdə "Borcalan" adlanacaq fiziki şəxs
-        <strong th:text="${requestedUser.fullName}"></strong> şəxsində digər tərəfdən, (birlikdə "Tərəflər" adlanacaq)
-        aşağıdakılar
-        barədə
-        razılığa gələrək bu müqaviləni bağladılar.
+        <em></em>
     </p>
-    <div class="section-title">1. ÜMUMİ ANLAYIŞLAR</div>
-
-
-    <table>
-        <tr>
-            <td class="title">BOKT</td>
-            <td>- Qüvvədə olan qanunvericiliyə uyğun kreditlər verən Bank Olmayan Kredit Təşkilatı “İDEAL KREDİT” MMC
-            </td>
-        </tr>
-        <tr>
-            <td class="title">Borcalan</td>
-            <td>
-                Fiziki şəxs <span class="highlight" th:text="${requestedUser.fullName}"></span>
-                <span class="separator">|</span> Ş/V №
-                <span class="highlight" th:text="${requestedUser.seriaNo}"></span>
-                <span class="separator">|</span> verilib:
-                <span class="highlight" th:text="${requestedUser.eventDate}"></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="title">Kredit məbləği</td>
-            <td th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></td>
-        </tr>
-        <tr>
-            <td class="title">İllik faiz dərəcəsi</td>
-            <td>
-                <p th:text="${documentNumber}">09/745-2023</p>Saylı kredit müqaviləsinə ediləcək Əlavələrlə
-                müəyyən olunur
-            </td>
-        </tr>
-        <tr>
-            <td class="title">Cərimə</td>
-            <td th:text="${fine} + '%'"></td>
-        </tr>
-        <tr>
-            <td class="title">Kredit müddəti</td>
-            <td th:text="${creditTerm} + ' ay'"></td>
-        </tr>
-        <tr>
-            <td class="title">Kreditin növü</td>
-            <td th:text="${creditType}"></td>
-        </tr>
-        <tr>
-            <td class="title">Ayrılacaq tranşın məbləği</td>
-            <td>
-                <p th:text="${documentNumber}">09/745-2023</p> Saylı kredit müqaviləsinə ediləcək Əlavələrlə
-                müəyyən olunur
-            </td>
-        </tr>
-        <tr>
-            <td class="title">Kredit təminatı</td>
-            <td th:text="${guarantee}"></td>
-        </tr>
-        <tr>
-            <td class="title">Xidmət haqqı və xərclər</td>
-            <td>
-                <p th:text="${documentNumber}">09/745-2023</p> Saylı kredit müqaviləsinə ediləcək Əlavələrlə
-                müəyyən olunur
-            </td>
-        </tr>
+    <p>
+        Əsasnamə və Etibarnamə əsasında fəaliyyət göstərən (gələcəkdə "BOKT"
+        adlanacaq) BOKT “İDEAL KREDİT” MMC-nin direktoru
+        <strong>
+            <em>Qubadov Qubad Baxas oğlu</em>
+        </strong>
+        şəxsində bir tərəfdən, gələcəkdə "Borcalan" adlanacaq fiziki şəxs
+        <strong><em th:text="${requestedUser.fullName}">Mehdiyev Elşən Osman oğlu</em></strong>şəxsində digər
+        tərəfdən,(birlikdə "Tərəflər" adlanacaq) aşağıdakılar barədə razılığa
+        gələrək bu müqaviləni bağladılar.
+    </p>
+    <p style="text-align: center;">
+        <strong>1.MÜQAVİLƏNİN PREDMETİ</strong>
+    </p>
+    <p>
+        <strong>1.1.</strong>Bu Müqavilə “BOKT” tərəfindən “Borcalan”a kreditin
+        verilməsi və kreditin qaytarılması şərtləri çərçivəsində Tərəflərin hüquq və
+        öhdəliklərini tənzimləyir.
+    </p>
+    <p>
+        <strong>1.2.</strong>Bu müqavilə üzrə "BOKT" "Borcalan"a
+        <strong th:text="${partner.companyName}">
+            Abbasov Vüqar Ələddin oğlu
+        </strong>
+        (bundan sonra "Partnyor") tərəfindən satışı həyata keçirilən İstehlak
+        mal(lar)ının veya xidmətlərin alınması üçün <strong th:text="${creditAmount}">1500</strong><strong
+            th:text="(${creditAmountWithText})">(Bir min beş yüz
+            manat)</strong>məbləğində istehlak krediti verməyi "Borcalan" isə aldığı
+        borcu bu Müqavilədə müəyyən edilmiş müddətdə və qaydada, ödəniş qrafiki
+        (Əlavə №1) əsasında "BOKT"-a qaytarmağı öz öhdəsinə götürür.
+    </p>
+    <p>
+        <strong>1.3.</strong>Bu müqaviləyə əsasən alınmış istehlak malları (bundan
+        sonra "Girov Predmeti") "Borcalan"ın razılığı ilə "BOKT"nin xeyrinə girov
+        qoyulur. "Girov Predmeti" Borcalanda qalır. "Borcalan" "BOKT" tərəfndən
+        "Girov Predmeti"nin Daşınar Əmlakın Yüklülüyünün Dövlət Reyestrində
+        (DƏYDR) qeydiyyatının aparılmasına və bu müqavilə üzrə öhdəliyin vaxtının
+        bitmə müddətindən əlavə 3 (üç) il müddətində yüklü (girovda) olaraq
+        qalmasına razılıq verir.
+    </p>
+    <p>
+        <strong>1.4.</strong>1.4. Kreditin verilməsi, partnyorun bank hesabına köçürmə yolu ilə həyata keçirilir.
+    </p>
+    <p>
+        <strong>1.5.</strong>Kredit rəsmiləşdirilməsinə görə ümumi kredit
+        məbləğinin <strong th:text="${commissionRate}">20,00%</strong><strong>%</strong> həcmində komissiya haqqı
+        tutulur.
+    </p>
+    <p>
+        <strong>1.6.</strong>Kredit "Borcalan"a kreditdən istifadə haqqı olaraq
+        illik <strong><em th:text="${annualPercent}">0,00</em></strong>% (annuitet qaydasında) hesablanmaqla
+        <strong><em th:text="${creditTerm}">10</em></strong> ay müddətinə verilir.
+    </p>
+    <strong>
+        <strong>1.7.</strong>Bu Müqaviləyə əsasən alınmış mal(lar)ın ümumi dəyəri
+        <strong th:text="${creditAmount}">1.560</strong>AZN
+        (<strong th:text="${creditAmountWithText}">Bir min beş yüz altmış manat</strong>)
+        təşkil edir.
+    </strong>
+    <p>
+        <strong>1.8.</strong>Borcalan kredit müqaviləsi üzrə borcun ödənilməsini
+        ödəniş qrafikinə (Əlavə №1) uyğun olaraq həyata keçirir. Borcalan kredit
+        borcunu ödəniş qrafikində <strong><em>(Əlavə №1)</em></strong>nəzərdə
+        tutulmuş tarixlərdə ödəmədikdə hər gecikdirilmiş gün üçün aylıq ödəniləcək
+        borc məbləğinin 1%-i həcmində dəbbə (cərimə) pulu ödəyir.
+    </p>
+    <p>
+        <strong>1.9.</strong>Bu Müqaviləyə və onun əlavələrinə uyğun olaraq ödəniş
+        məbləğləri "BOKT"nin hər hansı bir əməkdaşına deyil, yalnız onun bank
+        hesablarına və digər ödəmə vasitələrinə(ödəniş terminalları, onlayn
+        ödənişlər) ödənilir.
+    </p>
+    <p>
+        <strong></strong>
+    </p>
+    <p style="text-align: center;">
+        <strong>2.TƏRƏFLƏRİN HÜQUQ VƏ VƏZİFƏLƏRİ</strong>
+    </p>
+    <p>
+        <strong>2.1. "BOKT"nın hüquqları:</strong>
+    </p>
+    <p>
+        <strong>2.1.1.</strong>"Borcalan" bu Müqaviləyə və onun əlavə(lər)sinə uyğun
+        olaraq ödəniş qrafikində nəzərdə tutulmuş ödəniş məbləğlərini
+        ödəmədikdə/vaxtında ödəmədikdə (həmçinin "Borcalan"ın əmlak və ya maliyyə
+        vəziyyətinin pisləşməsi səbəbindən ödəmədikdə) kreditin vaxtından əvvəl tam
+        ödənilməsini "Borcalan"dan tələb etmək;
+    </p>
+    <p>
+        <strong>2.1.2.</strong>"Borcalan" bu Müqaviləyə və onun əlavə(lər)sinə uyğun
+        olaraq ödəniş məbləğlərini bu Müqavilənin <strong>1.9-</strong>cu bəndində
+        göstərilmiş qaydada bank hesabları və digər ödəmə vasitələri (kassa,
+        ödəniş terminalları, onlayn ödənişlər) ilə deyil, "BOKT"nin hər hansı bir
+        əməkdaşına ödəməsini bildirdikdə və ya bu cür ödənişlərin edilməsi ilə bağlı
+        hər hansı bir qəbz forması təqdim etdikdə, həmin ödənişləri və ya qəbzləri
+        qəbul etmədən ödənişlərin bu müqavilənin <strong>1.9</strong>-cu bəndində
+        göstərilən qaydada yenidən ödənilməsini tələb etmək;
+    </p>
+    <p>
+        <strong>2.1.3.</strong>Kredit borcu Azərbaycan manatının, Müqavilə
+        imzalandığı günə olan AR Mərkəzi Bankının məzənnəsinə nisbətən, ABŞ
+        dollarına qarşı məzənnəsinin hər 10% (on) faiz həcmində aşağı düşməsi
+        (devalivasiya) halında birtərəfli qaydada Kredit üzrə faiz dərəcəsini 2%
+        (iki) faizədək artırmaq;
+    </p>
+    <p>
+        <strong>2.1.4.</strong>"Borcalan" öhdəliklərini bu Müqavilə və onun
+        əlavə(lər)sinə uyğun şəkildə yerinə yetirmədiyi halda "BOKT" "Borcalan"ın
+        yaşayış yerlərinə, iş yerlərinə və "Borcalan" ilə əlaqəli digər ünvanlara
+        bildiriş (xəbərdarlıq və ya hər hansı məlumatlandırıcı məktub) göndərmək;
+    </p>
+    <p>
+        <strong>2.1.5.</strong>"Borcalan" öhdəliyini lazımi qaydada icra etmədikdə
+        "Girov Predmeti"nə və ya onun digər daşınar və daşınmaz əmlaklarına
+        tutmanı yönəltmək;
+    </p>
+    <p>
+        <strong>2.1.6.</strong>İstənilən vaxt "Girov Predmeti"nin saxlanılma
+        vəziyyətini, "Borcalan"ın maliyyə vəziyyətini və s. məsələləri istənilən
+        yerdə (evində, iş yerində və s) yoxlamaq;
+    </p>
+    <p>
+        <strong>2.1.7. "</strong>Borcalan" kreditin tam ödənişini müqavilədə
+        müəyyən edilən vaxtdan tez icra etdikdə “Borcalan”dan bu Müqavilədə və
+        qanunvericilikdə müəyyən olunmuş məbləğdə kompensasiya tələb etmək;
+    </p>
+    <p>
+        <strong>2.1.8.</strong>Borc məcburi qaydada məhkəmə yolu ilə alınarsa
+        qətnamə tam icra olunub başa çatanadək hesablanan cərimə (dəbbə) pulunu
+        "Borcalan"dan tələb etmək;
+    </p>
+    <p>
+        <strong>2.1.9.</strong>Bu Müqavilədən irəli gələn və qanunvericiliklə
+        nəzərdə tutulmuş digər hüquqlar.
+    </p>
+    <p>
+        <strong>2.1.10.</strong>Bu Müqavilənin bağlanması zamanı “BOKT” Müqaviləni
+        təmsil olunduğu şəxsin fiziki imzası, elektron imza və ya qanunvericiliklə
+        nəzərdə tutulmuş qaydada mexaniki və ya başqa surətçıxartma vasitələrinin
+        köməyi ilə imzanın faksimilesindən istifadə etməklə təsdiq etmək hüququ
+        vardır.
+    </p>
+    <p>
+        <strong>2.1.11.</strong>Kredit borcu haqqında arayışın əldə olunmasına görə
+        Borcalandan xidmət haqqı tələb edə bilər.
+    </p>
+    <p>
+        <strong>2.2. "BOKT"nin vəzifələri:</strong>
+    </p>
+    <p>
+        <strong>2.2.1.</strong>Bu Müqavilənin 1.2-ci bəndində göstərilən kredit
+        məbləğini kreditin rəsmiləşdirilməsinə görə xidmət haqqı və vəsait karta
+        köçürüldükdə plastik ödəniş kartının dəyərini tutaraq plastik kart
+        hesabına və ya partnyorun bank hesabına köçürmək;
+    </p>
+    <p>
+        <strong>2.2.2.</strong>Bu Müqavilə ilə üzərinə götürdüyü öhdəlikləri
+        vaxtında və lazımi qaydada icra etmək və onların pozulmasına yol verməmək;
+    </p>
+    <p>
+        <strong>2.2.3.</strong>Bu Müqavilə müddətində “Borcalan”ın müraciəti
+        əsasında ödənişsiz olaraq kağız daşıyıcıda təqvim ili ərzində iki dəfə,
+        digər davamlı daşıyıcıda isə istənilən zaman kreditin qalığı barədə
+        “Borcalan”a hesabdan çıxarış təqdim etmək;
+    </p>
+    <p>
+        <strong>2.2.4.</strong>Bu Müqavilədən irəli gələn və qanunvericilikdə
+        nəzərdə tutulmuş digər vəzifələr.
+    </p>
+    <p>
+        <strong>2.3. "Borcalan"ın hüquqları:</strong>
+    </p>
+    <p>
+        <strong>2.3.1.</strong>Bu Müqavilə üzrə götürdüyü kredit borcunu vaxtından
+        əvvəl ödəyə bilmək;
+    </p>
+    <p>
+        <strong>2.3.2.</strong>Obyektiv səbəblərdən borcun ödənilməsində çətinlik
+        yarandıqda, ödəniş vaxtının dəyişdirilməsi və ya restrukturizasiyası barədə
+        "BOKT"a müraciət etmək;
+    </p>
+    <p>
+        <strong>2.3.3.</strong>Bu Müqavilə müddətində müraciət əsasənda ödənişsiz
+        olaraq kağız daşıyıcıda təqvim ili ərzində iki dəfə, digər davamlı
+        daşıyıcıda isə istənilən zaman kreditin qalığı barədə hesabdan çıxarış əldə
+        etmək;
+    </p>
+    <p>
+        <strong>2.3.4.</strong>"Borcalan" Bu Müqavilə üzrə pul vəsaitinin verildiyi
+        gündən 30 (otuz) gün müddətində heç bir səbəb göstərmədən bu müqavilədən
+        imtina edə bilər, Bu halda, "Borcalan" müqavilə üzrə verilmiş pul
+        vəsaitini və həmin pul vəsaitinin verildiyi gündən qaytarıldığı günədək
+        hesablanan faizləri, dövlət rüsumu və xidmət haqlarının məbləğini
+        ödəməlidir.
+    </p>
+    <p>
+        <strong>2.3.5.</strong>Bu Müqavilədən irəli gələn və qanunvericilikdə
+        nəzərdə tutulmuş digər hüquqlar.
+    </p>
+    <p>
+        <strong>2.4. "Borcalan"ın vəzifələri:</strong>
+    </p>
+    <p>
+        <strong>2.4.1.</strong>Bu Müqavilə üzrə kreditin verilməsi üçün lazımi
+        sənədləri "BOKT"nin tələbi əsasında hazırlayaraq "BOKT"yə təqdim etmək;
+    </p>
+    <p>
+        <strong>2.4.2.</strong>Müqavilə üzrə üzərinə götürdüyü öhdəlikləri
+        vaxtında, düzgün və tam həcmdə icra etmək;
+    </p>
+    <p>
+        <strong>2.4.3.</strong>Ona məlum olan "BOKT"in sirri sayılan məlumatların
+        konfedensiallığını qorumaq, əks halda bu məlumatların yayılmasına görə
+        dəymiş ziyanı "BOKT"a ödəmək;
+    </p>
+    <p>
+        <strong></strong>
+    </p>
+    <p>
+        <strong></strong>
+    </p>
+    <p>
+        <strong></strong>
+    </p>
+    <p>
+        BOKT <u>Müqavilə SİMA İMZA ilə imzalanmışdır</u> Borcalan –
+        <u>
+            Müqavilə SİMA İMZA ilə imzalanmışdır
+        </u>
+        <strong></strong>
+    </p>
+    <p>
+        <strong>2.4.4.</strong>Öz qeydiyyat/yaşayış yerinin dəyişilməsi barədə
+        "BOKT"a məlumat vermək, olduğu yer, ticarətinin yeri və ya iş yeri, yaxud
+        işə götürənin dəyişilməsi haqqında həmin dəyişiklikdən etibarən 3 (üç) gün
+        ərzində "BOKT"nı xəbərdar etmək;
+    </p>
+    <p>
+        <strong>2.4.5.</strong>Bu Müqavilənin bağlanması zamanı “BOKT” Müqaviləni
+        təmsil olunduğu şəxsin fiziki imzası və ya qanunvericiliklə nəzərdə
+        tutulmuş qaydada mexaniki və ya başqa surətçıxartma vasitələrinin köməyi
+        ilə imzanin faksimilesindən istifadə etməklə təsdiq etməsi prosesi ilə
+        razılaşmaq;
+    </p>
+    <p>
+        <strong>2.4.6.</strong>Bu Müqavilədən irəli gələn və qanunvericilikdə
+        nəzərdə tutulmuş digər vəzifələr.
+    </p>
+    <p style="text-align: center;">
+        <strong>3.TƏRƏFLƏRİN MƏSULİYYƏTİ</strong>
+    </p>
+    <p>
+        <strong>3.1.</strong>Tərəflər bu Müqavilə şərtlərinin pozulması və ya
+        yerinə yetirilməməsi nəticəsində bir-birinə vurduqları zərərə görə tam
+        həcmdə mülki-hüquqi məsuliyyət daşıyırlar.
+    </p>
+    <p>
+        <strong>3.2.</strong>"BOKT" "Borcalan" qarşısında "BOKT"dan asılı olmayan
+        səbəblərə görə ("Borcalan"ın özü seçib aldığı istehlak mal(lar)ındakı
+        qüsura, uyğunsuzluğa, mal(lar)ın "Borcalan"a vaxtında verilməməsinə,
+        "Borcalan"ın göstərdiyi ünvanda quraşdırılmamasına və hər hansı digər
+        hallara görə) heç bir məsuliyyət daşımır.
+    </p>
+    <p>
+        <strong>3.3.</strong>Fors-major halında (daşqın, uçqun, sel, zəlzələ və
+        s.) müqavilənin icrası mümkün olmadıqda onun icrası həmin halın mövcud
+        olduğu müddət ərzində dayandırılır, Tərəflərdən hər biri istinad etdiyi
+        fors-major halın mövcudluğunu və öhdəliyin icrasına təsirini sübut etməyə,
+        fors-major hal barədə dərhal məlumat verməyə borcludur. Fors-major halın
+        olması müvafiq dövlət orqanı tərəfindən təsdiq olunmalıdır. Fors-major hal
+        bitdikdə 10 gün ərzində tərəflər öhdəliyini tam həcmdə yerinə
+        yetirməlidir.
+    </p>
+    <p style="text-align: center;">
+        <strong>4. MÜQAVİLƏNİN QÜVVƏYƏ MİNMƏSİ VƏ MÜDDƏTİ</strong>
+    </p>
+    <p>
+        <strong>4.1</strong>. Bu Müqavilə «Tərəflər»in onu imzası və möhürü ilə
+        (olduqda) təsdiq etdiyi andan qüvvəyə minir və «Tərəflər» öz öhdəliklərini
+        tam yerinə yetirənədək qüvvədədir.
+    </p>
+    <p>
+        <strong>4.2.</strong>Aşağıdakı hallardan hər hansı biri mövcud olduqda, bu
+        Müqavilə bağlandıqdan sonra da “BOKT” kreditin verilməsindən imtina edə
+        bilər:
+    </p>
+    <p>
+        <strong>4.2.1.</strong>Kreditin əsas məbləğinin və faizlərinin “Borcalan”
+        tərəfindən ödənilməsinə təhlükə yarada bilən hər hansı mülki, inzibati və
+        ya cinayət işi, təqibi, icraatı və ya iddiası və ya qeyd edilənlərlə bağlı
+        müvafiq orqanın qərarı, sərəncamı və ya məhkəmə aktı müvcud olduqda;
+    </p>
+    <p>
+        <strong>4.2.2.</strong>“Borcalan” tərəfindən kreditlə əlaqədar “BOKT”nı
+        aldatmağa yönəlmiş və ya qanunvericiliyə zidd hər hansı bir hərəkətin
+        edilməsi və ya yanlış məlumatların və ya sənədlərin təqdim edilməsi barədə
+        “BOKT”da ciddi şübhələr və ya məlumat olduqda;
+    </p>
+    <p>
+        <strong>4.2.3.</strong>Bu müqavilə üzrə “Borcalan”ın öhdəliklərini yerinə
+        yetirməsinə mənfi təsir göstərə biləcək hallar barədə məlumat daxil olduqda.
+    </p>
+    <p>
+        <strong>4.3.</strong>«BOKT» «Borcalan»ı 1 (bir) ay əvvəlcədən yazılı
+        xəbərdar etməklə aşağıdakı hallarda bu Müqaviləni birtərəfli qaydada ləğv
+        edə və kreditin (əsas məbləğ, hesablanmış faizlər, cərimə və s.) vaxtından
+        əvvəl qaytarılmasını tələb edə bilər:
+    </p>
+    <p>
+        <strong>4.3.1.</strong>“Borcalan” kredit müqaviləsi üzrə öhdəliklərini (əsas
+        borc və ya faizləri, yaxud onların bir hissəsini) bu müqavilənin ayrılmaz
+        tərkib hissəsi olan “Ödəniş qrafiki (Əlavə №1)" üzrə ödənişləri yerinə
+        yetirmədikdə;
+    </p>
+    <p>
+        <strong>4.3.2.</strong>“Borcalan” kreditdən təyinatına uyğun istifadə
+        etmədikdə;
+    </p>
+    <p>
+        <strong>4.3.3.</strong>“BOKT”nı aldatmağa yönəlmiş hər hansı bir hərəkətin
+        edildiyi aşkar olunduqda, maliyyə imkanları və bu müqavilədən irəli gələn
+        öhdəliklərin vaxtında və lazimi qaydada icrasına mənfi təsir edə biləcək
+        digər faktlar (Borcalanın ödənilməmiş borcları, icra edilməmiş mülki-hüquqi
+        öhdəlikləri, saxta sənədlərin təqdim edilməsi və s.) haqqında verdiyi
+        məlumatların və təqdim etdiyi sənədlərin (o cümlədən kredit alınması üçün
+        müraciət formasında ifadə edilmiş məlumatlar da daxil olmaqla) həqiqətə
+        uyğun olmadığı aşkar olunduqda;
+    </p>
+    <p>
+        <strong>4.3.4.</strong>“Borcalan”ın əmlak vəziyyəti əhəmiyyətli dərəcədə
+        pisləşdikdə;
+    </p>
+    <p>
+        <strong>4.3.5.</strong>Borcalan tərəfindən bu Müqavilə üzrə müəyyən edilmiş
+        vəzifələr icra edilmədikdə və ya lazımınca icra edilmədikdə;
+    </p>
+    <p>
+        <strong>4.3.6.</strong>Borcun hissə-hissə qaytarılmasını (faizlər, dəbbə
+        pulu və digər haqlar daxil olmaqla), hissə-hissə ödənilməsini bu Müqavilə
+        üzrə vaxtı çatmış borcun (faizlər, dəbbə pulu və digər haqlar daxil
+        olmaqla) 90 (doxsan) gün və ya daha çox müddətdə gecikdirildikdə, yaxud
+        borcun (faizlər, dəbbə pulu və digər haqlar daxil olmaqla) ödənilməsi
+        müddətləri 90 (doxsan) gündən az olmamaqla ardıcıl olaraq iki dəfə
+        pozulduqda;
+    </p>
+    <p>
+        <strong>4.4.</strong>“Borcalan” bu müqavilənin şərtlərini pozduqda və ya bu
+        müqavilənin 4.3-cü bəndində nəzərdə tutulmuş hallardan hər hansı biri baş
+        verdikdə “BOKT” borcun ödənilməsi tələbi ilə bağlı aidiyyəti məhkəməyə və ya
+        icra qeydinin aparılması üçün notariat orqanına müraciət edə bilər.
+    </p>
+    <p>
+        <strong>4.5.</strong>“Borcalan” “BOKT”dan və ya Satıcıdan («Girov
+        Predmeti»ni «Borcalan»a satan) asılı olmayan səbəblərdən və ya hər hansı
+        bir səbəb göstərmədən pul vəsaitinin ona verildiyi gündən 30 (otuz) gün
+        ərzində bu müqavilədən imtina etdikdə, bu Müqavilə üzrə hesablanmış
+        faizləri, dəbbə pulunu və kredit rəsmiləşdirilməsinə görə çəkilmiş 6%
+        xidmət haqqı xərcini “BOKT”a ödəməlidir.
+    </p>
+    <p>
+        <strong>4.6.</strong>Bu Müqavilə üzrə alınmalı olan mal(lar) “Borcalan”a
+        verilmədikdə, qismən verildikdə və ya Satıcı ilə Borcalan arasında
+        razılaşdırılmış şərtlərə uyğun olmadıqda, “Borcalan”ın bu müqavilə üzrə
+        yaranan öhdəliklərinin icrasını dayandırmaq və etdiyi ödənişlərin geri
+        qaytarılmasını “BOKT”dan tələb etmək hüququ vardır.
+    </p>
+    <p>
+        <strong>4.7.</strong>Bu Müqavilənin 4.6.-ci bəndində göstərilən hüquqlar
+        yalnız aşağıdakı hallarda həyata keçirilə bilər:
+    </p>
+    <p>
+        <strong>4.7.1.</strong>“Borcalan” malların ona verilməməsi, qismən verilməsi
+        və yaxud Satıcı ilə aralarında razılaşdırılmış şərtlərə uyğun olmaması ilə
+        bağlı Satıcıya müraciət etmişdir və bu müraciət tarixindən sonra 1 (bir) ay
+        müddətində Satıcı ilə “Borcalan” arasında razılaşdırılmış şərtlər Satıcı
+        tərəfindən yerinə yetirilməmişdir;
+    </p>
+    <p>
+        <strong>4.7.2.</strong>Malların lazımi keyfiyyətdə olmaması səbəbindən
+        Satıcı ilə Borcalan arasında bağlanmış müqavilə ləğv edildiyi halda, bu
+        şərtlə ki, “Borcalan”“BOKT”a malların lazımi keyfiyyətdə olmaması barədə
+        müraciət etmişdir;
+    </p>
+    <p>
+        <strong>4.7.3.</strong>Satıcı tərəfindən malların təhvil verilməməsi
+        səbəbindən Satıcı ilə Borcalan arasında bağlanmış müqaviləyə xitam
+        verilməsi halları istisna olmaqla,Satıcı ləğv edilmiş müqavilə əsasında
+        aldığı malları tam olaraq geri qaytarmışdır;
+    </p>
+    <p>
+        <strong>4.8.</strong>Bu Müqavilənin 4.7-ci bəndində göstərilən halların baş
+        verməsi ilə bağlı “Borcalan” “BOKT”a müraciət etdikdə, “BOKT” 10 (on) iş
+        günü müddətində “Borcalan”ın bu Müqavilə üzrə etdiyi ödənişləri geri
+        qaytarır. Karta görə ödənilən məbləğ “Borcalan”a geri qaytarılmır.
+    </p>
+    <p style="text-align: center;">
+        <strong>5. YEKUN MÜDDƏALAR</strong>
+    </p>
+    <p>
+        <strong>5.1.</strong>"BOKT" bu Müqavilə ilə bağlı qanunvericiliklə müəyyən
+        edilmiş məlumatları "Azərbaycan Kredit Bürosu" MMC-yə və Mərkəzi Bankın
+        Mərkəzləşdirilmiş Kredit Reyestrinə göndərə bilər. "Borcalan" bu müqaviləni
+        imzalamaqla, Bank olmayan kredit təşkilatları haqqında" Azərbaycan
+        Respublikası Qanununa və digər qanunvericilik aktlarına müvafiq olaraq
+        özləri haqqında məlumatların "Azərbaycan Kredit Bürosu" MMC-yə və Mərkəzi
+        Bankın Mərkəzləşdirilmiş Kredit Reyestrinə təqdim edilməsinə və həmçinin
+        "büro"da haqqında olan bütün məlumatların “İDEAL KREDİT” BOKT MMC
+        tərəfindən sorğu edilməsinə, həmçinin Azərbaycan Respublikası Qanununa və
+        digər qanunvericilik aktlarına uyğun olaraq borcalan və ailə üzvləri
+        haqqında fərdi məlumatların (o cümlədən “ASAN Finans”dan əldə edilən bütün
+        məlumatların) toplanmasına razılıq verir.
+    </p>
+    <p>
+        <strong>5.2.</strong>Bu Müqaviləyə gələcəkdə hər hansı əlavə və
+        dəyişikliklərin edilməsi Azərbaycan Respublikasının qanunvericiliyi ilə
+        nəzərdə tutulmuş qaydada tərəflər arasında yazılı şəkildə bağlanmış
+        razılaşma ilə rəsmiləşdiriləcəkdir.
+    </p>
+    <p>
+        <strong>5.3.</strong>"BOKT" bu Müqavilədən irəli gələn hüquq və
+        vəzifələrini, o cümlədən, kreditin qaytarılması üçün tədbir görülməsini,
+        "Borcalan" haqqında məlumatları "Borcalan"ın razılığı olmadan üçüncü
+        şəxslərə verə (transfer edə) bilər. "Borcalan" isə yalnız "BOKT"nin yazılı
+        razılığı ilə bu hüquqa malikdir.
+    </p>
+    <p>
+        <strong>5.4.</strong>Kredit üzrə Faktiki İllik Faiz Dərəcəsi
+    <p th:text="${calculatedFIFD}">51,53</p> % təşkil
+    edir.
+    </p>
+    <p>
+        <strong>5.5.</strong>Kredit üzrə faizlərin hesablanması ildə 360 (üç yüz
+        altmış) təqvim günü, ayda isə 30 (otuz) təqvim günü götürülməklə kreditin
+        “Borcalan”a verildiyi gündən faktiki qaytarıldığı günədək, kreditdən
+        istifadə edilmiş günlərin faktiki sayına görə əsas borcun qalıq məbləğinə
+        hesablanır.
+    </p>
+    <p>
+        BOKT <u>Müqavilə SİMA İMZA ilə imzalanmışdır</u> Borcalan –
+        <u>
+            Müqavilə SİMA İMZA ilə imzalanmışdır
+        </u>
+        <strong></strong>
+    </p>
+    <p>
+        <strong>5.6.</strong>"Borcalan"ın yetərli miqdarda olmayan kredit
+        ödənişlərinin öhdəliyin icrasından silinmə ardıcıllığı: cərimə (dəbbə)
+        pulu, faiz borcu və əsas borcdan silinməklə həyata keçiriləcək. Artıq
+        miqdarda edilən ödənişlərin öhdəliyin icrasından silinmə ardıcıllığı: əsas
+        borcdan silinməklə həyata keçiriləcək.
+    </p>
+    <p>
+        <strong>5.7.</strong>"Borcalan" son ödəniş zamanı yarana biləcək (ödədiyi)
+        artıq məbləğin "BOKT" tərəfindən qeyd-şərtsiz silinməsinə etiraz etmir.
+    </p>
+    <p>
+        <strong>5.8.</strong>Borcalan” krediti istənilən vaxt xəbərdarlıq etmədən
+        tamamilə və ya qismən “BOKT”a qaytara bilər. “Borcalan” krediti vaxtından
+        əvvəl qaytardıqda, kreditin qalıq müddətinə görə hesablanmış faizlər
+        vaxtından əvvəl ödənilmiş məbləğə mütənasib olaraq azaldılır.
+    </p>
+    <p>
+        <strong>5.9.</strong>"BOKT” kreditin vaxtından əvvəl icrası zamanı zərərin
+        əvəzinin ödənilməsi üçün “Borcalan”dan kompensasiya məbləği tələb edə bilər.
+        Kompensasiyanın məbləği müqavilə müddətinin bitməsinə 1 (bir) ildən çox
+        qaldıqda, vaxtından əvvəl ödənilmiş məbləğin 1 (bir) faizi həcmində, 1 (bir)
+        il və daha az müddət qaldıqda isə 0,5 faiz həcmində müəyyən edilir.
+    </p>
+    <p>
+        <strong>5.10.</strong>Kreditin nağdlaşdırılması zamanı həcmində
+        nağdlaşdırma xərci tutulur, kredit kart emitentinə məxsus olmayan digər
+        təşkilatların ATM/Pos-terminalı vasitəsilə nağdlaşdırıldıqda nağdlaşdırma
+        xərci həmin təşkilatların tariflərinə uyğun olaraq tutulur.
+    </p>
+    <p>
+        <strong>5.11.</strong>“Borcalan” “İstehlak krediti müqaviləsi üzrə Standart
+        məlumatlandırma forması”nın “BOKT” tərəfindən ona təqdim edilməsini təsdiq
+        edir.
+    </p>
+    <p>
+        <strong>5.12.</strong>“BOKT”un “Borcalan”a ünvanladığı bütün müraciətlər,
+        bildirişlər, xəbərdarlıqlar “Borcalan”ın bu Müqavilədə göstərilən ünvanına
+        göndərilir. “Borcalan” qeydiyyat/ yaşayış ünvanında edilmiş dəyişikliklər
+        barədə bu Müqavilənin 2.4.4-cü bəndi ilə müəyyən olunmuş qaydada “BOKT”u
+        məlumatlandırmadıqda sonuncu məlum olan ünvan üzrə gəndərilmiş müraciətlər,
+        bildirişlər, xəbərdarlıqlar çatdırılmış hesab olunur.
+    </p>
+    <p>
+        <strong>5.13.</strong>Tərəflər arasında bu müqavilənin icrası ilə əlaqədar
+        olan mübahisələr qarşılıqlı razılıqla həll edilir. Qarşılıqlı razılıqla həll
+        edilə bilməyən mübahisələr Azərbaycan Respublikasının qanunvericiliyi
+        əsasında aidiyyəti məhkəmə tərəfindən həll olunur.
+    </p>
+    <p>
+        <strong>5.14.</strong>Bu Müqavilənin hər hansı bir müddəasının etibarsız
+        hesab edilməsi bu Müqavilənin bütün və ya digər müddəalarının etibarsız
+        hesab edilməsinə səbəb olmur.
+    </p>
+    <p>
+        <strong>5.15.</strong>Bu Müqavilə ilə tənzimlənməyən məsələlər Azərbaycan
+        Respublikasının qanunvericiliyi ilə tənzimlənir.
+    </p>
+    <p>
+        <strong>5.16.</strong>“BOKT” bu müqavilədə və qanunvericilikdə müəyyən
+        edilmiş qaydada kreditin verilməsindən imtina etmək hüququnu özündə
+        saxlayır.
+    </p>
+    <p>
+        <strong>5.17.</strong>“Borcalan” aşağıda imza etməklə bu Müqaviləni
+        oxuduğunu, şərtlərini başa düşdüyünü təsdiq edir və Müqavilənin şərtləri ilə
+        razı olduğunu bildirir.
+    </p>
+    <p>
+        <strong>5.18.</strong>"Borcalan" maliyyə xidmətlərini istehlak edərkən
+        qarşılaşdığı çətinliklər və suallarla əlaqədar Azərbaycan Respublikası
+        Mərkəzi Bankının ünvanı (Bakı şəhəri, R.Behbudov küçəsi 90,), əlaqə
+        nömrəsi: +994 012 966; +99412 493 50 58 və qaynar xətti ilə əlaqə saxlaya
+        bilər.
+    </p>
+    <p>
+        <strong>5.19.</strong>Müraciət üçün “BOKT”un əlaqə nömrəsi: +99412 526 26
+        25; Sayt ünvanı:
+        <a href="https://www.idealkredit.az/">
+            https://www.idealkredit.az
+        </a>
+    </p>
+    <p>
+        <strong>5.20.</strong>Bu müqavilə eyni hüquqi qüvvəyə malik 2 (iki) nüsxədə
+        tərtib edilmişdir və tərəflərin imza və möhürü ilə təsdiq edildikdən sonra
+        qüvvəyə minir.
+    </p>
+    <p>
+        _________________________________________________________________________________________________
+    </p>
+    <p style="text-align: center;">
+        ("Borcalan" əl ilə
+        <strong>"tanış</strong><strong></strong><strong>oldum</strong><strong></strong><strong>razıyam"</strong><strong></strong>yazır
+        və <strong>"tarixi</strong><strong></strong><strong>qeyd</strong><strong></strong><strong>edir"</strong>)
+    </p>
+    <p style="text-align: center;">
+        <strong>6.TƏRƏFLƏRİN REKVİZİTLƏRİ:</strong>
+    </p>
+    <table style="border: 1px solid;" cellspacing="0" cellpadding="0">
+        <tbody>
+            <tr>
+                <td width="352" valign="top">
+                    <p>
+                        <strong>BOKT:</strong>
+                    </p>
+                    <p>
+                        "İDEAL KREDİT" BOKT
+                    </p>
+                    <p>
+                        VÖEN: 1300480591
+                    </p>
+                    <p>
+                        Direktor: Qubadov Qubad Baxas oğlu
+                    </p>
+                    <p>
+                        Hüquqi ünvan: Bakı şəhəri, F.Xoyski küç. 111"A", m.26
+                    </p>
+                    <p>
+                        Faktiki ünvan: Bakı ş, Binəqədi r, 7 MKR, S.S.Axundov küç,
+                        3123-cü məh.
+                    </p>
+                    <p>
+                        Tel: 012 526 26 25
+                    </p>
+                    <p>
+                        BOKT <u>Müqavilə SİMA İMZA ilə imzalanmışdır</u>
+                    </p>
+                </td>
+                <td width="352" valign="top">
+                    <p>
+                        <strong>Borcalan:</strong>
+                    </p>
+                    <p th:text="${requestedUser.fullName}">
+                        Əsədov Bulud Mübariz oğlu
+                    </p>
+                    VÖEN:
+                    <p th:text="${requestedUser.voen}">
+                        1000110022
+                    </p>
+                    <p th:text="${requestedUser.address}">
+                        Ünvan: Bakı şəh, Suraxanı ray, Yeni Suraxanı qəs, Mərkəzi
+                        küç.,8-ci döngə,ev.16D
+                    </p>
+                    Ş/V №:
+                    <p th:text="${requestedUser.seriaNo}">
+                        AA4053986
+                    </p>
+                    Ş/V verilmə tarixi:
+                    <p th:text="${requestedUser.eventDate}">
+                        05 may 2022
+                    </p>
+                    Ş/V bitmə tarixi:
+                    <p th:text="${requestedUser.expDate}">
+                        04 may 2032
+                    </p>
+                    <p>
+                        Ş/V verən orqan:
+                    </p>
+                    Tel:
+                    <p th:text="${phoneNumber}">
+                        994556000011
+                    </p>
+                    <p>
+                        Borcalan – <u>Müqavilə SİMA İMZA ilə imzalanmışdır</u>
+                        <strong></strong>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
     </table>
-
-    <div class="section-title">2. MÜQAVİLƏNİN PREDMETİ</div>
-
-    <div class="subsection">
-        <span>2.1.</span> Bu müqavilə üzrə <span class="highlight">BOKT</span> Borcalara
-        <span class="highlight" th:text="${creditTerm}"> ay müddətinə qaytarmaq şərti ilə</span>
-        <span class="highlight" th:text="${creditAmount} + ' (' + ${creditAmountWithText} + ')'"></span> məbləğində
-        kredit əldə edir.
-        Borcalan isə bu Müqavilədə və ya onun əlavə(lər)ində göstərilən kredit məbləğini qəbul edərək, müqavilədə
-        göstərilən müddətdə və
-        qaydada, ödəniş qrafiki (Əlavə №1) əsasında krediti və həmin kreditə görə hesablanmış faizləri
-        <span class="highlight" th:text="'BOKT-a'"></span> qaytarmağı öz öhdəsinə götürür.
-
-        <div class="subsection">
-            <span>2.2.</span> Bu müqavilə üzrə kredit <span class="italic" th:text="${creditPurpose}"></span> üçün
-            götürülür.
-        </div>
-
-        <div class="subsection">
-            <span>2.3.</span> Kredit <span class="highlight">"Borcalan"</span>ın bank hesabına köçürmə yolu ilə verilir
-            və ya
-            müştəriyə təqdim edilmiş kart hesabına köçürülür.
-        </div>
-
-        <div class="subsection">
-            <span>2.4.</span> Borcalan bu kreditdən istifadəyə görə illik <span class="highlight"
-                th:text="${annualPercent}">%</span>
-            məbləğində faiz
-            ödəyir.
-        </div>
-
-        <div class="subsection">
-            <span>2.5.</span> Borcalan bu kredit müqaviləsinin əlavələri ilə ona ayrılacaq kredit məbləği üzrə
-            əsas borcun
-            və faizlərin ödənilməsini ödəniş qrafikinə (Əlavə №1) uyğun olaraq həyata keçirir. Borcalan kredit və (və
-            ya) ona
-            hesablanmış faizləri ödəniş qrafikində (Əlavə №1) nəzərdə tutulmuş tarixlərdə ödəmədikdə <span
-                class="highlight">2 (iki) gündən sonra</span>
-            hər gecikdirilmiş gün üçün aylıq ödəniləcək əsas məbləğin <span class="highlight">1%-i</span> həcmində dəbbə
-            (cərimə) pulu ödəyir.
-        </div>
-
-        <div class="subsection">
-            <span>2.6.</span> Bu Müqaviləyə və onun əlavə(lər)inə uyğun olaraq ödəniş məbləğləri <span
-                class="highlight">"BOKT"</span>-nin hər hansı bir əməkdaşına deyil, yalnız onun bank hesablarına və
-            digər ödəmə
-            vasitələrinə (<span class="italic">kassa, ödəniş terminalları, onlayn ödənişlər</span>) ödənilir.
-        </div>
-
-
-        <div class="section-title">3. TƏRƏFLƏRİN HÜQUQ VƏ VƏZİFƏLƏRİ</div>
-
-        <div class="subsection-title">3.1. BOKT-nın hüquqları:</div>
-        <div class="subsection">
-            <span>3.1.1.</span> BOKT müqavilə ilə nəzərdə tutulmuş kredit məbləğini Borcalanın bank hesabına və ya ona
-            təqdim
-            edilmiş kart hesab(lar)ına köçürür.
-        </div>
-        <div class="subsection">
-            <span>3.1.2.</span> Borcalanın əmlak və ya maliyyə vəziyyəti əhəmiyyətli dərəcədə pisləşərsə, bu borcun
-            qaytarılması
-            tələbi üzrə təhlükə yaradarsa borcun dərhal qaytarılmasını tələb etmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.3.</span> Azərbaycan Respublikasının səlahiyyətli orqanlarının pul-kredit siyasətinin
-            tələblərindən irəli
-            gələn səbəblər nəticəsində kreditlərə görə faiz dərəcələri dəyişdikdə, habelə daxili və beynəlxalq maliyyə
-            bazarlarında faiz dərəcələrində BOKT tərəfindən cəlb olunan resursların qiymətinə təsir göstərən ciddi
-            dəyişikliklər
-            müşahidə olunduğu hallarda borcalanı <span class="highlight">3 (üç) iş günü əvvəlcədən xəbərdar
-                etməklə</span>
-            verilmiş kredit üzrə faiz dərəcələrini dəyişmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.4.</span> "Borcalan" bu Müqaviləyə və onun əlavə(lər)inə uyğun olaraq ödəniş məbləğlərini bu
-            Müqavilənin
-            <span class="highlight">2.6-cı</span> bəndində göstərilmiş qaydada bank hesabları və digər ödəmə vasitələri
-            (kassa,
-            ödəniş terminalları, onlayn ödənişlər) ilə deyil, "BOKT"-nin hər hansı bir əməkdaşına ödəniş edilməsi barədə
-            bildirdikdə və ya bu cür ödənişlərin edilməsi ilə bağlı hər hansı bir qəbz forması təqdim etdikdə həmin
-            ödənişi
-            qəbul etməmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.5.</span> Borcalan üzərinə götürdüyü öhdəliyi yerinə yetirmədikdə və ya lazımınca yerinə
-            yetirməzsə,
-            cərimə faizi və dəbbə pulu daxil olmaqla kredit və faiz borcunu "Borcalan"dan qanunvericiliyə uyğun tələb
-            etmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.6.</span> "Borcalan" tərəfindən kredit məbləğinin məqsədinə uyğun istifadə edilib-edilmədiyini
-            yoxlamaq
-            üçün dövri monitorinqlər aparmaq.
-        </div>
-        <div class="subsection">
-            <span>3.1.7.</span> "Borcalan" öhdəliklərini bu Müqavilə və onun əlavə(lər)inə uyğun yerinə yetirmədiyi
-            halda "BOKT"
-            "Borcalan"ın yaşayış yerinə, iş yerlərinə və "Borcalan" ilə əlaqəli digər ünvanlara bildiriş (xəbərdarlıq və
-            ya hər
-            hansı məlumatlandırıcı məktub) göndərmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.8.</span> "Borcalan" öhdəliklərini icra etmədikdə və ya lazımi qaydada yerinə yetirmədikdə "Girov
-            Predmeti" varsa, ona tutmanı yönəltmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.9.</span> İstənilən vaxt "Girov Predmeti"nin saxlanılma vəziyyətini, daşınmaz əmlakın mülkiyyətini
-            və s.
-            məsələləri istənilən yerdə (evində, iş yerində və s.) yoxlamaq.
-        </div>
-        <div class="subsection">
-            <span>3.1.10.</span> Hər hansı səbəbdən "Borcalan"ın bu müqavilə üzrə kredit borcu üçüncü şəxs tərəfindən
-            ödənilərsə, müqavilə üzrə öhdəliklərin icrası müddətində üçüncü şəxs tərəfindən ödənilmiş məbləği
-            "Borcalan"dan
-            tələb etmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.11.</span> Kredit borcu Azərbaycan manatının, müqavilə imzalandığı gündən etibarən Mərkəzi Bankın
-            məzənnəsinə nisbətən, ABŞ dollarına qarşı məzənnəsinin <span class="highlight">10% (on)</span> faiz həcmində
-            aşağı
-            düşməsi (devalvasiya) halında dəyişməklə Kredit üzrə faiz dərəcəsini <span class="highlight">2% (iki)</span>
-            faizədək artırmaq.
-        </div>
-        <div class="subsection">
-            <span>3.1.12.</span> Borcalan üzərinə götürdüyü öhdəliyi yerinə yetirməzsə müqavilə ilə nəzərdə tutulan
-            kreditin
-            verilməsini dayandırmaq və ya verilmiş kreditin vaxtından əvvəl qaytarılmasını tələb etmək, həmçinin cərimə
-            faizi və
-            dəbbə pulu daxil olmaqla kredit və faiz borcunu kredit müqaviləsi üzrə öhdəliklərin icrasının təminatı
-            (girov,
-            ipoteka, zaminlik və s.) və "Borcalan"ın digər daşınar və daşınmaz əmlakına yönəltmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.13.</span> Borcalan kreditin tam dövriyyəsi müddətində nəzərdə tutulmuş vaxtda keçirəcə qanunda
-            nəzərdə
-            tutulmuş qaydada kompensasiya məbləğini Borcalandan tələb etmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.14.</span> Borcalan tərəfindən öhdəliyin icra edilməməsi və ya lazımi icra edilməməsi ilə əlaqədar
-            borcun
-            məcburi qaydada alınmasına yönəlmiş məhkəmə tam icra olunub başa çatanadək hesablanan faizləri tələb etmək.
-        </div>
-        <div class="subsection">
-            <span>3.1.15.</span> Bu Müqavilədən irəli gələn və qanunvericiliklə nəzərdə tutulan digər hüquqları həyata
-            keçirmək.
-        </div>
-
-        <div class="subsection-title">3.2. BOKT-nın vəzifələri:</div>
-        <div class="subsection">
-            <span>3.2.1.</span> Bu müqavilənin <span class="highlight">2.1-ci</span> bəndində nəzərdə tutulan kredit
-            məbləğini
-            Borcalanın bank hesabına və ya ona təqdim edilmiş kart hesabına köçürmək.
-        </div>
-        <div class="subsection">
-            <span>3.2.2.</span> Kreditin ödənilmə vaxtının dəyişdirilməsi, restrukturizasiyası (ödəniş müddətli
-            möhlətlər
-            verilməsi) barədə Borcalanın müraciətlərini müzakirə edərək "BOKT"-nin aidiyyəti orqanı qarşısında məsələ
-            qaldırmaq.
-        </div>
-
-        <div class="subsection-title">3.3. Borcalanın hüquqları:</div>
-        <div class="subsection">
-            <span>3.3.1.</span> Bu Müqavilə üzrə götürdüyü krediti və hesablanmış faizləri vaxtından əvvəl ödəmək.
-        </div>
-        <div class="subsection">
-            <span>3.3.2.</span> Ödəniş çətinlikləri yarandıqda kreditin ödəniş vaxtının dəyişdirilməsi, kreditin
-            restrukturizasiyası (qısa müddətli möhlət) barədə "BOKT"a müraciət etmək.
-        </div>
-        <div class="subsection">
-            <span>3.3.3.</span> Qanunvericilikdə nəzərdə tutulmuş digər hüquqlar.
-        </div>
-
-        <div class="subsection-title">3.4. Borcalanın vəzifələri:</div>
-        <div class="subsection">
-            <span>3.4.1.</span> Bu Müqavilə üzrə kreditin verilməsi üçün lazım olan sənədləri hazırlayaraq "BOKT"a
-            təqdim etmək.
-        </div>
-        <div class="subsection">
-            <span>3.4.2.</span> Bu Müqaviləyə və onun əlavə(lər)inə uyğun olaraq ödəniş məbləğlərini "BOKT"-nin hər
-            hansı bir
-            əməkdaşına deyil, yalnız onun bank hesablarına və digər ödəmə vasitələrinə (kassa, ödəniş terminalları,
-            onlayn
-            ödənişlər) ödəmək.
-        </div>
-
-
-        <div class="signature-section">
-            <div class="signature-box">
-                <p>BOKT</p>
-
-            </div>
-            <div class="signature-box">
-                <p>Borcalan</p>
-            </div>
-        </div>
-
-
-        <div class="subsection-title">3.4. Borcalanın vəzifələri:</div>
-
-        <div class="subsection">
-            <span>3.4.3.</span> Öhdəliyin icra edilməməsi və ya lazımı icra edilməməsi ilə əlaqədar borcun məcburi
-            qaydada
-            alınmasına yönəlmiş məhkəmə qətnaməsi tam icra olunub başa çatanadək hesablanmış faizləri "BOKT"a ödəmək.
-        </div>
-        <div class="subsection">
-            <span>3.4.4.</span> "BOKT"nin tələbi əsasında dəbbə pulunu ödəmək.
-        </div>
-        <div class="subsection">
-            <span>3.4.5.</span> Hər hansı səbəbdən bu müqavilə üzrə kredit borcu üçüncü şəxs tərəfindən ödənilərsə,
-            müqavilə
-            üzrə öhdəliklərin icrası müddətində üçüncü şəxs tərəfindən ödənilmiş məbləği "BOKT"a ödəmək.
-        </div>
-        <div class="subsection">
-            <span>3.4.6.</span> Öz qeydiyyat/yaşayış yerinin dəyişilməsi barədə (həmçinin zamin və girovqoyan barəsində
-            də)
-            "BOKT"a məlumat vermək, olduğu yer, ticarətinin yeri və ya iş yeri, yaxud işə götürənin dəyişilməsi,
-            həmçinin
-            pasport məlumatları, telefonları, elektron poçt məlumatları, eləcə də digər rekvizitlərinin dəyişilməsi
-            haqqında
-            həmin dəyişiklikdən etibarən <span class="highlight">5 (beş) gün ərzində</span> "BOKT"ni xəbərdar etmək.
-        </div>
-        <div class="subsection">
-            <span>3.4.7.</span> Kreditin verilməsinə əsas olan və qaytarılmasının mümkünlüyünü təsdiq edən məlumatları
-            kreditorlara tam və dəqiq verməklə yanaşı onların həqiqiliyinə məsuliyyət daşımaq. Bu məlumatlarda sonradan
-            baş
-            vermiş dəyişikliklər haqqında kreditoru dərhal xəbərdar etmək.
-        </div>
-        <div class="subsection">
-            <span>3.4.8.</span> Kreditin təyinatı üzrə istifadə edildiyini yoxlamaq məqsədilə BOKT-nin əməkdaşlarına
-            dövri
-            monitorinqlərin aparılması üçün lazımi şərait yaratmaq.
-        </div>
-        <div class="subsection">
-            <span>3.4.9.</span> Kreditdən təyinatına uyğun istifadə etmək (əks halda <span class="highlight">Cinayət
-                Məcəlləsinin 178, 195, 196, 306-cı maddələri</span>
-            ilə məsuliyyət daşıyır).
-        </div>
-        <div class="subsection">
-            <span>3.4.10.</span> Ona məlum olmuş "BOKT"nin sirr təşkil edən məlumatlarının konfidensiallığını qorumaq,
-            əks
-            təqdirdə bu məlumatların yayılması ilə əlaqədar dəymiş ziyanı BOKT-a ödəmək.
-        </div>
-
-        <div class="section-title">4. Tərəflərin Məsuliyyəti</div>
-
-        <div class="subsection">
-            <span>4.1.</span> Borcalan özünün əmlak və ya maliyyə vəziyyəti barədə bilə-bilə yalan məlumatlar verməklə
-            və ya
-            saxta sənəd təqdim etməklə kredit alarsa, habelə verilmiş kreditdən təyinatına uyğun istifadə etməzsə <span
-                class="highlight">Azərbaycan Respublikası Cinayət Məcəlləsinin 195-ci maddəsinə</span> müvafiq olaraq
-            məsuliyyət
-            daşıyır.
-        </div>
-        <div class="subsection">
-            <span>4.2.</span> "Borcalan" bu Müqaviləyə və onun əlavə(lər)sinə uyğun olaraq vaxtlı-vaxtında üzərinə
-            götürdüyü
-            öhdəlikləri icra etmədiyi təqdirdə əsas və faiz borcundan əlavə <span class="highlight">"BOKT"</span>-a
-            ödənilməmiş
-            əsas məbləğin <span class="highlight">2 gündən sonra</span> hər gecikən günü üçün <span
-                class="highlight">1%</span>
-            məbləğində dəbbə (cərimə) pulu ödəyir.
-        </div>
-        <div class="subsection">
-            <span>4.3.</span> Tərəflər bu Müqavilənin şərtlərinin pozulması və ya yerinə yetirilməməsi nəticəsində
-            tərəflərin
-            bir-birinə vurduqları zərərə görə tam həcmdə mülki-hüquqi məsuliyyət daşıyırlar.
-        </div>
-        <div class="subsection">
-            <span>4.4.</span> Bu müqavilə üzrə "Borcalan" <span class="highlight">"BOKT"</span> qarşısında olan
-            öhdəliyinin
-            icrası üçün öz daşınar və daşınmaz əmlakları ilə tam məsuliyyət daşıyır.
-        </div>
-        <div class="subsection">
-            <span>4.5.</span> "Borcalan" bu Müqaviləyə və onun əlavə(lər)sinə uyğun olaraq ödəniş məbləğlərini bu
-            müqavilənin
-            <span class="highlight">2.6-cı</span> bəndində göstərilmiş qaydada bank hesabları və digər ödəmə vasitələri
-            (kassa,
-            ödəmə terminalları, onlayn ödənişlər) ilə deyil, <span class="highlight">"BOKT"</span>-nin hər hansı bir
-            əməkdaşına
-            ödəməsini bildirdikdə və ya bu cür ödənişlərin edilməsi ilə bağlı hər hansı bir qəbz forması təqdim etdikdə,
-            <span class="highlight">"BOKT"</span> həmin ödənişləri qəbul etmir və bu cür ödənişlərlə bağlı heç bir
-            məsuliyyət
-            daşımır. Belə hal baş verərsə həmin ödənişin bu müqavilənin <span class="highlight">2.6-cı</span> bəndində
-            göstərilən qaydada "BOKT"a ödənilməməsi ilə bağlı məsuliyyəti "Borcalan" özü daşıyır.
-        </div>
-        <div class="subsection">
-            <span>4.6.</span> Fors-major hallarında (<span class="highlight">daşqın, uçqun, sel, zəlzələ, yer
-                sürüşməsi</span>)
-            müqavilənin icrası mümkün olmadıqda onun icrası həmin halın mövcud olduğu müddət ərzində dayandırılır.
-            Tərəflərdən
-            hər biri istinad etdiyi fors-major halın mövcudluğunu və öhdəliklərin icrasına təsirini sübut etməyə,
-            fors-major
-            halları barədə dərhal məlumat verməyə borcludur. Fors-major halın olması səlahiyyətli dövlət orqanı
-            tərəfindən
-            təsdiq olunmalıdır. Fors-major hal bitdikdən sonra <span class="highlight">10 gün</span> ərzində tərəflər
-            öhdəliklərini tam həcmdə yerinə yetirməlidirlər.
-        </div>
-
-
-        <div class="section-title">5. Digər Müddəalar</div>
-
-        <div class="subsection">
-            <span>5.1.</span> Kredit üzrə Faktiki İllik Faiz Dərəcəsi (FİFD) bu kredit müqaviləsinə ediləcək
-            əlavələrdə
-            göstərilir.
-        </div>
-
-        <div class="subsection">
-            <span>5.2.</span> "BOKT" "Borcalan"ı <span class="highlight">1 (bir) təqvim ayı əvvəlcədən yazılı xəbərdar
-                etməklə</span> aşağıdakı hallarda bu müqaviləni
-            birtərəfli qaydada ləğv edə və kreditin (əsas məbləğ, hesablanmış faizlər, cərimə və s.) vaxtından əvvəl
-            qaytarılmasını tələb edə bilər:
-            <ul>
-                <li><span>a)</span> "Borcalan"ın əmlak vəziyyəti, bu Müqavilə üzrə pul öhdəliklərinin icrası üçün
-                    təhlükə
-                    yaradan dərəcədə pisləşdikdə;
-                </li>
-                <li><span>b)</span> "Borcalan" tərəfindən kredit almaq məqsədilə təqdim edilən məlumat və sənədlərin
-                    saxta,
-                    həqiqətə uyğun olmadığı aşkar edildikdə;
-                </li>
-                <li><span>c)</span> "Borcalan" bu Müqavilə üzrə öhdəliklərini icra etmədikdə.</li>
-            </ul>
-        </div>
-
-        <div class="subsection">
-            <span>5.3.</span> Bu müqavilədə və onun əlavə(lər)ində nəzərdə tutulan kredit borcuna görə faizlər borcun
-            kreditora
-            ödənildiyi günə qədər hesablanır. Bu səbəbdən, məhkəmənin qanuni qüvvəyə minmiş qətnaməsi icra olunub başa
-            çatanadək
-            hesablanan faizlər borcalandan (ələcə də zamindən) tutulur və yaxud öhdəliyin icrasının təmin edildiyi
-            ipoteka və ya
-            girov predmet(lər)inə və ya onun daşınar və daşınmaz əmlaklarına yönəldilir.
-        </div>
-
-        <div class="subsection">
-            <span>5.4.</span> Borcalan ödəniş qrafikinə riayət etməzsə və yaxud kredit müqaviləsinin vaxtı keçərsə bu
-            zaman
-            <span class="highlight">"BOKT"</span>-nin borcalana verdiyi krediti və ona hesablanmış faizləri və dəbbə
-            borcunu
-            vaxtından əvvəl tələb etmək, tələbin ipoteka qoyulmuş daşınar və yaxud daşınmaz əmlaka yönəldilməsini <span
-                class="highlight">"Notariat haqqında"</span> Azərbaycan Respublikası qanununun <span
-                class="highlight">76-cı maddəsinə</span>
-            və <span class="highlight">"İpoteka haqqında"</span> qanununun <span class="highlight">38.1-ci
-                maddəsinə</span>
-            əsasən məhkəmədən kənar İcra Qeydində əsasən təmin etmək hüququ vardır.
-        </div>
-
-        <div class="subsection">
-            <span>5.5.</span> "BOKT" bu Müqavilə ilə bağlı qanunvericiliklə müəyyən edilmiş məlumatları <span
-                class="highlight">"Azərbaycan Kredit Bürosu"</span>
-            MMC-yə və Mərkəzi Bankın Mərkəzləşdirilmiş Kredit Reyestrinə göndərə bilər. "Borcalan" bu müqaviləni
-            imzalamaqla,
-            Bank olmayan kredit təşkilatları haqqında Azərbaycan Respublikası Qanununa və digər qanunvericilik aktlarına
-            müvafiq
-            olaraq özləri haqqında məlumatların <span class="highlight">"Azərbaycan Kredit Bürosu"</span> MMC-yə və
-            Mərkəzi
-            Bankın Mərkəzləşdirilmiş Kredit Reyestrinə təqdim edilməsinə və həmçinin "büro"da haqqında olan bütün
-            məlumatların
-            <span class="highlight">"İDEAL KREDİT"</span> BOKT MMC tərəfindən sorğu edilməsinə razılıq verir.
-        </div>
-
-        <div class="subsection">
-            <span>5.6.</span> "BOKT" bu Müqavilədən irəli gələn hüquq və vəzifələrini, o cümlədən, kreditin qaytarılması
-            üçün
-            tədbirlərin görülməsini, "Borcalan" haqqında məlumatları "Borcalan"ın razılığı olmadan üçüncü şəxslərə verə
-            (transfer edə) bilər. "Borcalan" isə yalnız "BOKT"nin yazılı razılığı ilə bu hüquqa malikdir.
-        </div>
-
-        <div class="subsection">
-            <span>5.7.</span> Faizlər bu Müqavilənin imzalanma tarixindən etibarən kredit tam məbləğdə faktiki
-            qaytarılan
-            günədək borc məbləğinə aylıq <span class="highlight">30</span>, illik <span class="highlight">360 gün</span>
-            hesabı
-            ilə gündəlik olaraq hesablanır.
-        </div>
-
-        <div class="subsection">
-            <span>5.8.</span> "Borcalan"ın yetərli miqdarda olmayan kredit ödənişlərinin öhdəliyin icrasından silinmə
-            ardıcıllığı: dəbbə pulu, faiz borcu və əsas borcdan silinməklə həyata keçiriləcək. Artıq miqdarda edilən
-            ödənişlərin
-            öhdəliyin icrasından silinmə ardıcıllığı: əsas borcdan silinməklə həyata keçiriləcək.
-        </div>
-
-        <div class="subsection">
-            <span>5.9.</span> "Borcalan" son ödəniş zamanı yarana biləcək (ödədiyi) artıq məbləğin <span
-                class="highlight">"BOKT"</span>
-            tərəfindən qeyd-şərtsiz silinməsinə etiraz etmir.
-        </div>
-
-        <div class="subsection">
-            <span>5.10.</span> Bu Müqavilənin hər hansı bir müddəasının etibarsız hesab edilməsi bu Müqavilənin
-            ümumiyyətlə
-            etibarsız hesab edilməsinə səbəb olmur.
-        </div>
-
-        <div class="subsection">
-            <span>5.11.</span> Bu Müqavilə ilə tənzimlənməyən məsələlər Azərbaycan Respublikasının Mülki Məcəlləsi və
-            digər
-            normativ-hüquqi aktları ilə tənzimlənir.
-        </div>
-
-        <div class="subsection">
-            <span>5.12.</span> Bu Müqavilənin icrası ilə bağlı meydana çıxan bütün mübahisələr tərəflər arasında
-            danışıqlar yolu
-            ilə həll edilmədikdə mövcud qanunvericiliyə uyğun məhkəmə qaydasında həll ediləcəkdir.
-        </div>
-
-        <div class="subsection">
-            <span>5.13.</span> "Borcalan" maliyyə xidmətlərini istehlak edərkən qarşılaşdığı çətinliklər və suallarla
-            əlaqədar
-            Mərkəzi Bankın <span class="highlight">+994124935058</span> telefon nömrəsi və <span
-                class="highlight">+99412966</span> qaynar ilə əlaqə saxlaya bilər.
-        </div>
-
-        <div class="subsection">
-            <span>5.14.</span> Bu Müqaviləyə gələcəkdə hər hansı əlavə və dəyişikliklərin edilməsi Azərbaycan
-            Respublikasının
-            qanunvericiliyi ilə nəzərdə tutulmuş qaydada tərəflər arasında yazılı şəkildə bağlanmış razılaşma ilə
-            rəsmiləşdiriləcəkdir.
-        </div>
-
-        <div class="subsection">
-            <span>5.15.</span> Bu müqavilə eyni hüquqi qüvvəyə malik <span class="highlight">2 (iki)</span> nüsxədə
-            tərtib
-            edilmişdir və tərəflərin imza və möhürü ilə təsdiq edildikdən sonra qüvvəyə minir.
-        </div>
-
-        <div class="note">("borcalan" əl ilə <span class="underline">"tanış oldum razıyam"</span> yazır və <span
-                class="underline">"tarixi qeyd edir"</span>)
-        </div>
-
-        <div class="section-title">7. Tərəflərin Rekvizitləri:</div>
-
-        <div class="rekvizit-table">
-            <!-- Left Box -->
-            <div class="left-box">
-                <h3>BOKT</h3>
-                <p class="bold">"İDEAL KREDİT" BOKT</p>
-                <p><span class="bold">Direktor:</span> Qubadov Qubad Baxas oğlu</p>
-                <p><span class="bold underline">Hüquqi ünvan:</span> Bakı şəhəri, F.Xoyski küç., 111"A", m.26</p>
-                <p><span class="bold underline">Faktiki ünvan:</span> Bakı şəhəri, 7-ci Mkr. S.Sani Axundov küç. 31/23
-                </p>
-                <p><span class="bold">Tel:</span> 012 526 26 25</p>
-                <p><span class="bold">İndeks:</span> AZ 1078</p>
-                <p><span class="bold">VÖEN:</span> 1300480591</p>
-                <p class="bold">Müdir:</p>
-                <p>M.Y</p>
-            </div>
-
-            <!-- Right Box -->
-            <div class="right-box">
-                <h3>Borcalan</h3>
-                <p><span class="bold" th:text="${requestedUser.fullName}"></span></p>
-                <p><span class="bold underline">Ünvan:</span> <span th:text="${requestedUser.address}"></span></p>
-                <p><span class="bold underline">Ş/V №:</span> <span th:text="${requestedUser.seriaNo}"></span></p>
-                <p><span class="bold underline">Verilmə tarixi:</span> <span
-                        th:text="${requestedUser.eventDate}"></span></p>
-            </div>
-        </div>
-
-
-        <p class="footer">Bu müqavilə 2 (iki) nüsxədə tərtib edilmişdir.</p>
-    </div>
 </body>
 
 </html>

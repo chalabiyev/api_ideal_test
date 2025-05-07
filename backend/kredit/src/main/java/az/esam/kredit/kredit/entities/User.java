@@ -161,6 +161,7 @@ public class User extends BaseEntity {
         userMap.put("birthDate", birthDate);
         userMap.put("photo", photo);
         userMap.put("departmentId", departmentId);
+        userMap.put("expDate", expDate);
         return userMap;
     }
 

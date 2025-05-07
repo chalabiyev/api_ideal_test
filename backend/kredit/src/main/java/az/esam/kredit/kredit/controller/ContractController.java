@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,7 @@ import az.esam.kredit.kredit.entities.PPTransEntity;
 import az.esam.kredit.kredit.entities.PaymentTableContent;
 import az.esam.kredit.kredit.entities.Spouse;
 import az.esam.kredit.kredit.entities.UploadedFile;
+import az.esam.kredit.kredit.helper.FIDFCalculator;
 import az.esam.kredit.kredit.repositories.UploadedFileRepository;
 import az.esam.kredit.kredit.security.auth.AuthenticationService;
 import az.esam.kredit.kredit.services.external.pdf.PdfService;
@@ -54,6 +57,15 @@ public class ContractController {
 
         @Autowired
         CreditCalculation creditCalculation;
+
+        static final Map termCommisionRateMap = Map.of(
+                        3, 7.0,
+                        6, 12,
+                        9, 16.0,
+                        12, 20.0,
+                        15, 23.0,
+                        18, 25.6,
+                        24, 28.55);
 
         @PreAuthorize("hasRole('ADMIN')")
         @SecurityRequirement(name = "authentication")
@@ -82,6 +94,10 @@ public class ContractController {
                                 request.getCreditTerm());
                 double totalPayment = monthlyPayment * request.getCreditTerm();
                 double totalInterest = Math.round((totalPayment - request.getCreditAmount()) * 100.0) / 100.0;
+                request.setCommissionRate(
+                                termCommisionRateMap.containsKey(request.getCreditTerm())
+                                                ? (Double) termCommisionRateMap.get(request.getCreditTerm())
+                                                : 0);
 
                 PPTransEntity ppTransEntity = PPTransEntity.builder()
                                 .date(request.getConfirmDate())
@@ -98,13 +114,31 @@ public class ContractController {
                                 .paymentTableContents(creditPayment)
                                 .build();
 
+                List<Double> paymentList = new ArrayList<>();
+                List<LocalDate> dateList = new ArrayList<>();
+
+                // Örneğin her ay için eşit taksit varsa...
+                LocalDate startDate = request.getRequestDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                for (int i = 0; i < request.getCreditTerm(); i++) {
+                        paymentList.add(monthlyPayment);
+                        dateList.add(startDate.plusMonths(i + 1));
+                }
+
+                Double[] payments = paymentList.toArray(new Double[0]);
+                LocalDate[] dates = dateList.toArray(new LocalDate[0]);
+
+                request.setCalculatedFIFD(
+                                FIDFCalculator.calculateFIDF(request.getAmountToBePaid(), payments, dates, startDate));
+
                 List<String> htmlContents = new ArrayList<>(List.of(
                                 pdfService.loadHtmlContent("firstpage", request.toMap()),
                                 pdfService.loadHtmlContent("page_2", request.toMap()),
                                 pdfService.loadHtmlContent("m-formasi", request.toMap()),
                                 pdfService.loadHtmlContent("erize-xett", request.toMap()),
                                 pdfService.loadHtmlContent("sifaris-xett", request.toMap()),
-                                pdfService.loadHtmlContent(request.getPartner() != null ? "xett-partner" : "xett",
+                                pdfService.loadHtmlContent(
+                                                request.getPartner() != null ? "xett-partner" : "xett",
                                                 request.toMap()),
                                 pdfService.loadHtmlContent("trans", request.toMap()),
                                 pdfService.loadHtmlContent("tehlil-trans", request.toMap()),

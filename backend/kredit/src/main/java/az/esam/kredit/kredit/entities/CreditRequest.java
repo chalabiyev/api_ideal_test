@@ -98,6 +98,8 @@ public class CreditRequest extends BaseEntity {
     private int creditOrderNo;
     private int creditYear;
     private List<CreditProduct> items;
+    private Double commissionRate;
+    private Double calculatedFIFD;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -170,6 +172,8 @@ public class CreditRequest extends BaseEntity {
         }
         map.put("isPhysicalPerson", true);
         map.put("isLegalPerson", false);
+        map.put("commissionRate", commissionRate);
+        map.put("calculatedFIFD", calculatedFIFD);
         return map;
     }
 
