@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Card, CardContent, Grid, TextField, Typography, Avatar } from '@mui/material';
 import { Guarantor } from 'src/pages/dashboard/VideoMuraciet/types';
+import { CreditRequest } from 'src/types/CreditRequest';
 
 const TabGuarantor = ({
   setValue,
   loading,
-  guarantorInfo,  
+  guarantorInfo,
   hasData,
   setPin,
   setSeriaNo,
+  creditRequest,
+  setCreditRequest,
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   loading: boolean;
@@ -16,6 +19,8 @@ const TabGuarantor = ({
   hasData: boolean;
   setPin: React.Dispatch<React.SetStateAction<string>>;
   setSeriaNo: React.Dispatch<React.SetStateAction<string>>;
+  creditRequest: CreditRequest;
+  setCreditRequest: React.Dispatch<React.SetStateAction<CreditRequest>>;
 }) => {
   const [zaminList, setZaminList] = useState<Guarantor[]>([]);
 
@@ -25,7 +30,7 @@ const TabGuarantor = ({
     if (targetZamin?.pin && targetZamin.documentNumber) {
       setPin(targetZamin.pin);
       setSeriaNo(targetZamin.documentNumber);
-      
+
     } else {
       console.log('PIN veya Serial Number eksik');
     }
@@ -37,16 +42,16 @@ const TabGuarantor = ({
         prev.map((zamin) =>
           zamin.pin === guarantorInfo.pin
             ? {
-                ...zamin,
-                personAz: guarantorInfo.personAz,
-                birthAddress: guarantorInfo.birthAddress,
-                birthDate: guarantorInfo.birthDate,
-                maritalStatus: guarantorInfo.maritalStatus,
-                gender: guarantorInfo.gender,
-                addressDetail: guarantorInfo.addressDetail,
-                image: `data:image/jpeg;base64,${guarantorInfo.image}`,
-                isActive: guarantorInfo.isActive,
-              }
+              ...zamin,
+              personAz: guarantorInfo.personAz,
+              birthAddress: guarantorInfo.birthAddress,
+              birthDate: guarantorInfo.birthDate,
+              maritalStatus: guarantorInfo.maritalStatus,
+              gender: guarantorInfo.gender,
+              addressDetail: guarantorInfo.addressDetail,
+              image: `data:image/jpeg;base64,${guarantorInfo.image}`,
+              isActive: guarantorInfo.isActive,
+            }
             : zamin
         )
       );
@@ -75,6 +80,13 @@ const TabGuarantor = ({
       },
     ]);
   };
+
+  useEffect(() => {
+    setCreditRequest((prev) => ({
+      ...prev,
+      guarantors: zaminList,
+    }));
+  }, [zaminList]);
 
   // Input Değişimi Takibi d
   const handleInputChange = (id: number, field: string, value: string) => {

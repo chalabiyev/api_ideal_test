@@ -33,13 +33,17 @@ import az.esam.kredit.kredit.entities.UploadedFile;
 import az.esam.kredit.kredit.helper.FIDFCalculator;
 import az.esam.kredit.kredit.repositories.UploadedFileRepository;
 import az.esam.kredit.kredit.security.auth.AuthenticationService;
+import az.esam.kredit.kredit.services.excel.ExcelParseService;
+import az.esam.kredit.kredit.services.excel.ExcelService;
 import az.esam.kredit.kredit.services.external.pdf.PdfService;
 import az.esam.kredit.kredit.utility.CreditCalculation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin(origins = { "*" }, maxAge = 3600)
 @RestController
 @Validated
+@Slf4j
 @RequestMapping("/api/contract")
 public class ContractController {
 
@@ -58,6 +62,12 @@ public class ContractController {
         @Autowired
         CreditCalculation creditCalculation;
 
+        @Autowired
+        ExcelParseService excelParseService;
+
+        @Autowired
+        ExcelService excelService;
+
         static final Map termCommisionRateMap = Map.of(
                         3, 7.0,
                         6, 12,
@@ -70,8 +80,8 @@ public class ContractController {
         @PreAuthorize("hasRole('ADMIN')")
         @SecurityRequirement(name = "authentication")
         @SecurityRequirement(name = "X-API-KEY")
-        @PostMapping("/generate")
-        public ResponseEntity<Map<String, String>> generate(@RequestBody CreditRequest request) throws IOException {
+        @PostMapping("/generateA")
+        public ResponseEntity<Map<String, String>> generateA(@RequestBody CreditRequest request) throws IOException {
                 if (request.getRequestedUser() == null) {
                         return ResponseEntity.badRequest().build();
                 }
@@ -159,6 +169,85 @@ public class ContractController {
 
                 // Save to file or return as a response
                 Files.write(path, mergedPdf);
+                uploadedFileRepository.save(UploadedFile.builder()
+                                .fileName(pdfName)
+                                .upladedDate(new Date())
+                                .owner(request.getRequestedUser())
+                                .build());
+                return ResponseEntity.ok(Map.of("pdfName", pdfName, "status", "success"));
+        }
+
+        @PreAuthorize("hasRole('ADMIN')")
+        @SecurityRequirement(name = "authentication")
+        @SecurityRequirement(name = "X-API-KEY")
+        @PostMapping("/generate")
+        public ResponseEntity<Map<String, String>> generate(@RequestBody CreditRequest request) throws IOException {
+                if (request.getRequestDate() == null) {
+                        request.setRequestDate(new Date());
+                }
+                if (request.getRequestedUser() == null) {
+                        return ResponseEntity.badRequest().build();
+                }
+                Path uploadDir = Paths.get("uploads");
+                if (!Files.exists(uploadDir)) {
+                        Files.createDirectories(uploadDir);
+                }
+                String uuid = UUID.randomUUID().toString();
+                String excelName = uuid + ".xlsx";
+                Path excelPath = Paths.get(uploadDir.toString(), excelName);
+                String tmpPdfName = uuid + "_tmp.pdf";
+                Path tmpPdfPath = Paths.get(uploadDir.toString(), tmpPdfName);
+                String pdfName = uuid + ".pdf";
+                Path pdfPath = Paths.get(uploadDir.toString(), pdfName);
+
+                double monthlyPayment = creditCalculation.calculateMonthlyPayment(
+                                request.getCreditAmount(),
+                                request.getAnnualPercent(),
+                                request.getCreditTerm());
+                request.setMonthlyPayment(monthlyPayment);
+                List<PaymentTableContent> creditPayment = creditCalculation.calculatePaymentTable(
+                                request.getId(),
+                                request.getCreditAmount(),
+                                request.getAnnualPercent(),
+                                request.getCreditTerm());
+                double totalPayment = monthlyPayment * request.getCreditTerm();
+                double totalInterest = Math.round((totalPayment - request.getCreditAmount()) * 100.0) / 100.0;
+                request.setCommissionRate(
+                                termCommisionRateMap.containsKey(request.getCreditTerm())
+                                                ? (Double) termCommisionRateMap.get(request.getCreditTerm())
+                                                : 0);
+
+                PPTransEntity ppTransEntity = PPTransEntity.builder()
+                                .date(request.getConfirmDate())
+                                .creditAmount(request.getCreditAmount())
+                                .interestRate(request.getAnnualPercent())
+                                .creditTerm(request.getCreditTerm())
+                                .monthlyPayment(request.getMonthlyPayment())
+                                .userPin(request.getRequestedUser().getPin())
+                                .userSerialNumber(request.getRequestedUser().getSeriaNo())
+                                .userFullName(request.getRequestedUser().getFullName())
+                                .birthDate(request.getRequestedUser().getBirthDate())
+                                .totalPayment(totalPayment)
+                                .totalInterest(totalInterest)
+                                .paymentTableContents(creditPayment)
+                                .build();
+                try {
+                        boolean parseResult = excelParseService.parseExcel(excelPath, request);
+                        if (!parseResult) {
+                                throw new Exception();
+                        }
+                        boolean convertResult = excelService.convertToPdf(excelPath.toString(),
+                                        tmpPdfPath.toString(),
+                                        pdfPath.toString(),
+                                        request.getGuarantors() == null ? 0 : request.getGuarantors().size());
+                        if (!convertResult) {
+                                throw new Exception();
+                        }
+                } catch (Exception e) {
+                        log.error(e.getMessage());
+                        return ResponseEntity.badRequest().build();
+                }
+
                 uploadedFileRepository.save(UploadedFile.builder()
                                 .fileName(pdfName)
                                 .upladedDate(new Date())

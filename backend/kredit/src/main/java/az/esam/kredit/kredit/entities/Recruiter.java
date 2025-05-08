@@ -3,10 +3,12 @@ package az.esam.kredit.kredit.entities;
 import java.util.Date;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.springframework.data.annotation.Id;
 
-@Builder
 @Data
+@NoArgsConstructor
 public class Recruiter {
 
     @Id

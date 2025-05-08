@@ -503,13 +503,13 @@ export default function Page() {
           ]
         };
       }
-      if (hasGuarantorData) {
-        setGuarantorInfo(guarantorData);
-        newCreditRequest = {
-          ...newCreditRequest,
-          guarantors: [guarantorData],
-        }
-      }
+      // if (hasGuarantorData) {
+      //   setGuarantorInfo(guarantorData);
+      //   newCreditRequest = {
+      //     ...newCreditRequest,
+      //     guarantors: [guarantorData],
+      //   }
+      // }
       try {
         const akbResponse = await request.post('/akb/inquireByIdCard', {
           "purposeCode": "001",
@@ -687,6 +687,8 @@ export default function Page() {
                 setPin={setGuarantorPin}
                 setSeriaNo={setGuarantorSeriaNo}
                 hasData={hasGuarantorData}
+                creditRequest={creditRequest}
+                setCreditRequest={setCreditRequest}
               />
             </TabPanel>
 

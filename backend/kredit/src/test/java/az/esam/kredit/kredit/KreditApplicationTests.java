@@ -1,12 +1,29 @@
 package az.esam.kredit.kredit;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+
+import az.esam.kredit.kredit.entities.CreditRequest;
+import az.esam.kredit.kredit.services.excel.ExcelParseService;
+import az.esam.kredit.kredit.services.excel.ExcelService;
 import az.esam.kredit.kredit.services.external.idService.DocumentInfoService;
 import az.esam.kredit.kredit.services.sima.SimaService;
+import az.esam.kredit.kredit.utility.CreditCalculation;
+import java.util.Date;
+import org.junit.jupiter.api.Test;
 
 // @SpringBootTest
-class KreditApplicationTests {
+public class KreditApplicationTests {
 
     @Autowired
     SimaService simaService;
@@ -14,9 +31,74 @@ class KreditApplicationTests {
     @Autowired
     DocumentInfoService documentInfoService;
 
-    // @Test
-    void test() throws Exception {
+    @Autowired
+    CreditCalculation creditCalculation;
 
+    @Autowired
+    ExcelParseService excelParseService;
+
+    @Autowired
+    ExcelService excelService;
+
+    public KreditApplicationTests() {
+
+    }
+
+    static final Map termCommisionRateMap = Map.of(
+            3, 7.0,
+            6, 12,
+            9, 16.0,
+            12, 20.0,
+            15, 23.0,
+            18, 25.6,
+            24, 28.55);
+
+    // @Test
+    public void test() throws Exception {
+        ObjectMapper om = new JsonMapper();
+        om.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String jsonValue = "{\"createdBy\":\"\",\"updatedBy\":\"\",\"createdDate\":\"2025-05-08T12:40:43.867Z\",\"updatedDate\":\"2025-05-08T12:40:43.867Z\",\"id\":\"\",\"phoneNumber\":\"994504809988\",\"otherPhoneNumbers\":{\"Ev\":\"\",\"Is\":\"\",\"GSM\":\"\"},\"creditAmount\":1075.2,\"creditTerm\":3,\"creditAmountWithText\":\"1075.2 AZN\",\"requestDate\":\"2025-05-08T12:40:46.790Z\",\"confirmStatus\":\"Requested\",\"activateStatus\":\"PENDING\",\"finalStatus\":\"PENDING\",\"requestedUser\":{\"id\":\"67f7d0a54d6003331003e541\",\"username\":\"5RWXAGV\",\"name\":\"Esam Innovations\",\"surname\":\"Elşən Quliyev\",\"fullName\":\"ELŞƏN QULİYEV BALAZAYİD OĞLU\",\"fatherName\":null,\"gender\":\"MALE\",\"phoneNumber\":\"994504809988\",\"email\":null,\"pin\":\"5RWXAGV\",\"seriaNo\":\"AA1138466\",\"eventDate\":null,\"expDate\":null,\"address\":\"BAKI ŞƏHƏRİ, SƏBAİL RAYONU, İBRAHİM MƏMMƏDOV KÜÇƏSİ, EV 2A, MƏNZİL 18\",\"organisationName\":null,\"activationDate\":null,\"birthAddress\":\"Azərbaycan Respublikası,BAKI\",\"nationality\":\"Azərbaycan Respublikası\",\"maritalStatus\":\"SINGLE\",\"factAddress\":null,\"countOfChildren\":0,\"education\":null,\"workPlace\":null,\"workAddress\":null,\"position\":null,\"experience\":0,\"salary\":0,\"otherIncome\":0,\"voen\":null,\"formOfOwnership\":null,\"password\":\"$2a$10$KCE0tMX2NA/frsq840ET/Ov0kj1t2Pf5ysx/lyqd0Fw42cZMSm05y\",\"lastLoginDate\":null,\"loggedIn\":true,\"partners\":[{\"id\":\"67f52621c2b35347f860210c\",\"phoneNumber\":\"0504809988\",\"businessName\":null,\"identityCard\":null,\"rentContract\":null,\"startDate\":null,\"establishmentDocument\":null,\"voen\":\"1707337304\",\"bank\":null,\"clientBankAccount\":null,\"reportBankAccount\":null,\"bankCode\":null,\"bankVoen\":null,\"swiftCode\":null,\"singableContract\":null,\"companyName\":\"Esam Innovations\",\"directorName\":\"Elşən Quliyev\",\"pin\":\"5RWXAGV\",\"image\":null,\"url\":null,\"monthlySales\":50000,\"activityType\":\"IT\",\"formOfOwnership\":\"HUQUQI\",\"companyImages\":[],\"country\":null,\"city\":\"Bakı\",\"address\":\"Həsən Əliyev 96\",\"status\":\"REJECTED\",\"statusUpdatedDate\":\"2025-04-17T10:01:33.377+00:00\",\"createdBy\":null,\"updatedBy\":\"admin\",\"createdDate\":\"2025-04-08T13:35:29.230+00:00\",\"updatedDate\":\"2025-04-17T10:01:33.378+00:00\"}],\"roles\":[{\"name\":\"ROLE_PARTNER\",\"createdBy\":null,\"updatedBy\":null,\"createdDate\":\"2025-04-03T13:39:14.918+00:00\",\"updatedDate\":\"2025-04-03T13:39:14.918+00:00\",\"id\":\"67ee8f8263f62e3ff73fc8f7\"}],\"tokens\":null,\"birthDate\":\"1994-05-27T00:00:00.000+00:00\",\"status\":\"ACTIVE\",\"signUpDate\":\"2025-04-10T14:07:33.270+00:00\",\"photo\":\"\",\"departmentId\":null,\"title\":null,\"createdBy\":\"admin\",\"updatedBy\":\"admin\",\"createdDate\":\"2025-04-10T14:07:33.272+00:00\",\"updatedDate\":\"2025-05-07T12:27:43.062+00:00\"},\"confirmDate\":\"2025-05-08T12:40:43.867Z\",\"confirmerComment\":\"\",\"creditType\":\"PARTNER_CREDIT\",\"serviceRate\":1.5,\"cartCost\":10,\"insuranceCost\":1,\"valuationCost\":0,\"monthlyPayment\":0,\"amountToBePaid\":0,\"creditPurpose\":\"\",\"annualPercent\":0,\"otherPayment\":0,\"notarialCost\":\"\",\"insuranceType\":\"\",\"guarantee\":\"NONE\",\"spouses\":[],\"fine\":\"\",\"simaContractOperationId\":\"\",\"contractFileName\":\"\",\"videoSignFileName\":\"\",\"decisionQueryEnabled\":false,\"videoSignText\":\"\",\"partner\":{\"id\":\"680a1f8f829d72586267488b\",\"phoneNumber\":\"0502092304\",\"businessName\":null,\"identityCard\":null,\"rentContract\":null,\"startDate\":null,\"establishmentDocument\":null,\"voen\":\"99999999999\",\"bank\":null,\"clientBankAccount\":null,\"reportBankAccount\":null,\"bankCode\":null,\"bankVoen\":null,\"swiftCode\":null,\"singableContract\":null,\"companyName\":\"Jale Quliyeva\",\"directorName\":\"Jale Quliyeva\",\"pin\":\"59Y4D8M\",\"image\":null,\"url\":null,\"monthlySales\":50000,\"activityType\":\"LOGISTICS\",\"formOfOwnership\":\"FIZIKI\",\"companyImages\":[\"1745493901035_Screenshot_(3).png\"],\"country\":null,\"city\":\"Bakı\",\"address\":\"Həsən Əliyev 96\",\"status\":\"ACCEPTED\",\"statusUpdatedDate\":\"2025-04-24T12:53:51.588+00:00\",\"createdBy\":null,\"updatedBy\":\"admin\",\"createdDate\":\"2025-04-24T11:25:03.781+00:00\",\"updatedDate\":\"2025-04-24T12:53:51.591+00:00\"},\"guarantors\":[],\"recruiter\":{\"education\":\"\",\"companyName\":\"\",\"salary\":0,\"address\":\"\",\"position\":\"\",\"workPlace\":\"\",\"workAddress\":\"\",\"experience\":0,\"otherIncome\":0,\"voen\":\"\",\"formOfOwnership\":\"\",\"status\":\"\",\"signUpDate\":\"2025-05-08T12:40:43.867Z\",\"photo\":\"\",\"departmentId\":\"\"},\"cashPrice\":1000,\"operationType\":\"product\",\"productName\":\"test\",\"creditDetails\":{\"storeName\":\"Jale Quliyeva\",\"operationType\":\"product\",\"productName\":\"test\",\"creditTerm\":3,\"cashPrice\":1000,\"creditAmount\":1075.2,\"category\":\"\",\"detail\":\"\",\"creditAmountInput\":1075.2,\"annualPercent\":0,\"monthlyPayment\":0,\"totalPayment\":0,\"cardCost\":0,\"valuationCost\":0,\"insuranceCost\":0,\"creditPurpose\":\"\",\"decisionQueryEnabled\":false,\"serviceRate\":1.5},\"workExperience\":\"\",\"familyMembers\":\"\",\"familyIncome\":\"\",\"isRenting\":false,\"rentAmount\":\"\",\"rentDuration\":\"\",\"actualAddress\":\"\",\"additionalIncomes\":[{\"id\":0,\"source\":\"\",\"amount\":\"\"}],\"idQuality\":3,\"generalNote\":\"\",\"relatedPersons\":[],\"pensioner\":{\"name\":\"Ad\",\"patronymic\":\"Ata adı\",\"birthDate\":\"Doğum tarixi\",\"surname\":\"Soyad\",\"allowance\":[{\"beginDate\":\"Başlanğıc tarixi\",\"type\":{\"id\":0,\"description\":\"Identifikasiyaya uyğun izah\"},\"group\":{\"id\":0,\"description\":\"Identifikasiyaya uyğun izah\"},\"amount\":100,\"endDate\":\"Bitmə tarixi\"}],\"pension\":[{\"type\":{\"label\":\"Qısa adı\",\"id\":0,\"description\":\"Identifikasiyaya uyğun izah\"},\"group\":{\"id\":0,\"description\":\"Identifikasiyaya uyğun izah\"},\"amount\":1000,\"startDate\":\"Başlanğıc tarixi\",\"endDate\":\"24.32.1223\"}]},\"creditYear\":2025,\"creditOrderNo\":2,\"items\":[{\"productName\":\"test\",\"unitPrice\":1000,\"quantity\":1,\"totalPrice\":1000}]}";
+        CreditRequest request = om.readValue(jsonValue, CreditRequest.class);
+        System.out.println(request.toMap());
+        request.setRequestDate(new Date());
+        Path excelFile = Paths.get("exceltest.xlsx");
+        boolean parseResult = excelParseService.parseExcel(excelFile, request);
+        assertTrue(parseResult);
+        // boolean result = excelService.convertToPdf(excelFile.toString(), "test.pdf", request.getGuarantors().size());
+
+        assertNotNull(request);
+
+        // CreditRequest request = CreditRequest.builder()
+        // .cashPrice(1000d)
+        // .amountToBePaid(1400d)
+        // .creditAmount(1400d)
+        // .annualPercent(5d)
+        // .requestDate(new Date())
+        // .creditTerm(24)
+        // .build();
+        // double monthlyPayment = request.getAmountToBePaid() /
+        // request.getCreditTerm();
+        // request.setMonthlyPayment(monthlyPayment);
+        // double totalPayment = monthlyPayment * request.getCreditTerm();
+        // double totalInterest = Math.round((totalPayment - request.getCreditAmount())
+        // * 100.0) / 100.0;
+        // request.setCommissionRate(
+        // termCommisionRateMap.containsKey(request.getCreditTerm())
+        // ? (Double) termCommisionRateMap.get(request.getCreditTerm())
+        // : 0);
+        // List<Double> paymentList = new ArrayList<>();
+        // List<LocalDate> dateList = new ArrayList<>();
+        // LocalDate startDate =
+        // request.getRequestDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // for (int i = 0; i < request.getCreditTerm(); i++) {
+        // paymentList.add(monthlyPayment);
+        // dateList.add(startDate.plusMonths(i + 1));
+        // }
+        // Double[] payments = paymentList.toArray(new Double[0]);
+        // LocalDate[] dates = dateList.toArray(new LocalDate[0]);
+        // Double calculatedFIFD = FIDFCalculator.calculateFIDF(request.getCashPrice(),
+        // payments, dates, startDate);
+        // assertNotNull(calculatedFIFD);
         // ObjectMapper objectMapper = new ObjectMapper();
         // objectMapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         // objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
@@ -73,7 +155,6 @@ class KreditApplicationTests {
         // json,
         // objectMapper.getTypeFactory().constructParametricType(AsanFinanceResponse.class,
         // EmployeeInfoResponse.class));
-
         // assertNotNull(employeeInfoResponse);
         // simaService.getAuthQR();
         // String certB64 =
@@ -82,6 +163,7 @@ class KreditApplicationTests {
         // String dataB64 = "YjY1MmEyYTAtYmQ4NS00Njg3LThjYWMtYWMxOTk0ODYzMWMx";
         // String signB64 =
         // "MEUCIGZCLjtrJntX4PLE2sToyXz2fo6oLPJj0MoBaJwSrQ4BAiEAogZRicKMYzmnF2aHqL/L0IWOrVxAwmh/CJoT/ESlJuM=";
+
         //// String signB64 =
         // "MEUCIQCN+6Di6lGyJlhMTji0whBZQHXtyOb6e6IE4c6RnsguggIgNt0pufpX1El2vTrtGPIqPoiB96qA501SA7JwTI7HMCM=";
         // boolean verify = simaService.verifySign(certB64, dataB64, signB64);

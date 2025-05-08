@@ -3,6 +3,8 @@ package az.esam.kredit.kredit.entities;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @Document(collection = "credit_products")
+@NoArgsConstructor
 public class CreditProduct extends BaseEntity {
     @Id
     private String id;

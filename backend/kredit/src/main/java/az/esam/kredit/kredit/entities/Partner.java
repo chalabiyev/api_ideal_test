@@ -6,6 +6,8 @@ import az.esam.kredit.kredit.entities.enums.EOwnerType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @Document(collection = "partners")
+@NoArgsConstructor
 public class Partner extends BaseEntity {
     @Id
     private String id;

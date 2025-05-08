@@ -102,22 +102,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new BadRequestException(ERROR_USERNAME_IS_ALREADY_TAKEN);
             }
 
-            var user = User.builder()
-                    .username(request.getUsername())
-                    .name(request.getName())
-                    .surname(request.getSurName())
-                    .fatherName(request.getFatherName())
-                    .gender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null)
-                    .phoneNumber(request.getPhoneNumber())
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .status(EUserStatus.ACTIVE)
-                    .signUpDate(new Date())
-                    .birthDate(request.getBirthDate())
-                    .photo(request.getPhoto())
-                    .departmentId(request.getDepartmentId())
-                    .fullName(request.getFullName())
-                    .build();
+            var user = new User();
+            user.setUsername(request.getUsername());
+            user.setName(request.getName());
+            user.setSurname(request.getSurName());
+            user.setFatherName(request.getFatherName());
+            user.setGender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null);
+            user.setPhoneNumber(request.getPhoneNumber());
+            user.setEmail(request.getEmail());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setStatus(EUserStatus.ACTIVE);
+            user.setSignUpDate(new Date());
+            user.setBirthDate(request.getBirthDate());
+            user.setPhoto(request.getPhoto());
+            user.setDepartmentId(request.getDepartmentId());
+            user.setFullName(request.getFullName());
 
             if (existingUser != null) {
                 user.setId(existingUser.getId());
@@ -201,26 +200,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 password = UUID.randomUUID().toString();
             }
 
-            var user = User.builder()
-                    .username(request.getUsername())
-                    .name(request.getName())
-                    .surname(request.getSurName())
-                    .fullName(request.getFullName())
-                    .fatherName(request.getFatherName())
-                    .gender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null)
-                    .phoneNumber(request.getPhoneNumber())
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(password))
-                    .status(EUserStatus.ACTIVE)
-                    .signUpDate(new Date())
-                    .birthDate(request.getBirthDate())
-                    .photo(request.getPhoto())
-                    .departmentId(request.getDepartmentId())
-                    .fullName(request.getFullName())
-                    .voen(request.getVoen())
-                    .organisationName(request.getOrganisation())
-                    .title(request.getTitle())
-                    .build();
+            var user = new User();
+            user.setUsername(request.getUsername());
+            user.setName(request.getName());
+            user.setSurname(request.getSurName());
+            user.setFullName(request.getFullName());
+            user.setFatherName(request.getFatherName());
+            user.setGender(request.getGender() != null ? EGender.valueOf(request.getGender().toUpperCase()) : null);
+            user.setPhoneNumber(request.getPhoneNumber());
+            user.setEmail(request.getEmail());
+            user.setPassword(passwordEncoder.encode(password));
+            user.setStatus(EUserStatus.ACTIVE);
+            user.setSignUpDate(new Date());
+            user.setBirthDate(request.getBirthDate());
+            user.setPhoto(request.getPhoto());
+            user.setDepartmentId(request.getDepartmentId());
+            user.setFullName(request.getFullName());
+            user.setVoen(request.getVoen());
+            user.setOrganisationName(request.getOrganisation());
+            user.setTitle(request.getTitle());
 
             Set<String> strRoles = request.getRoles() == null ? new HashSet<>() : request.getRoles();
             Set<Role> roles;

@@ -7,19 +7,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import az.esam.kredit.kredit.entities.enums.*;
-import az.esam.kredit.kredit.utility.RoundUtil;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import az.esam.kredit.kredit.entities.enums.CreditRequestStatusEnum;
+import az.esam.kredit.kredit.entities.enums.EActivateStatus;
+import az.esam.kredit.kredit.entities.enums.ECreditType;
+import az.esam.kredit.kredit.entities.enums.EFinalStatus;
+import az.esam.kredit.kredit.entities.enums.EGuarantyType;
+import az.esam.kredit.kredit.utility.RoundUtil;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @Document(collection = "credit_requests")
+@NoArgsConstructor
 public class CreditRequest extends BaseEntity {
 
     @Id

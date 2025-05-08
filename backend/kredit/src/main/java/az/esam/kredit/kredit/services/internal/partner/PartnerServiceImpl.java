@@ -57,20 +57,20 @@ public class PartnerServiceImpl implements PartnerService {
             throw new BadRequestException("Bu VÖEN ilə qeydiyyatdan keçmiş partnyor mövcuddur");
         }
 
-        Partner partner = Partner.builder()
-                .companyName(request.getCompanyName())
-                .directorName(request.getDirectorName())
-                .pin(request.getPin())
-                .formOfOwnership(request.getFormOfOwnership())
-                .voen(request.getVoen())
-                .monthlySales(request.getMonthlySales())
-                .activityType(request.getActivityType())
-                .companyImages(request.getCompanyImages())
-                .city(request.getCity())
-                .address(request.getAddress())
-                .phoneNumber(request.getPhoneNumber())
-                .status(EFinalStatus.PENDING)
-                .build();
+        Partner partner = new Partner();
+        partner.setCompanyName(request.getCompanyName());
+        partner.setDirectorName(request.getDirectorName());
+        partner.setPin(request.getPin());
+        partner.setFormOfOwnership(request.getFormOfOwnership());
+        partner.setVoen(request.getVoen());
+        partner.setMonthlySales(request.getMonthlySales());
+        partner.setActivityType(request.getActivityType());
+        partner.setCompanyImages(request.getCompanyImages());
+        partner.setCity(request.getCity());
+        partner.setAddress(request.getAddress());
+        partner.setPhoneNumber(request.getPhoneNumber());
+        partner.setStatus(EFinalStatus.PENDING);
+
         return partnerRepository.save(partner);
     }
 
@@ -140,7 +140,8 @@ public class PartnerServiceImpl implements PartnerService {
         Partner partner = partnerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Partner tapılmadı"));
 
-        if (!partner.getStatus().equals(EFinalStatus.ACCEPTED) && EFinalStatus.ACCEPTED.equals(EFinalStatus.valueOf(status))) {
+        if (!partner.getStatus().equals(EFinalStatus.ACCEPTED)
+                && EFinalStatus.ACCEPTED.equals(EFinalStatus.valueOf(status))) {
             // check if user exists with partner pin, then add partner role to user
             User existingUser = userRepository.findFirstByUsername(partner.getPin()).orElse(null);
             if (existingUser != null) {
@@ -149,7 +150,8 @@ public class PartnerServiceImpl implements PartnerService {
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
                         .numbers(List.of(partner.getPhoneNumber()))
                         .message("Sizin partnyorlugunuz uğurla təsdiqləndi. " +
-                                "Hesabınıza aşağıdakı url-dən pin və istifadəçi hesabınızın parolu ilə giriş edə bilərsiniz: \n" +
+                                "Hesabınıza aşağıdakı url-dən pin və istifadəçi hesabınızın parolu ilə giriş edə bilərsiniz: \n"
+                                +
                                 "https://admin.idealkredit.az/auth/jwt/sign-in")
                         .build());
 
@@ -183,9 +185,11 @@ public class PartnerServiceImpl implements PartnerService {
                 // TODO: sms gonder url?token=accessToken
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
                         .numbers(List.of(partner.getPhoneNumber()))
-                        .message("Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
-                                + "https://kabinet.idealkredit.az/setpassword?token=" + response.getAccessToken()
-                                + " Link 24 saat ərzində aktivdir.")
+                        .message(
+                                "Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
+                                        + "https://kabinet.idealkredit.az/setpassword?token="
+                                        + response.getAccessToken()
+                                        + " Link 24 saat ərzində aktivdir.")
                         .build());
             }
             userRepository.save(existingUser);
