@@ -182,7 +182,7 @@ export default function Page() {
   const [seriaNo, setSeriaNo] = React.useState<string>('');
 
   // guarantor
-  
+
   const [guarantorPin, setGuarantorPin] = React.useState<string>('');
   const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
 
@@ -602,6 +602,8 @@ export default function Page() {
         console.log('wsNK.readyState', wsNK.readyState);
         if (!wsNK || wsNK.readyState == WebSocket.CLOSED) {
           wsNK = new WebSocket(webSocketUri);
+          wsNK.onopen = handleSocketOpen;
+          wsNK.onmessage = handleMessage;
         }
       }, 10000);
     }

@@ -73,10 +73,12 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
       ws.onopen = handleSocketOpen;
       ws.onmessage = handleMessage;
       setInterval(() => {
-        if (ws.readyState == WebSocket.CLOSED) {
+        if (!ws || ws.readyState == WebSocket.CLOSED) {
           ws = new WebSocket(webSocketUri);
+          ws.onopen = handleSocketOpen;
+          ws.onmessage = handleMessage;
         }
-      }, 30000);
+      }, 10000);
     }
   }, []);
 

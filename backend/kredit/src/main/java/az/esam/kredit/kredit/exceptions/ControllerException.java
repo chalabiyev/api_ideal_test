@@ -16,28 +16,29 @@ import java.security.SignatureException;
 @ControllerAdvice
 public class ControllerException {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            Exception.class,
-            BadRequestException.class,
-            StorageException.class,
-    })
-    public ResponseEntity<?> HandleGenericException(Exception e) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
-    }
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler({
+                        Exception.class,
+                        BadRequestException.class,
+                        StorageException.class,
+        })
+        public ResponseEntity<?> HandleGenericException(Exception e) {
+                e.printStackTrace();
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(new MessageResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
+        }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler({
-            UsernameNotFoundException.class,
-            AuthenticationException.class,
-            RequestRejectedException.class,
-            SignatureException.class
-    })
-    public ResponseEntity<?> UnauthorizedException(Exception e) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new MessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage()));
-    }
+        @ResponseStatus(HttpStatus.UNAUTHORIZED)
+        @ExceptionHandler({
+                        UsernameNotFoundException.class,
+                        AuthenticationException.class,
+                        RequestRejectedException.class,
+                        SignatureException.class
+        })
+        public ResponseEntity<?> UnauthorizedException(Exception e) {
+                return ResponseEntity
+                                .status(HttpStatus.UNAUTHORIZED)
+                                .body(new MessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage()));
+        }
 }
