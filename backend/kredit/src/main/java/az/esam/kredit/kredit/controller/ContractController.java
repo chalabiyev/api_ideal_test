@@ -192,46 +192,49 @@ public class ContractController {
                 if (!Files.exists(uploadDir)) {
                         Files.createDirectories(uploadDir);
                 }
-                String uuid = UUID.randomUUID().toString();
-                String excelName = uuid + ".xlsx";
-                Path excelPath = Paths.get(uploadDir.toString(), excelName);
-                String tmpPdfName = uuid + "_tmp.pdf";
-                Path tmpPdfPath = Paths.get(uploadDir.toString(), tmpPdfName);
-                String pdfName = uuid + ".pdf";
-                Path pdfPath = Paths.get(uploadDir.toString(), pdfName);
-
-                double monthlyPayment = creditCalculation.calculateMonthlyPayment(
-                                request.getCreditAmount(),
-                                request.getAnnualPercent(),
-                                request.getCreditTerm());
-                request.setMonthlyPayment(monthlyPayment);
-                List<PaymentTableContent> creditPayment = creditCalculation.calculatePaymentTable(
-                                request.getId(),
-                                request.getCreditAmount(),
-                                request.getAnnualPercent(),
-                                request.getCreditTerm());
-                double totalPayment = monthlyPayment * request.getCreditTerm();
-                double totalInterest = Math.round((totalPayment - request.getCreditAmount()) * 100.0) / 100.0;
-                request.setCommissionRate(
-                                termCommisionRateMap.containsKey(request.getCreditTerm())
-                                                ? (Double) termCommisionRateMap.get(request.getCreditTerm())
-                                                : 0);
-
-                PPTransEntity ppTransEntity = PPTransEntity.builder()
-                                .date(request.getConfirmDate())
-                                .creditAmount(request.getCreditAmount())
-                                .interestRate(request.getAnnualPercent())
-                                .creditTerm(request.getCreditTerm())
-                                .monthlyPayment(request.getMonthlyPayment())
-                                .userPin(request.getRequestedUser().getPin())
-                                .userSerialNumber(request.getRequestedUser().getSeriaNo())
-                                .userFullName(request.getRequestedUser().getFullName())
-                                .birthDate(request.getRequestedUser().getBirthDate())
-                                .totalPayment(totalPayment)
-                                .totalInterest(totalInterest)
-                                .paymentTableContents(creditPayment)
-                                .build();
                 try {
+                        String uuid = UUID.randomUUID().toString();
+                        String excelName = uuid + ".xlsx";
+                        Path excelPath = Paths.get(uploadDir.toString(), excelName);
+                        String tmpPdfName = uuid + "_tmp.pdf";
+                        Path tmpPdfPath = Paths.get(uploadDir.toString(), tmpPdfName);
+                        String pdfName = uuid + ".pdf";
+                        Path pdfPath = Paths.get(uploadDir.toString(), pdfName);
+
+                        // double monthlyPayment = creditCalculation.calculateMonthlyPayment(
+                        // request.getCreditAmount(),
+                        // request.getAnnualPercent(),
+                        // request.getCreditTerm());
+                        // request.setMonthlyPayment(monthlyPayment);
+                        // List<PaymentTableContent> creditPayment =
+                        // creditCalculation.calculatePaymentTable(
+                        // request.getId(),
+                        // request.getCreditAmount(),
+                        // request.getAnnualPercent(),
+                        // request.getCreditTerm());
+                        // double totalPayment = monthlyPayment * request.getCreditTerm();
+                        // double totalInterest = Math.round((totalPayment - request.getCreditAmount())
+                        // * 100.0) / 100.0;
+                        // request.setCommissionRate(
+                        // termCommisionRateMap.containsKey(request.getCreditTerm())
+                        // ? (Double) termCommisionRateMap.get(request.getCreditTerm())
+                        // : 0);
+
+                        // PPTransEntity ppTransEntity = PPTransEntity.builder()
+                        // .date(request.getConfirmDate())
+                        // .creditAmount(request.getCreditAmount())
+                        // .interestRate(request.getAnnualPercent())
+                        // .creditTerm(request.getCreditTerm())
+                        // .monthlyPayment(request.getMonthlyPayment())
+                        // .userPin(request.getRequestedUser().getPin())
+                        // .userSerialNumber(request.getRequestedUser().getSeriaNo())
+                        // .userFullName(request.getRequestedUser().getFullName())
+                        // .birthDate(request.getRequestedUser().getBirthDate())
+                        // .totalPayment(totalPayment)
+                        // .totalInterest(totalInterest)
+                        // .paymentTableContents(creditPayment)
+                        // .build();
+
                         boolean parseResult = excelParseService.parseExcel(excelPath, request);
                         if (!parseResult) {
                                 throw new Exception();
@@ -243,17 +246,24 @@ public class ContractController {
                         if (!convertResult) {
                                 throw new Exception();
                         }
-                } catch (Exception e) {
-                        log.error(e.getMessage());
-                        return ResponseEntity.badRequest().build();
-                }
+                        Files.delete(tmpPdfPath);
 
-                uploadedFileRepository.save(UploadedFile.builder()
-                                .fileName(pdfName)
-                                .upladedDate(new Date())
-                                .owner(request.getRequestedUser())
-                                .build());
-                return ResponseEntity.ok(Map.of("pdfName", pdfName, "status", "success"));
+                        uploadedFileRepository.save(UploadedFile.builder()
+                                        .fileName(pdfName)
+                                        .upladedDate(new Date())
+                                        .owner(request.getRequestedUser())
+                                        .build());
+                        uploadedFileRepository.save(UploadedFile.builder()
+                                        .fileName(excelName)
+                                        .upladedDate(new Date())
+                                        .owner(request.getRequestedUser())
+                                        .build());
+                        return ResponseEntity.ok(Map.of("pdfName", pdfName, "status", "success"));
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        log.error(e.getMessage());
+                        return ResponseEntity.ok(Map.of("error", e.getMessage(), "status", "fail"));
+                }
         }
 
         @GetMapping("calculate")

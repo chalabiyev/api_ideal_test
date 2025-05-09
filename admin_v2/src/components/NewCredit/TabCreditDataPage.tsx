@@ -26,7 +26,7 @@ const TabCreditDataPage = ({
 }) => {
   const calculateCreditAmount = (cashPrice: number, term: number) => {
     const rates = {
-      3: 7.52,
+      3: 7.53,
       6: 13.7,
       9: 19.1,
       12: 25,
@@ -35,7 +35,8 @@ const TabCreditDataPage = ({
       24: 40,
     };
     const rate = rates[term as keyof typeof rates] || 0;
-    return cashPrice + (cashPrice * rate) / 100;
+    let result = cashPrice + (cashPrice * rate) / 100;
+    return  Math.ceil(result);
   };
 
   return (

@@ -192,34 +192,36 @@ const TabContract = ({
   }, [newSignal]);
 
   useEffect(() => {
-    if (creditRequest && !contractGenerating && !creditRequest.contractFileName) {
+    if (!creditRequest.id && !contractGenerating && !creditRequest.contractFileName) {
       setContractGenerating(true);
-      generateContract(creditRequest)
-        .then((res: ContractGenerateResponse | null) => {
-          if (res?.status == 'success') {
-            setCreditRequest({ ...creditRequest, contractFileName: res.pdfName });
-            callGetFile(res.pdfName)
-              .then((file) => {
-                if (file) {
-                  setContractPdf(file);
-                  setContractGenerating(false);
-                } else {
-                  toast.error('Müqavilə tərtib olunmadı!');
-                  setContractGenerating(false);
-                }
-              })
-              .catch((err) => {
-                toast.error('Müqavilə tərtib olunmadı!');
-                setContractGenerating(false);
-              });
-          }
-        })
-        .catch((err) => {
-          toast.error('Müqavilə tərtib olunmadı!');
-          setContractGenerating(false);
-        });
     }
   }, []);
+
+  const createContract = async () => {
+    try {
+      const res = await generateContract(creditRequest);
+      if (res && res.status == 'success') {
+        setCreditRequest({ ...creditRequest, contractFileName: res.pdfName });
+        const file = await callGetFile(res.pdfName);
+        if (file) {
+          setContractPdf(file);
+        }
+      } else {
+        throw new Error('Müqavilə yaradılmadı.');
+      }
+
+    } catch (error) {
+      console.log("error", error);
+      toast.error('Müqavilə yaradılmadı.');
+    }
+    setContractGenerating(false);
+  }
+
+  useEffect(() => {
+    if (contractGenerating) {
+      createContract();
+    }
+  }, [contractGenerating]);
 
   return (
     <Box sx={{ py: 4 }}>
@@ -237,7 +239,7 @@ const TabContract = ({
           }}
         >
           {contractGenerating && <Typography>Müqavilə yaradılır...</Typography>}
-          {!contractGenerating && (
+          {!contractGenerating && contractPdf && (
             <embed
               src={`${contractPdf}#toolbar=0&navpanes=0&scrollbar=0`}
               width="100%"

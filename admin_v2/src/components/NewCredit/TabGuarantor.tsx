@@ -37,26 +37,19 @@ const TabGuarantor = ({
   };
 
   useEffect(() => {
-    if (guarantorInfo) {
+    if (guarantorInfo && hasData) {
       setZaminList((prev) =>
         prev.map((zamin) =>
           zamin.pin === guarantorInfo.pin
             ? {
               ...zamin,
-              personAz: guarantorInfo.personAz,
-              birthAddress: guarantorInfo.birthAddress,
-              birthDate: guarantorInfo.birthDate,
-              maritalStatus: guarantorInfo.maritalStatus,
-              gender: guarantorInfo.gender,
-              addressDetail: guarantorInfo.addressDetail,
-              image: `data:image/jpeg;base64,${guarantorInfo.image}`,
-              isActive: guarantorInfo.isActive,
+              ...guarantorInfo,
             }
             : zamin
         )
       );
     }
-  }, [guarantorInfo]);
+  }, [guarantorInfo, hasData]);
 
   console.log('zaminList : ', zaminList);
 
@@ -156,7 +149,7 @@ const TabGuarantor = ({
                 <Button
                   variant="outlined"
                   onClick={() => handleSearch(zamin.id)}
-                  disabled={!zamin.pin || !zamin.documentNumber || loading}
+                  disabled={!zamin.pin || !zamin.documentNumber}
                   fullWidth
                 >
                   Axtarış et

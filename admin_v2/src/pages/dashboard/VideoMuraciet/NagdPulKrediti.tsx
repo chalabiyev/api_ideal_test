@@ -182,11 +182,11 @@ export default function Page() {
   const [seriaNo, setSeriaNo] = React.useState<string>('');
 
   // guarantor
-  const [guarantorInfo, setGuarantorInfo] = React.useState<any>(null);
+  
   const [guarantorPin, setGuarantorPin] = React.useState<string>('');
   const [guarantorSeriaNo, setGuarantorSeriaNo] = React.useState<string>('');
 
-  const guarantorEndpoint = guarantorPin
+  const guarantorEndpoint = guarantorPin && guarantorSeriaNo
     ? `/document/getIdCardInfo?pin=${guarantorPin}&documentNumber=${guarantorSeriaNo}`
     : '';
   const {
@@ -428,7 +428,7 @@ export default function Page() {
   const [contractPdf, setContractPdf] = useState('');
   const calculateCreditAmount = (cashPrice: number, term: number) => {
     const rates = {
-      3: 7.52,
+      3: 7.53,
       6: 13.7,
       9: 19.1,
       12: 25,
@@ -437,7 +437,8 @@ export default function Page() {
       24: 40,
     };
     const rate = rates[term as keyof typeof rates] || 0;
-    return cashPrice + (cashPrice * rate) / 100;
+    let result = cashPrice + (cashPrice * rate) / 100;
+    return Math.ceil(result);
   };
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = async () => {
@@ -548,7 +549,7 @@ export default function Page() {
     getUserInfo();
 
     // eslint-disable-next-line
-  }, [data, guarantorData]);
+  }, [data]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -594,11 +595,15 @@ export default function Page() {
       wsNK = new WebSocket(webSocketUri);
       wsNK.onopen = handleSocketOpen;
       wsNK.onmessage = handleMessage;
+      wsNK.onclose = () => {
+        console.log('wsNK closed');
+      }
       setInterval(() => {
-        if (wsNK.readyState == WebSocket.CLOSED) {
+        console.log('wsNK.readyState', wsNK.readyState);
+        if (!wsNK || wsNK.readyState == WebSocket.CLOSED) {
           wsNK = new WebSocket(webSocketUri);
         }
-      }, 30000);
+      }, 10000);
     }
   }, []);
 
@@ -683,7 +688,7 @@ export default function Page() {
               <TabGuarantor
                 setValue={setValue}
                 loading={guarantorLoading}
-                guarantorInfo={guarantorInfo}
+                guarantorInfo={guarantorData}
                 setPin={setGuarantorPin}
                 setSeriaNo={setGuarantorSeriaNo}
                 hasData={hasGuarantorData}
