@@ -137,6 +137,15 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             return request;
         }
 
+        if (request.getRequestedUser().getSalary() == 0 && request.getAdditionalIncomes() != null
+                && !request.getAdditionalIncomes().isEmpty()
+                && request.getAdditionalIncomes().get(0).getAmount() != null
+                && request.getAdditionalIncomes().get(0).getAmount() != null
+                && !request.getAdditionalIncomes().get(0).getAmount().trim().isEmpty()) {
+            request.getRequestedUser()
+                    .setSalary(Double.parseDouble(request.getAdditionalIncomes().get(0).getAmount().trim()));
+        }
+
         if (request.getRequestedUser().getSalary() < 350) {
             request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
             request.setConfirmerComment("Rəsmi gəlir 350 manatdan aşağı olmamalıdır");

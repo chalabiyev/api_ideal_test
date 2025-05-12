@@ -46,6 +46,15 @@ const RecruiterData = ({
 
     if (typeof _EMPLOYEE_DATA === 'object' && _EMPLOYEE_DATA !== null) {
       setRecruiterState(_EMPLOYEE_DATA as RecruiterState);
+      if (_EMPLOYEE_DATA && _EMPLOYEE_DATA.Active.length > 0 && _EMPLOYEE_DATA.Active[0].Employee.salary) {
+        setCreditRequest({
+          ...creditRequest,
+          requestedUser: {
+            ...creditRequest.requestedUser,
+            salary: _EMPLOYEE_DATA.Active[0].Employee.salary,
+          }
+        });
+      }
     } else {
       console.error('Invalid employee data:', _EMPLOYEE_DATA);
     }
