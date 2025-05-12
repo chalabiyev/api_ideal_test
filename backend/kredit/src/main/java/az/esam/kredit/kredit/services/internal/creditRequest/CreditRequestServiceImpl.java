@@ -137,13 +137,14 @@ public class CreditRequestServiceImpl implements CreditRequestService {
             return request;
         }
 
-        if (request.getRequestedUser().getSalary() == 0 && request.getAdditionalIncomes() != null
+        if (request.getAdditionalIncomes() != null
                 && !request.getAdditionalIncomes().isEmpty()
                 && request.getAdditionalIncomes().get(0).getAmount() != null
                 && request.getAdditionalIncomes().get(0).getAmount() != null
                 && !request.getAdditionalIncomes().get(0).getAmount().trim().isEmpty()) {
             request.getRequestedUser()
-                    .setSalary(Double.parseDouble(request.getAdditionalIncomes().get(0).getAmount().trim()));
+                    .setSalary(request.getRequestedUser().getSalary()
+                            + Double.parseDouble(request.getAdditionalIncomes().get(0).getAmount().trim()));
         }
 
         if (request.getRequestedUser().getSalary() < 350) {
