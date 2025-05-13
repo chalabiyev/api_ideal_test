@@ -44,7 +44,7 @@ const TabAKB = ({
                 label="Müharibə iştirakçısı olub olmadığı"
                 fullWidth
                 value={
-                  AKB_STATE.borrower.participantOfPatrioticWar === true
+                   AKB_STATE && AKB_STATE.borrower && AKB_STATE.borrower.participantOfPatrioticWar === true
                     ? 'Bəli'
                     : AKB_STATE.borrower.participantOfPatrioticWar === false
                       ? 'Xeyr'

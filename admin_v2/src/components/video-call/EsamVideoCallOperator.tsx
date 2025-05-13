@@ -46,6 +46,7 @@ let inCall = false;
 let calling = false;
 let peerConnection: RTCPeerConnection;
 let ws: WebSocket;
+let localStreamSended = false;
 
 export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
   const handleSocketOpen = () => {
@@ -119,6 +120,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     };
 
     peerConnection.onconnectionstatechange = () => {
+      console.log('Connection state change', peerConnection.connectionState);
       if (peerConnection.connectionState == 'connected') {
         sendCamAndMicStreams();
       } else if (peerConnection.connectionState == 'failed') {
@@ -138,12 +140,14 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
   };
 
   const sendCamAndMicStreams = async () => {
+    console.log("prop.localStream", prop.localStream, "peerConnection", peerConnection);
     if (!peerConnection) return;
     if (!prop.localStream) {
       alert('Webcam bağlantısı kurulamadı!');
     }
     prop.localStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, prop.localStream);
+      localStreamSended = true;
     });
   };
 
@@ -151,6 +155,7 @@ export const EsamVideoCallOperator = (prop: EsamVideoCallOperatorProp) => {
     try {
       let strm = e.streams[0];
       prop.onReceiverStream(strm);
+      if (!localStreamSended) sendCamAndMicStreams();
     } catch (error) {
       console.error(error);
     }

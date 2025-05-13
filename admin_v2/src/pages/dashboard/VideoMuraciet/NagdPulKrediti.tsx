@@ -197,7 +197,8 @@ export default function Page() {
     refetch: guarantorRefetch,
   } = useApi(guarantorEndpoint);
 
-  const endpoint = pin ? `/document/getIdCardInfoByPin?pin=${pin}` : '';
+  const endpoint = pin && seriaNo ? `/document/getIdCardInfo?pin=${pin}&documentNumber=${seriaNo}` : pin ? `/document/getIdCardInfoByPin?pin=${pin}` : '';
+
   const { data, error, hasData, loading, refetch } = useApi(endpoint);
   const endpointUserByUserName = pin ? `/auth/getUserByUserName/${pin}` : '';
   const { data: userData } = useApi(endpointUserByUserName);
@@ -516,8 +517,8 @@ export default function Page() {
           "purposeCode": "001",
           "accept": true,
           "documentSerial": "AZE",
-          "documentNo": newCreditRequest.requestedUser?.seriaNo,
-          "pinCode": newCreditRequest.requestedUser?.pin,
+          "documentNo": seriaNo,
+          "pinCode": pin,
           "org_id": "135",
           "branchId": "IdealKredit",
           "userId": "IdealKreditBoktWs"
