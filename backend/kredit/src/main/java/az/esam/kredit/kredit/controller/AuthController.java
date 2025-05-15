@@ -222,14 +222,12 @@ public class AuthController {
     }
 
     @PostMapping("/set-password")
-    @SecurityRequirement(name = "authentication")
-    @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "X-API-KEY")
     public ResponseEntity<AuthenticationResponse> setPassword(
             @Valid @RequestBody SetPasswordRequest request,
-            Authentication authentication,
-            HttpServletRequest httpRequest) throws BadRequestException {
-        return ResponseEntity.ok(authenticationService.setPassword(request, httpRequest, authentication));
+            HttpServletRequest httpRequest, @RequestParam String token) throws BadRequestException {
+
+        return ResponseEntity.ok(authenticationService.setPassword(request, httpRequest, token));
     }
 
     @PostMapping("/change-email")

@@ -47,7 +47,7 @@ public interface AuthenticationService {
 
     boolean changeName(ChangeNameRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException;
 
-    AuthenticationResponse setPassword(@Valid SetPasswordRequest request, HttpServletRequest httpRequest, Authentication authentication) throws BadRequestException;
+    AuthenticationResponse setPassword(@Valid SetPasswordRequest request, HttpServletRequest httpRequest, String token) throws BadRequestException;
 
     Page<User> findAllUsers(int page, int size);
 

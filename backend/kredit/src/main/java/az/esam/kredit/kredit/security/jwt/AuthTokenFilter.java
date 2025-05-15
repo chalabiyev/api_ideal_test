@@ -60,6 +60,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 || request.getRequestURI().equals("/api/auth/register")
                 || request.getRequestURI().equals("/api/auth/login")
                 || request.getRequestURI().equals("/api/auth/reset-password")
+                || request.getRequestURI().equals("/api/auth/set-password")
                 || request.getRequestURI().contains("/api/sima")
                 || request.getRequestURI().contains(".png")) {
             filterChain.doFilter(request, response);

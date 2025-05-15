@@ -293,7 +293,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             var jwtToken = jwtService.generateJwtToken(userDetails);
             var refreshToken = jwtService.generateRefreshToken(userDetails);
-            saveUserToken(savedUser, jwtToken);
+            Token token = saveUserToken(savedUser, jwtToken);
 
             return AuthenticationResponse.builder()
                     .id(savedUser.getId())
@@ -311,6 +311,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .voen(savedUser.getVoen())
                     .organisation(savedUser.getOrganisationName())
                     .title(savedUser.getTitle())
+                    .tokenId(token.getId())
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -526,14 +527,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse setPassword(SetPasswordRequest request, HttpServletRequest httpRequest,
-            Authentication a) throws BadRequestException {
+            String token) throws BadRequestException {
         try {
-            var user = userRepository.findFirstByUsername(a.getName())
+            if (token == null) {
+                throw new BadRequestException("Token not found!");
+            }
+            Token tokenRecord = tokenRepository.findById(token)
+                    .orElseThrow(() -> new BadRequestException("Token not found!"));
+
+            if (tokenRecord.isExpired() || tokenRecord.isRevoked()) {
+                throw new BadRequestException("Token expired!");
+            }
+
+            var user = userRepository.findFirstByUsername(tokenRecord.getUser().getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (request.getNewPassword().equals(request.getPassword())) {
                 user.setPassword(passwordEncoder.encode(request.getPassword()));
                 userRepository.save(user);
+
+                tokenRecord.setRevoked(true);
+                tokenRecord.setExpired(true);
+                tokenRepository.save(tokenRecord);
+
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 user.getUsername(),
@@ -682,7 +698,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new PageImpl<>(users, PageRequest.of(page, size), total);
     }
 
-    private void saveUserToken(User user, String jwtToken) {
+    private Token saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
@@ -690,8 +706,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .revoked(false)
                 .user(user)
                 .build();
-
-        tokenRepository.save(token);
+        return tokenRepository.save(token);
     }
 
     private void revokeAllUserTokens(User user) {
@@ -759,7 +774,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .message(
                                     "Sizin hesabınız uğurla yaradıldı. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
                                             + "https://kabinet.idealkredit.az/setpassword?token="
-                                            + response.getAccessToken()
+                                            + response.getTokenId()
                                             + " Link 24 saat ərzində aktivdir.")
                             .numbers(List.of(person.getPhoneNumber()))
                             .build());

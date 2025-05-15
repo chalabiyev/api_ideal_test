@@ -30,4 +30,5 @@ public class AuthenticationResponse {
     private String organisation;
     private String voen;
     private String title;
+    private String tokenId;
 }

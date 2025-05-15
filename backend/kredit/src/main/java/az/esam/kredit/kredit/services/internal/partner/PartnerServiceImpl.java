@@ -188,7 +188,7 @@ public class PartnerServiceImpl implements PartnerService {
                         .message(
                                 "Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
                                         + "https://kabinet.idealkredit.az/setpassword?token="
-                                        + response.getAccessToken()
+                                        + response.getTokenId()
                                         + " Link 24 saat ərzində aktivdir.")
                         .build());
             }
