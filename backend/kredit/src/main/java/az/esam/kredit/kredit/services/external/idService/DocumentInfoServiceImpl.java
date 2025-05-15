@@ -349,7 +349,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
             return null;
         }
         return null;
-    }
+}
 
     @Override
     public FullIDCardInfoResponse getIdCardInfoByPin(String pin) throws IOException {

@@ -113,62 +113,19 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         } else if (request.getCreditAmount() < 500d) {
             request.setCreditType(ECreditType.BELOW_500);
         }
-
+        boolean controlsEnabled = false;
         boolean flag = false;
         if (request.getCreditType() == null) {
             throw new RuntimeException("Credit type is null");
         }
-        String rejectMessage = "Hormətli müştəri, hazırda daxili şərtlərə uyğun olaraq sizə kredit rəsmiləşdirilə bilməz";
-        // Müraciətçinin 30 gündən çox gecikən aktiv krediti varsa kredit təsdiq
-        // olunmasın.
-        // Müraciətçinin yaşı məsələn 20-70 yaş aralığında olmalıdır.
-        // Müraciətçinin Rəsmi gəliri 350 manat və ondan yuxarı olsun.
-        int age = new Date().getYear() - request.getRequestedUser().getBirthDate().getYear();
-        if (age < 20 || age > 70) {
-            request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
-            request.setConfirmerComment("Yaş limiti 20-70 aralığında olmalıdır");
-            creditRequestRepository.save(request);
-            flag = true;
-            smsService.sendSMSOneToN(SendSmsRequest.builder()
-                    .message(
-                            rejectMessage)
-                    .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
-                    .build());
-            return request;
-        }
-
-        if (request.getAdditionalIncomes() != null
-                && !request.getAdditionalIncomes().isEmpty()
-                && request.getAdditionalIncomes().get(0).getAmount() != null
-                && request.getAdditionalIncomes().get(0).getAmount() != null
-                && !request.getAdditionalIncomes().get(0).getAmount().trim().isEmpty()) {
-            request.getRequestedUser()
-                    .setSalary(request.getRequestedUser().getSalary()
-                            + Double.parseDouble(request.getAdditionalIncomes().get(0).getAmount().trim()));
-        }
-
-        if (request.getRequestedUser().getSalary() < 350) {
-            request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
-            request.setConfirmerComment("Rəsmi gəlir 350 manatdan aşağı olmamalıdır");
-            creditRequestRepository.save(request);
-            flag = true;
-            smsService.sendSMSOneToN(SendSmsRequest.builder()
-                    .message(
-                            rejectMessage)
-                    .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
-                    .build());
-            return request;
-        }
-
-        Optional<CreditRequest> credit = creditRequestRepository
-                .findOneByRequestedUserOrderByRequestDateDesc(request.getRequestedUser());
-
-        if (credit.isPresent()) {
-            Date requestDate = credit.get().getRequestDate();
-            long diff = new Date().getTime() - requestDate.getTime();
-            if (diff < 2592000000L) {
+        if (controlsEnabled) {
+            String rejectMessage = "Hormətli müştəri, hazırda daxili şərtlərə uyğun olaraq sizə kredit rəsmiləşdirilə bilməz";
+            // Müraciətçinin yaşı məsələn 20-70 yaş aralığında olmalıdır.
+            // Müraciətçinin Rəsmi gəliri 350 manat və ondan yuxarı olsun.
+            int age = new Date().getYear() - request.getRequestedUser().getBirthDate().getYear();
+            if (age < 20 || age > 70) {
                 request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
-                request.setConfirmerComment("Müraciətçinin 30 gün gecikməsi olmamalıdır");
+                request.setConfirmerComment("Yaş limiti 20-70 aralığında olmalıdır");
                 creditRequestRepository.save(request);
                 flag = true;
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
@@ -178,6 +135,51 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                         .build());
                 return request;
             }
+
+            if (request.getAdditionalIncomes() != null
+                    && !request.getAdditionalIncomes().isEmpty()
+                    && request.getAdditionalIncomes().get(0).getAmount() != null
+                    && request.getAdditionalIncomes().get(0).getAmount() != null
+                    && !request.getAdditionalIncomes().get(0).getAmount().trim().isEmpty()) {
+                request.getRequestedUser()
+                        .setSalary(request.getRequestedUser().getSalary()
+                                + Double.parseDouble(request.getAdditionalIncomes().get(0).getAmount().trim()));
+            }
+
+            if (request.getRequestedUser().getSalary() < 350) {
+                request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
+                request.setConfirmerComment("Rəsmi gəlir 350 manatdan aşağı olmamalıdır");
+                creditRequestRepository.save(request);
+                flag = true;
+                smsService.sendSMSOneToN(SendSmsRequest.builder()
+                        .message(
+                                rejectMessage)
+                        .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
+                        .build());
+                return request;
+            }
+
+            Optional<CreditRequest> credit = creditRequestRepository
+                    .findOneByRequestedUserOrderByRequestDateDesc(request.getRequestedUser());
+
+            if (credit.isPresent()) {
+                Date requestDate = credit.get().getRequestDate();
+                long diff = new Date().getTime() - requestDate.getTime();
+                if (diff < 2592000000L) {
+                    request.setConfirmStatus(CreditRequestStatusEnum.Rejected);
+                    request.setConfirmerComment("Müraciətçinin 30 gün gecikməsi olmamalıdır");
+                    creditRequestRepository.save(request);
+                    flag = true;
+                    smsService.sendSMSOneToN(SendSmsRequest.builder()
+                            .message(
+                                    rejectMessage)
+                            .numbers(List.of(request.getRequestedUser().getPhoneNumber()))
+                            .build());
+                    return request;
+                }
+            }
+        } else {
+            flag = true;
         }
 
         if (!flag) {
