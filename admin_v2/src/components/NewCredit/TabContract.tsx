@@ -20,6 +20,9 @@ import { SignalType } from '../video-call/WebsocketTypes';
 import { createCreditRequest } from 'src/api/CreditService';
 import { Navigate } from 'react-router-dom';
 
+let jsContractCreated = false;
+let jsRequestCreated = false;
+
 const TabContract = ({
   creditRequest,
   contractPdf,
@@ -124,16 +127,19 @@ const TabContract = ({
                           uploadFileWithFile(file).then((res) => {
                             let lastCreditRequest = { ...creditRequest, contractFileName: res.data.message };
                             setCreditRequest(lastCreditRequest);
-                            createCreditRequest(lastCreditRequest).then((res) => {
-                              if (res) {
-                                setCreditRequest(res);
-                                // yönəndirmə və toast mesaj
-                                toast.success('Müqavilə uğurla imzalandı. Yönləndirilirsiniz...');
-                                setTimeout(() => {
-                                  window.location.href = '/';
-                                }, 2000);
-                              }
-                            });
+                            if (!jsRequestCreated) {
+                              jsRequestCreated = true;
+                              createCreditRequest(lastCreditRequest).then((res) => {
+                                if (res) {
+                                  setCreditRequest(res);
+                                  // yönəndirmə və toast mesaj
+                                  toast.success('Müqavilə uğurla imzalandı. Yönləndirilirsiniz...');
+                                  setTimeout(() => {
+                                    window.location.href = '/';
+                                  }, 2000);
+                                }
+                              });
+                            }
                           }).catch((err) => {
                             throw err;
                           });
@@ -199,6 +205,8 @@ const TabContract = ({
 
   const createContract = async () => {
     try {
+      if (jsContractCreated) return;
+      jsContractCreated = true;
       const res = await generateContract(creditRequest);
       if (res && res.status == 'success') {
         setCreditRequest({ ...creditRequest, contractFileName: res.pdfName });
