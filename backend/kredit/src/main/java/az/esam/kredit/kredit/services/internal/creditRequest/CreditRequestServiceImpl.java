@@ -178,8 +178,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                     return request;
                 }
             }
-        } else {
-            flag = true;
         }
 
         if (!flag) {
