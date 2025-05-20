@@ -347,7 +347,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .toList();
 
             // revokeAllUserTokens(user);
-            saveUserToken(user, jwtToken);
+            Token token = saveUserToken(user, jwtToken);
 
             userRepository.save(user);
 
@@ -367,6 +367,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .voen(user.getVoen())
                     .organisation(user.getOrganisationName())
                     .title(user.getTitle())
+                    .tokenId(token.getId())
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
