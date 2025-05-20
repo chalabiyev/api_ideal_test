@@ -154,6 +154,7 @@ public class PartnerServiceImpl implements PartnerService {
                 authenticationService.addRole(existingUser.getUsername(), ERole.ROLE_PARTNER);
                 String newPassword = UUID.randomUUID().toString();
                 existingUser.setPassword(passwordEncoder.encode(newPassword));
+                existingUser = userRepository.save(existingUser);
                 AuthenticationResponse response = authenticationService.authenticate(
                         LoginRequest.builder().username(existingUser.getUsername()).password(newPassword).build());
 
@@ -191,6 +192,7 @@ public class PartnerServiceImpl implements PartnerService {
                 if (existingUser.getPartners() == null) {
                     existingUser.setPartners(new HashSet<>());
                 }
+                
                 existingUser.getPartners().add(partner);
 
                 // TODO: sms gonder url?token=accessToken
