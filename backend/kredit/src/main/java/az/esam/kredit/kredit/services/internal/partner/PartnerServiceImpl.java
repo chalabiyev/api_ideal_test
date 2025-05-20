@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.services.internal.partner;
 
+import az.esam.kredit.kredit.dtos.requests.LoginRequest;
 import az.esam.kredit.kredit.dtos.requests.PartnerFormRequest;
 import az.esam.kredit.kredit.dtos.requests.RegisterRequest;
 import az.esam.kredit.kredit.dtos.requests.SendSmsRequest;
@@ -22,12 +23,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -50,6 +53,9 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Autowired
     SMSService smsService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public Partner submitForm(PartnerFormRequest request) throws BadRequestException {
@@ -146,13 +152,18 @@ public class PartnerServiceImpl implements PartnerService {
             User existingUser = userRepository.findFirstByUsername(partner.getPin()).orElse(null);
             if (existingUser != null) {
                 authenticationService.addRole(existingUser.getUsername(), ERole.ROLE_PARTNER);
-                // TODO: sms gonder partner role added
+                String newPassword = UUID.randomUUID().toString();
+                existingUser.setPassword(passwordEncoder.encode(newPassword));
+                AuthenticationResponse response = authenticationService.authenticate(
+                        LoginRequest.builder().username(existingUser.getUsername()).password(newPassword).build());
+
                 smsService.sendSMSOneToN(SendSmsRequest.builder()
                         .numbers(List.of(partner.getPhoneNumber()))
-                        .message("Sizin partnyorlugunuz uğurla təsdiqləndi. " +
-                                "Hesabınıza aşağıdakı url-dən pin və istifadəçi hesabınızın parolu ilə giriş edə bilərsiniz: \n"
-                                +
-                                "https://admin.idealkredit.az/auth/jwt/sign-in")
+                        .message(
+                                "Sizin partnyorlugunuz uğurla təsdiqləndi. Şifrənizi yeniləmək üçün bu linkə keçid edin: \n"
+                                        + "https://kabinet.idealkredit.az/setpassword?token="
+                                        + response.getTokenId()
+                                        + " Link 24 saat ərzində aktivdir.")
                         .build());
 
                 // set user's companys
