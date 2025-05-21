@@ -212,6 +212,7 @@ export default function Kredit() {
                     <TableCell sx={{ minWidth: '150px' }}>Müraciətin tarixi</TableCell>
                     <TableCell sx={{ minWidth: '160px' }}>İcraçı</TableCell>
                     <TableCell sx={{ minWidth: '260px' }}>Soyadı, adı, atasının adı</TableCell>
+                    <TableCell sx={{ minWidth: '260px' }}>Partnyorluq adı</TableCell>
                     <TableCell sx={{ minWidth: '340px' }}>Əlaqə nömrəsi</TableCell>
                     <TableCell sx={{ minWidth: '340px' }}>
                       Əlaqədar şəxsin adı, soyadı, ata adı
@@ -232,6 +233,7 @@ export default function Kredit() {
                       <TableCell>{row.requestDate ? formatDDate(row.requestDate) : ''}</TableCell>
                       <TableCell>{row.createdBy}</TableCell>
                       <TableCell>{`${row.requestedUser?.surname},  ${row.requestedUser?.name}, ${row.requestedUser?.fatherName} `}</TableCell>
+                      <TableCell>{row.partner ? row.partner.companyName : ''}</TableCell>
                       <TableCell>
                         {row.phoneNumber &&
                           <Card sx={{ display: 'inline-block', mr: 1 }}>

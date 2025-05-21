@@ -14,6 +14,8 @@ import { toast } from 'sonner';
 import { Label } from 'recharts';
 import { callGetFile } from 'src/api/FileService';
 import { Iconify } from 'src/components/iconify';
+import request from 'src/api/request';
+import { formatDate } from 'date-fns';
 
 const Muraciet = () => {
   const [data, setData] = React.useState<CreditRequest>({
@@ -60,12 +62,25 @@ const Muraciet = () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
 
+  const fetchCreditRequest = async (id: string) => {
+    let response: CreditRequest | null = await getCreditRequest(id);
+
+    if (response) {
+      if (!response.requestedUser?.eventDate && response.requestedUser?.pin && response.requestedUser?.seriaNo) {
+        const endpoint = `/document/getIdCardInfo?pin=${response.requestedUser?.pin}&documentNumber=${response.requestedUser?.seriaNo}`;
+        const res = await request.get(endpoint);
+        if (res.data) {
+          response.requestedUser = { ...response.requestedUser, ...res.data, eventDate: formatDate(new Date(res.data.eventDate), 'dd.MM.yyyy') };
+        }
+      }
+      setData(response);
+    }
+
+  };
+
   useEffect(() => {
     if (!id) return;
-    getCreditRequest(id).then((response) => {
-      if (!response) return;
-      setData(response);
-    });
+    fetchCreditRequest(id);
   }, []);
 
   const handleApprove = async () => {
@@ -120,17 +135,15 @@ const Muraciet = () => {
 
       <DashboardContent maxWidth="xl">
         <CustomBreadcrumbs
-          heading={`${
-            data.requestedUser?.name
-              ? data.requestedUser.name.charAt(0).toUpperCase() +
-                data.requestedUser.name.slice(1).toLowerCase()
-              : ''
-          } ${
-            data.requestedUser?.surname
+          heading={`${data.requestedUser?.name
+            ? data.requestedUser.name.charAt(0).toUpperCase() +
+            data.requestedUser.name.slice(1).toLowerCase()
+            : ''
+            } ${data.requestedUser?.surname
               ? data.requestedUser.surname.charAt(0).toUpperCase() +
-                data.requestedUser.surname.slice(1).toLowerCase()
+              data.requestedUser.surname.slice(1).toLowerCase()
               : ''
-          }`}
+            }`}
           links={[{ name: 'Bütün Müraciətlər', href: '/esassehife/statistika' }]}
           sx={{ mb: { xs: 3, md: 5 } }}
         />
@@ -147,30 +160,52 @@ const Muraciet = () => {
               <TextField
                 fullWidth
                 label="Ad Soyad"
-                value={`${
-                  data.requestedUser?.name
-                    ? data.requestedUser.name.charAt(0).toUpperCase() +
-                      data.requestedUser.name.slice(1).toLowerCase()
-                    : ''
-                } ${
-                  data.requestedUser?.surname
+                value={`${data.requestedUser?.name
+                  ? data.requestedUser.name.charAt(0).toUpperCase() +
+                  data.requestedUser.name.slice(1).toLowerCase()
+                  : ''
+                  } ${data.requestedUser?.surname
                     ? data.requestedUser.surname.charAt(0).toUpperCase() +
-                      data.requestedUser.surname.slice(1).toLowerCase()
+                    data.requestedUser.surname.slice(1).toLowerCase()
                     : ''
-                }`}
+                  }`}
                 variant="outlined"
               />
             </Grid>
 
             {/* Contact Numbers */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Əlaqə Nömrələri"
-                value={data.otherPhoneNumbers || ''}
-                variant="outlined"
-              />
-            </Grid>
+            {data.otherPhoneNumbers?.Ev && (
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Ev Telefon Nömrəsi"
+                  value={data.otherPhoneNumbers.Ev || ''}
+                  variant="outlined"
+                />
+              </Grid>
+            )}
+
+            {data.otherPhoneNumbers?.GSM && (
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="GSM Telefon Nömrəsi"
+                  value={data.otherPhoneNumbers.GSM || ''}
+                  variant="outlined"
+                />
+              </Grid>
+            )}
+
+            {data.otherPhoneNumbers?.Is && (
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="İş Telefon Nömrəsi"
+                  value={data.otherPhoneNumbers.Is || ''}
+                  variant="outlined"
+                />
+              </Grid>
+            )}
 
             {/* Phone Number */}
             <Grid item xs={12} md={6}>
@@ -230,6 +265,8 @@ const Muraciet = () => {
               { label: 'İş Yeri', value: data.requestedUser?.workAddress },
               { label: 'Vəzifəsi', value: data.requestedUser?.position },
               { label: 'Maaşı', value: data.requestedUser?.salary },
+              { label: 'Vesika Verilme Tarihi', value: data.requestedUser?.eventDate },
+              { label: 'Medeni Hal', value: data.requestedUser?.maritalStatus === 'SINGLE' ? 'Subay' : 'Evli' },
               { label: 'Təcrübə', value: `${data.requestedUser?.experience} il` },
             ].map((item, index) => (
               <Grid key={index} item xs={12} md={6}>
