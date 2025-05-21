@@ -209,7 +209,7 @@ public class ExcelParseService {
                         cr = new CellReference("C94");
                         dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
                                         .setCellValue(request.getPartner() != null
-                                                        ? request.getPartner().getCompanyName()
+                                                        ? request.getPartner().getDirectorName()
                                                         : "");
                         if (request.getGuarantors() != null && request.getGuarantors().size() > 0) {
                                 cr = new CellReference("C102");
