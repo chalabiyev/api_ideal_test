@@ -254,6 +254,21 @@ const VideoCall = () => {
     }
   }, [receivedMessage]);
 
+  const RenderFileMessage = (msg: any) => {
+    const fullMessage = msg.msg.text;
+    const splitted = fullMessage.split(',');
+    const fileName = splitted[0].split('fileName:')[1];
+    const fileType = splitted[1].split('fileType:')[1];
+    const fileDataBase64 = splitted[2].split('fileData:')[1].concat(",").concat(splitted[3]);
+    return (
+      <>
+        <Typography variant="body2">File: {fileName}</Typography>
+        <a href={fileDataBase64} download={fileName}>Download</a>
+      </>
+    );
+  }
+
+
   const renderMessage = (msg: { text: string; sender: string; time: string }) => (
     <Grid
       container
@@ -277,10 +292,11 @@ const VideoCall = () => {
                 : theme.palette.background.neutral,
           }}
         >
-          <Typography variant="body2">{msg.text} {msg.sender}</Typography>
+          {!msg.text.includes('fileName:') && <Typography variant="body2">{msg.text} {msg.sender}</Typography>}
+          {msg.text.includes('fileName:') && <RenderFileMessage msg={msg} />}
         </Paper>
       </Grid>
-    </Grid>
+    </Grid >
   );
 
   return (
