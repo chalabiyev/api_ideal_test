@@ -444,7 +444,9 @@ export default function Page() {
   // Call this function only to set the userInfo after data is fetched
   const getUserInfo = async () => {
     if (hasData) {
-      if (userData) data.phoneNumber = userData.phoneNumber;
+      if (userData) {
+        data.phoneNumber = userData.phoneNumber;
+      }
       setUserInfo(data);
       const creditYear = new Date().getFullYear();
       const creditOrderNo = (await request.get('/creditrequest/countByCreditYear')).data + 1;
@@ -452,7 +454,7 @@ export default function Page() {
         ...creditRequest,
         creditYear: creditYear,
         creditOrderNo: creditOrderNo,
-        requestedUser: userData,
+        requestedUser: { ...userData, seriaNo: data.documentNumber, birthDate: data.birthDate, birthAddress: data.birthAddress },
         phoneNumber: userData.phoneNumber,
         requestDate: new Date(),
         spouses: [],

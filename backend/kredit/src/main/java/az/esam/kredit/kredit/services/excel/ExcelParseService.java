@@ -53,8 +53,17 @@ public class ExcelParseService {
                                 log.error("dataSheet is null");
                                 return false;
                         }
-                        FullIDCardInfoResponse idCardInfoResponse = documentInfoService
-                                        .getIdCardInfoByPin(request.getRequestedUser().getPin());
+                        FullIDCardInfoResponse idCardInfoResponse = null;
+                        if (request.getRequestedUser().getSeriaNo() != null
+                                        && request.getRequestedUser().getPin() != null) {
+                                idCardInfoResponse = documentInfoService
+                                                .getIdCardInfo(request.getRequestedUser().getSeriaNo(),
+                                                                request.getRequestedUser().getPin());
+                        } else if (request.getRequestedUser().getPin() != null) {
+                                idCardInfoResponse = documentInfoService
+                                                .getIdCardInfoByPin(request.getRequestedUser().getPin());
+                        }
+
                         if (idCardInfoResponse == null) {
                                 log.error("idCardInfoResponse is null");
                                 return false;
