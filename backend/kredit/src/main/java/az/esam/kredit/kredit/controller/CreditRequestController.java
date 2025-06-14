@@ -66,7 +66,7 @@ public class CreditRequestController {
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/createA")
     public ResponseEntity<CreditRequest> createAdmin(@RequestBody CreditRequest request,
-            Authentication authentication) throws Exception {
+                                                     Authentication authentication) throws Exception {
         if (request.getRequestedUser() == null) {
             throw new Exception("User not found");
         }
@@ -128,7 +128,7 @@ public class CreditRequestController {
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/search")
     public ResponseEntity<Page<CreditRequest>> search(@RequestBody CreditRequestSearchDto search,
-            Authentication authentication) {
+                                                      Authentication authentication) {
         return ResponseEntity.ok(creditRequestService.search(search, authentication));
     }
 
@@ -145,7 +145,7 @@ public class CreditRequestController {
     @SecurityRequirement(name = "X-API-KEY")
     @GetMapping("/countOfConfirmStatus/{confirmStatus}")
     public ResponseEntity<Long> countOfConfirmStatus(@PathVariable String confirmStatus,
-            Authentication authentication) {
+                                                     Authentication authentication) {
         return ResponseEntity.ok(creditRequestService
                 .countOfConfirmStatus(CreditRequestStatusEnum.valueOf(confirmStatus), authentication));
     }
