@@ -177,4 +177,12 @@ public class CreditRequestController {
     public ResponseEntity<Long> countByCreditYear(Authentication authentication) {
         return ResponseEntity.ok(creditRequestService.countByCreditYear());
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/sendConfirmation")
+    public ResponseEntity<String> sendConfirmation(@RequestParam String creditRequestId, Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.sendConfirmation(creditRequestId, authentication));
+    }
 }

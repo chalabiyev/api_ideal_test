@@ -5,6 +5,7 @@ import az.esam.kredit.kredit.entities.CreditRequest;
 import az.esam.kredit.kredit.entities.enums.CreditRequestStatusEnum;
 import az.esam.kredit.kredit.entities.enums.ECreditType;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -37,4 +38,6 @@ public interface CreditRequestService {
     CreditRequest rejectByAdmin(String creditRequestId, Authentication authentication);
 
     Long countByCreditYear();
+
+    String sendConfirmation(String creditRequestId, Authentication authentication);
 }

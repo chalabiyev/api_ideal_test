@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Service
@@ -423,5 +425,24 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         return creditRequestRepository.countByCreditYear(c.get(Calendar.YEAR));
+    }
+
+    @Override
+    public String sendConfirmation(String creditRequestId, Authentication authentication) {
+        CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
+                .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
+
+        String phoneNumber = creditRequest.getPhoneNumber();
+        String confirmationUrl = "http://localhost:5173/confirmation?phoneNumber=" + phoneNumber;
+        String message = "Hörmətli müştəri, sifarişinizi kreditlə əldə etmək üçün aşağıdaki linkə daxil olun\n" + confirmationUrl;
+
+        // Send SMS
+        SendSmsRequest smsRequest = SendSmsRequest.builder()
+                .message(message)
+                .numbers(List.of(phoneNumber))
+                .build();
+        smsService.sendSMSOneToN(smsRequest);
+
+        return "SMS sent to " + phoneNumber;
     }
 }

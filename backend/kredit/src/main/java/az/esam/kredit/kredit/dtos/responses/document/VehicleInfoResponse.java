@@ -13,16 +13,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "vehicle_info")
 public class VehicleInfoResponse {
-    private String color;
-    private String bodyNumber;
-    private String vehicleRegistryDate;
+    private String issueDate;
+    private String manufactureYear;
     private String vehicleNumber;
+    private String vehicleMark;
     private String vehicleModel;
-    private String vehicleManufactYear;
+    private String engineCapacity;
+
+    private String bodyNumber;
     private String note;
     private String pin;
     private String patronymic;
     private String surname;
     private String name;
-    private String engineCapacity;
+    private String color;
 }

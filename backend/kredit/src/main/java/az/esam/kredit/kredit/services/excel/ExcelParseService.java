@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import az.esam.kredit.kredit.entities.CreditDetail;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -198,23 +199,36 @@ public class ExcelParseService {
                                         .setCellValue(request.getOperationType().equals("product")
                                                         ? "İstehlak mal(lar)ının alınması üçün"
                                                         : "Xidmətlərin alınması üçün");
-                        cr = new CellReference("C74");
-                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
-                                        .setCellValue(request.getCreditDetails().getCreditAmount());
-                        cr = new CellReference("C78");
-                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
-                                        .setCellValue(request.getCreditDetails().getCreditTerm());
-                        cr = new CellReference("C84");
-                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
-                                        .setCellValue(request.getCreditDetails().getCashPrice());
-                        cr = new CellReference("C90");
-                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
-                                        .setCellValue(request.getOperationType().equals("product")
+
+                        for (CreditDetail creditDetail : request.getCreditDetails()) {
+                                for (CreditDetail.Product product : creditDetail.getProducts()) {
+                                        Double creditAmount = product.getCreditAmount();
+                                        cr = new CellReference("C74");
+                                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
+                                                .setCellValue(creditAmount);
+
+                                        Integer creditTerm = product.getCreditTerm();
+                                        cr = new CellReference("C78");
+                                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
+                                                .setCellValue(creditTerm);
+
+                                        Double cashPrice = product.getCashPrice();
+                                        cr = new CellReference("C84");
+                                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
+                                                .setCellValue(cashPrice);
+
+                                        String productName = product.getProductName();
+                                        cr = new CellReference("C90");
+                                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
+                                                .setCellValue(request.getOperationType().equals("product")
                                                         ? "Daşınar əmlak-İstehlak malları"
                                                         : "");
-                        cr = new CellReference("C92");
-                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
-                                        .setCellValue(request.getCreditDetails().getProductName());
+                                        cr = new CellReference("C92");
+                                        dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
+                                                .setCellValue(productName);
+                                }
+                        }
+
                         cr = new CellReference("C94");
                         dataSheet.getRow(cr.getRow()).getCell(cr.getCol())
                                         .setCellValue(request.getPartner() != null

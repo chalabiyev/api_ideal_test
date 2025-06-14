@@ -54,8 +54,6 @@ public class CreditRequest extends BaseEntity {
     private Double valuationCost;
     private Double monthlyPayment;
 
-    // creditAmount - (creditAmount * serviceRate) - (creditAmount * insuranceCost)
-    // - cartCost - valuationCost
     private Double amountToBePaid;
 
     private String creditPurpose;
@@ -87,7 +85,9 @@ public class CreditRequest extends BaseEntity {
     private String operationType;
     private String productName;
 
-    private CreditDetail creditDetails;
+    // Product list
+    private List<CreditDetail> creditDetails;
+
     private String workExperience;
     private String familyMembers;
     private String familyIncome;
@@ -141,21 +141,21 @@ public class CreditRequest extends BaseEntity {
         map.put("productName", productName);
         map.put("spouses", spouses != null
                 ? spouses.stream().map(spouse -> {
-                    Map<String, Object> spouseMap = new HashMap<>();
-                    spouseMap.put("fullName", spouse.getFullName());
-                    spouseMap.put("serialNumber", spouse.getSerialNumber());
-                    spouseMap.put("eventDate", spouse.getEventDate());
-                    spouseMap.put("organisationName", spouse.getOrganisationName());
-                    spouseMap.put("birthAddress", spouse.getBirthAddress());
-                    spouseMap.put("nationality", spouse.getNationality());
-                    spouseMap.put("address", spouse.getAddress());
-                    spouseMap.put("factAddress", spouse.getFactAddress());
-                    spouseMap.put("phoneNumbers", spouse.getPhoneNumbers());
-                    spouseMap.put("workPlace", spouse.getWorkPlace());
-                    spouseMap.put("workAddress", spouse.getWorkAddress());
-                    spouseMap.put("position", spouse.getPosition());
-                    return spouseMap;
-                }).collect(Collectors.toList())
+            Map<String, Object> spouseMap = new HashMap<>();
+            spouseMap.put("fullName", spouse.getFullName());
+            spouseMap.put("serialNumber", spouse.getSerialNumber());
+            spouseMap.put("eventDate", spouse.getEventDate());
+            spouseMap.put("organisationName", spouse.getOrganisationName());
+            spouseMap.put("birthAddress", spouse.getBirthAddress());
+            spouseMap.put("nationality", spouse.getNationality());
+            spouseMap.put("address", spouse.getAddress());
+            spouseMap.put("factAddress", spouse.getFactAddress());
+            spouseMap.put("phoneNumbers", spouse.getPhoneNumbers());
+            spouseMap.put("workPlace", spouse.getWorkPlace());
+            spouseMap.put("workAddress", spouse.getWorkAddress());
+            spouseMap.put("position", spouse.getPosition());
+            return spouseMap;
+        }).collect(Collectors.toList())
                 : null);
         map.put("fine", fine);
         map.put("simaContractOperationId", simaContractOperationId);
@@ -172,8 +172,8 @@ public class CreditRequest extends BaseEntity {
             map.put("items", items.stream().map(item -> item.toMap()).collect(Collectors.toList()));
             map.put("totalPrice", items.stream().mapToDouble(item -> item.getTotalPrice()).sum());
         }
-        if (creditDetails != null) {
-            map.put("creditDetails", creditDetails.toMap());
+        if (creditDetails != null && !creditDetails.isEmpty()) {
+            map.put("creditDetails", creditDetails.stream().map(CreditDetail::toMap).collect(Collectors.toList()));
         }
         map.put("isPhysicalPerson", true);
         map.put("isLegalPerson", false);
