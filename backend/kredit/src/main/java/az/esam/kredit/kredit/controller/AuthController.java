@@ -78,7 +78,7 @@ public class AuthController {
         if (roleRepository.findAll().isEmpty()) {
             roleRepository.insert(new Role(ERole.ROLE_ADMIN));
             roleRepository.insert(new Role(ERole.ROLE_USER));
-            roleRepository.insert(new Role(ERole.ROLE_HR));
+            roleRepository.insert(new Role(ERole.ROLE_SITE_MANAGER));
             roleRepository.insert(new Role(ERole.ROLE_CREDIT_MANAGER));
             roleRepository.insert(new Role(ERole.ROLE_ACCOUNTANT));
             roleRepository.insert(new Role(ERole.ROLE_PARTNER));

@@ -249,7 +249,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                                 break;
                             case "hr", "ROLE_HR":
-                                Role hr = roleRepository.findByName(ERole.ROLE_HR)
+                                Role hr = roleRepository.findByName(ERole.ROLE_SITE_MANAGER)
                                         .orElseThrow(() -> new UsernameNotFoundException(ERROR_ROLE_IS_NOT_FOUND));
                                 roles.add(hr);
 
@@ -609,7 +609,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Page<User> findManagementUsers(int page, int size) {
         List<Role> roles = roleRepository.findByNameIn(Arrays.asList(
                 ERole.ROLE_ADMIN,
-                ERole.ROLE_HR,
+                ERole.ROLE_SITE_MANAGER,
                 ERole.ROLE_CREDIT_MANAGER,
                 ERole.ROLE_ACCOUNTANT));
         if (roles.isEmpty()) {
@@ -653,7 +653,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } else if (role != null && role.equalsIgnoreCase("management")) {
             List<Role> roles = roleRepository.findByNameIn(Arrays.asList(
                     ERole.ROLE_ADMIN,
-                    ERole.ROLE_HR,
+                    ERole.ROLE_SITE_MANAGER,
                     ERole.ROLE_CREDIT_MANAGER,
                     ERole.ROLE_ACCOUNTANT));
             if (roles.isEmpty()) {

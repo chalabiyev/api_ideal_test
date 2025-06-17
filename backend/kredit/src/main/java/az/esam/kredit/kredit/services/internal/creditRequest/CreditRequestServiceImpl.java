@@ -446,7 +446,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     @Override
     public String acceptConfirmation(String id, boolean isUsed, Authentication authentication) {
         CreditRequest creditRequest = creditRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("id does not exits"));
+                .orElseThrow(() -> new RuntimeException("id does not exist"));
 
         creditRequest.setUsed(isUsed);
         creditRequest.setUrlNumber(null);

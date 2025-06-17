@@ -4,7 +4,7 @@ public enum ERole {
     ROLE_USER,
     ROLE_PARTNER,
     ROLE_ADMIN,
-    ROLE_HR,
+    ROLE_SITE_MANAGER,
     ROLE_CREDIT_MANAGER,
     ROLE_ACCOUNTANT,
 }
