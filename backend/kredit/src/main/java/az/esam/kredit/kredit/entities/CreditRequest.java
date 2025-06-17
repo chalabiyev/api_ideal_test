@@ -38,6 +38,7 @@ public class CreditRequest extends BaseEntity {
     private CreditRequestStatusEnum confirmStatus;
     private EActivateStatus activateStatus;
     private EFinalStatus finalStatus;
+    private String urlNumber;
 
     @DocumentReference
     private User requestedUser;
@@ -165,6 +166,7 @@ public class CreditRequest extends BaseEntity {
         map.put("creditOrderNoStr", String.format("%05d", creditOrderNo));
         map.put("documentNumber", "İK-BSİ/" + String.format("%05d", creditOrderNo) + "/" + creditYear);
         map.put("documentDate", new SimpleDateFormat("dd.MM.yyyy").format(requestDate));
+        map.put("urlNumber", urlNumber);
         if (partner != null) {
             map.put("partner", partner.toMap());
         }

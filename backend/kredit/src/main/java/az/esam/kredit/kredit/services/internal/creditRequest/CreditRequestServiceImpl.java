@@ -448,9 +448,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         CreditRequest creditRequest = creditRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("id does not exits"));
 
-        List<CreditDetail> creditDetails = creditRequest.getCreditDetails();
-        for (CreditDetail detail : creditDetails)
-            detail.setUrlNumber(null);
+        creditRequest.setUrlNumber(null);
+//        List<CreditDetail> creditDetails = creditRequest.getCreditDetails();
+//        for (CreditDetail detail : creditDetails)
+//            detail.setUrlNumber(null);
 
         return "Confirmation Accepted";
     }

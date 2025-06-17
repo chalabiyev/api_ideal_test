@@ -13,7 +13,7 @@ public class CreditDetail {
 
     private String storeName;
     private String operationType;
-    private String urlNumber;
+    //private String urlNumber;
     private List<Product> products;
 
     // return as a map
@@ -21,7 +21,7 @@ public class CreditDetail {
         Map<String, Object> map = new java.util.HashMap<>();
         map.put("storeName", storeName);
         map.put("operationType", operationType);
-        map.put("urlNumber", urlNumber);
+        //map.put("urlNumber", urlNumber);
         map.put("products", products);
         return map;
     }
