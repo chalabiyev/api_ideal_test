@@ -3,6 +3,7 @@ package az.esam.kredit.kredit.services.internal.creditRequest;
 import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.dtos.requests.SendSmsRequest;
 import az.esam.kredit.kredit.entities.Credit;
+import az.esam.kredit.kredit.entities.CreditDetail;
 import az.esam.kredit.kredit.entities.CreditRequest;
 import az.esam.kredit.kredit.entities.User;
 import az.esam.kredit.kredit.entities.enums.*;
@@ -428,21 +429,29 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     @Override
-    public String sendConfirmation(String creditRequestId, Authentication authentication) {
-        CreditRequest creditRequest = creditRequestRepository.findById(creditRequestId)
-                .orElseThrow(() -> new RuntimeException("Credit request with this id does not exist"));
-
-        String phoneNumber = creditRequest.getPhoneNumber();
-        String confirmationUrl = "http://localhost:5173/confirmation?phoneNumber=" + phoneNumber;
+    public String sendConfirmation(String urlNumber, Authentication authentication) {
+        String confirmationUrl = "http://localhost:5173/muraciet?type=new-flow&phoneNumber=" + urlNumber;
         String message = "Hörmətli müştəri, sifarişinizi kreditlə əldə etmək üçün aşağıdaki linkə daxil olun\n" + confirmationUrl;
 
         // Send SMS
         SendSmsRequest smsRequest = SendSmsRequest.builder()
                 .message(message)
-                .numbers(List.of(phoneNumber))
+                .numbers(List.of(urlNumber))
                 .build();
         smsService.sendSMSOneToN(smsRequest);
 
-        return "SMS sent to " + phoneNumber;
+        return "SMS sent to " + urlNumber;
+    }
+
+    @Override
+    public String acceptConfirmation(String id, Authentication authentication) {
+        CreditRequest creditRequest = creditRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("id does not exits"));
+
+        List<CreditDetail> creditDetails = creditRequest.getCreditDetails();
+        for (CreditDetail detail : creditDetails)
+            detail.setUrlNumber(null);
+
+        return "Confirmation Accepted";
     }
 }

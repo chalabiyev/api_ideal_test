@@ -39,5 +39,7 @@ public interface CreditRequestService {
 
     Long countByCreditYear();
 
-    String sendConfirmation(String creditRequestId, Authentication authentication);
+    String sendConfirmation(String urlNumber, Authentication authentication);
+
+    String acceptConfirmation(String id, Authentication authentication);
 }

@@ -97,6 +97,9 @@ public class User extends BaseEntity {
     private Set<Role> roles;
 
     @DBRef
+    private Role role;
+
+    @DBRef
     private List<Token> tokens;
 
     private Date birthDate;

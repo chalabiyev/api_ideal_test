@@ -48,18 +48,18 @@ public class CreditRequestController {
     @Autowired
     ObjectMapper om;
 
-    // @PreAuthorize("isAuthenticated()")
-    // @SecurityRequirement(name = "authentication")
-    // @SecurityRequirement(name = "X-API-KEY")
-    // @PostMapping("/create")
-    // public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest
-    // request, Authentication authentication) {
-    // var user = userRepository.findFirstByUsername(authentication.getName())
-    // .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    // request.setRequestedUser(user);
-    // return ResponseEntity.ok(creditRequestService.create(request,
-    // authentication));
-    // }
+     @PreAuthorize("isAuthenticated()")
+     @SecurityRequirement(name = "authentication")
+     @SecurityRequirement(name = "X-API-KEY")
+     @PostMapping("/create")
+     public ResponseEntity<CreditRequest> create(@RequestBody CreditRequest
+     request, Authentication authentication) {
+         var user = userRepository.findFirstByUsername(authentication.getName())
+         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+         request.setRequestedUser(user);
+         return ResponseEntity.ok(creditRequestService.create(request,
+         authentication));
+     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "authentication")
@@ -182,7 +182,15 @@ public class CreditRequestController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/sendConfirmation")
-    public ResponseEntity<String> sendConfirmation(@RequestParam String creditRequestId, Authentication authentication) {
-        return ResponseEntity.ok(creditRequestService.sendConfirmation(creditRequestId, authentication));
+    public ResponseEntity<String> sendConfirmation(@RequestParam String urlNumber, Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.sendConfirmation(urlNumber, authentication));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/acceptConfirmation")
+    public ResponseEntity<String> acceptConfirmation(String id, Authentication authentication) {
+         return ResponseEntity.ok(creditRequestService.acceptConfirmation(id, authentication));
     }
 }
