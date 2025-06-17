@@ -39,7 +39,7 @@ public class CreditRequest extends BaseEntity {
     private EActivateStatus activateStatus;
     private EFinalStatus finalStatus;
     private String urlNumber;
-    private Boolean used;
+    private boolean used;
 
     @DocumentReference
     private User requestedUser;
