@@ -440,7 +440,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
                 .build();
         smsService.sendSMSOneToN(smsRequest);
 
-        return "SMS sent to " + urlNumber;
+        return "SMS göndərildi: " + urlNumber;
     }
 
     @Override
@@ -453,6 +453,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 //        for (CreditDetail detail : creditDetails)
 //            detail.setUrlNumber(null);
 
-        return "Confirmation Accepted";
+        return "Təsdiq qəbul edildi";
     }
 }
