@@ -41,5 +41,5 @@ public interface CreditRequestService {
 
     String sendConfirmation(String urlNumber, Authentication authentication);
 
-    String acceptConfirmation(String id, CreditRequest request, Authentication authentication);
+    String acceptConfirmation(String id, boolean isUsed, Authentication authentication);
 }

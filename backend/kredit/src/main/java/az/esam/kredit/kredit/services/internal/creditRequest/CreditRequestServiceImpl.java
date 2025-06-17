@@ -444,12 +444,15 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     @Override
-    public String acceptConfirmation(String id, CreditRequest request, Authentication authentication) {
+    public String acceptConfirmation(String id, boolean isUsed, Authentication authentication) {
         CreditRequest creditRequest = creditRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("id does not exits"));
 
-        creditRequest.setUsed(request.isUsed());
+        creditRequest.setUsed(isUsed);
         creditRequest.setUrlNumber(null);
+
+        log.info("USED: " + creditRequest.isUsed());
+
 //        List<CreditDetail> creditDetails = creditRequest.getCreditDetails();
 //        for (CreditDetail detail : creditDetails)
 //            detail.setUrlNumber(null);
