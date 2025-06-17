@@ -431,7 +431,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     @Override
     public String sendConfirmation(String urlNumber, Authentication authentication) {
         String confirmationUrl = "http://localhost:5173/muraciet?type=new-flow&phoneNumber=" + urlNumber;
-        String message = "Hörmətli müştəri, sifarişinizi kreditlə əldə etmək üçün aşağıdaki linkə daxil olun\n" + confirmationUrl;
+        String message = "Hörmətli müştəri, sifarişinizi kreditlə əldə etmək üçün aşağıdaki linkə daxil olun:\n" + confirmationUrl;
 
         // Send SMS
         SendSmsRequest smsRequest = SendSmsRequest.builder()

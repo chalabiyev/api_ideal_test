@@ -110,7 +110,7 @@ public class OTPServiceImpl implements OTPService {
                 // SMS gönderme işlemi
                 List<SmsResponse> response = smsService.sendSMSOneToN(
                         SendSmsRequest.builder()
-                                .message("Your OTP code is: " + otpCode)
+                                .message("Diqqet! Bu kodu hec kimle paylasmayin \nOTP: " + otpCode + "\n Ideal Kredit BOKT")
                                 .numbers(List.of(request.getContact()))
                                 .build());
                 boolean result = response != null && !response.isEmpty() && response.get(0).getCharge() == 1;
