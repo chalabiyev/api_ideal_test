@@ -190,7 +190,7 @@ public class CreditRequestController {
     @SecurityRequirement(name = "authentication")
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/acceptConfirmation")
-    public ResponseEntity<String> acceptConfirmation(String id, CreditRequest request, Authentication authentication) {
-         return ResponseEntity.ok(creditRequestService.acceptConfirmation(id, request, authentication));
+    public ResponseEntity<String> acceptConfirmation(String id, Authentication authentication) {
+         return ResponseEntity.ok(creditRequestService.acceptConfirmation(id, authentication));
     }
 }
