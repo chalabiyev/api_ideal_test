@@ -459,4 +459,18 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
         return "Təsdiq qəbul edildi";
     }
+
+    @Override
+    public String rejectCredit(String id, String rejectPurpose, Authentication authentication) {
+        CreditRequest creditRequest = creditRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("id does not exist"));
+
+        creditRequest.setConfirmStatus(CreditRequestStatusEnum.Rejected);
+        creditRequest.setRejectPurpose(rejectPurpose);
+        creditRequest.setActivateStatus(EActivateStatus.REJECTED);
+        creditRequest.setFinalStatus(EFinalStatus.REJECTED);
+        creditRequestRepository.save(creditRequest);
+
+        return "Kredit müraciəti rədd edildi";
+    }
 }

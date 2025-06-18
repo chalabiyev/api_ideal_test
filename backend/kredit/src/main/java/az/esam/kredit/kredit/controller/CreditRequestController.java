@@ -193,4 +193,14 @@ public class CreditRequestController {
     public ResponseEntity<String> acceptConfirmation(String id, boolean isUsed, Authentication authentication) {
          return ResponseEntity.ok(creditRequestService.acceptConfirmation(id, isUsed, authentication));
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "authentication")
+    @SecurityRequirement(name = "X-API-KEY")
+    @PostMapping("/rejectCredit")
+    public ResponseEntity<String> rejectCredit(@RequestParam String id,
+                                               @RequestParam String rejectPurpose,
+                                               Authentication authentication) {
+        return ResponseEntity.ok(creditRequestService.rejectCredit(id, rejectPurpose, authentication));
+    }
 }
