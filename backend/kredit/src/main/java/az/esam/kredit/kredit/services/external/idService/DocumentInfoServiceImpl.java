@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -43,6 +44,18 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) throws IOException {
         try {
+            // check if the data is already cached in MongoDB
+            FullIDCardInfoResponse cachedData = mongoTemplate.findOne(
+                    Query.query(Criteria.where("documentNumber").is(documentNumber).and("pin").is(pin)),
+                    FullIDCardInfoResponse.class
+            );
+
+            if (cachedData != null) {
+                log.info("Data found in the database for Pin: {} and Document Number: {}", pin, documentNumber);
+                return cachedData;
+            }
+
+            // if not cached, proceed to fetch from the external service
             String url = host + "iamas/document/getIdCardInfo?Pin=" + pin + "&DocumentNumber=" + documentNumber;
             log.info("Request URL: {}", url);
             JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
@@ -54,27 +67,30 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                     );
 
                     if (idCardInfoList != null && !idCardInfoList.isEmpty()) {
-                        // check if person is on the blacklistedIndividuals
+                        FullIDCardInfoResponse idCardInfo = idCardInfoList.get(0);
+
+                        mongoTemplate.save(idCardInfo);
+
                         Aggregation aggregation = Aggregation.newAggregation(
-                                Aggregation.match(Criteria.where("nameAz").is(idCardInfoList.get(0).getPersonAz().getName())),
+                                Aggregation.match(Criteria.where("nameAz").is(idCardInfo.getPersonAz().getName())),
                                 Aggregation.project()
                                         .and(ConditionalOperators.Cond
-                                                .when(Criteria.where("nameAz").is(idCardInfoList.get(0).getPersonAz().getName()))
+                                                .when(Criteria.where("nameAz").is(idCardInfo.getPersonAz().getName()))
                                                 .then(1)
                                                 .otherwise(0)
                                         ).as("nameMatch")
                                         .and(ConditionalOperators.Cond
-                                                .when(Criteria.where("surnameAz").is(idCardInfoList.get(0).getPersonAz().getSurname()))
+                                                .when(Criteria.where("surnameAz").is(idCardInfo.getPersonAz().getSurname()))
                                                 .then(1)
                                                 .otherwise(0)
                                         ).as("surnameMatch")
                                         .and(ConditionalOperators.Cond
-                                                .when(Criteria.where("patronymicAz").is(idCardInfoList.get(0).getPersonAz().getPatronymic()))
+                                                .when(Criteria.where("patronymicAz").is(idCardInfo.getPersonAz().getPatronymic()))
                                                 .then(1)
                                                 .otherwise(0)
                                         ).as("patronymicMatch")
                                         .and(ConditionalOperators.Cond
-                                                .when(Criteria.where("dateOfBirth").is(idCardInfoList.get(0).getBirthDate()))
+                                                .when(Criteria.where("dateOfBirth").is(idCardInfo.getBirthDate()))
                                                 .then(1)
                                                 .otherwise(0)
                                         ).as("birthDateMatch"),
@@ -85,19 +101,20 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                                         )
                                         .build()
                         );
+
                         AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, "blacklisted_individuals", Document.class);
 
                         for (Document doc : result) {
                             int total = doc.getInteger("totalMatches");
                             if (total == 4) {
-                                idCardInfoList.get(0).setBlackListStatus(BlackListStatus.builder()
+                                idCardInfo.setBlackListStatus(BlackListStatus.builder()
                                         .matchCount(doc.getInteger("totalMatches"))
                                         .message("Şəxs siyahıda tapıldı")
                                         .build());
                                 break;
                             }
                             if (total == 3) {
-                                idCardInfoList.get(0).setBlackListStatus(BlackListStatus.builder()
+                                idCardInfo.setBlackListStatus(BlackListStatus.builder()
                                         .matchCount(doc.getInteger("totalMatches"))
                                         .message("Şəxs məlumatları 75% siyahıda tapıldı")
                                         .build());
@@ -105,11 +122,11 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                             }
                         }
 
-                        return idCardInfoList.get(0);
+                        // Возвращаем данные
+                        return idCardInfo;
                     }
                 } catch (Exception e) {
                     log.error("Error parsing JSON response: {}", e.getMessage(), e);
-
                 }
             } else {
                 log.error("Response is null or empty");
@@ -237,17 +254,31 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public List<VehicleInfoResponse> getVehicleInfoByPin(String pin) throws IOException {
         try {
+            // Check if the data is already cached in MongoDB
+            List<VehicleInfoResponse> cachedData = mongoTemplate.find(
+                    Query.query(Criteria.where("pin").is(pin)),
+                    VehicleInfoResponse.class
+            );
+
+            if (cachedData != null && !cachedData.isEmpty()) {
+                log.info("Data found in the database for Pin: {}", pin);
+                return cachedData;
+            }
+
+            // If not cached, proceed to fetch from the external service
             String url = host + "general/vehicle/getVehicleInfoByPin?Pin=" + pin;
+            log.info("Request URL: {}", url);
             JsonNode jsonNode = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);
+
             if (jsonNode != null) {
                 try {
-                    List<VehicleInfoResponse> vehicleInfoResponseList
-                            = objectMapper.readValue(
-                                    jsonNode.get("data").toString(),
-                                    objectMapper.getTypeFactory().constructParametricType(List.class, VehicleInfoResponse.class)
-                            );
+                    List<VehicleInfoResponse> vehicleInfoResponseList = objectMapper.readValue(
+                            jsonNode.get("data").toString(),
+                            objectMapper.getTypeFactory().constructParametricType(List.class, VehicleInfoResponse.class)
+                    );
 
                     if (vehicleInfoResponseList != null && !vehicleInfoResponseList.isEmpty()) {
+                        mongoTemplate.insertAll(vehicleInfoResponseList);
                         return vehicleInfoResponseList;
                     }
                 } catch (Exception e) {
@@ -257,7 +288,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
                 log.error("Response is null or empty");
             }
         } catch (Exception ex) {
-            log.error(null, ex);
+            log.error("Error during getVehicleInfoByPin execution: {}", ex.getMessage(), ex);
             throw ex;
         }
         return null;

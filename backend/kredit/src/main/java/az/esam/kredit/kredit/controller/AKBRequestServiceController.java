@@ -101,7 +101,7 @@ public class AKBRequestServiceController {
         return ResponseEntity.ok(akbRequestService.lkpCreditTypes());
     }
 
-    @GetMapping("/lkpCurrencies")
+    @GetMapping("/lkp ")
     public ResponseEntity<List<AKBCurrencyResponse>> lkpCurrencies() {
         return ResponseEntity.ok(akbRequestService.lkpCurrencies());
     }
