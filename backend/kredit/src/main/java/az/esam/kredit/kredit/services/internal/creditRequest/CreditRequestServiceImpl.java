@@ -2,10 +2,7 @@ package az.esam.kredit.kredit.services.internal.creditRequest;
 
 import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.dtos.requests.SendSmsRequest;
-import az.esam.kredit.kredit.entities.Credit;
-import az.esam.kredit.kredit.entities.CreditDetail;
-import az.esam.kredit.kredit.entities.CreditRequest;
-import az.esam.kredit.kredit.entities.User;
+import az.esam.kredit.kredit.entities.*;
 import az.esam.kredit.kredit.entities.enums.*;
 import az.esam.kredit.kredit.entities.sima.ContractTypeEnum;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
@@ -461,16 +458,18 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     @Override
-    public String rejectCredit(String id, String rejectPurpose, Authentication authentication) {
+    public String rejectCredit(String id, List<RejectRequest> rejectRequest, Authentication authentication) {
         CreditRequest creditRequest = creditRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("id does not exist"));
 
+//        List<String> rejectPurposeList = creditRequest.getRejectPurpose();
+        creditRequest.setRejectRequest(rejectRequest);
+
         creditRequest.setConfirmStatus(CreditRequestStatusEnum.Rejected);
-        creditRequest.setRejectPurpose(rejectPurpose);
         creditRequest.setActivateStatus(EActivateStatus.REJECTED);
         creditRequest.setFinalStatus(EFinalStatus.REJECTED);
         creditRequestRepository.save(creditRequest);
 
-        return "Kredit müraciəti rədd edildi";
+        return "Kredit müraciəti ləğv edildi";
     }
 }

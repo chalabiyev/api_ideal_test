@@ -40,7 +40,7 @@ public class CreditRequest extends BaseEntity {
     private EFinalStatus finalStatus;
     private String urlNumber;
     private boolean used;
-    private String rejectPurpose;
+    private List<RejectRequest> rejectRequest;
 
     @DocumentReference
     private User requestedUser;
@@ -142,7 +142,7 @@ public class CreditRequest extends BaseEntity {
         map.put("cashPrice", cashPrice);
         map.put("operationType", operationType);
         map.put("productName", productName);
-        map.put("rejectPurpose", rejectPurpose);
+        // map.put("rejectPurpose", rejectPurpose);
         map.put("spouses", spouses != null
                 ? spouses.stream().map(spouse -> {
             Map<String, Object> spouseMap = new HashMap<>();
@@ -171,6 +171,9 @@ public class CreditRequest extends BaseEntity {
         map.put("documentDate", new SimpleDateFormat("dd.MM.yyyy").format(requestDate));
         map.put("urlNumber", urlNumber);
         map.put("used", used);
+        if (rejectRequest != null) {
+            map.put("rejectRequest", rejectRequest);
+        }
         if (partner != null) {
             map.put("partner", partner.toMap());
         }

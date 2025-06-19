@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.controller;
 
 import java.util.List;
 
+import az.esam.kredit.kredit.entities.RejectRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -199,8 +200,8 @@ public class CreditRequestController {
     @SecurityRequirement(name = "X-API-KEY")
     @PostMapping("/rejectCredit")
     public ResponseEntity<String> rejectCredit(@RequestParam String id,
-                                               @RequestParam String rejectPurpose,
+                                               @RequestBody List<RejectRequest> rejectRequest,
                                                Authentication authentication) {
-        return ResponseEntity.ok(creditRequestService.rejectCredit(id, rejectPurpose, authentication));
+        return ResponseEntity.ok(creditRequestService.rejectCredit(id, rejectRequest, authentication));
     }
 }

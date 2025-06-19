@@ -2,6 +2,7 @@ package az.esam.kredit.kredit.services.internal.creditRequest;
 
 import az.esam.kredit.kredit.dtos.requests.CreditRequestSearchDto;
 import az.esam.kredit.kredit.entities.CreditRequest;
+import az.esam.kredit.kredit.entities.RejectRequest;
 import az.esam.kredit.kredit.entities.enums.CreditRequestStatusEnum;
 import az.esam.kredit.kredit.entities.enums.ECreditType;
 import az.esam.kredit.kredit.entities.sima.SimaQRResponse;
@@ -43,5 +44,5 @@ public interface CreditRequestService {
 
     String acceptConfirmation(String id, boolean isUsed, Authentication authentication);
 
-    String rejectCredit(String id, String rejectPurpose, Authentication authentication);
+    String rejectCredit(String id, List<RejectRequest> rejectRequest, Authentication authentication);
 }
