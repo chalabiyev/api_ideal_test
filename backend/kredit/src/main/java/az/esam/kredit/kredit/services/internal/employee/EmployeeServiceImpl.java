@@ -18,5 +18,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findByPin(pin)
                 .orElseThrow(() -> new RuntimeException("FIN kodlu işçi " + pin + " tapılmadı"));
     }
-
 }

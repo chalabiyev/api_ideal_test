@@ -448,12 +448,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         creditRequest.setUsed(isUsed);
         creditRequest.setUrlNumber(null);
 
-        log.info("USED: " + creditRequest.isUsed());
-
-//        List<CreditDetail> creditDetails = creditRequest.getCreditDetails();
-//        for (CreditDetail detail : creditDetails)
-//            detail.setUrlNumber(null);
-
         return "Təsdiq qəbul edildi";
     }
 
@@ -462,7 +456,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         CreditRequest creditRequest = creditRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("id does not exist"));
 
-//        List<String> rejectPurposeList = creditRequest.getRejectPurpose();
         creditRequest.setRejectRequest(rejectRequest);
 
         creditRequest.setConfirmStatus(CreditRequestStatusEnum.Rejected);
