@@ -35,6 +35,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(subject);
             helper.setText(text, true);
 
+            message.setHeader("Disposition-Notification-To", from);
+
             javaMailSender.send(message);
             return true;
         } catch (Exception e) {
