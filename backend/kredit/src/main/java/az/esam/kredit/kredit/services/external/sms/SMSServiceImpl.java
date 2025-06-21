@@ -70,7 +70,7 @@ public class SMSServiceImpl implements SMSService {
                         objectMapper.getTypeFactory().constructParametricType(List.class, SmsResponse.class)
                 );
             } else {
-                throw new RuntimeException("Error while sending SMS");
+                throw new RuntimeException("Error while sending SMS: Response was null");
             }
         } catch (Exception ex) {
             log.error(null, ex);
@@ -107,8 +107,8 @@ public class SMSServiceImpl implements SMSService {
                 throw new RuntimeException("Error while sending SMS");
             }
         } catch (Exception ex) {
-            log.error(null, ex);
-            throw new RuntimeException("Error while sending SMS");
+            log.error("Error while sending SMS", ex);
+            throw new RuntimeException("Error while sending SMS: " + ex.getMessage(), ex);
         }
     }
 
@@ -162,7 +162,7 @@ public class SMSServiceImpl implements SMSService {
             log.info("Service resp : {} ", responseStr);
             result = objectMapper.readTree(responseStr);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Error executing request to URL: " + url, e);
         }
         return result;
     }
