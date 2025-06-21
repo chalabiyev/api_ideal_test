@@ -11,15 +11,15 @@ import az.esam.kredit.kredit.repositories.CreditRequestRepository;
 import az.esam.kredit.kredit.repositories.UserRepository;
 import az.esam.kredit.kredit.services.external.sms.SMSService;
 import az.esam.kredit.kredit.services.sima.SimaService;
-import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.bson.types.ObjectId;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +33,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Service
@@ -59,6 +58,8 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Value("${kabinetUrl}")
     private String kabinetUrl;
+
+    private static final ObjectMapper om = new ObjectMapper();
 
     @Override
     public CreditRequest create(CreditRequest request, Authentication authentication) {
@@ -115,9 +116,13 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         }
         boolean controlsEnabled = false;
         boolean flag = false;
-        if (request.getCreditType() == null) {
-            throw new RuntimeException("Credit type is null");
+
+        try {
+            System.out.println(om.writeValueAsString(request));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         if (controlsEnabled) {
             String rejectMessage = "Hormətli müştəri, hazırda daxili şərtlərə uyğun olaraq sizə kredit rəsmiləşdirilə bilməz";
             // Müraciətçinin yaşı məsələn 20-70 yaş aralığında olmalıdır.

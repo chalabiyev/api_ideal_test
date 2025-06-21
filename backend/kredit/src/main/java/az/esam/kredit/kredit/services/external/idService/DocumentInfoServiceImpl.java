@@ -1,6 +1,8 @@
 package az.esam.kredit.kredit.services.external.idService;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import az.esam.kredit.kredit.dtos.responses.document.*;
+import az.esam.kredit.kredit.repositories.document.MobileNumberRepository;
 import az.esam.kredit.kredit.services.external.SendRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +42,10 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Autowired
+    MobileNumberRepository mobileNumberRepository;
+
 
     @Override
     public FullIDCardInfoResponse getIdCardInfo(String documentNumber, String pin) throws IOException {
@@ -141,6 +147,11 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
     @Override
     public List<MobileNumberResponse> getMobileNumbersWithPin(String pin) {
         try {
+            List<MobileNumberResponse> results = mobileNumberRepository.findByPin(pin);
+            if (!results.isEmpty()) {
+                results.forEach(r -> r.setSource(ESource.DB));
+                return results;
+            }
             String url = host + "mobile/numbers/getmobileNumbersWithPin?Pin=" + pin;
             log.info("Request URL: {}", url);
             JsonNode jsonResponse = sendRequest.executeRequest(null, url, "GET", authName, authKey, false);

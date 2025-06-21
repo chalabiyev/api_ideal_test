@@ -1,5 +1,6 @@
 package az.esam.kredit.kredit.dtos.responses.document;
 
+import az.esam.kredit.kredit.dtos.enums.ESource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class MobileNumberResponse {
     private String phone;
     private String typeName;
+    private ESource source;
 
 }
