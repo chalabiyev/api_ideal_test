@@ -7,4 +7,5 @@ public enum ERole {
     ROLE_SITE_MANAGER,
     ROLE_CREDIT_MANAGER,
     ROLE_ACCOUNTANT,
+    ROLE_HR,
 }
